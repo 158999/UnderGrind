@@ -43,7 +43,7 @@ namespace UnderGrind.Tests.Diagnostics
             var healthySink = new RecordingSink();
             var logger = new Logger(LogLevel.Trace, new ThrowingSink(), healthySink);
 
-            Assert.DoesNotThrow(() => logger.Error("Test", "Sink failure must be isolated."));
+            Assert.That(() => logger.Error("Test", "Sink failure must be isolated."), Throws.Nothing);
 
             Assert.That(healthySink.Entries, Has.Count.EqualTo(1));
             Assert.That(healthySink.Entries[0].Level, Is.EqualTo(LogLevel.Error));
