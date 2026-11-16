@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Assets/UnderGrind/Runtime/Diagnostics/LogLevel.cs" Link="Diagnostics/LogLevel.cs" />
+    <Compile Include="../../Assets/UnderGrind/Runtime/Diagnostics/LogEvent.cs" Link="Diagnostics/LogEvent.cs" />
+    <Compile Include="../../Assets/UnderGrind/Runtime/Diagnostics/ILogSink.cs" Link="Diagnostics/ILogSink.cs" />
+    <Compile Include="../../Assets/UnderGrind/Runtime/Diagnostics/IUnderGrindLogger.cs" Link="Diagnostics/IUnderGrindLogger.cs" />
+    <Compile Include="../../Assets/UnderGrind/Runtime/Diagnostics/Logger.cs" Link="Diagnostics/Logger.cs" />
+    <Compile Include="../../Assets/UnderGrind/Runtime/Diagnostics/FileLogSink.cs" Link="Diagnostics/FileLogSink.cs" />
+    <Compile Include="../../Assets/UnderGrind/Runtime/Diagnostics/TextWriterLogSink.cs" Link="Diagnostics/TextWriterLogSink.cs" />
+  </ItemGroup>
+</Project>
