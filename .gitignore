@@ -1,0 +1,26 @@
+# Unity generated data
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Bb]uild/
+[Bb]uilds/
+
+# IDE
+.vs/
+.idea/
+*.csproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.tmp
+
+# Test output
+/TestResults/*
+!/TestResults/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
