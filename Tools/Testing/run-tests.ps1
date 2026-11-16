@@ -66,6 +66,7 @@ foreach ($project in $projects) {
     $code = $LASTEXITCODE
     $output | Out-File (Join-Path $runDir $logName) -Encoding utf8
     $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
+    $failures = @()
     $trxPath = Join-Path $runDir $trxName
     if (Test-Path $trxPath) {
         [xml]$trx = Get-Content $trxPath -Raw
@@ -76,6 +77,16 @@ foreach ($project in $projects) {
             $counts.failed = [int]$counter.failed
             $counts.skipped = [int]$counter.notExecuted
         }
+        $failures = @($trx.SelectNodes("//*[local-name()='UnitTestResult'][@outcome='Failed']") | ForEach-Object {
+            $errorInfo = $_.SelectSingleNode(".//*[local-name()='ErrorInfo']")
+            $messageNode = if ($errorInfo) { $errorInfo.SelectSingleNode("./*[local-name()='Message']") } else { $null }
+            $stackNode = if ($errorInfo) { $errorInfo.SelectSingleNode("./*[local-name()='StackTrace']") } else { $null }
+            [ordered]@{
+                test = $_.testName
+                message = if ($messageNode) { $messageNode.InnerText } else { "Test failed; inspect the TRX result." }
+                stackTrace = if ($stackNode) { $stackNode.InnerText } else { "" }
+            }
+        })
     }
     $items.Add([ordered]@{
         project = $project.FullName.Substring($root.Length + 1)
@@ -83,6 +94,7 @@ foreach ($project in $projects) {
         trx = $trxName
         log = $logName
         totals = $counts
+        failures = $failures
     })
     if ($code -ne 0 -or $counts.failed -gt 0) { $exit = 1 }
     Write-Host "[$code] $($project.Name): $($counts.passed) passed, $($counts.failed) failed"
