@@ -8,6 +8,7 @@ namespace UnderGrind.Diagnostics
         private readonly object _gate = new object();
         private readonly TextWriter _writer;
         private readonly bool _ownsWriter;
+        private bool _disposed;
 
         public TextWriterLogSink(TextWriter writer, bool ownsWriter = false)
         {
@@ -19,6 +20,9 @@ namespace UnderGrind.Diagnostics
         {
             lock (_gate)
             {
+                if (_disposed)
+                    return;
+
                 _writer.WriteLine(entry.ToString());
                 _writer.Flush();
             }
@@ -26,8 +30,15 @@ namespace UnderGrind.Diagnostics
 
         public void Dispose()
         {
-            if (_ownsWriter)
-                _writer.Dispose();
+            lock (_gate)
+            {
+                if (_disposed)
+                    return;
+
+                _disposed = true;
+                if (_ownsWriter)
+                    _writer.Dispose();
+            }
         }
     }
 }
