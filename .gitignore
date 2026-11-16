@@ -2,6 +2,7 @@
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
+[Bb]in/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 [Bb]uild/
@@ -10,14 +11,14 @@
 # IDE
 .vs/
 .idea/
-*.csproj
+*.csproj.user
 *.sln
 *.slnx
 *.suo
 *.user
 *.tmp
 
-# Test output
+# Test and diagnostic output
 /TestResults/*
 !/TestResults/.gitkeep
 
