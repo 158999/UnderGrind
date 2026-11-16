@@ -1,0 +1,39 @@
+name: Standalone Diagnostics Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  standalone-tests:
+    name: Build and test diagnostics
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Run standalone tests
+        shell: pwsh
+        run: ./run-tests.ps1
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: undergrind-standalone-test-results
+          path: TestResults/
+          if-no-files-found: warn
+          retention-days: 30
