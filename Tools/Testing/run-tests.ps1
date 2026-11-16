@@ -13,6 +13,27 @@ if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
     exit 2
 }
 
+$started = [DateTime]::UtcNow
+$diagnosticsProject = Join-Path $root "Tools/Diagnostics/UnderGrind.Diagnostics.Standalone.csproj"
+$buildOutput = & dotnet build $diagnosticsProject --configuration $Configuration 2>&1
+$buildCode = $LASTEXITCODE
+$buildOutput | Out-File (Join-Path $runDir "diagnostics-build.log") -Encoding utf8
+if ($buildCode -ne 0) {
+    $report = [ordered]@{
+        runId = $runId
+        finishedUtc = [DateTime]::UtcNow.ToString("O")
+        status = "BuildFailed"
+        diagnosticsBuildExitCode = $buildCode
+        message = "The shared diagnostics source failed to build outside Unity."
+        totals = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
+        projects = @()
+    }
+    $report | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $results "latest.json") -Encoding utf8
+    "Standalone diagnostics build failed. See TestResults/$runId/diagnostics-build.log" | Set-Content (Join-Path $results "latest.txt") -Encoding utf8
+    Write-Host "Diagnostics build failed. No tests were executed."
+    exit 1
+}
+
 $projects = @(Get-ChildItem $root -Filter "*.Standalone.Tests.csproj" -File -Recurse |
     Where-Object { $_.FullName -notmatch "(bin|obj|Library|Temp)" } |
     Sort-Object FullName)
@@ -20,19 +41,21 @@ $projects = @(Get-ChildItem $root -Filter "*.Standalone.Tests.csproj" -File -Rec
 if ($projects.Count -eq 0) {
     $report = [ordered]@{
         runId = $runId
+        startedUtc = $started.ToString("O")
         finishedUtc = [DateTime]::UtcNow.ToString("O")
         status = "NotConfigured"
-        message = "No standalone test projects found. No tests were executed."
+        diagnosticsBuild = "Passed"
+        diagnosticsBuildLog = "diagnostics-build.log"
+        message = "Shared diagnostics compiled successfully. No standalone test projects were found; no tests were executed."
         totals = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
         projects = @()
     }
     $report | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $results "latest.json") -Encoding utf8
-    "Standalone tests are not configured. No test projects were found." | Set-Content (Join-Path $results "latest.txt") -Encoding utf8
-    Write-Host "No standalone test projects found. No tests were executed."
+    @("Diagnostics build: PASS", "Standalone tests: NOT CONFIGURED", "No tests were executed.") | Set-Content (Join-Path $results "latest.txt") -Encoding utf8
+    Write-Host "Diagnostics build passed. No standalone test projects found; no tests were executed."
     exit 2
 }
 
-$started = [DateTime]::UtcNow
 $items = [System.Collections.Generic.List[object]]::new()
 $exit = 0
 foreach ($project in $projects) {
@@ -77,6 +100,7 @@ $report = [ordered]@{
     startedUtc = $started.ToString("O")
     finishedUtc = $finished.ToString("O")
     durationSeconds = [Math]::Round(($finished - $started).TotalSeconds, 3)
+    diagnosticsBuild = "Passed"
     status = if ($exit -eq 0) { "Passed" } else { "Failed" }
     totals = $totals
     projects = @($items)
@@ -84,6 +108,7 @@ $report = [ordered]@{
 $report | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $results "latest.json") -Encoding utf8
 @(
     "UnderGrind standalone tests"
+    "Diagnostics build: PASS"
     "Status: $($report.status)"
     "Total: $($totals.total) | Passed: $($totals.passed) | Failed: $($totals.failed) | Skipped: $($totals.skipped)"
     "Duration: $($report.durationSeconds)s"
