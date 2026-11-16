@@ -19,14 +19,14 @@ if ([string]::IsNullOrWhiteSpace($UnityEditorPath)) {
     $UnityEditorPath = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
 }
 if ([string]::IsNullOrWhiteSpace($UnityEditorPath) -or -not (Test-Path $UnityEditorPath)) {
-    Write-Error "Unity Editor not found. Set UNITY_EDITOR_PATH or pass -UnityEditorPath."
+    Write-Host "Unity Editor not found. Set UNITY_EDITOR_PATH or pass -UnityEditorPath."
     exit 2
 }
 
 $testAssemblies = @(Get-ChildItem (Join-Path $root "Assets") -Filter "*.asmdef" -File -Recurse |
     Where-Object { $_.DirectoryName -match "Tests" })
 if ($testAssemblies.Count -eq 0) {
-    Write-Error "No Unity test assemblies found. No tests were executed."
+    Write-Host "No Unity test assemblies found. No tests were executed."
     exit 2
 }
 
