@@ -44,6 +44,12 @@ namespace UnderGrind.Locomotion
         public bool IsThirdPerson => _thirdPerson;
         public float VerticalVelocity => _verticalVelocity;
 
+        public void ConfigureViewRig(Transform pivot, Camera camera)
+        {
+            viewPivot = pivot;
+            playerCamera = camera;
+        }
+
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
