@@ -12,9 +12,14 @@ namespace UnderGrind.Locomotion
         public const float DefaultCharacterHeight = 1.78f;
 
         [Header("Human movement")]
-        [SerializeField, Min(0.1f)] private float walkSpeed = DefaultWalkSpeed;
-        [SerializeField, Min(1f)] private float runMultiplier = DefaultRunMultiplier;
-        [SerializeField, Min(0.05f)] private float jumpHeight = DefaultJumpHeight;
+        [SerializeField, Min(1f), Tooltip("Altezza totale del personaggio in metri.")]
+        private float characterHeight = DefaultCharacterHeight;
+        [SerializeField, Min(0.1f), Tooltip("Velocità di camminata in m/s. Valore iniziale: 1,40.")]
+        private float walkSpeed = DefaultWalkSpeed;
+        [SerializeField, Min(1f), Tooltip("Moltiplicatore della camminata. 1,333 = corsa più veloce di un terzo.")]
+        private float runMultiplier = DefaultRunMultiplier;
+        [SerializeField, Min(0.05f), Tooltip("Altezza teorica raggiunta dal salto verticale in metri.")]
+        private float jumpHeight = DefaultJumpHeight;
         [SerializeField, Min(0.1f)] private float gravity = 9.81f;
         [SerializeField, Range(0f, 1f)] private float airControl = 0.65f;
 
@@ -33,10 +38,12 @@ namespace UnderGrind.Locomotion
         private Vector3 _horizontalVelocity;
         private float _measuredSpeed;
 
+        public float CharacterHeight => characterHeight;
         public float WalkSpeed => walkSpeed;
         public float RunSpeed => walkSpeed * runMultiplier;
         public float RunMultiplier => runMultiplier;
         public float JumpHeight => jumpHeight;
+        public float Gravity => gravity;
         public float JumpVelocity => Mathf.Sqrt(2f * gravity * jumpHeight);
         public float MeasuredSpeed => _measuredSpeed;
         public bool IsGrounded => _characterController != null && _characterController.isGrounded;
@@ -59,15 +66,41 @@ namespace UnderGrind.Locomotion
             if (viewPivot == null && playerCamera != null)
                 viewPivot = playerCamera.transform.parent;
 
-            _characterController.height = DefaultCharacterHeight;
-            _characterController.radius = 0.28f;
-            _characterController.center = new Vector3(0f, DefaultCharacterHeight * 0.5f, 0f);
-            _characterController.stepOffset = 0.32f;
-            _characterController.slopeLimit = 48f;
-            _characterController.minMoveDistance = 0f;
-
+            ApplyCharacterDimensions();
             SetCursorLocked(true);
             ApplyCameraMode();
+        }
+
+        private void OnValidate()
+        {
+            characterHeight = Mathf.Max(1f, characterHeight);
+            walkSpeed = Mathf.Max(0.1f, walkSpeed);
+            runMultiplier = Mathf.Max(1f, runMultiplier);
+            jumpHeight = Mathf.Max(0.05f, jumpHeight);
+            gravity = Mathf.Max(0.1f, gravity);
+
+            if (!Application.isPlaying)
+            {
+                var controller = GetComponent<CharacterController>();
+                if (controller != null)
+                    ApplyCharacterDimensions(controller);
+            }
+        }
+
+        private void ApplyCharacterDimensions()
+        {
+            if (_characterController != null)
+                ApplyCharacterDimensions(_characterController);
+        }
+
+        private void ApplyCharacterDimensions(CharacterController controller)
+        {
+            controller.height = characterHeight;
+            controller.radius = Mathf.Min(0.28f, characterHeight * 0.16f);
+            controller.center = new Vector3(0f, characterHeight * 0.5f, 0f);
+            controller.stepOffset = Mathf.Min(0.32f, characterHeight * 0.18f);
+            controller.slopeLimit = 48f;
+            controller.minMoveDistance = 0f;
         }
 
         private void Update()
