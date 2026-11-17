@@ -22,10 +22,23 @@ namespace UnderGrind.Editor
             EnsureFolder("Assets/UnderGrind/Art/Source");
             EnsureFolder(GeneratedPath);
 
+            AssetDatabase.ImportAsset(HumanModelPath,
+                ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+            var human = ResolveHumanModel();
+            if (human == null)
+            {
+                const string message = "Unity non ha importato alcun modello 3D utilizzabile da humans.blend. " +
+                    "La scena esistente non è stata modificata e non verrà creato un manichino sostitutivo. " +
+                    "Controlla la Console e Unity > Preferences > External Tools: Unity deve poter individuare Blender.";
+                Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
+                EditorUtility.DisplayDialog("Modello umano non disponibile", message, "OK");
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
             CreateCourse();
-            CreatePlayer();
+            CreatePlayer(human);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -42,7 +55,7 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static void CreatePlayer()
+        private static void CreatePlayer(GameObject human)
         {
             var player = new GameObject("Player - Human 1.78m");
             player.transform.position = new Vector3(0f, 0.05f, 0f);
@@ -55,22 +68,14 @@ namespace UnderGrind.Editor
 
             var visualRoot = new GameObject("Visual");
             visualRoot.transform.SetParent(player.transform, false);
-            var human = ResolveHumanModel();
-            if (human != null)
-            {
-                var instance = (GameObject)PrefabUtility.InstantiatePrefab(human);
-                if (instance == null) instance = UnityEngine.Object.Instantiate(human);
-                instance.name = "Human Base - imported from humans.blend";
-                instance.transform.SetParent(visualRoot.transform, false);
-                FitModelToHeight(instance, HumanLocomotionController.DefaultCharacterHeight);
-                ConfigureAnimations(instance);
-                Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
-            }
-            else
-            {
-                CreateFallbackHumanoid(visualRoot.transform);
-                Debug.LogWarning("UnderGrind: humans.blend non è stato importato da Unity. Creato un manichino procedurale temporaneo.");
-            }
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(human);
+            if (instance == null) instance = UnityEngine.Object.Instantiate(human);
+            instance.name = "Human Base - imported from humans.blend";
+            instance.transform.SetParent(visualRoot.transform, false);
+            FitModelToHeight(instance, HumanLocomotionController.DefaultCharacterHeight);
+            ApplyPlayerMaterial(instance);
+            ConfigureAnimations(instance);
+            Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
 
             var pivot = new GameObject("View Pivot").transform;
             pivot.SetParent(player.transform, false);
@@ -91,10 +96,18 @@ namespace UnderGrind.Editor
 
         private static GameObject ResolveHumanModel()
         {
+            // Inspect the imported hierarchy, but only consider subtrees with human-sized
+            // bounds. This avoids choosing the whole Blender scene (which may contain more
+            // than one body) or an isolated limb/torso as the player model.
             var candidates = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<GameObject>()
                 .SelectMany(root => root.GetComponentsInChildren<Transform>(true).Select(t => t.gameObject))
                 .Distinct()
-                .Where(x => x.GetComponentInChildren<Renderer>(true) != null).ToList();
+                .Where(x => x.GetComponentInChildren<Renderer>(true) != null)
+                .Where(x =>
+                {
+                    var size = GetCombinedBounds(x).size;
+                    return size.y >= 0.5f && size.y <= 250f;
+                }).ToList();
             if (candidates.Count == 0) return null;
 
             int Score(GameObject item)
@@ -141,6 +154,23 @@ namespace UnderGrind.Editor
             var fitted = GetCombinedBounds(model);
             var parentPosition = model.transform.parent != null ? model.transform.parent.position : Vector3.zero;
             model.transform.position += new Vector3(parentPosition.x - fitted.center.x, parentPosition.y - fitted.min.y, parentPosition.z - fitted.center.z);
+        }
+
+        private static void ApplyPlayerMaterial(GameObject model)
+        {
+            var playerMaterial = MakeMaterial("Human Base", new Color(0.43f, 0.61f, 0.68f));
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+            {
+                var materials = renderer.sharedMaterials;
+                if (materials.Length == 0)
+                    renderer.sharedMaterial = playerMaterial;
+                else
+                {
+                    for (var i = 0; i < materials.Length; i++)
+                        materials[i] = playerMaterial;
+                    renderer.sharedMaterials = materials;
+                }
+            }
         }
 
         private static void ConfigureAnimations(GameObject model)
@@ -269,9 +299,25 @@ namespace UnderGrind.Editor
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material == null)
             {
-                var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+                var activePipeline = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
+                var shader = activePipeline != null
+                    ? Shader.Find("Universal Render Pipeline/Lit")
+                    : Shader.Find("Standard");
+                shader ??= Shader.Find("Universal Render Pipeline/Lit");
+                if (shader == null)
+                    throw new InvalidOperationException("Nessuno shader Lit compatibile è disponibile nel progetto.");
                 material = new Material(shader) { name = name };
                 AssetDatabase.CreateAsset(material, path);
+            }
+            else
+            {
+                var activePipeline = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
+                var compatibleShader = activePipeline != null
+                    ? Shader.Find("Universal Render Pipeline/Lit")
+                    : Shader.Find("Standard");
+                compatibleShader ??= Shader.Find("Universal Render Pipeline/Lit");
+                if (compatibleShader != null && material.shader != compatibleShader)
+                    material.shader = compatibleShader;
             }
             material.color = color;
             EditorUtility.SetDirty(material);

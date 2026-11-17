@@ -28,5 +28,25 @@ namespace UnderGrind.Tests
         {
             Assert.That(HumanLocomotionController.DefaultCharacterHeight, Is.EqualTo(1.78f).Within(0.0001f));
         }
+
+        [Test]
+        public void PlayerMovementParametersAreExposedAsSerializedInspectorFields()
+        {
+            var player = new GameObject("Inspector test player");
+            try
+            {
+                var movement = player.AddComponent<HumanLocomotionController>();
+                var serialized = new UnityEditor.SerializedObject(movement);
+                Assert.That(serialized.FindProperty("characterHeight"), Is.Not.Null);
+                Assert.That(serialized.FindProperty("walkSpeed"), Is.Not.Null);
+                Assert.That(serialized.FindProperty("runMultiplier"), Is.Not.Null);
+                Assert.That(serialized.FindProperty("jumpHeight"), Is.Not.Null);
+                Assert.That(serialized.FindProperty("gravity"), Is.Not.Null);
+            }
+            finally
+            {
+                Object.DestroyImmediate(player);
+            }
+        }
     }
 }

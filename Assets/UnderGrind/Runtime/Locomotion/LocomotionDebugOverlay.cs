@@ -8,27 +8,86 @@ namespace UnderGrind.Locomotion
         private HumanLocomotionController _movement;
         private GUIStyle _style;
         private GUIStyle _heading;
+        private GUIStyle _hint;
+        private int _styleFontSize = -1;
 
         private void Awake() => _movement = GetComponent<HumanLocomotionController>();
 
         private void OnGUI()
         {
-            if (_movement == null) return;
-            _style ??= new GUIStyle(GUI.skin.label) { fontSize = 14, normal = { textColor = Color.white } };
-            _heading ??= new GUIStyle(_style) { fontStyle = FontStyle.Bold, fontSize = 16 };
+            if (_movement == null)
+                return;
 
-            GUI.Box(new Rect(14, 14, 310, 174), GUIContent.none);
-            GUILayout.BeginArea(new Rect(26, 22, 286, 160));
-            GUILayout.Label("UNDERGRIND  |  LOCOMOTION TEST", _heading);
-            GUILayout.Label($"Velocità: {_movement.MeasuredSpeed:0.00} m/s", _style);
-            GUILayout.Label($"Camminata: {_movement.WalkSpeed:0.00} m/s", _style);
-            GUILayout.Label($"Corsa: {_movement.RunSpeed:0.00} m/s", _style);
-            GUILayout.Label($"Salto: {_movement.JumpHeight:0.00} m", _style);
-            GUILayout.Label($"Stato: {(_movement.IsGrounded ? "a terra" : "in aria")}  |  {(_movement.IsRunning ? "corsa" : "cammino")}", _style);
-            GUILayout.Label($"Visuale: {(_movement.IsThirdPerson ? "terza persona" : "prima persona")}", _style);
-            GUILayout.EndArea();
-            GUI.Label(new Rect(14, Screen.height - 34, 700, 24),
-                "WASD / frecce: muovi   SHIFT: corri   SPAZIO: salta   F5: cambia visuale   ESC: libera mouse", _style);
+            var safe = Screen.safeArea;
+            var scale = Mathf.Clamp(Mathf.Min(Screen.width / 1280f, Screen.height / 720f), 0.68f, 1.15f);
+            EnsureStyles(scale);
+
+            var labels = new[]
+            {
+                $"Velocità attuale: {_movement.MeasuredSpeed:0.00} m/s",
+                $"Camminata: {_movement.WalkSpeed:0.00} m/s",
+                $"Corsa: {_movement.RunSpeed:0.00} m/s  (× {_movement.RunMultiplier:0.00})",
+                $"Salto: {_movement.JumpHeight:0.00} m  |  v₀ {_movement.JumpVelocity:0.00} m/s",
+                $"Altezza: {_movement.CharacterHeight:0.00} m  |  Gravità: {_movement.Gravity:0.00} m/s²",
+                $"Stato: {(_movement.IsGrounded ? "a terra" : "in aria")}  |  {(_movement.IsRunning ? "corsa" : "cammino")}",
+                $"Visuale: {(_movement.IsThirdPerson ? "terza persona" : "prima persona")}"
+            };
+
+            var width = Mathf.Min(390f, Mathf.Max(250f, safe.width - 24f));
+            var contentWidth = Mathf.Max(1f, width - 24f);
+            const string title = "UNDERGRIND  |  LOCOMOTION TEST";
+            var headingHeight = _heading.CalcHeight(new GUIContent(title), contentWidth);
+            var contentHeight = headingHeight + 6f;
+            foreach (var label in labels)
+                contentHeight += _style.CalcHeight(new GUIContent(label), contentWidth) + 2f;
+
+            var panelHeight = contentHeight + 22f;
+            var guiTop = Screen.height - safe.yMax;
+            var guiBottom = Screen.height - safe.yMin;
+            var panel = new Rect(safe.xMin + 12f, guiTop + 12f, width, panelHeight);
+            GUI.Box(panel, GUIContent.none, GUI.skin.box);
+
+            var y = panel.y + 9f;
+            GUI.Label(new Rect(panel.x + 12f, y, contentWidth, headingHeight), title, _heading);
+            y += headingHeight + 6f;
+
+            foreach (var label in labels)
+            {
+                var height = _style.CalcHeight(new GUIContent(label), contentWidth);
+                GUI.Label(new Rect(panel.x + 12f, y, contentWidth, height), label, _style);
+                y += height + 2f;
+            }
+
+            const string controls = "WASD / frecce: muovi   SHIFT: corri   SPAZIO: salta   F5: visuale   ESC: mouse";
+            var hintWidth = Mathf.Max(1f, safe.width - 24f);
+            var hintHeight = _hint.CalcHeight(new GUIContent(controls), hintWidth);
+            GUI.Label(new Rect(safe.xMin + 12f, guiBottom - hintHeight - 10f, hintWidth, hintHeight), controls, _hint);
+        }
+
+        private void EnsureStyles(float scale)
+        {
+            var fontSize = Mathf.Max(10, Mathf.RoundToInt(14f * scale));
+            if (_style != null && _styleFontSize == fontSize)
+                return;
+
+            _styleFontSize = fontSize;
+            _style = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = fontSize,
+                wordWrap = true,
+                clipping = TextClipping.Clip,
+                normal = { textColor = Color.white }
+            };
+            _heading = new GUIStyle(_style)
+            {
+                fontStyle = FontStyle.Bold,
+                fontSize = fontSize + 1
+            };
+            _hint = new GUIStyle(_style)
+            {
+                fontSize = Mathf.Max(9, fontSize - 2),
+                wordWrap = true
+            };
         }
     }
 }
