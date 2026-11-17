@@ -282,6 +282,21 @@ namespace UnderGrind.Editor
                 stopMove.hasExitTime = false;
                 stopMove.duration = 0.12f;
                 stopMove.AddCondition(AnimatorConditionMode.Less, 0.1f, "Speed");
+
+                void AddCrouchExit(AnimatorState from, AnimatorState to, AnimatorConditionMode speedMode, float threshold)
+                {
+                    if (from == null || to == null) return;
+                    var transition = from.AddTransition(to);
+                    transition.hasExitTime = false;
+                    transition.duration = 0.12f;
+                    transition.AddCondition(AnimatorConditionMode.IfNot, 0f, "Crouching");
+                    transition.AddCondition(speedMode, threshold, "Speed");
+                }
+
+                AddCrouchExit(crouchIdleState, idleState, AnimatorConditionMode.Less, 0.1f);
+                AddCrouchExit(crouchIdleState, walkState, AnimatorConditionMode.Greater, 0.1f);
+                AddCrouchExit(crouchWalkState, idleState, AnimatorConditionMode.Less, 0.1f);
+                AddCrouchExit(crouchWalkState, walkState, AnimatorConditionMode.Greater, 0.1f);
             }
 
             if (jumpState != null)
