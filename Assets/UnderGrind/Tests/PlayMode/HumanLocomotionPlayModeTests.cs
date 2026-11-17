@@ -34,5 +34,79 @@ namespace UnderGrind.Tests
 
             yield return null;
         }
+
+        [UnityTest]
+        public IEnumerator FirstPersonHidesHeadButKeepsBodyAndArmsVisible()
+        {
+            var player = new GameObject("Visual rig test");
+            var head = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var arms = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            try
+            {
+                head.name = "Head Mesh";
+                body.name = "Torso Mesh";
+                arms.name = "FirstPerson_Arms";
+                head.transform.SetParent(player.transform, false);
+                body.transform.SetParent(player.transform, false);
+                arms.transform.SetParent(player.transform, false);
+                var rig = player.AddComponent<PlayerVisualRig>();
+                yield return null;
+
+                rig.SetThirdPerson(false);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(arms.GetComponent<Renderer>().enabled, Is.True);
+
+                rig.SetThirdPerson(true);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(arms.GetComponent<Renderer>().enabled, Is.False);
+            }
+            finally
+            {
+                Object.Destroy(player);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator VisualRigPreservesInitiallyDisabledRenderers()
+        {
+            var player = new GameObject("Visual rig disabled renderer test");
+            var head = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            try
+            {
+                head.name = "Head Mesh";
+                head.transform.SetParent(player.transform, false);
+                head.GetComponent<Renderer>().enabled = false;
+                var rig = player.AddComponent<PlayerVisualRig>();
+                yield return null;
+                rig.SetThirdPerson(true);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
+            }
+            finally
+            {
+                Object.Destroy(player);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator AnimationDriverWithoutAnimatorIsSafe()
+        {
+            var player = new GameObject("Animation driver no animator test");
+            try
+            {
+                var driver = player.AddComponent<PlayerAnimationDriver>();
+                yield return null;
+                Assert.DoesNotThrow(() => driver.Apply(1.2f, Vector2.up, true, 0f, false, false, false, false));
+            }
+            finally
+            {
+                Object.Destroy(player);
+            }
+            yield return null;
+        }
     }
 }
