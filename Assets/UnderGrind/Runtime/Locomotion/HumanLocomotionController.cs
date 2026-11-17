@@ -22,7 +22,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private Transform viewPivot;
         [SerializeField] private Camera playerCamera;
         [SerializeField, Min(0.01f)] private float mouseSensitivity = 0.12f;
-        [SerializeField, Range(0f, 1f)] private float thirdPersonDistance = 3.25f;
+        [SerializeField, Min(0.5f)] private float thirdPersonDistance = 3.25f;
 
         private CharacterController _characterController;
         private Animator _animator;
