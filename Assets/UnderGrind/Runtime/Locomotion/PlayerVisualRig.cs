@@ -30,6 +30,9 @@ namespace UnderGrind.Locomotion
 
         public void Configure(Renderer[] head, Renderer[] firstPersonOnly)
         {
+            // Explicit rig bindings must be authoritative. Name discovery is only a fallback
+            // for prototypes and must not silently add unrelated hair/face/arm renderers.
+            discoverRenderersByName = false;
             headRenderers = head ?? Array.Empty<Renderer>();
             firstPersonOnlyRenderers = firstPersonOnly ?? Array.Empty<Renderer>();
             CacheRenderers();
