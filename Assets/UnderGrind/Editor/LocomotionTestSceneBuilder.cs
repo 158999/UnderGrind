@@ -231,7 +231,7 @@ namespace UnderGrind.Editor
             var skin = MakeMaterial("Fallback Skin", new Color(0.72f, 0.55f, 0.43f));
             var shirt = MakeMaterial("Fallback Shirt", new Color(0.28f, 0.34f, 0.38f));
             var trousers = MakeMaterial("Fallback Trousers", new Color(0.18f, 0.20f, 0.23f));
-            Part("Torso", PrimitiveType.Capsule, parent, new Vector3(0f, 1.18f, 0f), new Vector3(0.36f, 0.70f, 0.22f), shirt);
+            Part("Torso", PrimitiveType.Capsule, parent, new Vector3(0f, 1.18f, 0f), new Vector3(0.36f, 0.35f, 0.22f), shirt);
             Part("Head", PrimitiveType.Sphere, parent, new Vector3(0f, 1.65f, 0f), new Vector3(0.23f, 0.26f, 0.22f), skin);
             Part("Pelvis", PrimitiveType.Cube, parent, new Vector3(0f, 0.88f, 0f), new Vector3(0.34f, 0.25f, 0.20f), trousers);
             Limb("Left Upper Arm", parent, new Vector3(-0.22f, 1.43f, 0f), new Vector3(-0.34f, 1.13f, 0f), 0.105f, shirt);
