@@ -278,9 +278,25 @@ namespace UnderGrind.Editor
             var material = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (material == null)
             {
-                var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+                var activePipeline = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
+                var shader = activePipeline != null
+                    ? Shader.Find("Universal Render Pipeline/Lit")
+                    : Shader.Find("Standard");
+                shader ??= Shader.Find("Universal Render Pipeline/Lit");
+                if (shader == null)
+                    throw new InvalidOperationException("Nessuno shader Lit compatibile è disponibile nel progetto.");
                 material = new Material(shader) { name = name };
                 AssetDatabase.CreateAsset(material, path);
+            }
+            else
+            {
+                var activePipeline = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
+                var compatibleShader = activePipeline != null
+                    ? Shader.Find("Universal Render Pipeline/Lit")
+                    : Shader.Find("Standard");
+                compatibleShader ??= Shader.Find("Universal Render Pipeline/Lit");
+                if (compatibleShader != null && material.shader != compatibleShader)
+                    material.shader = compatibleShader;
             }
             material.color = color;
             EditorUtility.SetDirty(material);
