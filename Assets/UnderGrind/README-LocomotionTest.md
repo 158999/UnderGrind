@@ -16,7 +16,7 @@ Il builder esegue una reimportazione forzata del modello prima di creare la scen
 3. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
 4. Aprire `Assets/UnderGrind/Scenes/LocomotionTest.unity` e premere Play.
 
-La scena contiene pavimento, marcatori di distanza, gradini, ostacoli, rampa e piattaforme con materiali distinti. Il modello viene scalato a 1,78 m. Le animazioni vengono collegate solo se il modello espone clip e Avatar compatibili; la locomozione non dipende dalla presenza di animazioni.
+La scena contiene pavimento, marcatori di distanza, gradini, ostacoli, rampa e piattaforme con materiali distinti. Anche il personaggio riceve un materiale dedicato, distinto dal pavimento. Il builder sceglie lo shader in base alla pipeline effettivamente attiva: il progetto attuale non ha un URP Render Pipeline Asset assegnato in Graphics Settings, quindi usa lo shader Standard invece di URP/Lit (che in questo assetto viene visualizzato magenta). Il modello viene scalato a 1,78 m. Le animazioni vengono collegate solo se il modello espone clip e Avatar compatibili; la locomozione non dipende dalla presenza di animazioni.
 
 ## Configurazione del Player dall'Inspector
 
