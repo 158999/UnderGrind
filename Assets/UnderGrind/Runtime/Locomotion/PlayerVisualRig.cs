@@ -6,7 +6,8 @@ namespace UnderGrind.Locomotion
 {
     /// <summary>
     /// Controls which visual renderers are visible in first- and third-person.
-    /// Assign explicit renderer lists for production rigs; name discovery is a safe fallback.
+    /// Production rigs should use the stable part-name convention emitted by the
+    /// UnderGrind humanoid asset pipeline; explicit renderer lists remain supported.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PlayerVisualRig : MonoBehaviour
@@ -26,6 +27,33 @@ namespace UnderGrind.Locomotion
         {
             CacheRenderers();
             ApplyVisibility();
+        }
+
+        /// <summary>
+        /// Binds the separate head and optional first-person arms/hand renderers
+        /// using the asset pipeline naming convention:
+        /// *_Head, *_FP_Arms and *_FP_Hands.
+        /// Returns false when no separate head renderer is found.
+        /// </summary>
+        public bool ConfigureFromHierarchy(Transform rigRoot)
+        {
+            if (rigRoot == null) return false;
+
+            var renderers = rigRoot.GetComponentsInChildren<Renderer>(true);
+            var heads = new List<Renderer>();
+            var firstPersonOnly = new List<Renderer>();
+            foreach (var renderer in renderers)
+            {
+                if (renderer == null) continue;
+                var partName = renderer.name;
+                if (HasPartSuffix(partName, "_Head")) heads.Add(renderer);
+                if (ContainsToken(partName, "_FP_Arms") || ContainsToken(partName, "_FP_Hands"))
+                    firstPersonOnly.Add(renderer);
+            }
+
+            if (heads.Count == 0) return false;
+            Configure(heads.ToArray(), firstPersonOnly.ToArray());
+            return true;
         }
 
         public void Configure(Renderer[] head, Renderer[] firstPersonOnly)
@@ -101,6 +129,12 @@ namespace UnderGrind.Locomotion
                                    (!isFirstPersonOnly || !_thirdPerson);
             }
         }
+
+        private static bool HasPartSuffix(string value, string suffix) =>
+            value.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
+
+        private static bool ContainsToken(string value, string token) =>
+            value.IndexOf(token, StringComparison.OrdinalIgnoreCase) >= 0;
 
         private static bool ContainsAny(string value, params string[] tokens)
         {
