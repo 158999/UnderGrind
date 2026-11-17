@@ -1,26 +1,62 @@
-# UnderGrind — prima scena di locomozione
+# UnderGrind — scena di test locomozione
+
+## Requisiti e importazione del personaggio
+
+- Unity **6000.6.7f1**.
+- Pacchetti del progetto: Input System e Unity Test Framework.
+- Il modello sorgente è `Assets/UnderGrind/Art/Source/humans.blend`.
+- Unity importa i file Blender tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, aprire **Edit → Preferences → External Tools** e verificare che Unity trovi l'eseguibile Blender; poi selezionare il file e usare **Reimport**.
+
+Il builder esegue una reimportazione forzata del modello prima di creare la scena. Se non trova geometria importata, interrompe la generazione e mostra un errore: non sostituisce più il personaggio reale con un manichino placeholder. Inoltre seleziona il GameObject radice del modello, non un singolo figlio (ad esempio torso o arto).
 
 ## Creazione della scena
-1. Aprire il progetto con Unity **6000.6.7f1**.
-2. Attendere che Unity termini l'importazione di \`Assets/UnderGrind/Art/Source/humans.blend\`.
-3. Verificare in **Edit → Project Settings → Player → Other Settings → Active Input Handling** che sia attivo **Input System Package (New)** (oppure **Both** durante la fase di test); se si cambia il backend, riavviare Unity.
-4. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
-4. Aprire \`Assets/UnderGrind/Scenes/LocomotionTest.unity\` e premere Play.
 
-Il builder cerca un modello maschile/base nel file Blender, lo scala a 1,78 m e, se trova clip di animazione compatibili, prepara un Animator Controller. Se Unity non riesce a importare il file Blender (ad esempio Blender non è installato o non è configurato), usa un manichino procedurale temporaneo: il file originale resta intatto.
+1. Attendere che Unity termini l'importazione di `humans.blend`.
+2. Verificare in **Edit → Project Settings → Player → Other Settings → Active Input Handling** che sia attivo **Input System Package (New)** oppure **Both**.
+3. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
+4. Aprire `Assets/UnderGrind/Scenes/LocomotionTest.unity` e premere Play.
 
-## Parametri iniziali
-- Altezza controller: 1,78 m
-- Camminata: 1,40 m/s
-- Corsa: 1,40 × 4/3 = 1,8667 m/s
-- Salto: 0,40 m di altezza teorica (gravità 9,81 m/s²; velocità iniziale calcolata dalla formula balistica)
-- Controlli: WASD/frecce, Shift per correre, Spazio per saltare, F5 per passare tra prima e terza persona, Esc per liberare il mouse.
+La scena contiene pavimento, marcatori di distanza, gradini, ostacoli, rampa e piattaforme con materiali distinti. Il modello viene scalato a 1,78 m. Le animazioni vengono collegate solo se il modello espone clip e Avatar compatibili; la locomozione non dipende dalla presenza di animazioni.
 
-## Scena
-La graybox contiene riferimenti di distanza, gradini, ostacoli di altezza misurata, una rampa e piattaforme. L'overlay mostra velocità misurata, velocità nominali, altezza di salto e stato.
+## Configurazione del Player dall'Inspector
 
-## Limiti della prima iterazione
-- Le animazioni vengono collegate solo se il file Blender espone clip con nomi riconoscibili (Idle/Standing, Walk, Run, Jump). L'assenza di clip non blocca la locomozione.
-- In prima persona vengono nascosti i renderer separati riconoscibili come testa/viso/capelli/occhi. Se il modello usa un'unica mesh skinnata per tutto il corpo, servirà separare la testa o usare una soluzione dedicata alle braccia.
-- La scena è una graybox di validazione, non una scena artistica definitiva.
-- La creazione dei file via GitHub non equivale a una verifica di importazione o Play Mode: il test runtime deve essere eseguito nell'Editor Unity.
+Selezionare **Player - Human 1.78m** nella Hierarchy. Il componente **Human Locomotion Controller** espone direttamente:
+
+| Parametro | Valore iniziale | Significato |
+|---|---:|---|
+| Character Height | 1,78 m | Altezza del controller |
+| Walk Speed | 1,40 m/s | Velocità di camminata |
+| Run Multiplier | 1,3333× | Corsa = camminata × moltiplicatore |
+| Jump Height | 0,40 m | Altezza teorica del salto verticale |
+| Gravity | 9,81 m/s² | Accelerazione gravitazionale |
+| Air Control | 0,65 | Controllo direzionale in aria |
+
+Il custom Inspector mostra anche velocità di corsa e velocità iniziale del salto calcolate. Il pulsante **Ripristina parametri umani iniziali** ripristina i valori di riferimento. Le modifiche ai parametri vengono salvate nella scena/prefab come normali proprietà serializzate Unity.
+
+La velocità di camminata iniziale è un riferimento umano medio, non un limite: aumentare **Walk Speed** direttamente sull'oggetto Player se si desidera una risposta più rapida. Il rapporto corsa/camminata rimane configurabile separatamente.
+
+## Controlli e overlay
+
+- WASD / frecce: movimento
+- Shift: corsa
+- Spazio: salto
+- F5: alterna prima e terza persona
+- Esc: libera il mouse; clic sinistro per riacquisirlo
+
+L'overlay è ancorato all'area sicura dello schermo e mostra velocità effettiva, velocità nominali, moltiplicatore di corsa, salto, altezza, gravità, stato e visuale.
+
+## Test e report automatici
+
+Sono presenti assembly separati per EditMode e PlayMode. Dal menu **UnderGrind → Tests**:
+
+- **Run EditMode Tests + Save Results**
+- **Run PlayMode Tests + Save Results**
+- **Choose Results Folder...**
+
+La cartella predefinita è `TestResults/UnderGrind` nella root del progetto. È possibile scegliere una cartella diversa, purché interna al progetto. A fine esecuzione vengono salvati automaticamente un XML con timestamp, un XML `Latest` e un riepilogo TXT. I callback vengono ripristinati anche dopo il domain reload che può avvenire durante i test PlayMode.
+
+I report sono output generati e non vengono inclusi nei commit (la cartella `TestResults` è esclusa dal `.gitignore`).
+
+## Limiti della verifica
+
+La modifica dei file nel repository non equivale a una verifica nell'Editor Unity. Importazione Blender, compilazione C#, rendering effettivo, EditMode e PlayMode devono essere eseguiti sul progetto aperto in Unity. In particolare, se il modello non viene importato dal Blender installato sul computer, il builder si ferma intenzionalmente invece di mostrare un placeholder ambiguo.
