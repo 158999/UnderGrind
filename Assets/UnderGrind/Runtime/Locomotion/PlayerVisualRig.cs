@@ -52,7 +52,6 @@ namespace UnderGrind.Locomotion
 
         private void CacheRenderers()
         {
-            _originalEnabled.Clear();
             if (discoverRenderersByName)
             {
                 var all = GetComponentsInChildren<Renderer>(true);
