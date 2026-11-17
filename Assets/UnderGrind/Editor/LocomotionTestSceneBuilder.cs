@@ -106,7 +106,7 @@ namespace UnderGrind.Editor
                 .Where(x =>
                 {
                     var size = GetCombinedBounds(x).size;
-                    return size.y >= 1.3f && size.y <= 2.2f;
+                    return size.y >= 0.5f && size.y <= 250f;
                 }).ToList();
             if (candidates.Count == 0) return null;
 
