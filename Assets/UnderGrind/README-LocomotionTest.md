@@ -3,7 +3,8 @@
 ## Creazione della scena
 1. Aprire il progetto con Unity **6000.6.7f1**.
 2. Attendere che Unity termini l'importazione di \`Assets/UnderGrind/Art/Source/humans.blend\`.
-3. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
+3. Verificare in **Edit → Project Settings → Player → Other Settings → Active Input Handling** che sia attivo **Input System Package (New)** (oppure **Both** durante la fase di test); se si cambia il backend, riavviare Unity.
+4. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
 4. Aprire \`Assets/UnderGrind/Scenes/LocomotionTest.unity\` e premere Play.
 
 Il builder cerca un modello maschile/base nel file Blender, lo scala a 1,78 m e, se trova clip di animazione compatibili, prepara un Animator Controller. Se Unity non riesce a importare il file Blender (ad esempio Blender non è installato o non è configurato), usa un manichino procedurale temporaneo: il file originale resta intatto.
