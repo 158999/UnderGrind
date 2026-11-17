@@ -53,7 +53,7 @@ Sono presenti assembly separati per EditMode e PlayMode. Dal menu **UnderGrind �
 - **Run PlayMode Tests + Save Results**
 - **Choose Results Folder...**
 
-La cartella predefinita è `TestResults/UnderGrind` nella root del progetto. È possibile scegliere una cartella diversa, purché interna al progetto. A fine esecuzione vengono salvati automaticamente un XML con timestamp, un XML `Latest` e un riepilogo TXT. I callback vengono ripristinati anche dopo il domain reload che può avvenire durante i test PlayMode.
+La cartella predefinita è `TestResults/UnderGrind` nella root del progetto. È possibile scegliere una cartella diversa, purché interna al progetto. L'esportazione è automatica sia lanciando i test dai comandi UnderGrind sia dalla finestra standard **Window → General → Test Runner**: non serve premere Save Results. A fine esecuzione vengono salvati un XML con timestamp, un XML `Latest` e un riepilogo TXT. I callback vengono ripristinati anche dopo il domain reload che può avvenire durante i test PlayMode.
 
 I report sono output generati e non vengono inclusi nei commit (la cartella `TestResults` è esclusa dal `.gitignore`).
 
