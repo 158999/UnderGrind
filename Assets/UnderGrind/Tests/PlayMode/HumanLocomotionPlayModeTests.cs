@@ -23,6 +23,9 @@ namespace UnderGrind.Tests
                 Assert.That(movement.WalkSpeed, Is.EqualTo(1.4f).Within(0.001f));
                 Assert.That(movement.RunSpeed / movement.WalkSpeed, Is.EqualTo(4f / 3f).Within(0.001f));
                 Assert.That(movement.JumpHeight, Is.EqualTo(0.4f).Within(0.001f));
+                Assert.That(movement.IsCrouching, Is.False);
+                Assert.That(movement.MoveInput, Is.EqualTo(Vector2.zero));
+                Assert.That(movement.RunSpeed, Is.EqualTo(1.4f * 4f / 3f).Within(0.001f));
             }
             finally
             {
