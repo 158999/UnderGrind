@@ -210,6 +210,8 @@ namespace UnderGrind.Editor
             var walk = Find(new[] { "walk", "walking" });
             var run = Find(new[] { "run", "running" });
             var jump = Find(new[] { "jump" });
+            var crouchIdle = Find(new[] { "crouch", "idle" });
+            var crouchWalk = Find(new[] { "crouch", "walk" });
             if (idle == null && walk == null && run == null) return;
 
             var controllerPath = GeneratedPath + "/LocomotionTest.controller";
@@ -217,8 +219,14 @@ namespace UnderGrind.Editor
                 AssetDatabase.DeleteAsset(controllerPath);
             var animatorController = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
             animatorController.AddParameter("Speed", AnimatorControllerParameterType.Float);
+            animatorController.AddParameter("MoveX", AnimatorControllerParameterType.Float);
+            animatorController.AddParameter("MoveY", AnimatorControllerParameterType.Float);
             animatorController.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
             animatorController.AddParameter("VerticalSpeed", AnimatorControllerParameterType.Float);
+            animatorController.AddParameter("Running", AnimatorControllerParameterType.Bool);
+            animatorController.AddParameter("Crouching", AnimatorControllerParameterType.Bool);
+            animatorController.AddParameter("Jumping", AnimatorControllerParameterType.Bool);
+            animatorController.AddParameter("Falling", AnimatorControllerParameterType.Bool);
             var machine = animatorController.layers[0].stateMachine;
 
             AnimatorState AddState(string name, AnimationClip clip, Vector3 position)
@@ -233,7 +241,9 @@ namespace UnderGrind.Editor
             var walkState = AddState("Walk", walk, new Vector3(500, 100));
             var runState = AddState("Run", run, new Vector3(750, 100));
             var jumpState = AddState("Jump", jump, new Vector3(500, 300));
-            machine.defaultState = idleState ?? walkState ?? runState ?? jumpState;
+            var crouchIdleState = AddState("Crouch Idle", crouchIdle, new Vector3(250, 500));
+            var crouchWalkState = AddState("Crouch Walk", crouchWalk, new Vector3(500, 500));
+            machine.defaultState = idleState ?? walkState ?? runState ?? crouchIdleState ?? jumpState;
 
             void Transition(AnimatorState from, AnimatorState to, string parameter, AnimatorConditionMode mode, float threshold = 0f)
             {
@@ -251,14 +261,35 @@ namespace UnderGrind.Editor
             Transition(runState, walkState, "Speed", AnimatorConditionMode.Less, 1.6f);
             Transition(runState, idleState, "Speed", AnimatorConditionMode.Less, 0.1f);
 
+            foreach (var state in new[] { idleState, walkState, runState })
+            {
+                if (state == null || crouchIdleState == null) continue;
+                var toCrouch = state.AddTransition(crouchIdleState);
+                toCrouch.hasExitTime = false;
+                toCrouch.duration = 0.12f;
+                toCrouch.AddCondition(AnimatorConditionMode.If, 0f, "Crouching");
+            }
+
+            if (crouchIdleState != null && crouchWalkState != null)
+            {
+                var startMove = crouchIdleState.AddTransition(crouchWalkState);
+                startMove.hasExitTime = false;
+                startMove.duration = 0.12f;
+                startMove.AddCondition(AnimatorConditionMode.Greater, 0.1f, "Speed");
+                var stopMove = crouchWalkState.AddTransition(crouchIdleState);
+                stopMove.hasExitTime = false;
+                stopMove.duration = 0.12f;
+                stopMove.AddCondition(AnimatorConditionMode.Less, 0.1f, "Speed");
+            }
+
             if (jumpState != null)
             {
                 var any = machine.AddAnyStateTransition(jumpState);
                 any.hasExitTime = false;
                 any.duration = 0.08f;
                 any.canTransitionToSelf = false;
-                any.AddCondition(AnimatorConditionMode.IfNot, 0f, "Grounded");
-                foreach (var state in new[] { idleState, walkState, runState })
+                any.AddCondition(AnimatorConditionMode.If, 0f, "Jumping");
+                foreach (var state in new[] { idleState, walkState, runState, crouchIdleState, crouchWalkState })
                     Transition(jumpState, state, "Grounded", AnimatorConditionMode.If);
             }
 
