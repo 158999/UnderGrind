@@ -96,15 +96,18 @@ namespace UnderGrind.Editor
 
         private static GameObject ResolveHumanModel()
         {
-            var mainAsset = AssetDatabase.LoadAssetAtPath<GameObject>(HumanModelPath);
-            if (mainAsset != null && mainAsset.GetComponentInChildren<Renderer>(true) != null)
-                return mainAsset;
-
-            // Select only imported model roots. Selecting an arbitrary child can instantiate
-            // just a torso/limb and make the imported character appear incomplete.
+            // Inspect the imported hierarchy, but only consider subtrees with human-sized
+            // bounds. This avoids choosing the whole Blender scene (which may contain more
+            // than one body) or an isolated limb/torso as the player model.
             var candidates = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<GameObject>()
-                .Where(x => x.transform.parent == null && x.GetComponentInChildren<Renderer>(true) != null)
-                .Distinct().ToList();
+                .SelectMany(root => root.GetComponentsInChildren<Transform>(true).Select(t => t.gameObject))
+                .Distinct()
+                .Where(x => x.GetComponentInChildren<Renderer>(true) != null)
+                .Where(x =>
+                {
+                    var size = GetCombinedBounds(x).size;
+                    return size.y >= 1.3f && size.y <= 2.2f;
+                }).ToList();
             if (candidates.Count == 0) return null;
 
             int Score(GameObject item)
