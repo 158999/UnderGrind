@@ -211,10 +211,9 @@ namespace UnderGrind.Editor
             var animator = model.GetComponentInChildren<Animator>();
             var avatar = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<Avatar>().FirstOrDefault();
             if (animator == null && avatar != null)
-            {
                 animator = model.AddComponent<Animator>();
+            if (animator != null && animator.avatar == null && avatar != null)
                 animator.avatar = avatar;
-            }
             if (animator == null || animator.avatar == null)
             {
                 AssetDatabase.DeleteAsset(controllerPath);
