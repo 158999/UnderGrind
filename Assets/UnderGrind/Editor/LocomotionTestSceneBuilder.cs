@@ -93,22 +93,34 @@ namespace UnderGrind.Editor
         private static GameObject ResolveHumanModel()
         {
             var candidates = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<GameObject>()
+                .SelectMany(root => root.GetComponentsInChildren<Transform>(true).Select(t => t.gameObject))
+                .Distinct()
                 .Where(x => x.GetComponentInChildren<Renderer>(true) != null).ToList();
             if (candidates.Count == 0) return null;
 
             int Score(GameObject item)
             {
                 var name = item.name.ToLowerInvariant();
+                var bounds = GetCombinedBounds(item);
                 var score = 0;
-                if (name.Contains("male") || name.Contains("man")) score += 100;
+                if ((name.Contains("male") && !name.Contains("female")) ||
+                    (name.Contains("man") && !name.Contains("human") && !name.Contains("woman")) ||
+                    name.Contains("maschio") || name.Contains("uomo")) score += 100;
                 if (name.Contains("human") || name.Contains("person") || name.Contains("character")) score += 35;
                 if (name.Contains("base")) score += 20;
-                if (name.Contains("female") || name.Contains("woman")) score -= 40;
+                if (name.Contains("female") || name.Contains("woman") || name.Contains("femmina")) score -= 40;
                 if (name.Contains("camera") || name.Contains("light")) score -= 1000;
+                if (bounds.size.y >= 1.3f && bounds.size.y <= 2.2f) score += 30;
+                if (bounds.size.x > 1f && bounds.size.y < 3f) score -= 60;
+                if (bounds.size.z > 1f && bounds.size.y < 3f) score -= 40;
                 return score;
             }
 
-            return candidates.OrderByDescending(Score).ThenByDescending(x => GetCombinedBounds(x).size.y).FirstOrDefault();
+            var selected = candidates.OrderByDescending(Score)
+                .ThenByDescending(x => GetCombinedBounds(x).size.y).FirstOrDefault();
+            if (selected != null)
+                Debug.Log("UnderGrind: candidato umano selezionato: " + selected.name + " | bounds " + GetCombinedBounds(selected).size);
+            return selected;
         }
 
         private static Bounds GetCombinedBounds(GameObject root)
@@ -144,7 +156,7 @@ namespace UnderGrind.Editor
             var walk = Find(new[] { "walk", "walking" });
             var run = Find(new[] { "run", "running" });
             var jump = Find(new[] { "jump" });
-            if (idle == null && walk == null && run == null && jump == null) return;
+            if (idle == null && walk == null && run == null) return;
 
             var controllerPath = GeneratedPath + "/LocomotionTest.controller";
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath) != null)
