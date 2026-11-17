@@ -10,7 +10,11 @@ Expected clip names (case-insensitive matching in the test-scene builder):
 - Crouch Idle / Crouching Idle
 - Crouch Walk
 
-Do not place the PINOC 441-bone `splat-skeleton-fbx` clips here for the current humanoid body workflow. Those are intended for the PINOC Splat Engine Generic rig and contain no mesh. For a conventional humanoid rig, use a clip source with a compatible humanoid Avatar or retarget clips after the final body rig has been accepted.
+PINOC exposes two distinct FBX families and they must not be confused:
+- `splat-skeleton-fbx`: 441-bone MetaHuman skeleton including facial bones, no mesh. Intended for the PINOC Splat Engine Generic rig with `com.viggle.splat-engine` 0.2.2+; not the conventional Humanoid retarget path.
+- `mixamo-fbx`: includes the X Bot mesh and Mixamo-named skeleton, intended for DCC tools and retargeting onto other humanoid rigs. This is the relevant candidate for the current UnderGrind body pipeline. The X Bot is a retarget source, not the player body.
+
+The six selected assets currently expose both families. None has yet been imported into this repository or retargeted onto the UnderGrind body rig.
 
 The scene builder currently searches clips embedded in `Assets/UnderGrind/Art/Source/humans.blend`. Imported clips in this folder are a planned extension; until that importer is wired, they are not automatically discovered.
 
@@ -24,4 +28,4 @@ PINOC curated library assets selected for evaluation (all taken at zero credits)
 - Crouching Idle: `7cd56394-0b47-4fa7-b951-6658d5ea3da6`
 - Crouch Walk Forward: `e4f5b9e6-381c-4227-88d4-94d6a0615df8`
 
-Their available Mixamo FBX exports include the X Bot mesh and Mixamo-named skeleton for general DCC retargeting. They are not yet included in this repository. Confirm the provider's applicable usage terms before redistributing or shipping any downloaded export.
+Their `mixamo-fbx` exports include the X Bot mesh and Mixamo-named skeleton for general DCC retargeting. Their `splat-skeleton-fbx` exports are armature-only 441-bone clips. Neither family is currently included in this repository. Confirm the provider's applicable usage terms before redistributing or shipping any downloaded export.
