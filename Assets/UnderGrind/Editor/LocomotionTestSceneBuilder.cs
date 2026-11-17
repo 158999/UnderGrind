@@ -24,21 +24,30 @@ namespace UnderGrind.Editor
 
             AssetDatabase.ImportAsset(HumanModelPath,
                 ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
-            var human = ResolveHumanModel();
-            if (human == null)
+            var maleSource = ResolveHumanModel("male");
+            var femaleSource = ResolveHumanModel("female");
+            if (maleSource == null || femaleSource == null)
             {
-                const string message = "Unity non ha importato alcun modello 3D utilizzabile da humans.blend. " +
+                const string message = "Unity deve importare entrambe le mesh 'male' e 'female' da humans.blend. " +
                     "La scena esistente non è stata modificata e non verrà creato un manichino sostitutivo. " +
-                    "Controlla la Console e Unity > Preferences > External Tools: Unity deve poter individuare Blender.";
+                    "Controlla la Console e Unity > Preferences > External Tools.";
                 Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
-                EditorUtility.DisplayDialog("Modello umano non disponibile", message, "OK");
+                EditorUtility.DisplayDialog("Modelli umani non disponibili", message, "OK");
+                return;
+            }
+
+            var malePrefab = CreateHumanPrefab(maleSource, "Human_Male", HumanLocomotionController.DefaultCharacterHeight);
+            var femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", 1.70f);
+            if (malePrefab == null || femalePrefab == null)
+            {
+                Debug.LogError("UnderGrind: impossibile generare entrambi i prefab dai modelli originali.");
                 return;
             }
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
             CreateCourse();
-            CreatePlayer(human);
+            CreatePlayer(malePrefab);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -72,8 +81,6 @@ namespace UnderGrind.Editor
             if (instance == null) instance = UnityEngine.Object.Instantiate(human);
             instance.name = "Human Base - imported from humans.blend";
             instance.transform.SetParent(visualRoot.transform, false);
-            FitModelToHeight(instance, HumanLocomotionController.DefaultCharacterHeight);
-            ApplyPlayerMaterial(instance);
             ConfigureAnimations(instance);
             Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
 
@@ -94,7 +101,23 @@ namespace UnderGrind.Editor
             player.AddComponent<LocomotionDebugOverlay>();
         }
 
-        private static GameObject ResolveHumanModel()
+        private static GameObject CreateHumanPrefab(GameObject source, string prefabName, float targetHeight)
+        {
+            var prefabPath = GeneratedPath + "/Prefabs/" + prefabName + ".prefab";
+            EnsureFolder(GeneratedPath + "/Prefabs");
+            var temporary = UnityEngine.Object.Instantiate(source);
+            temporary.name = prefabName;
+            FitModelToHeight(temporary, targetHeight);
+            var prefab = PrefabUtility.SaveAsPrefabAsset(temporary, prefabPath);
+            UnityEngine.Object.DestroyImmediate(temporary);
+            if (prefab == null)
+                Debug.LogError("UnderGrind: salvataggio prefab fallito: " + prefabPath);
+            else
+                Debug.Log("UnderGrind: prefab creato: " + prefabPath + " | altezza " + targetHeight + " m");
+            return prefab;
+        }
+
+        private static GameObject ResolveHumanModel(string sex)
         {
             // Inspect the imported hierarchy, but only consider subtrees with human-sized
             // bounds. This avoids choosing the whole Blender scene (which may contain more
@@ -110,25 +133,27 @@ namespace UnderGrind.Editor
                 }).ToList();
             if (candidates.Count == 0) return null;
 
+            bool MatchesSex(GameObject item)
+            {
+                var name = item.name.ToLowerInvariant();
+                if (sex == "female")
+                    return name == "female" || name.Contains("female") || name.Contains("woman") || name.Contains("femmina");
+                return name == "male" || (name.Contains("male") && !name.Contains("female")) ||
+                    name.Contains("maschio") || name.Contains("uomo");
+            }
+
             int Score(GameObject item)
             {
                 var name = item.name.ToLowerInvariant();
+                if (!MatchesSex(item)) return int.MinValue;
                 var bounds = GetCombinedBounds(item);
-                var score = 0;
-                if ((name.Contains("male") && !name.Contains("female")) ||
-                    (name.Contains("man") && !name.Contains("human") && !name.Contains("woman")) ||
-                    name.Contains("maschio") || name.Contains("uomo")) score += 100;
-                if (name.Contains("human") || name.Contains("person") || name.Contains("character")) score += 35;
-                if (name.Contains("base")) score += 20;
-                if (name.Contains("female") || name.Contains("woman") || name.Contains("femmina")) score -= 40;
-                if (name.Contains("camera") || name.Contains("light")) score -= 1000;
-                if (bounds.size.y >= 1.3f && bounds.size.y <= 2.2f) score += 30;
-                if (bounds.size.x > 1f && bounds.size.y < 3f) score -= 60;
-                if (bounds.size.z > 1f && bounds.size.y < 3f) score -= 40;
+                var score = name == sex ? 1000 : 100;
+                if (name.Contains("human") || name.Contains("person") || name.Contains("character")) score += 20;
+                if (bounds.size.y >= 0.5f && bounds.size.y <= 4f) score += 20;
                 return score;
             }
 
-            var selected = candidates.OrderByDescending(Score)
+            var selected = candidates.Where(MatchesSex).OrderByDescending(Score)
                 .ThenByDescending(x => GetCombinedBounds(x).size.y).FirstOrDefault();
             if (selected != null)
                 Debug.Log("UnderGrind: candidato umano selezionato: " + selected.name + " | bounds " + GetCombinedBounds(selected).size);
