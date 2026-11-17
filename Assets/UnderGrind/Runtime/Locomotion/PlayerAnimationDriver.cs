@@ -21,7 +21,9 @@ namespace UnderGrind.Locomotion
         private static readonly int FallingHash = Animator.StringToHash("Falling");
 
         [SerializeField] private Animator animator;
-        private readonly HashSet<int> _availableParameters = new HashSet<int>();
+        private readonly Dictionary<int, AnimatorControllerParameterType> _availableParameters =
+            new Dictionary<int, AnimatorControllerParameterType>();
+        private RuntimeAnimatorController _cachedController;
         private int _parameterCount = -1;
 
         public Animator Animator => animator;
@@ -44,7 +46,8 @@ namespace UnderGrind.Locomotion
             ResolveAnimator();
             if (animator == null) return;
             if (animator.applyRootMotion) animator.applyRootMotion = false;
-            if (animator.parameters.Length != _parameterCount) RefreshParameters();
+            if (animator.runtimeAnimatorController != _cachedController ||
+                animator.parameters.Length != _parameterCount) RefreshParameters();
 
             SetFloat(SpeedHash, speed);
             SetFloat(MoveXHash, moveInput.x);
@@ -60,7 +63,8 @@ namespace UnderGrind.Locomotion
         private void ResolveAnimator()
         {
             if (animator == null) animator = GetComponentInChildren<Animator>(true);
-            if (animator != null && animator.parameters.Length != _parameterCount)
+            if (animator != null && (animator.runtimeAnimatorController != _cachedController ||
+                animator.parameters.Length != _parameterCount))
                 RefreshParameters();
         }
 
@@ -69,24 +73,30 @@ namespace UnderGrind.Locomotion
             _availableParameters.Clear();
             if (animator == null)
             {
+                _cachedController = null;
                 _parameterCount = 0;
                 return;
             }
 
             var parameters = animator.parameters;
+            _cachedController = animator.runtimeAnimatorController;
             _parameterCount = parameters.Length;
             foreach (var parameter in parameters)
-                _availableParameters.Add(parameter.nameHash);
+                _availableParameters[parameter.nameHash] = parameter.type;
         }
 
         private void SetFloat(int hash, float value)
         {
-            if (_availableParameters.Contains(hash)) animator.SetFloat(hash, value);
+            if (_availableParameters.TryGetValue(hash, out var type) &&
+                type == AnimatorControllerParameterType.Float)
+                animator.SetFloat(hash, value);
         }
 
         private void SetBool(int hash, bool value)
         {
-            if (_availableParameters.Contains(hash)) animator.SetBool(hash, value);
+            if (_availableParameters.TryGetValue(hash, out var type) &&
+                type == AnimatorControllerParameterType.Bool)
+                animator.SetBool(hash, value);
         }
     }
 }
