@@ -108,5 +108,30 @@ namespace UnderGrind.Tests
             }
             yield return null;
         }
+
+        [UnityTest]
+        public IEnumerator VisualRigRefreshDoesNotLoseOriginalRendererState()
+        {
+            var player = new GameObject("Visual rig refresh test");
+            var head = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            try
+            {
+                head.name = "Head Mesh";
+                head.transform.SetParent(player.transform, false);
+                var rig = player.AddComponent<PlayerVisualRig>();
+                yield return null;
+
+                rig.SetThirdPerson(false);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
+                rig.RefreshRenderers();
+                rig.SetThirdPerson(true);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.True);
+            }
+            finally
+            {
+                Object.Destroy(player);
+            }
+            yield return null;
+        }
     }
 }
