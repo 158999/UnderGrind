@@ -128,7 +128,8 @@ namespace UnderGrind.Editor
             if (initial.size.y < 0.05f) return;
             model.transform.localScale *= targetHeight / initial.size.y;
             var fitted = GetCombinedBounds(model);
-            model.transform.position += new Vector3(-fitted.center.x, -fitted.min.y, -fitted.center.z);
+            var parentPosition = model.transform.parent != null ? model.transform.parent.position : Vector3.zero;
+            model.transform.position += new Vector3(parentPosition.x - fitted.center.x, parentPosition.y - fitted.min.y, parentPosition.z - fitted.center.z);
         }
 
         private static void ConfigureAnimations(GameObject model)
@@ -146,6 +147,8 @@ namespace UnderGrind.Editor
             if (idle == null && walk == null && run == null && jump == null) return;
 
             var controllerPath = GeneratedPath + "/LocomotionTest.controller";
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath) != null)
+                AssetDatabase.DeleteAsset(controllerPath);
             var animatorController = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
             animatorController.AddParameter("Speed", AnimatorControllerParameterType.Float);
             animatorController.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
@@ -239,8 +242,18 @@ namespace UnderGrind.Editor
 
         private static Material MakeMaterial(string name, Color color)
         {
-            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            return new Material(shader) { name = name, color = color };
+            var safeName = string.Concat(name.Select(c => char.IsLetterOrDigit(c) ? c : '_'));
+            var path = GeneratedPath + "/" + safeName + ".mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+                material = new Material(shader) { name = name };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            material.color = color;
+            EditorUtility.SetDirty(material);
+            return material;
         }
 
         private static void CreateCourse()
