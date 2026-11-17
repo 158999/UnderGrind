@@ -22,10 +22,23 @@ namespace UnderGrind.Editor
             EnsureFolder("Assets/UnderGrind/Art/Source");
             EnsureFolder(GeneratedPath);
 
+            AssetDatabase.ImportAsset(HumanModelPath,
+                ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+            var human = ResolveHumanModel();
+            if (human == null)
+            {
+                const string message = "Unity non ha importato alcun modello 3D utilizzabile da humans.blend. " +
+                    "La scena esistente non è stata modificata e non verrà creato un manichino sostitutivo. " +
+                    "Controlla la Console e Unity > Preferences > External Tools: Unity deve poter individuare Blender.";
+                Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
+                EditorUtility.DisplayDialog("Modello umano non disponibile", message, "OK");
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
             CreateCourse();
-            CreatePlayer();
+            CreatePlayer(human);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -42,7 +55,7 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static void CreatePlayer()
+        private static void CreatePlayer(GameObject human)
         {
             var player = new GameObject("Player - Human 1.78m");
             player.transform.position = new Vector3(0f, 0.05f, 0f);
@@ -55,22 +68,13 @@ namespace UnderGrind.Editor
 
             var visualRoot = new GameObject("Visual");
             visualRoot.transform.SetParent(player.transform, false);
-            var human = ResolveHumanModel();
-            if (human != null)
-            {
-                var instance = (GameObject)PrefabUtility.InstantiatePrefab(human);
-                if (instance == null) instance = UnityEngine.Object.Instantiate(human);
-                instance.name = "Human Base - imported from humans.blend";
-                instance.transform.SetParent(visualRoot.transform, false);
-                FitModelToHeight(instance, HumanLocomotionController.DefaultCharacterHeight);
-                ConfigureAnimations(instance);
-                Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
-            }
-            else
-            {
-                CreateFallbackHumanoid(visualRoot.transform);
-                Debug.LogWarning("UnderGrind: humans.blend non è stato importato da Unity. Creato un manichino procedurale temporaneo.");
-            }
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(human);
+            if (instance == null) instance = UnityEngine.Object.Instantiate(human);
+            instance.name = "Human Base - imported from humans.blend";
+            instance.transform.SetParent(visualRoot.transform, false);
+            FitModelToHeight(instance, HumanLocomotionController.DefaultCharacterHeight);
+            ConfigureAnimations(instance);
+            Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
 
             var pivot = new GameObject("View Pivot").transform;
             pivot.SetParent(player.transform, false);
@@ -91,10 +95,15 @@ namespace UnderGrind.Editor
 
         private static GameObject ResolveHumanModel()
         {
+            var mainAsset = AssetDatabase.LoadAssetAtPath<GameObject>(HumanModelPath);
+            if (mainAsset != null && mainAsset.GetComponentInChildren<Renderer>(true) != null)
+                return mainAsset;
+
+            // Select only imported model roots. Selecting an arbitrary child can instantiate
+            // just a torso/limb and make the imported character appear incomplete.
             var candidates = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<GameObject>()
-                .SelectMany(root => root.GetComponentsInChildren<Transform>(true).Select(t => t.gameObject))
-                .Distinct()
-                .Where(x => x.GetComponentInChildren<Renderer>(true) != null).ToList();
+                .Where(x => x.transform.parent == null && x.GetComponentInChildren<Renderer>(true) != null)
+                .Distinct().ToList();
             if (candidates.Count == 0) return null;
 
             int Score(GameObject item)
