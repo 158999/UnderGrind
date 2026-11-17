@@ -1,7 +1,7 @@
 {
   "name": "UnderGrind.Runtime",
   "rootNamespace": "UnderGrind",
-  "references": [],
+  "references": ["Unity.InputSystem"],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
