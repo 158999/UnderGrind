@@ -17,7 +17,7 @@ The jump apex is a gameplay tuning parameter, not a claim of measured human biom
 
 ## Runtime responsibilities
 
-`HumanLocomotionController` owns movement and the CharacterController. It supports keyboard, mouse and gamepad; acceleration/deceleration; buffered jump and coyote time; crouch clearance; first-/third-person camera; and Animator parameter output. Root motion is disabled so the Animator cannot apply a second displacement.
+`HumanLocomotionController` owns movement and the CharacterController. It supports keyboard, mouse and gamepad; acceleration/deceleration; buffered jump and coyote time; crouch clearance; and first-/third-person camera. `PlayerVisualRig` owns renderer visibility: head renderers are hidden in first person, explicitly marked first-person-only renderers are hidden in third person, and all other renderers preserve their original enabled state. Assign renderer arrays explicitly on production prefabs; name discovery is only a fallback. `PlayerAnimationDriver` writes only parameters actually present in the assigned Animator Controller and disables root motion so the Animator cannot apply a second displacement.
 
 First person hides the head renderer (the head must be a separate renderer) while retaining body and arm renderers. Third person restores the head and places the camera behind the player with a sphere-cast obstruction check. This is a first implementation: renderer-name matching is a temporary convention and should become an explicit body-rig visibility component once the final head/eye/face hierarchy is verified.
 
@@ -36,7 +36,7 @@ First person hides the head renderer (the head must be a separate renderer) whil
 
 ## Animator parameters
 
-The controller writes `Speed` (m/s), `MoveX`, `MoveY`, `Grounded`, `VerticalSpeed`, `Running`, `Crouching`, `Jumping` and `Falling`. Parameters not present on a controller are ignored by Unity's Animator API only if the corresponding parameter exists; before wiring a final controller, verify the declared parameter set. Use a locomotion blend tree for idle/walk/run, a crouch blend tree for crouch idle/walk and transitions driven by grounded/vertical speed.
+`PlayerAnimationDriver` can write `Speed` (m/s), `MoveX`, `MoveY`, `Grounded`, `VerticalSpeed`, `Running`, `Crouching`, `Jumping` and `Falling`. It checks the Animator parameter list before writing, so a partially configured controller does not receive missing-parameter writes. The test-scene builder creates matching parameters and idle/walk/run/jump/crouch states when compatible clips and an Avatar are available. It does not fabricate animation clips or an Avatar when the Blender source lacks them.
 
 ## Asset pipeline
 
@@ -44,4 +44,4 @@ The selected PINOC library motions are Standing Idle, Walking, Running, Jump, Cr
 
 ## Verification boundary
 
-The source changes and tests are committed to the feature branch. Unity 6000.6.7f1 has not been launched in this session. Script compilation, asset import, Play Mode, camera occlusion, animation retargeting, hand visibility and visual quality remain unverified. Do not mark them passed until Unity executes the tests and the scene is inspected.
+The current source meshes are still static, unrigged geometry. The earlier Blendstra rig-generation attempt failed during source-object selection and did not save a rigged version; the source asset remains unchanged. PINOC motions remain external library assets and have not been imported or retargeted. The player code, renderer visibility policy, Animator bridge and Play Mode tests are committed to `main`. No Unity Editor was available to me for this turn, so these new changes have not been compiled or executed here. The user's previously reported standalone/EditMode/PlayMode passes apply to the merged baseline, not to commits added after those runs.
