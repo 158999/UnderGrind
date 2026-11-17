@@ -6,38 +6,25 @@ using UnityEngine;
 
 namespace UnderGrind.Editor
 {
+    [InitializeOnLoad]
     public static class LocomotionTestResultsRunner
     {
         private const string ResultsFolderKey = "UnderGrind.LocomotionTestResultsFolder";
-        private const string RunActiveKey = "UnderGrind.LocomotionTests.RunActive";
-        private const string RunModeKey = "UnderGrind.LocomotionTests.RunMode";
-        private const string RunDirectoryKey = "UnderGrind.LocomotionTests.RunDirectory";
         private static TestRunnerApi _runner;
-
-        static LocomotionTestResultsRunner()
-        {
-            // PlayMode runs can reload the AppDomain. Restore the callback after that reload
-            // so the final report is still written when the test run completes.
-            EditorApplication.delayCall += RestoreCallbackAfterReload;
-        }
-
-        private static void RestoreCallbackAfterReload()
-        {
-            if (!EditorPrefs.GetBool(RunActiveKey, false) || _runner != null)
-                return;
-
-            var mode = (TestMode)EditorPrefs.GetInt(RunModeKey, (int)TestMode.EditMode);
-            var directory = EditorPrefs.GetString(RunDirectoryKey, string.Empty);
-            if (string.IsNullOrEmpty(directory))
-                return;
-
-            _runner = ScriptableObject.CreateInstance<TestRunnerApi>();
-            _runner.RegisterCallbacks(new ResultsCallback(mode, directory));
-        }
+        private static ResultsCallback _callbacks;
+        private static bool _callbacksRegistered;
 
         private static string ProjectRoot => Directory.GetParent(Application.dataPath).FullName;
         private static string RelativeResultsFolder =>
             EditorPrefs.GetString(ResultsFolderKey, "TestResults/UnderGrind");
+
+        static LocomotionTestResultsRunner()
+        {
+            // Register globally so runs started from either the Test Runner window or
+            // the UnderGrind menu are exported. InitializeOnLoad restores this after
+            // the AppDomain reload that can occur during PlayMode tests.
+            EditorApplication.delayCall += EnsureCallbacksRegistered;
+        }
 
         [MenuItem("UnderGrind/Tests/Run EditMode Tests + Save Results")]
         public static void RunEditModeTests() => Run(TestMode.EditMode);
@@ -69,41 +56,31 @@ namespace UnderGrind.Editor
             Debug.Log("UnderGrind: cartella risultati test impostata su " + relative);
         }
 
+        private static void EnsureCallbacksRegistered()
+        {
+            if (_callbacksRegistered)
+                return;
+
+            _runner ??= ScriptableObject.CreateInstance<TestRunnerApi>();
+            _callbacks ??= new ResultsCallback();
+            _runner.RegisterCallbacks(_callbacks);
+            _callbacksRegistered = true;
+        }
+
         private static void Run(TestMode mode)
         {
-            if (_runner != null)
-            {
-                EditorUtility.DisplayDialog("Test già in esecuzione",
-                    "Attendi il completamento della sessione di test corrente.", "OK");
-                return;
-            }
-
+            EnsureCallbacksRegistered();
             var outputDirectory = Path.GetFullPath(Path.Combine(ProjectRoot, RelativeResultsFolder));
             Directory.CreateDirectory(outputDirectory);
-
-            EditorPrefs.SetInt(RunModeKey, (int)mode);
-            EditorPrefs.SetString(RunDirectoryKey, outputDirectory);
-            EditorPrefs.SetBool(RunActiveKey, true);
-
-            _runner = ScriptableObject.CreateInstance<TestRunnerApi>();
-            _runner.RegisterCallbacks(new ResultsCallback(mode, outputDirectory));
             _runner.Execute(new ExecutionSettings(new Filter { testMode = mode }));
-
-            Debug.Log($"UnderGrind: avviati test {mode}. Risultati previsti in: {outputDirectory}");
+            Debug.Log($"UnderGrind: avviati test {mode}. I risultati saranno salvati automaticamente in: {outputDirectory}");
         }
 
         private sealed class ResultsCallback : ICallbacks
         {
-            private readonly TestMode _mode;
-            private readonly string _directory;
+            private TestMode _mode = TestMode.EditMode;
 
-            public ResultsCallback(TestMode mode, string directory)
-            {
-                _mode = mode;
-                _directory = directory;
-            }
-
-            public void RunStarted(ITestAdaptor testsToRun) { }
+            public void RunStarted(ITestAdaptor testsToRun) => _mode = testsToRun.TestMode;
             public void TestStarted(ITestAdaptor test) { }
             public void TestFinished(ITestResultAdaptor result) { }
 
@@ -111,13 +88,14 @@ namespace UnderGrind.Editor
             {
                 try
                 {
+                    var directory = Path.GetFullPath(Path.Combine(ProjectRoot, RelativeResultsFolder));
+                    Directory.CreateDirectory(directory);
                     var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                     var prefix = _mode == TestMode.EditMode ? "EditMode" : "PlayMode";
                     var xml = result.ToXml().OuterXml;
-                    var timestampedPath = Path.Combine(_directory, $"{prefix}_{timestamp}.xml");
-                    var latestPath = Path.Combine(_directory, $"{prefix}_Latest.xml");
+                    var timestampedPath = Path.Combine(directory, $"{prefix}_{timestamp}.xml");
                     File.WriteAllText(timestampedPath, xml);
-                    File.WriteAllText(latestPath, xml);
+                    File.WriteAllText(Path.Combine(directory, $"{prefix}_Latest.xml"), xml);
 
                     var summary =
                         $"UnderGrind {_mode} test results{Environment.NewLine}" +
@@ -129,23 +107,15 @@ namespace UnderGrind.Editor
                         $"Total: {result.TotalCount}{Environment.NewLine}" +
                         $"Result: {result.ResultState}{Environment.NewLine}" +
                         $"XML: {timestampedPath}{Environment.NewLine}";
-                    File.WriteAllText(Path.Combine(_directory, $"{prefix}_{timestamp}.txt"), summary);
+                    File.WriteAllText(Path.Combine(directory, $"{prefix}_{timestamp}.txt"), summary);
 
                     Debug.Log($"UnderGrind: test {_mode} completati. Passati {result.PassCount}, falliti {result.FailCount}, " +
                               $"saltati {result.SkipCount}. Report: {timestampedPath}");
-                    EditorPrefs.SetBool(RunActiveKey, false);
                     EditorApplication.delayCall += () => AssetDatabase.Refresh();
                 }
                 catch (Exception exception)
                 {
                     Debug.LogError("UnderGrind: impossibile salvare i risultati dei test. " + exception);
-                }
-                finally
-                {
-                    EditorPrefs.SetBool(RunActiveKey, false);
-                    if (_runner != null)
-                        UnityEngine.Object.DestroyImmediate(_runner);
-                    _runner = null;
                 }
             }
         }
