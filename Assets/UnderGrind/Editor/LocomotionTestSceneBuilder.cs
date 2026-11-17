@@ -205,13 +205,15 @@ namespace UnderGrind.Editor
             if (clips.Length == 0) return;
             AnimationClip Find(string[] tokens) => clips.FirstOrDefault(c => tokens.Any(t =>
                 c.name.IndexOf(t, StringComparison.OrdinalIgnoreCase) >= 0));
+            AnimationClip FindAll(string[] tokens) => clips.FirstOrDefault(c => tokens.All(t =>
+                c.name.IndexOf(t, StringComparison.OrdinalIgnoreCase) >= 0));
 
             var idle = Find(new[] { "idle", "standing" });
             var walk = Find(new[] { "walk", "walking" });
             var run = Find(new[] { "run", "running" });
             var jump = Find(new[] { "jump" });
-            var crouchIdle = Find(new[] { "crouch", "idle" });
-            var crouchWalk = Find(new[] { "crouch", "walk" });
+            var crouchIdle = FindAll(new[] { "crouch", "idle" });
+            var crouchWalk = FindAll(new[] { "crouch", "walk" });
             if (idle == null && walk == null && run == null) return;
 
             var controllerPath = GeneratedPath + "/LocomotionTest.controller";
