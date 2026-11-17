@@ -135,6 +135,47 @@ namespace UnderGrind.Tests
         }
 
         [UnityTest]
+        public IEnumerator VisualRigBindsStableGeneratedPartNames()
+        {
+            var player = new GameObject("Generated rig binding test");
+            var head = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var fpArms = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var unrelatedHair = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            try
+            {
+                head.name = "UG_Male_Head";
+                body.name = "UG_Male_Body";
+                fpArms.name = "UG_Male_FP_Arms";
+                unrelatedHair.name = "UG_Male_Hair";
+                head.transform.SetParent(player.transform, false);
+                body.transform.SetParent(player.transform, false);
+                fpArms.transform.SetParent(player.transform, false);
+                unrelatedHair.transform.SetParent(player.transform, false);
+
+                var rig = player.AddComponent<PlayerVisualRig>();
+                yield return null;
+
+                Assert.That(rig.ConfigureFromHierarchy(player.transform), Is.True);
+                rig.SetThirdPerson(false);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(fpArms.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(unrelatedHair.GetComponent<Renderer>().enabled, Is.True);
+
+                rig.SetThirdPerson(true);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(fpArms.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(unrelatedHair.GetComponent<Renderer>().enabled, Is.True);
+            }
+            finally
+            {
+                Object.Destroy(player);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator ExplicitVisualRigBindingsOverrideNameDiscovery()
         {
             var player = new GameObject("Explicit visual rig test");
