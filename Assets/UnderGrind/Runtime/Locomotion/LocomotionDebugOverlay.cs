@@ -42,7 +42,9 @@ namespace UnderGrind.Locomotion
                 contentHeight += _style.CalcHeight(new GUIContent(label), contentWidth) + 2f;
 
             var panelHeight = contentHeight + 22f;
-            var panel = new Rect(safe.xMin + 12f, safe.yMax - panelHeight - 12f, width, panelHeight);
+            var guiTop = Screen.height - safe.yMax;
+            var guiBottom = Screen.height - safe.yMin;
+            var panel = new Rect(safe.xMin + 12f, guiTop + 12f, width, panelHeight);
             GUI.Box(panel, GUIContent.none, GUI.skin.box);
 
             var y = panel.y + 9f;
@@ -59,7 +61,7 @@ namespace UnderGrind.Locomotion
             const string controls = "WASD / frecce: muovi   SHIFT: corri   SPAZIO: salta   F5: visuale   ESC: mouse";
             var hintWidth = Mathf.Max(1f, safe.width - 24f);
             var hintHeight = _hint.CalcHeight(new GUIContent(controls), hintWidth);
-            GUI.Label(new Rect(safe.xMin + 12f, safe.yMin + 10f, hintWidth, hintHeight), controls, _hint);
+            GUI.Label(new Rect(safe.xMin + 12f, guiBottom - hintHeight - 10f, hintWidth, hintHeight), controls, _hint);
         }
 
         private void EnsureStyles(float scale)
