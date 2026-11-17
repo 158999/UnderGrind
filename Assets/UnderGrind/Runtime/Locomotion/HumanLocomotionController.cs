@@ -40,7 +40,8 @@ namespace UnderGrind.Locomotion
         [SerializeField] private LayerMask cameraCollisionLayers = ~0;
 
         private CharacterController _characterController;
-        private Animator _animator;
+        private PlayerAnimationDriver _animationDriver;
+        private PlayerVisualRig _visualRig;
         private float _verticalVelocity;
         private float _pitch;
         private float _currentHeight;
@@ -80,18 +81,24 @@ namespace UnderGrind.Locomotion
         {
             if (_thirdPerson == thirdPerson) return;
             _thirdPerson = thirdPerson;
+            if (_visualRig == null) _visualRig = GetComponentInChildren<PlayerVisualRig>(true);
+            if (_visualRig != null) _visualRig.SetThirdPerson(_thirdPerson);
             ApplyCameraMode();
         }
 
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
-            _animator = GetComponentInChildren<Animator>(true);
+            _animationDriver = GetComponent<PlayerAnimationDriver>();
+            if (_animationDriver == null) _animationDriver = gameObject.AddComponent<PlayerAnimationDriver>();
+            _visualRig = GetComponentInChildren<PlayerVisualRig>(true);
+            if (_visualRig == null) _visualRig = gameObject.AddComponent<PlayerVisualRig>();
             if (playerCamera == null) playerCamera = GetComponentInChildren<Camera>(true);
             if (viewPivot == null && playerCamera != null) viewPivot = playerCamera.transform.parent;
             _currentHeight = characterHeight;
             ApplyCharacterDimensions();
             SetCursorLocked(playerCamera != null);
+            _visualRig.SetThirdPerson(_thirdPerson);
             ApplyCameraMode();
         }
 
@@ -249,29 +256,17 @@ namespace UnderGrind.Locomotion
                 1f - Mathf.Exp(-14f * Time.deltaTime));
             playerCamera.transform.localRotation = Quaternion.identity;
             playerCamera.nearClipPlane = 0.04f;
-            foreach (var renderer in GetComponentsInChildren<Renderer>(true))
-            {
-                var n = renderer.name.ToLowerInvariant();
-                if (n.Contains("head") || n.Contains("face") || n.Contains("hair") ||
-                    n.Contains("eye") || n.Contains("skull") || n.Contains("jaw"))
-                    renderer.enabled = _thirdPerson;
-            }
+
         }
 
         private void UpdateAnimator()
         {
-            if (_animator == null) _animator = GetComponentInChildren<Animator>(true);
-            if (_animator == null) return;
-            if (_animator.applyRootMotion) _animator.applyRootMotion = false;
-            _animator.SetFloat("Speed", _measuredSpeed);
-            _animator.SetFloat("MoveX", _moveInput.x);
-            _animator.SetFloat("MoveY", _moveInput.y);
-            _animator.SetBool("Grounded", _characterController.isGrounded);
-            _animator.SetFloat("VerticalSpeed", _verticalVelocity);
-            _animator.SetBool("Running", IsRunning);
-            _animator.SetBool("Crouching", IsCrouching);
-            _animator.SetBool("Jumping", !_characterController.isGrounded && _verticalVelocity > 0.05f);
-            _animator.SetBool("Falling", !_characterController.isGrounded && _verticalVelocity <= 0.05f);
+            if (_animationDriver == null) _animationDriver = GetComponent<PlayerAnimationDriver>();
+            if (_animationDriver == null) return;
+            var grounded = _characterController.isGrounded;
+            _animationDriver.Apply(_measuredSpeed, _moveInput, grounded, _verticalVelocity,
+                IsRunning, IsCrouching, !grounded && _verticalVelocity > 0.05f,
+                !grounded && _verticalVelocity <= 0.05f);
         }
 
         private void ApplyCameraMode()
