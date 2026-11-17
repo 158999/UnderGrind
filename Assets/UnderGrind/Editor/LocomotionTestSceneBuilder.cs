@@ -197,9 +197,21 @@ namespace UnderGrind.Editor
             }
 
             var animator = model.GetComponentInChildren<Animator>();
-            if (animator == null) animator = model.AddComponent<Animator>();
+            var avatar = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<Avatar>().FirstOrDefault();
+            if (animator == null && avatar != null)
+            {
+                animator = model.AddComponent<Animator>();
+                animator.avatar = avatar;
+            }
+            if (animator == null || animator.avatar == null)
+            {
+                AssetDatabase.DeleteAsset(controllerPath);
+                Debug.LogWarning("UnderGrind: clip trovate, ma nessun Avatar valido nel modello. Animazioni non collegate.");
+                return;
+            }
             animator.runtimeAnimatorController = animatorController;
             animator.applyRootMotion = false;
+            animator.SetBool("Grounded", true);
         }
 
         private static void CreateFallbackHumanoid(Transform parent)
