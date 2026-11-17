@@ -104,7 +104,7 @@ namespace UnderGrind.Editor
                         $"Failed: {result.FailCount}{Environment.NewLine}" +
                         $"Skipped: {result.SkipCount}{Environment.NewLine}" +
                         $"Inconclusive: {result.InconclusiveCount}{Environment.NewLine}" +
-                        $"Total: {result.TotalCount}{Environment.NewLine}" +
+                        $"Total: {result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount}{Environment.NewLine}" +
                         $"Result: {result.ResultState}{Environment.NewLine}" +
                         $"XML: {timestampedPath}{Environment.NewLine}";
                     File.WriteAllText(Path.Combine(directory, $"{prefix}_{timestamp}.txt"), summary);
