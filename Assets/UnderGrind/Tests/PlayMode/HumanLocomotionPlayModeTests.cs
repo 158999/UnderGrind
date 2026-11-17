@@ -133,5 +133,34 @@ namespace UnderGrind.Tests
             }
             yield return null;
         }
+
+        [UnityTest]
+        public IEnumerator ExplicitVisualRigBindingsOverrideNameDiscovery()
+        {
+            var player = new GameObject("Explicit visual rig test");
+            var explicitHead = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var unrelatedHair = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            try
+            {
+                explicitHead.name = "Head Mesh";
+                unrelatedHair.name = "Hair Accessory";
+                explicitHead.transform.SetParent(player.transform, false);
+                unrelatedHair.transform.SetParent(player.transform, false);
+                var rig = player.AddComponent<PlayerVisualRig>();
+                yield return null;
+
+                rig.Configure(new[] { explicitHead.GetComponent<Renderer>() },
+                    System.Array.Empty<Renderer>());
+                rig.SetThirdPerson(false);
+
+                Assert.That(explicitHead.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(unrelatedHair.GetComponent<Renderer>().enabled, Is.True);
+            }
+            finally
+            {
+                Object.Destroy(player);
+            }
+            yield return null;
+        }
     }
 }
