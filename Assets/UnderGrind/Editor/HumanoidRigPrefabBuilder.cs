@@ -100,8 +100,8 @@ namespace UnderGrind.Editor
             }
 
             if (temporary.GetComponentsInChildren<Renderer>(true).All(x =>
-                    !x.name.Contains("_FP_Arms", StringComparison.OrdinalIgnoreCase) &&
-                    !x.name.Contains("_FP_Hands", StringComparison.OrdinalIgnoreCase)))
+                    x.name.IndexOf("_FP_Arms", StringComparison.OrdinalIgnoreCase) < 0 &&
+                    x.name.IndexOf("_FP_Hands", StringComparison.OrdinalIgnoreCase) < 0))
                 Debug.LogWarning("UnderGrind: " + prefabName +
                     " non contiene renderer FP dedicati; in prima persona verrà mostrato il corpo riggato.");
 
