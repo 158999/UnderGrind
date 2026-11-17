@@ -73,6 +73,7 @@ namespace UnderGrind.Editor
             instance.name = "Human Base - imported from humans.blend";
             instance.transform.SetParent(visualRoot.transform, false);
             FitModelToHeight(instance, HumanLocomotionController.DefaultCharacterHeight);
+            ApplyPlayerMaterial(instance);
             ConfigureAnimations(instance);
             Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
 
@@ -150,6 +151,23 @@ namespace UnderGrind.Editor
             var fitted = GetCombinedBounds(model);
             var parentPosition = model.transform.parent != null ? model.transform.parent.position : Vector3.zero;
             model.transform.position += new Vector3(parentPosition.x - fitted.center.x, parentPosition.y - fitted.min.y, parentPosition.z - fitted.center.z);
+        }
+
+        private static void ApplyPlayerMaterial(GameObject model)
+        {
+            var playerMaterial = MakeMaterial("Human Base", new Color(0.43f, 0.61f, 0.68f));
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+            {
+                var materials = renderer.sharedMaterials;
+                if (materials.Length == 0)
+                    renderer.sharedMaterial = playerMaterial;
+                else
+                {
+                    for (var i = 0; i < materials.Length; i++)
+                        materials[i] = playerMaterial;
+                    renderer.sharedMaterials = materials;
+                }
+            }
         }
 
         private static void ConfigureAnimations(GameObject model)
