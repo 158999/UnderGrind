@@ -9,7 +9,31 @@ namespace UnderGrind.Editor
     public static class LocomotionTestResultsRunner
     {
         private const string ResultsFolderKey = "UnderGrind.LocomotionTestResultsFolder";
+        private const string RunActiveKey = "UnderGrind.LocomotionTests.RunActive";
+        private const string RunModeKey = "UnderGrind.LocomotionTests.RunMode";
+        private const string RunDirectoryKey = "UnderGrind.LocomotionTests.RunDirectory";
         private static TestRunnerApi _runner;
+
+        static LocomotionTestResultsRunner()
+        {
+            // PlayMode runs can reload the AppDomain. Restore the callback after that reload
+            // so the final report is still written when the test run completes.
+            EditorApplication.delayCall += RestoreCallbackAfterReload;
+        }
+
+        private static void RestoreCallbackAfterReload()
+        {
+            if (!EditorPrefs.GetBool(RunActiveKey, false) || _runner != null)
+                return;
+
+            var mode = (TestMode)EditorPrefs.GetInt(RunModeKey, (int)TestMode.EditMode);
+            var directory = EditorPrefs.GetString(RunDirectoryKey, string.Empty);
+            if (string.IsNullOrEmpty(directory))
+                return;
+
+            _runner = ScriptableObject.CreateInstance<TestRunnerApi>();
+            _runner.RegisterCallbacks(new ResultsCallback(mode, directory));
+        }
 
         private static string ProjectRoot => Directory.GetParent(Application.dataPath).FullName;
         private static string RelativeResultsFolder =>
@@ -56,6 +80,10 @@ namespace UnderGrind.Editor
 
             var outputDirectory = Path.GetFullPath(Path.Combine(ProjectRoot, RelativeResultsFolder));
             Directory.CreateDirectory(outputDirectory);
+
+            EditorPrefs.SetInt(RunModeKey, (int)mode);
+            EditorPrefs.SetString(RunDirectoryKey, outputDirectory);
+            EditorPrefs.SetBool(RunActiveKey, true);
 
             _runner = ScriptableObject.CreateInstance<TestRunnerApi>();
             _runner.RegisterCallbacks(new ResultsCallback(mode, outputDirectory));
@@ -105,7 +133,8 @@ namespace UnderGrind.Editor
 
                     Debug.Log($"UnderGrind: test {_mode} completati. Passati {result.PassCount}, falliti {result.FailCount}, " +
                               $"saltati {result.SkipCount}. Report: {timestampedPath}");
-                    EditorApplication.delayCall += AssetDatabase.Refresh;
+                    EditorPrefs.SetBool(RunActiveKey, false);
+                    EditorApplication.delayCall += () => AssetDatabase.Refresh();
                 }
                 catch (Exception exception)
                 {
@@ -113,6 +142,7 @@ namespace UnderGrind.Editor
                 }
                 finally
                 {
+                    EditorPrefs.SetBool(RunActiveKey, false);
                     if (_runner != null)
                         UnityEngine.Object.DestroyImmediate(_runner);
                     _runner = null;
