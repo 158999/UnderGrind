@@ -67,7 +67,7 @@ namespace UnderGrind.Locomotion
                 viewPivot = playerCamera.transform.parent;
 
             ApplyCharacterDimensions();
-            SetCursorLocked(true);
+            SetCursorLocked(playerCamera != null);
             ApplyCameraMode();
         }
 
