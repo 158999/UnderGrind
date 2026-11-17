@@ -203,15 +203,19 @@ namespace UnderGrind.Editor
             var clips = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<AnimationClip>()
                 .Where(x => !x.name.StartsWith("__preview", StringComparison.OrdinalIgnoreCase)).ToArray();
             if (clips.Length == 0) return;
-            AnimationClip Find(string[] tokens) => clips.FirstOrDefault(c => tokens.Any(t =>
-                c.name.IndexOf(t, StringComparison.OrdinalIgnoreCase) >= 0));
-            AnimationClip FindAll(string[] tokens) => clips.FirstOrDefault(c => tokens.All(t =>
-                c.name.IndexOf(t, StringComparison.OrdinalIgnoreCase) >= 0));
+            bool HasToken(AnimationClip clip, string token) =>
+                clip.name.IndexOf(token, StringComparison.OrdinalIgnoreCase) >= 0;
+            AnimationClip FindLocomotion(params string[] tokens) => clips
+                .Where(clip => !HasToken(clip, "crouch") && tokens.Any(token => HasToken(clip, token)))
+                .OrderBy(clip => tokens.Any(token => string.Equals(clip.name, token, StringComparison.OrdinalIgnoreCase)) ? 0 : 1)
+                .FirstOrDefault();
+            AnimationClip FindAll(string[] tokens) => clips.FirstOrDefault(clip =>
+                tokens.All(token => HasToken(clip, token)));
 
-            var idle = Find(new[] { "idle", "standing" });
-            var walk = Find(new[] { "walk", "walking" });
-            var run = Find(new[] { "run", "running" });
-            var jump = Find(new[] { "jump" });
+            var idle = FindLocomotion("idle", "standing");
+            var walk = FindLocomotion("walk", "walking");
+            var run = FindLocomotion("run", "running");
+            var jump = FindLocomotion("jump");
             var crouchIdle = FindAll(new[] { "crouch", "idle" });
             var crouchWalk = FindAll(new[] { "crouch", "walk" });
             if (idle == null && walk == null && run == null) return;
