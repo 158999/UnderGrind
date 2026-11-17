@@ -85,8 +85,7 @@ namespace UnderGrind.Editor
             cameraObject.AddComponent<AudioListener>();
 
             var movement = player.AddComponent<HumanLocomotionController>();
-            SetPrivateField(movement, "viewPivot", pivot);
-            SetPrivateField(movement, "playerCamera", camera);
+            movement.ConfigureViewRig(pivot, camera);
             player.AddComponent<LocomotionDebugOverlay>();
         }
 
@@ -363,11 +362,5 @@ namespace UnderGrind.Editor
             if (!string.IsNullOrEmpty(parent)) AssetDatabase.CreateFolder(parent, folder);
         }
 
-        private static void SetPrivateField<T>(T target, string fieldName, object value) where T : UnityEngine.Object
-        {
-            var field = typeof(T).GetField(fieldName, System.Reflection.BindingFlags.Instance |
-                System.Reflection.BindingFlags.NonPublic);
-            field?.SetValue(target, value);
-        }
     }
 }
