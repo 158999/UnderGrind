@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnderGrind.Inventory;
 
 namespace UnderGrind.Locomotion
 {
@@ -22,6 +23,9 @@ namespace UnderGrind.Locomotion
         [SerializeField, Range(0f, 1f)] private float airControl = 0.35f;
         [SerializeField, Min(0f)] private float coyoteTime = 0.1f;
         [SerializeField, Min(0f)] private float jumpBufferTime = 0.12f;
+
+        [Header("Inventory overload")]
+        [SerializeField] private PlayerInventory inventory;
 
         [Header("Stance")]
         [SerializeField, Min(0.1f)] private float crouchHeight = 1.12f;
@@ -55,7 +59,11 @@ namespace UnderGrind.Locomotion
 
         public float CharacterHeight => characterHeight;
         public float WalkSpeed => walkSpeed;
+        public float EffectiveWalkSpeed => walkSpeed * (IsOverloaded ? inventory.OverloadedWalkSpeedMultiplier : 1f);
         public float RunSpeed => walkSpeed * runMultiplier;
+        public bool IsOverloaded => inventory != null && inventory.IsOverloaded;
+        public bool CanRun => !IsOverloaded;
+        public bool CanJump => !IsOverloaded;
         public float RunMultiplier => runMultiplier;
         public float JumpHeight => jumpHeight;
         public float Gravity => gravity;
@@ -89,6 +97,7 @@ namespace UnderGrind.Locomotion
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
+            if (inventory == null) inventory = GetComponent<PlayerInventory>();
             _animationDriver = GetComponent<PlayerAnimationDriver>();
             if (_animationDriver == null) _animationDriver = gameObject.AddComponent<PlayerAnimationDriver>();
             _visualRig = GetComponentInChildren<PlayerVisualRig>(true);
@@ -204,8 +213,13 @@ namespace UnderGrind.Locomotion
             if (grounded) _lastGroundedTime = Time.time;
             var jumpPressed = keyboard != null && keyboard.spaceKey.wasPressedThisFrame ||
                               gamepad != null && gamepad.buttonSouth.wasPressedThisFrame;
-            if (jumpPressed) _jumpBufferedUntil = Time.time + jumpBufferTime;
-            if (Time.time <= _jumpBufferedUntil && Time.time - _lastGroundedTime <= coyoteTime)
+            if (IsOverloaded)
+                _jumpBufferedUntil = float.NegativeInfinity;
+            else if (jumpPressed)
+                _jumpBufferedUntil = Time.time + jumpBufferTime;
+
+            if (!IsOverloaded && Time.time <= _jumpBufferedUntil &&
+                Time.time - _lastGroundedTime <= coyoteTime)
             {
                 _verticalVelocity = JumpVelocity;
                 _jumpBufferedUntil = float.NegativeInfinity;
@@ -216,8 +230,10 @@ namespace UnderGrind.Locomotion
             _verticalVelocity -= gravity * dt;
             var moving = _moveInput.sqrMagnitude > 0.001f;
             var runHeld = keyboard != null && (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed);
-            IsRunning = moving && runHeld && !IsCrouching;
-            var speed = IsCrouching ? walkSpeed * crouchSpeedMultiplier : IsRunning ? RunSpeed : walkSpeed;
+            IsRunning = moving && runHeld && !IsCrouching && CanRun;
+            var speed = IsCrouching
+                ? EffectiveWalkSpeed * crouchSpeedMultiplier
+                : IsRunning ? RunSpeed : EffectiveWalkSpeed;
             var forward = _thirdPerson && playerCamera != null
                 ? Vector3.ProjectOnPlane(playerCamera.transform.forward, Vector3.up).normalized : transform.forward;
             var right = _thirdPerson && playerCamera != null
