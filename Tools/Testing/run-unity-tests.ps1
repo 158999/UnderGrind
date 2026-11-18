@@ -2,6 +2,7 @@
 param(
     [ValidateSet("EditMode", "PlayMode", "All")][string]$Platform = "All",
     [string]$UnityEditorPath = $env:UNITY_EDITOR_PATH,
+    [ValidateRange(60, 3600)][int]$TimeoutSeconds = 600,
     [switch]$ReuseCurrentRun
 )
 
@@ -19,28 +20,30 @@ $items = [System.Collections.Generic.List[object]]::new()
 $exit = 0
 $environmentErrors = [System.Collections.Generic.List[string]]::new()
 
+$projectVersion = ""
 if ([string]::IsNullOrWhiteSpace($UnityEditorPath)) {
     $projectVersionFile = Join-Path $root "ProjectSettings/ProjectVersion.txt"
     $projectVersion = if (Test-Path -LiteralPath $projectVersionFile) {
         (Select-String -LiteralPath $projectVersionFile -Pattern "^m_EditorVersion:\s*(.+)$").Matches.Groups[1].Value.Trim()
     } else { "" }
 
-    $editorRoots = @(
-        (Join-Path $env:ProgramFiles "Unity/Hub/Editor"),
-        (Join-Path $env:LOCALAPPDATA "Programs/Unity/Hub/Editor"),
-        (Join-Path $env:ProgramFiles "Unity")
-    ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Container) }
-
-    $candidates = [System.Collections.Generic.List[string]]::new()
-    foreach ($editorRoot in $editorRoots) {
-        if ($projectVersion) {
-            $versionCandidate = Join-Path $editorRoot "$projectVersion/Editor/Unity.exe"
-            if (Test-Path -LiteralPath $versionCandidate) { $candidates.Add($versionCandidate) }
-        }
-        Get-ChildItem -LiteralPath $editorRoot -Filter "Unity.exe" -File -Recurse -ErrorAction SilentlyContinue |
-            ForEach-Object { $candidates.Add($_.FullName) }
+    $editorRoots = [System.Collections.Generic.List[string]]::new()
+    if ($env:ProgramFiles) {
+        $editorRoots.Add((Join-Path $env:ProgramFiles "Unity/Hub/Editor"))
     }
-    $UnityEditorPath = $candidates | Select-Object -Unique | Select-Object -First 1
+    if ($env:LOCALAPPDATA) {
+        $editorRoots.Add((Join-Path $env:LOCALAPPDATA "Programs/Unity/Hub/Editor"))
+    }
+
+    $UnityEditorPath = $null
+    foreach ($editorRoot in $editorRoots) {
+        if ([string]::IsNullOrWhiteSpace($projectVersion)) { continue }
+        $versionCandidate = Join-Path $editorRoot "$projectVersion/Editor/Unity.exe"
+        if (Test-Path -LiteralPath $versionCandidate -PathType Leaf) {
+            $UnityEditorPath = $versionCandidate
+            break
+        }
+    }
 }
 if ([string]::IsNullOrWhiteSpace($UnityEditorPath) -or -not (Test-Path -LiteralPath $UnityEditorPath)) {
     $environmentErrors.Add("Unity Editor non trovato nelle installazioni Unity Hub standard. Impostare UNITY_EDITOR_PATH o passare -UnityEditorPath con il percorso completo a Unity.exe. Versione richiesta dal progetto: $projectVersion.")
@@ -84,14 +87,27 @@ else {
             $hasValidResult = $false
             $code = 1
 
+            $timedOut = $false
             try {
-                $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow
-                $code = $process.ExitCode
+                $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow
+                if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
+                    $timedOut = $true
+                    $validationErrors.Add("Timeout: Unity $target ha superato $TimeoutSeconds secondi. Il processo verrà terminato.")
+                    try { & taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null } catch { }
+                    try {
+                        if (-not $process.HasExited) { $process.Kill() }
+                        $process.WaitForExit()
+                    } catch { }
+                    $code = 124
+                }
+                else {
+                    $code = $process.ExitCode
+                }
             }
             catch {
                 $validationErrors.Add("Impossibile avviare o attendere Unity: $($_.Exception.Message)")
             }
-            if ($code -ne 0) { $validationErrors.Add("Unity è terminato con codice $code.") }
+            if ($code -ne 0 -and -not $timedOut) { $validationErrors.Add("Unity è terminato con codice $code.") }
 
             $actualResultPath = $xmlPath
             if (-not (Test-Path -LiteralPath $actualResultPath) -and (Test-Path -LiteralPath $callbackPath)) {
@@ -153,6 +169,8 @@ else {
             } else { "TestResults/test/Unity/$xmlName" }
             $items.Add([ordered]@{
                 platform = $target
+                timeoutSeconds = $TimeoutSeconds
+                timedOut = $timedOut
                 exitCode = $code
                 resultValid = $resultValid
                 validationErrors = @($validationErrors)
@@ -163,6 +181,15 @@ else {
             })
             if ($code -ne 0 -or -not $resultValid) { $exit = 1 }
             Write-Host "Unity $target : $($counts.passed) superati, $($counts.failed) falliti, $($counts.total) totali"
+
+            if ($timedOut) {
+                $environmentErrors.Add("Test Unity interrotti dopo il timeout di $TimeoutSeconds secondi; le altre piattaforme non verranno avviate.")
+                break
+            }
+            if ($compilerDiagnostics.Count -gt 0 -and $target -eq "EditMode" -and $Platform -eq "All") {
+                $environmentErrors.Add("PlayMode non avviato: EditMode ha già rilevato errori di compilazione che impediscono l'esecuzione dei test.")
+                break
+            }
         }
     }
 }
