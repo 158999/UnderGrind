@@ -13,7 +13,7 @@ namespace UnderGrind.Inventory
         [SerializeField] private string weightTextFormat;
         [SerializeField] private string emptySlotText;
         [SerializeField] private Font font;
-        [SerializeField] private string fallbackFontResourceName;
+        [SerializeField] private string fallbackFontResourceName = "LegacyRuntime.ttf";
         [SerializeField, Min(1)] private int titleFontSize;
         [SerializeField, Min(1)] private int bodyFontSize;
         [SerializeField, Min(1)] private int slotFontSize;
