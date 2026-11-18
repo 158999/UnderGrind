@@ -48,7 +48,8 @@ namespace UnderGrind.Inventory
 
         public InventorySlot GetSlot(int index)
         {
-            if (index < 0 || index >= slots.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0 || index >= Mathf.Min(slots.Count, SlotCapacity))
+                throw new ArgumentOutOfRangeException(nameof(index));
             return slots[index];
         }
 
