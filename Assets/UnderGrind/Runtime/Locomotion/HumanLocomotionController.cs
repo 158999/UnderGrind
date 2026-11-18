@@ -191,6 +191,9 @@ namespace UnderGrind.Locomotion
                 _characterController.height * settings.CharacterStepOffsetHeightRatio);
             _characterController.slopeLimit = settings.CharacterSlopeLimit;
             _characterController.minMoveDistance = settings.CharacterMinMoveDistance;
+            _characterController.skinWidth = settings.CharacterSkinWidth;
+            _characterController.detectCollisions = settings.CharacterDetectCollisions;
+            _characterController.enableOverlapRecovery = settings.CharacterEnableOverlapRecovery;
         }
 
         private void MoveCharacter(Keyboard keyboard, Gamepad gamepad)
