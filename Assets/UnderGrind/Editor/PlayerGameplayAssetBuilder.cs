@@ -51,13 +51,14 @@ namespace UnderGrind.Editor
             var current = new SerializedObject(asset);
             var template = new SerializedObject(defaults);
             var version = current.FindProperty("settingsVersion");
-            if (version == null || version.intValue >= 1)
+            if (version == null)
             {
                 Object.DestroyImmediate(defaults);
                 return;
             }
 
-            if (current.FindProperty("panelAnchorMax").vector2Value == Vector2.zero)
+            if (version.intValue < 1 &&
+                current.FindProperty("panelAnchorMax").vector2Value == Vector2.zero)
             {
                 CopyInt(current, template, "canvasRenderMode");
                 CopyInt(current, template, "canvasScaleMode");
@@ -81,7 +82,8 @@ namespace UnderGrind.Editor
                 CopyInt(current, template, "gridChildAlignment");
             }
 
-            if (current.FindProperty("iconAnchorMax").vector2Value == Vector2.zero)
+            if (version.intValue < 1 &&
+                current.FindProperty("iconAnchorMax").vector2Value == Vector2.zero)
             {
                 CopyVector2(current, template, "iconAnchorMin");
                 CopyVector2(current, template, "iconAnchorMax");
@@ -90,7 +92,14 @@ namespace UnderGrind.Editor
                 CopyBool(current, template, "preserveIconAspect");
             }
 
-            version.intValue = 1;
+            if (version.intValue < 2)
+            {
+                CopyStringIfEmpty(current, template, "fallbackFontResourceName");
+                version.intValue = 2;
+            }
+            else if (version.intValue < 1)
+                version.intValue = 1;
+
             current.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
             Object.DestroyImmediate(defaults);
