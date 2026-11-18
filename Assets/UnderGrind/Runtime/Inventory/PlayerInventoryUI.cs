@@ -27,6 +27,7 @@ namespace UnderGrind.Inventory
         private GridLayoutGroup _grid;
         private int _builtSlotCount = -1;
         private bool _cursorWasCaptured;
+        private bool _inventoryEventsBound;
 
         public bool IsOpen { get; private set; }
         public InventoryUISettings Settings => settings;
@@ -39,6 +40,7 @@ namespace UnderGrind.Inventory
             inventory = playerInventory;
             locomotion = playerLocomotion;
             ResolveActions();
+            if (isActiveAndEnabled) BindInventoryEvents();
             if (isActiveAndEnabled) InitializeUI();
         }
 
@@ -52,13 +54,27 @@ namespace UnderGrind.Inventory
 
         private void OnEnable()
         {
-            if (inventory != null) inventory.Changed += Refresh;
+            BindInventoryEvents();
         }
 
         private void OnDisable()
         {
-            if (inventory != null) inventory.Changed -= Refresh;
+            UnbindInventoryEvents();
             if (IsOpen) SetOpen(false);
+        }
+
+        private void BindInventoryEvents()
+        {
+            if (_inventoryEventsBound || inventory == null) return;
+            inventory.Changed += Refresh;
+            _inventoryEventsBound = true;
+        }
+
+        private void UnbindInventoryEvents()
+        {
+            if (!_inventoryEventsBound || inventory == null) return;
+            inventory.Changed -= Refresh;
+            _inventoryEventsBound = false;
         }
 
         private void Update()
