@@ -13,29 +13,23 @@ L'esportazione di verifica non copre la configurazione dei modificatori e le coo
 
 ## Stato del prototipo di rig
 
-La versione salvata `version_9333bec316691d50b66236e6ed6e172d9dbb5921f28563f3d3ae9b2b96ff0591` contiene:
+La sorgente corrente è la versione Blendstra [`version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3&version=version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07). L'ispezione registra 16 oggetti:
 
-- Le mesh originali `Human_Male` e `Human_Female`, conservate e nascoste dal rendering.
-- Copie `Human_Male_Body` e `Human_Female_Body`, con gli stessi conteggi di vertici e triangoli delle rispettive sorgenti.
-- Le radici armature `UG_Male_Armature` e `UG_Female_Armature`.
+- Due armature: `UG_Male_Armature` e `UG_Female_Armature`.
+- Sei mesh derivate per personaggio: corpo, testa, braccia e mani dedicate alla prima e alla terza persona.
+- Le due mesh sorgenti originali `Human_Male` e `Human_Female`, conservate e nascoste dal rendering.
 
-Il codice che ha generato il prototipo colloca le ossa usando proporzioni ricavate dai bounding box e prova ad assegnare i pesi automatici di Blender, con una distribuzione per prossimità come fallback. Questi passaggi non sono ancora verificati con test di deformazione. L'esportazione nativa disponibile non espone il dettaglio delle ossa né la configurazione dei pesi. La versione risulta inoltre priva di canali di animazione.
+I nomi delle mesh derivate corrispondono ai token di `PlayerRigSettings.asset`: `_Body`, `_Head`, `_TP_Arms`, `_TP_Hands`, `_FP_Arms` e `_FP_Hands`. La separazione testa/corpo è stata eseguita con un piano al 78% dell'altezza del bounding box; braccia e mani sono state estratte usando i gruppi di pesi delle ossa. Non si tratta di una separazione manuale dei poligoni.
 
-Il prototipo non è quindi un rig Humanoid approvato per la produzione. In particolare, ogni personaggio ha ancora una sola mesh del corpo: non è presente un renderer separato per testa/viso. Non è possibile nascondere soltanto la testa in prima persona.
+Lo script che ha generato questa versione crea una gerarchia di 22 ossa per personaggio e tenta il weight painting automatico di Blender, con distribuzione per prossimità come fallback. L'ispezione sorgente non espone la configurazione completa dei modificatori né i pesi effettivi: la presenza degli oggetti non dimostra da sola che le deformazioni siano corrette.
 
-Il progetto separato [UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999) contiene la versione iniziale `version_3f8ecc6facc3cfa2f4f9a2234af25ae75c6cedf4dd39d94edbf0c485066935c0` e la revisione aggiornata `version_761640485ef91a3c2d77dde4cba3ea1412e032e2aa753f08c99379afff77828b`, generata usando la regione del vertex group `Head` con soglia di peso 0,35.
+`Tools/Blender/export-undergrind-humans.py` esegue i controlli direttamente in Blender prima dell'esportazione: ossa Humanoid richieste, sei mesh, parent corretti, modificatore Armature, gruppi di pesi collegati alle ossa deformanti e almeno un peso deformante valido per ogni vertice. Valida entrambi i personaggi prima di esportare e produce due FBX separati. I percorsi provengono da `PlayerRigSettings.asset` o, se l'asset non esiste ancora, dal template JSON.
 
-L'ispezione della sorgente registra quattro mesh derivate distinte:
-- `UG_Male_Head`: 67 vertici e 130 triangoli.
-- `UG_Male_Body`: 202 vertici e 400 triangoli.
-- `UG_Female_Head`: 30 vertici e 53 triangoli.
-- `UG_Female_Body`: 266 vertici e 528 triangoli.
+La sorgente `.blend` presente nel repository non è stata sostituita automaticamente dalla revisione Blendstra. Per usare la geometria corrente, aprire il link della versione sopra in Blendstra, scaricare la sorgente nativa e salvarla come `Assets/UnderGrind/Art/Source/humans.blend`. Poi eseguire lo script Blender descritto in `Tools/Blender/README.md`.
 
-Le mesh originali restano nel progetto sorgente importato. Il risultato include copie delle armature e mantiene i riferimenti ai componenti sorgente. L'ispezione registra ancora controlli non supportati per configurazione dei modificatori e coordinate UV valutate; il GLB esportato dichiara zero animazioni e non contiene materiali assegnati. La separazione della testa è quindi stata eseguita geometricamente, ma non è una prova di correttezza dei pesi, della deformazione o della topologia dei bordi.
+Le versioni `version_9333bec316691d50b66236e6ed6e172d9dbb5921f28563f3d3ae9b2b96ff0591`, `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` e il progetto separato `UnderGrind — Rigged Human Derivatives` sono iterazioni precedenti. La versione corrente con le 16 parti è la sorgente da esportare.
 
-Nella prima esportazione le copie delle armature avevano ricevuto il suffisso automatico `.001`. La revisione Blendstra successiva è terminata: l'ispezione della versione `version_761640485ef91a3c2d77dde4cba3ea1412e032e2aa753f08c99379afff77828b` conferma i nomi esatti `UG_Male_Armature` e `UG_Female_Armature`, senza suffisso. Sono inoltre presenti le quattro mesh separate per testa e corpo. L'ispezione registra 13 oggetti, nessun materiale assegnato e zero canali di animazione. Restano non supportati i controlli su preservazione completa della sorgente, configurazione dei modificatori, animazioni, adattamento tecnico e permessi delle dipendenze. I nomi richiesti dal builder sono quindi corretti, ma non è ancora dimostrato un rig deformabile né un Avatar Humanoid valido. Il modello non è stato importato nel repository e non è accettato come prefab Humanoid di produzione.
-
-La revisione precedente `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` aveva eseguito una separazione per sole isole geometriche disconnesse. Il risultato conteneva una sola mesh per personaggio: ciascun corpo era un'unica isola connessa e la testa non poteva essere separata con quell'operazione topologica. La successiva separazione per regione pesata descritta sopra è un'operazione distinta.
+La sorgente corrente non contiene canali di animazione. Le clip locomotion vengono importate separatamente da PINOC. Non sono ancora stati eseguiti l'export FBX, l'importazione Unity, la generazione dei prefab o i test di deformazione in Unity.
 
 ## Importazione in Unity e generazione dei prefab
 
