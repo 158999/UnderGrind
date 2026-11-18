@@ -57,6 +57,37 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void AnimationClipLoopModesAreInspectorConfigurable()
+        {
+            var animationSettings = ScriptableObject.CreateInstance<PlayerAnimationSettings>();
+            try
+            {
+                var serialized = new SerializedObject(animationSettings);
+                var fields = new[]
+                {
+                    "idleLoops", "walkLoops", "runLoops", "jumpLoops",
+                    "fallLoops", "landLoops", "crouchIdleLoops", "crouchWalkLoops"
+                };
+                foreach (var field in fields)
+                    Assert.That(serialized.FindProperty(field), Is.Not.Null,
+                        "Missing serialized animation loop setting: " + field);
+
+                Assert.IsTrue(animationSettings.IdleLoops);
+                Assert.IsTrue(animationSettings.WalkLoops);
+                Assert.IsTrue(animationSettings.RunLoops);
+                Assert.IsFalse(animationSettings.JumpLoops);
+                Assert.IsFalse(animationSettings.FallLoops);
+                Assert.IsFalse(animationSettings.LandLoops);
+                Assert.IsTrue(animationSettings.CrouchIdleLoops);
+                Assert.IsTrue(animationSettings.CrouchWalkLoops);
+            }
+            finally
+            {
+                Object.DestroyImmediate(animationSettings);
+            }
+        }
+
+        [Test]
         public void AllEightConfigurationGroupsAreSerializedOnSettingsAsset()
         {
             var serialized = new SerializedObject(_settings);
