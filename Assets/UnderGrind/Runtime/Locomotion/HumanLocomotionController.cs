@@ -180,7 +180,7 @@ namespace UnderGrind.Locomotion
             {
                 if (_cancelAction != null && _cancelAction.WasPressedThisFrame())
                     SetCursorLocked(false);
-                else if (!_cursorLocked && inputSettings != null && inputSettings.RecaptureCursorOnClick &&
+                else if (!_inputSuppressed && !_cursorLocked && inputSettings != null && inputSettings.RecaptureCursorOnClick &&
                          _captureCursorAction != null && _captureCursorAction.WasPressedThisFrame())
                     SetCursorLocked(true);
 
