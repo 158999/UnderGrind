@@ -43,10 +43,13 @@ namespace UnderGrind.Editor
                 "Assets/UnderGrind/Settings/PlayerInteractionSettings.asset");
             var inventoryUISettings = AssetDatabase.LoadAssetAtPath<InventoryUISettings>(
                 "Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset");
+            var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(
+                "Assets/UnderGrind/Settings/PlayerRigSettings.asset");
             var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(
                 "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset");
             if (locomotionSettings == null || inventorySettings == null ||
-                interactionSettings == null || inventoryUISettings == null || animationSettings == null)
+                interactionSettings == null || inventoryUISettings == null ||
+                rigSettings == null || animationSettings == null)
             {
                 EditorUtility.DisplayDialog("Configurazione Player mancante",
                     "Uno o più asset di configurazione Player non sono disponibili. La scena non è stata modificata.",
@@ -54,25 +57,35 @@ namespace UnderGrind.Editor
                 return;
             }
 
-            AssetDatabase.ImportAsset(HumanModelPath,
-                ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
-            var maleSource = ResolveHumanModel("male");
-            var femaleSource = ResolveHumanModel("female");
-            if (maleSource == null || femaleSource == null)
-            {
-                const string message = "Unity deve importare entrambe le mesh 'male' e 'female' da humans.blend. " +
-                    "La scena esistente non è stata modificata e non verrà creato un manichino sostitutivo. " +
-                    "Controlla la Console e Unity > Preferences > External Tools.";
-                Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
-                EditorUtility.DisplayDialog("Modelli umani non disponibili", message, "OK");
-                return;
-            }
+            var maleRiggedPath = GeneratedPath + "/Prefabs/" + rigSettings.MalePrefabName + ".prefab";
+            var femaleRiggedPath = GeneratedPath + "/Prefabs/" + rigSettings.FemalePrefabName + ".prefab";
+            var malePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(maleRiggedPath);
+            var femalePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(femaleRiggedPath);
 
-            var malePrefab = CreateHumanPrefab(maleSource, "Human_Male", locomotionSettings.CharacterHeight);
-            var femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", locomotionSettings.FemaleCharacterHeight);
             if (malePrefab == null || femalePrefab == null)
             {
-                Debug.LogError("UnderGrind: impossibile generare entrambi i prefab dai modelli originali.");
+                AssetDatabase.ImportAsset(HumanModelPath,
+                    ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+                var maleSource = ResolveHumanModel("male");
+                var femaleSource = ResolveHumanModel("female");
+                if (maleSource == null || femaleSource == null)
+                {
+                    const string message = "Non sono disponibili entrambi i prefab riggati e Unity non riesce a importare " +
+                        "le mesh 'male' e 'female' da humans.blend. La scena esistente non è stata modificata.";
+                    Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
+                    EditorUtility.DisplayDialog("Modelli umani non disponibili", message, "OK");
+                    return;
+                }
+
+                if (malePrefab == null)
+                    malePrefab = CreateHumanPrefab(maleSource, "Human_Male", locomotionSettings.CharacterHeight);
+                if (femalePrefab == null)
+                    femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", locomotionSettings.FemaleCharacterHeight);
+            }
+
+            if (malePrefab == null || femalePrefab == null)
+            {
+                Debug.LogError("UnderGrind: impossibile generare o caricare entrambi i prefab del personaggio.");
                 return;
             }
 
@@ -119,7 +132,13 @@ namespace UnderGrind.Editor
             instance.name = "Human Base - imported from humans.blend";
             instance.transform.SetParent(visualRoot.transform, false);
             ConfigureAnimations(instance, animationSettings);
-            Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
+            if (instance.GetComponent<PlayerVisualRig>() == null)
+            {
+                var visualRig = player.AddComponent<PlayerVisualRig>();
+                if (!visualRig.ConfigureFromHierarchy(instance.transform, rigSettings))
+                    Debug.LogWarning("UnderGrind: il prefab corrente non espone renderer separati secondo PlayerRigSettings.", instance);
+            }
+            Debug.Log("UnderGrind: prefab umano selezionato: " + human.name);
 
             var pivot = new GameObject("View Pivot").transform;
             pivot.SetParent(player.transform, false);
