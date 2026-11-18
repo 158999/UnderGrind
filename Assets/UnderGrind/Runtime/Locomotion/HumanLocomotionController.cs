@@ -7,17 +7,28 @@ namespace UnderGrind.Locomotion
     [RequireComponent(typeof(CharacterController))]
     public sealed class HumanLocomotionController : MonoBehaviour
     {
-        [Header("Configuration")]
+        [Header("Configurazione")]
         [SerializeField] private PlayerLocomotionSettings settings;
+        [SerializeField] private PlayerInputSettings inputSettings;
         [SerializeField] private PlayerInventory inventory;
 
-        [Header("View rig references")]
+        [Header("Riferimenti visuale")]
         [SerializeField] private Transform viewPivot;
         [SerializeField] private Camera playerCamera;
 
         private CharacterController _characterController;
         private PlayerAnimationDriver _animationDriver;
         private PlayerVisualRig _visualRig;
+        private InputActionMap _inputMap;
+        private InputAction _moveAction;
+        private InputAction _lookMouseAction;
+        private InputAction _lookGamepadAction;
+        private InputAction _jumpAction;
+        private InputAction _runAction;
+        private InputAction _crouchAction;
+        private InputAction _toggleCameraAction;
+        private InputAction _cancelAction;
+        private InputAction _captureCursorAction;
         private float _verticalVelocity;
         private float _pitch;
         private float _currentHeight;
@@ -26,11 +37,14 @@ namespace UnderGrind.Locomotion
         private bool _thirdPerson;
         private bool _cursorLocked;
         private bool _missingSettingsReported;
+        private bool _missingInputReported;
         private Vector3 _horizontalVelocity;
         private float _measuredSpeed;
         private Vector2 _moveInput;
 
         public PlayerLocomotionSettings Settings => settings;
+        public PlayerInputSettings InputSettings => inputSettings;
+        public PlayerInventory Inventory => inventory;
         public float CharacterHeight => settings != null ? settings.CharacterHeight : 0f;
         public float WalkSpeed => settings != null ? settings.WalkSpeed : 0f;
         public float EffectiveWalkSpeed => settings != null
@@ -50,6 +64,7 @@ namespace UnderGrind.Locomotion
         public bool IsRunning { get; private set; }
         public bool IsCrouching { get; private set; }
         public bool IsThirdPerson => _thirdPerson;
+        public bool IsCursorCaptured => _cursorLocked;
         public float VerticalVelocity => _verticalVelocity;
         public Vector2 MoveInput => _moveInput;
 
@@ -62,6 +77,15 @@ namespace UnderGrind.Locomotion
             ApplyCameraMode();
         }
 
+        public void ConfigureInputSettings(PlayerInputSettings value)
+        {
+            if (_inputMap != null) _inputMap.Disable();
+            inputSettings = value;
+            BindInputActions();
+            if (inputSettings != null && inputSettings.LockCursorOnStart && playerCamera != null)
+                SetCursorLocked(true);
+        }
+
         public void ConfigureViewRig(Transform pivot, Camera camera)
         {
             viewPivot = pivot;
@@ -69,6 +93,11 @@ namespace UnderGrind.Locomotion
             if (viewPivot != null && viewPivot != transform && !viewPivot.IsChildOf(transform))
                 viewPivot.SetParent(transform, true);
             ApplyCameraMode();
+        }
+
+        public void SetCursorCaptured(bool captured)
+        {
+            SetCursorLocked(captured);
         }
 
         public void SetCameraMode(bool thirdPerson)
@@ -92,9 +121,15 @@ namespace UnderGrind.Locomotion
             if (viewPivot == null && playerCamera != null) viewPivot = playerCamera.transform.parent;
             if (settings != null) _currentHeight = settings.CharacterHeight;
             ApplyCharacterDimensions();
-            SetCursorLocked(playerCamera != null);
+            BindInputActions();
+            SetCursorLocked(inputSettings != null && inputSettings.LockCursorOnStart && playerCamera != null);
             _visualRig.SetThirdPerson(_thirdPerson);
             ApplyCameraMode();
+        }
+
+        private void OnEnable()
+        {
+            if (_inputMap != null) _inputMap.Enable();
         }
 
         private void Update()
@@ -109,58 +144,74 @@ namespace UnderGrind.Locomotion
                 return;
             }
 
-            var keyboard = Keyboard.current;
-            var mouse = Mouse.current;
-            var gamepad = Gamepad.current;
-
-            if (keyboard != null)
+            if (_inputMap == null)
             {
-                if (keyboard.escapeKey.wasPressedThisFrame) SetCursorLocked(false);
-                else if (mouse != null && mouse.leftButton.wasPressedThisFrame && !_cursorLocked) SetCursorLocked(true);
-                if (keyboard.f5Key.wasPressedThisFrame) SetCameraMode(!_thirdPerson);
+                if (!_missingInputReported && inputSettings != null)
+                {
+                    Debug.LogError("UnderGrind: la configurazione Input Actions non contiene l'action map o le azioni richieste.", this);
+                    _missingInputReported = true;
+                }
+                _moveInput = Vector2.zero;
+                IsRunning = false;
+            }
+            else
+            {
+                if (_cancelAction != null && _cancelAction.WasPressedThisFrame())
+                    SetCursorLocked(false);
+                else if (!_cursorLocked && inputSettings != null && inputSettings.RecaptureCursorOnClick &&
+                         _captureCursorAction != null && _captureCursorAction.WasPressedThisFrame())
+                    SetCursorLocked(true);
+
+                if (_toggleCameraAction != null && _toggleCameraAction.WasPressedThisFrame())
+                    SetCameraMode(!_thirdPerson);
+
+                if (_cursorLocked) ReadLook();
+                ReadMovementInput();
+                UpdateStance();
             }
 
-            if (gamepad != null && gamepad.buttonNorth.wasPressedThisFrame)
-                SetCameraMode(!_thirdPerson);
-
-            if (_cursorLocked) ReadLook(mouse, gamepad);
-            ReadMovementInput(keyboard, gamepad);
-            UpdateStance(keyboard, gamepad);
-            MoveCharacter(keyboard, gamepad);
+            MoveCharacter();
             UpdateCamera();
             UpdateAnimator();
         }
 
-        private void ReadLook(Mouse mouse, Gamepad gamepad)
+        private void BindInputActions()
+        {
+            _inputMap = inputSettings != null ? inputSettings.FindActionMap() : null;
+            _moveAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.Move) : null;
+            _lookMouseAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.LookMouse) : null;
+            _lookGamepadAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.LookGamepad) : null;
+            _jumpAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.Jump) : null;
+            _runAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.Run) : null;
+            _crouchAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.Crouch) : null;
+            _toggleCameraAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.ToggleCamera) : null;
+            _cancelAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.Cancel) : null;
+            _captureCursorAction = inputSettings != null ? inputSettings.GetAction(PlayerInputActionId.CaptureCursor) : null;
+            if (_inputMap != null && isActiveAndEnabled) _inputMap.Enable();
+        }
+
+        private void ReadLook()
         {
             var look = Vector2.zero;
-            if (mouse != null) look += mouse.delta.ReadValue() * settings.MouseSensitivity;
-            if (gamepad != null)
-                look += gamepad.rightStick.ReadValue() * settings.GamepadLookSensitivity * Time.deltaTime;
+            if (_lookMouseAction != null)
+                look += _lookMouseAction.ReadValue<Vector2>() * settings.MouseSensitivity;
+            if (_lookGamepadAction != null)
+                look += _lookGamepadAction.ReadValue<Vector2>() * settings.GamepadLookSensitivity * Time.deltaTime;
             transform.Rotate(Vector3.up, look.x, Space.World);
             _pitch = Mathf.Clamp(_pitch - look.y, -settings.MaxLookAngle, settings.MaxLookAngle);
             if (viewPivot != null) viewPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
         }
 
-        private void ReadMovementInput(Keyboard keyboard, Gamepad gamepad)
+        private void ReadMovementInput()
         {
-            var input = Vector2.zero;
-            if (keyboard != null)
-            {
-                if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) input.x -= 1f;
-                if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) input.x += 1f;
-                if (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed) input.y += 1f;
-                if (keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed) input.y -= 1f;
-            }
-            if (gamepad != null && gamepad.leftStick.ReadValue().sqrMagnitude > input.sqrMagnitude)
-                input = gamepad.leftStick.ReadValue();
-            _moveInput = Vector2.ClampMagnitude(input, 1f);
+            _moveInput = _moveAction != null
+                ? Vector2.ClampMagnitude(_moveAction.ReadValue<Vector2>(), 1f)
+                : Vector2.zero;
         }
 
-        private void UpdateStance(Keyboard keyboard, Gamepad gamepad)
+        private void UpdateStance()
         {
-            var crouch = keyboard != null && keyboard.cKey.isPressed ||
-                         gamepad != null && gamepad.buttonEast.isPressed;
+            var crouch = _crouchAction != null && _crouchAction.IsPressed();
             var target = crouch ? settings.CrouchHeight : settings.CharacterHeight;
             if (!crouch && !CanStand()) target = settings.CrouchHeight;
             _currentHeight = Mathf.MoveTowards(_currentHeight, target, settings.StanceChangeSpeed * Time.deltaTime);
@@ -196,14 +247,13 @@ namespace UnderGrind.Locomotion
             _characterController.enableOverlapRecovery = settings.CharacterEnableOverlapRecovery;
         }
 
-        private void MoveCharacter(Keyboard keyboard, Gamepad gamepad)
+        private void MoveCharacter()
         {
             var dt = Time.deltaTime;
-            if (dt <= 0f) return;
+            if (dt <= 0f || _characterController == null) return;
             var grounded = _characterController.isGrounded;
             if (grounded) _lastGroundedTime = Time.time;
-            var jumpPressed = keyboard != null && keyboard.spaceKey.wasPressedThisFrame ||
-                              gamepad != null && gamepad.buttonSouth.wasPressedThisFrame;
+            var jumpPressed = _jumpAction != null && _jumpAction.WasPressedThisFrame();
             if (!CanJump)
                 _jumpBufferedUntil = float.NegativeInfinity;
             else if (jumpPressed)
@@ -221,7 +271,7 @@ namespace UnderGrind.Locomotion
 
             _verticalVelocity -= settings.Gravity * dt;
             var moving = _moveInput.sqrMagnitude > settings.MovementInputThreshold;
-            var runHeld = keyboard != null && (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed);
+            var runHeld = _runAction != null && _runAction.IsPressed();
             IsRunning = moving && runHeld && !IsCrouching && CanRun;
             var speed = IsCrouching
                 ? EffectiveWalkSpeed * settings.CrouchSpeedMultiplier
@@ -250,7 +300,7 @@ namespace UnderGrind.Locomotion
 
         private void UpdateCamera()
         {
-            if (viewPivot == null || playerCamera == null) return;
+            if (viewPivot == null || playerCamera == null || settings == null) return;
             viewPivot.localPosition = Vector3.up * (IsCrouching
                 ? settings.CrouchingViewHeight : settings.StandingViewHeight);
             var target = _thirdPerson
@@ -277,7 +327,7 @@ namespace UnderGrind.Locomotion
         private void UpdateAnimator()
         {
             if (_animationDriver == null) _animationDriver = GetComponent<PlayerAnimationDriver>();
-            if (_animationDriver == null) return;
+            if (_animationDriver == null || settings == null || _characterController == null) return;
             var grounded = _characterController.isGrounded;
             _animationDriver.Apply(_measuredSpeed, _moveInput, grounded, _verticalVelocity,
                 IsRunning, IsCrouching,
@@ -306,8 +356,8 @@ namespace UnderGrind.Locomotion
 
         private void OnDisable()
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (_inputMap != null) _inputMap.Disable();
+            SetCursorLocked(false);
         }
     }
 }
