@@ -156,6 +156,22 @@ namespace UnderGrind.Tests
             Object.DestroyImmediate(pickupObject);
         }
 
+        [Test]
+        public void CapacityReduction_DoesNotAcceptNewItemsIntoOccupiedOverflowSlots()
+        {
+            SetField(_item, "maxStackSize", 1);
+            Assert.AreEqual(2, _inventory.AddItem(_item, 2).Processed);
+
+            SetField(_settings, "maxSlots", 1);
+            _inventory.Configure(_settings);
+            var result = _inventory.AddItem(_item, 1);
+
+            Assert.AreEqual(0, result.Processed);
+            Assert.AreEqual(1, _inventory.ConfiguredSlotCapacity);
+            Assert.AreEqual(2, _inventory.SlotCapacity);
+            Assert.AreEqual(8f, _inventory.CurrentWeightKg);
+        }
+
         private static void SetField<T>(T target, string name, object value)
         {
             typeof(T).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(target, value);
