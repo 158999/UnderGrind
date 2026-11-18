@@ -5,39 +5,38 @@ using UnityEngine;
 namespace UnderGrind.Locomotion
 {
     /// <summary>
-    /// Controls which visual renderers are visible in first- and third-person.
-    /// Production rigs should use the stable part-name convention emitted by the
-    /// UnderGrind humanoid asset pipeline; explicit renderer lists remain supported.
+    /// Controls explicit head and first-person renderer groups. Production naming
+    /// rules are supplied by PlayerRigSettings; no geometry-based guessing is used.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PlayerVisualRig : MonoBehaviour
     {
-        [Header("Explicit renderer groups")]
+        [SerializeField] private PlayerRigSettings rigSettings;
         [SerializeField] private Renderer[] headRenderers = Array.Empty<Renderer>();
         [SerializeField] private Renderer[] firstPersonOnlyRenderers = Array.Empty<Renderer>();
-        [SerializeField] private bool discoverRenderersByName = true;
 
         private readonly Dictionary<Renderer, bool> _originalEnabled = new Dictionary<Renderer, bool>();
         private bool _thirdPerson;
         private bool _initialized;
 
         public bool IsThirdPerson => _thirdPerson;
+        public PlayerRigSettings RigSettings => rigSettings;
 
         private void Awake()
         {
+            if (rigSettings != null && ConfigureFromHierarchy(transform, rigSettings)) return;
             CacheRenderers();
             ApplyVisibility();
         }
 
-        /// <summary>
-        /// Binds the separate head and optional first-person arms/hand renderers
-        /// using the asset pipeline naming convention:
-        /// *_Head, *_FP_Arms and *_FP_Hands.
-        /// Returns false when no separate head renderer is found.
-        /// </summary>
         public bool ConfigureFromHierarchy(Transform rigRoot)
         {
-            if (rigRoot == null) return false;
+            return ConfigureFromHierarchy(rigRoot, rigSettings);
+        }
+
+        public bool ConfigureFromHierarchy(Transform rigRoot, PlayerRigSettings configuration)
+        {
+            if (rigRoot == null || configuration == null) return false;
 
             var renderers = rigRoot.GetComponentsInChildren<Renderer>(true);
             var heads = new List<Renderer>();
@@ -45,22 +44,27 @@ namespace UnderGrind.Locomotion
             foreach (var renderer in renderers)
             {
                 if (renderer == null) continue;
-                var partName = renderer.name;
-                if (HasPartSuffix(partName, "_Head")) heads.Add(renderer);
-                if (ContainsToken(partName, "_FP_Arms") || ContainsToken(partName, "_FP_Hands"))
+                if (!string.IsNullOrWhiteSpace(configuration.HeadRendererSuffix) &&
+                    HasPartSuffix(renderer.name, configuration.HeadRendererSuffix))
+                    heads.Add(renderer);
+
+                if ((!string.IsNullOrWhiteSpace(configuration.FirstPersonArmsToken) &&
+                     ContainsToken(renderer.name, configuration.FirstPersonArmsToken)) ||
+                    (!string.IsNullOrWhiteSpace(configuration.FirstPersonHandsToken) &&
+                     ContainsToken(renderer.name, configuration.FirstPersonHandsToken)))
                     firstPersonOnly.Add(renderer);
             }
 
-            if (heads.Count == 0) return false;
+            if (configuration.RequireSeparateHead && heads.Count == 0) return false;
+            if (configuration.RequireFirstPersonArms && firstPersonOnly.Count == 0) return false;
+
+            rigSettings = configuration;
             Configure(heads.ToArray(), firstPersonOnly.ToArray());
             return true;
         }
 
         public void Configure(Renderer[] head, Renderer[] firstPersonOnly)
         {
-            // Explicit rig bindings must be authoritative. Name discovery is only a fallback
-            // for prototypes and must not silently add unrelated hair/face/arm renderers.
-            discoverRenderersByName = false;
             headRenderers = head ?? Array.Empty<Renderer>();
             firstPersonOnlyRenderers = firstPersonOnly ?? Array.Empty<Renderer>();
             CacheRenderers();
@@ -83,28 +87,6 @@ namespace UnderGrind.Locomotion
 
         private void CacheRenderers()
         {
-            if (discoverRenderersByName)
-            {
-                var all = GetComponentsInChildren<Renderer>(true);
-                var heads = new List<Renderer>(headRenderers);
-                var firstPerson = new List<Renderer>(firstPersonOnlyRenderers);
-                foreach (var renderer in all)
-                {
-                    if (renderer == null) continue;
-                    var name = renderer.name.ToLowerInvariant();
-                    if (ContainsAny(name, "head", "face", "hair", "eye", "skull", "jaw"))
-                    {
-                        if (!heads.Contains(renderer)) heads.Add(renderer);
-                    }
-                    if (ContainsAny(name, "fp_", "firstperson", "first_person", "arms_fp", "hands_fp"))
-                    {
-                        if (!firstPerson.Contains(renderer)) firstPerson.Add(renderer);
-                    }
-                }
-                headRenderers = heads.ToArray();
-                firstPersonOnlyRenderers = firstPerson.ToArray();
-            }
-
             Cache(headRenderers);
             Cache(firstPersonOnlyRenderers);
             _initialized = true;
@@ -135,13 +117,6 @@ namespace UnderGrind.Locomotion
 
         private static bool ContainsToken(string value, string token) =>
             value.IndexOf(token, StringComparison.OrdinalIgnoreCase) >= 0;
-
-        private static bool ContainsAny(string value, params string[] tokens)
-        {
-            foreach (var token in tokens)
-                if (value.Contains(token)) return true;
-            return false;
-        }
 
 #if UNITY_EDITOR
         private void OnValidate()
