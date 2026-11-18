@@ -1,0 +1,507 @@
+{
+  "playerSpawnPosition": {
+    "x": 0,
+    "y": 0.05,
+    "z": 0
+  },
+  "floorPosition": {
+    "x": 0,
+    "y": -0.05,
+    "z": 20
+  },
+  "floorSize": {
+    "x": 50,
+    "y": 50
+  },
+  "markerInterval": 2,
+  "markerMaxDistance": 40,
+  "markerLineX": 0,
+  "markerLineWidth": 3,
+  "markerLineHeight": 0.012,
+  "markerLineDepth": 0.025,
+  "markerSurfaceOffset": 0.006,
+  "markerLabelOffset": {
+    "x": 1.8,
+    "y": 0.05,
+    "z": 0
+  },
+  "markerTextCharacterSize": 0.12,
+  "markerTextFontSize": 48,
+  "markerTextAlignment": 3,
+  "markerTextColor": {
+    "r": 1,
+    "g": 1,
+    "b": 1,
+    "a": 1
+  },
+  "groundColor": {
+    "r": 0.24,
+    "g": 0.27,
+    "b": 0.28,
+    "a": 1
+  },
+  "concreteColor": {
+    "r": 0.43,
+    "g": 0.46,
+    "b": 0.47,
+    "a": 1
+  },
+  "markerColor": {
+    "r": 0.83,
+    "g": 0.69,
+    "b": 0.34,
+    "a": 1
+  },
+  "accentColor": {
+    "r": 0.3,
+    "g": 0.52,
+    "b": 0.49,
+    "a": 1
+  },
+  "blocks": [
+    {
+      "objectName": "Jump step 0.20m",
+      "position": {
+        "x": 4,
+        "y": 0.1,
+        "z": 5
+      },
+      "size": {
+        "x": 1.2,
+        "y": 0.2,
+        "z": 1.2
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Jump step 0.40m",
+      "position": {
+        "x": 6,
+        "y": 0.2,
+        "z": 5
+      },
+      "size": {
+        "x": 1.2,
+        "y": 0.4,
+        "z": 1.2
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Jump step 0.60m",
+      "position": {
+        "x": 8,
+        "y": 0.3,
+        "z": 5
+      },
+      "size": {
+        "x": 1.2,
+        "y": 0.6,
+        "z": 1.2
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Stair 1",
+      "position": {
+        "x": -4,
+        "y": 0.08,
+        "z": 5
+      },
+      "size": {
+        "x": 1.5,
+        "y": 0.16,
+        "z": 0.5
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Stair 2",
+      "position": {
+        "x": -4,
+        "y": 0.24,
+        "z": 5.48
+      },
+      "size": {
+        "x": 1.5,
+        "y": 0.32,
+        "z": 0.5
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Stair 3",
+      "position": {
+        "x": -4,
+        "y": 0.4,
+        "z": 5.96
+      },
+      "size": {
+        "x": 1.5,
+        "y": 0.48,
+        "z": 0.5
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Stair 4",
+      "position": {
+        "x": -4,
+        "y": 0.5599999999999999,
+        "z": 6.4399999999999995
+      },
+      "size": {
+        "x": 1.5,
+        "y": 0.64,
+        "z": 0.5
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Stair 5",
+      "position": {
+        "x": -4,
+        "y": 0.72,
+        "z": 6.92
+      },
+      "size": {
+        "x": 1.5,
+        "y": 0.8,
+        "z": 0.5
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Wall 0.80m",
+      "position": {
+        "x": -6,
+        "y": 0.4,
+        "z": 10
+      },
+      "size": {
+        "x": 2.4,
+        "y": 0.8,
+        "z": 0.18
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Wall 1.00m",
+      "position": {
+        "x": -2.5,
+        "y": 0.5,
+        "z": 10
+      },
+      "size": {
+        "x": 2.4,
+        "y": 1,
+        "z": 0.18
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Wall 1.20m",
+      "position": {
+        "x": 1,
+        "y": 0.6,
+        "z": 10
+      },
+      "size": {
+        "x": 2.4,
+        "y": 1.2,
+        "z": 0.18
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Crouch tunnel left pillar",
+      "position": {
+        "x": -10,
+        "y": 0.7,
+        "z": 15
+      },
+      "size": {
+        "x": 0.25,
+        "y": 1.4,
+        "z": 4
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Crouch tunnel right pillar",
+      "position": {
+        "x": -7.5,
+        "y": 0.7,
+        "z": 15
+      },
+      "size": {
+        "x": 0.25,
+        "y": 1.4,
+        "z": 4
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Crouch tunnel roof",
+      "position": {
+        "x": -8.75,
+        "y": 1.5,
+        "z": 15
+      },
+      "size": {
+        "x": 2.75,
+        "y": 0.2,
+        "z": 4
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Narrow passage left wall",
+      "position": {
+        "x": -11.5,
+        "y": 1,
+        "z": 23
+      },
+      "size": {
+        "x": 0.15,
+        "y": 2,
+        "z": 7
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Narrow passage right wall",
+      "position": {
+        "x": -10.5,
+        "y": 1,
+        "z": 23
+      },
+      "size": {
+        "x": 0.15,
+        "y": 2,
+        "z": 7
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Slalom post 1",
+      "position": {
+        "x": 4.5,
+        "y": 0.5,
+        "z": 22
+      },
+      "size": {
+        "x": 0.35,
+        "y": 1,
+        "z": 0.35
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Slalom post 2",
+      "position": {
+        "x": 5.5,
+        "y": 0.5,
+        "z": 24
+      },
+      "size": {
+        "x": 0.35,
+        "y": 1,
+        "z": 0.35
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Slalom post 3",
+      "position": {
+        "x": 4.5,
+        "y": 0.5,
+        "z": 26
+      },
+      "size": {
+        "x": 0.35,
+        "y": 1,
+        "z": 0.35
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Slalom post 4",
+      "position": {
+        "x": 5.5,
+        "y": 0.5,
+        "z": 28
+      },
+      "size": {
+        "x": 0.35,
+        "y": 1,
+        "z": 0.35
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Low hurdle 0.30m",
+      "position": {
+        "x": 0,
+        "y": 0.15,
+        "z": 30
+      },
+      "size": {
+        "x": 1.4,
+        "y": 0.3,
+        "z": 0.25
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Hurdle 0.50m",
+      "position": {
+        "x": 2,
+        "y": 0.25,
+        "z": 30
+      },
+      "size": {
+        "x": 1.4,
+        "y": 0.5,
+        "z": 0.25
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Platform A",
+      "position": {
+        "x": 10,
+        "y": 0.25,
+        "z": 16
+      },
+      "size": {
+        "x": 2,
+        "y": 0.5,
+        "z": 2
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Platform B",
+      "position": {
+        "x": 10,
+        "y": 0.35,
+        "z": 19.5
+      },
+      "size": {
+        "x": 2,
+        "y": 0.7,
+        "z": 2
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Platform C",
+      "position": {
+        "x": 10,
+        "y": 0.5,
+        "z": 23
+      },
+      "size": {
+        "x": 2,
+        "y": 1,
+        "z": 2
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Platform D",
+      "position": {
+        "x": 10,
+        "y": 0.25,
+        "z": 27
+      },
+      "size": {
+        "x": 2,
+        "y": 0.5,
+        "z": 2
+      },
+      "materialKind": 0,
+      "colliderEnabled": true
+    }
+  ],
+  "ramps": [
+    {
+      "objectName": "Ramp 15 degrees",
+      "position": {
+        "x": 6,
+        "y": 0.35,
+        "z": 11
+      },
+      "size": {
+        "x": 2.5,
+        "y": 0.18,
+        "z": 4
+      },
+      "rotationEuler": {
+        "x": -15,
+        "y": 0,
+        "z": 0
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    },
+    {
+      "objectName": "Ramp 25 degrees",
+      "position": {
+        "x": 14,
+        "y": 0.5,
+        "z": 12
+      },
+      "size": {
+        "x": 2.5,
+        "y": 0.18,
+        "z": 4
+      },
+      "rotationEuler": {
+        "x": -25,
+        "y": 0,
+        "z": 0
+      },
+      "materialKind": 1,
+      "colliderEnabled": true
+    }
+  ],
+  "directionalLightEuler": {
+    "x": 50,
+    "y": -30,
+    "z": 0
+  },
+  "directionalLightIntensity": 1.15,
+  "ambientColor": {
+    "r": 0.43,
+    "g": 0.46,
+    "b": 0.5,
+    "a": 1
+  }
+}
