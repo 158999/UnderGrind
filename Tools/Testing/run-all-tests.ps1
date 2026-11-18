@@ -16,7 +16,6 @@ $runDir = Initialize-UnderGrindTestRun -ProjectRoot $root
 $standaloneScript = Join-Path $PSScriptRoot "run-tests.ps1"
 $unityScript = Join-Path $PSScriptRoot "run-unity-tests.ps1"
 $script:overallDeadline = [DateTime]::UtcNow.AddSeconds($OverallTimeoutSeconds)
-$script:executorLogs = [ordered]@{}
 
 function Invoke-TestScript {
     param(
@@ -25,63 +24,49 @@ function Invoke-TestScript {
         [Parameter(Mandatory = $true)][string[]]$ScriptArguments
     )
 
-    $stdoutPath = Join-Path $runDir "executor-$StageName.stdout.log"
-    $stderrPath = Join-Path $runDir "executor-$StageName.stderr.log"
-    Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
-
-    $arguments = @("-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $ScriptPath) + $ScriptArguments
-    $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
-        if ([string]$_ -match '\s') { '"' + [string]$_ + '"' } else { [string]$_ }
-    }))
     $remainingSeconds = [int][Math]::Ceiling(($script:overallDeadline - [DateTime]::UtcNow).TotalSeconds)
     if ($remainingSeconds -le 0) {
-        Write-Warning "Timeout globale raggiunto prima di avviare $ScriptPath."
-        $script:executorLogs[$StageName] = [ordered]@{ stdout = $null; stderr = $null; timedOut = $true }
+        Write-Warning "Timeout globale raggiunto prima di avviare la fase $StageName."
         return 124
     }
 
     Write-Host "Avvio fase $StageName (tempo residuo: $remainingSeconds secondi)..."
+    $arguments = @("-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $ScriptPath) + $ScriptArguments
+    $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
+        if ([string]$_ -match '\s') { '"' + [string]$_ + '"' } else { [string]$_ }
+    }))
+
     $process = $null
     $exitCode = 1
-    $timedOut = $false
     try {
-        # Redirect both streams to files. Nested PowerShell/Unity processes must
-        # not inherit the interactive console handles of the executor process.
-        $process = Start-Process -FilePath "powershell.exe" -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        # Wait for the PowerShell worker process only. Do not use Start-Process -Wait:
+        # it can wait for descendants (including Unity helper processes) after the
+        # test runner has already printed its final status.
+        $process = Start-Process -FilePath "powershell.exe" -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow
         if (-not $process.WaitForExit($remainingSeconds * 1000)) {
-            $timedOut = $true
             Write-Warning "Timeout globale durante la fase $StageName. Termino il processo e i suoi discendenti."
             try { & taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null } catch { }
             try {
                 if (-not $process.HasExited) { $process.Kill() }
                 [void]$process.WaitForExit(10000)
             } catch { }
-            $exitCode = 124
+            return 124
         }
-        elseif ($process.HasExited) {
+
+        $process.Refresh()
+        if ($process.HasExited) {
             $exitCode = [int]$process.ExitCode
         }
         else {
-            $timedOut = $true
-            $exitCode = 124
+            Write-Warning "Il processo della fase $StageName non ha confermato la terminazione."
+            return 124
         }
     }
     catch {
-        $exitCode = 1
-        if (-not (Test-Path -LiteralPath $stderrPath)) { Set-Content -LiteralPath $stderrPath -Value "" -Encoding utf8 }
-        Add-Content -LiteralPath $stderrPath -Value $_.Exception.ToString()
+        Write-Error "Errore durante la fase $StageName - $($_.Exception.Message)"
+        return 1
     }
 
-    $stdout = if (Test-Path -LiteralPath $stdoutPath) { Get-Content -LiteralPath $stdoutPath -Raw } else { "" }
-    $stderr = if (Test-Path -LiteralPath $stderrPath) { Get-Content -LiteralPath $stderrPath -Raw } else { "" }
-    if (-not [string]::IsNullOrWhiteSpace($stdout)) { Write-Host $stdout.TrimEnd() }
-    if (-not [string]::IsNullOrWhiteSpace($stderr)) { Write-Host $stderr.TrimEnd() }
-
-    $script:executorLogs[$StageName] = [ordered]@{
-        stdout = [IO.Path]::GetFileName($stdoutPath)
-        stderr = [IO.Path]::GetFileName($stderrPath)
-        timedOut = $timedOut
-    }
     Write-Host "Fase $StageName terminata: exit code $exitCode."
     return $exitCode
 }
@@ -105,7 +90,6 @@ if ([DateTime]::UtcNow -lt $script:overallDeadline) {
 }
 else {
     Write-Warning "Timeout globale raggiunto: fase Unity non avviata."
-    $script:executorLogs["unity"] = [ordered]@{ stdout = $null; stderr = $null; timedOut = $true }
 }
 
 Write-Host "Raccolta dei report delle due fasi..."
@@ -126,7 +110,6 @@ $combined = [ordered]@{
     status = $status
     standaloneExitCode = $standaloneExit
     unityExitCode = $unityExit
-    executorLogs = $script:executorLogs
     standalone = $standaloneReport
     unity = $unityReport
 }
@@ -136,7 +119,8 @@ $combined | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $runDir "all-lates
     "Status: $status"
     "Standalone: $($standaloneReport.status) | Exit: $standaloneExit"
     "Unity: $($unityReport.status) | Exit: $unityExit"
-    "Executor logs: TestResults/test/executor-*.log"
+    "Standalone logs: TestResults/test/*.log"
+    "Unity logs and XML: TestResults/test/Unity/"
     "Reports: TestResults/test/"
     "Previous execution: TestResults/test old/"
 ) | Set-Content (Join-Path $runDir "all-latest.txt") -Encoding utf8
