@@ -41,6 +41,14 @@ namespace UnderGrind.Tests
             Assert.IsFalse(locomotion.CanRun);
             Assert.IsFalse(locomotion.CanJump);
             Assert.AreEqual(locomotion.WalkSpeed * inventory.OverloadedWalkSpeedMultiplier, locomotion.EffectiveWalkSpeed, 0.001f);
+
+            inventory.RemoveItem(_item, 1);
+            yield return null;
+
+            Assert.IsFalse(locomotion.IsOverloaded);
+            Assert.IsTrue(locomotion.CanRun);
+            Assert.IsTrue(locomotion.CanJump);
+            Assert.AreEqual(locomotion.WalkSpeed, locomotion.EffectiveWalkSpeed, 0.001f);
         }
 
         [UnityTearDown]
