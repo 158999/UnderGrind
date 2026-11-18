@@ -5,6 +5,8 @@ namespace UnderGrind.Locomotion
     [CreateAssetMenu(menuName = "UnderGrind/Player/Animation Settings", fileName = "PlayerAnimationSettings")]
     public sealed class PlayerAnimationSettings : ScriptableObject
     {
+        [SerializeField, HideInInspector] private int settingsVersion;
+
         [Header("Controller e clip")]
         [SerializeField] private RuntimeAnimatorController animatorController;
         [SerializeField] private AnimationClip idleClip;
