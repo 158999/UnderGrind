@@ -1,0 +1,14 @@
+{
+  "maleArmatureRootName": "UG_Male_Armature",
+  "femaleArmatureRootName": "UG_Female_Armature",
+  "malePrefabName": "Human_Male_Rigged",
+  "femalePrefabName": "Human_Female_Rigged",
+  "headRendererSuffix": "_Head",
+  "firstPersonArmsToken": "_FP_Arms",
+  "firstPersonHandsToken": "_FP_Hands",
+  "requireSeparateHead": true,
+  "requireFirstPersonArms": false,
+  "importAnimation": false,
+  "optimizeGameObjects": false,
+  "importVisibility": true
+}
