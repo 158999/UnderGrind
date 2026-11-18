@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05df5ba8bb3d2bd87ce6607591f195f6, type: 3}
+  m_Name: PlayerInputSettings
+  m_EditorClassIdentifier: UnderGrind.Runtime::UnderGrind.Locomotion.PlayerInputSettings
+  settingsVersion: 2
+  actionAsset: {fileID: -944628639613478452, guid: 405866dbb8b926c39ee9f747fdc0c7c0, type: 3}
+  actionMapName: Player
+  moveActionName: Move
+  lookMouseActionName: LookMouse
+  lookGamepadActionName: LookGamepad
+  jumpActionName: Jump
+  runActionName: Run
+  crouchActionName: Crouch
+  toggleCameraActionName: ToggleCamera
+  cancelActionName: Cancel
+  captureCursorActionName: CaptureCursor
+  interactActionName: Interact
+  dropActionName: Drop
+  toggleInventoryActionName: ToggleInventory
+  nextSlotActionName: NextSlot
+  previousSlotActionName: PreviousSlot
+  movementDeadzone: 0.15
+  gamepadLookDeadzone: 0.12
+  rebindTimeoutSeconds: 8
+  overrideStorageKey: UnderGrind.Player.InputOverrides
+  lockCursorOnStart: 1
+  recaptureCursorOnClick: 1

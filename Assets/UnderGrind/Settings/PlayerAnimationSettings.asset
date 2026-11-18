@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ef8d47fe26ebfdf96dd125a02687b84, type: 3}
+  m_Name: PlayerAnimationSettings
+  m_EditorClassIdentifier: UnderGrind.Runtime::UnderGrind.Locomotion.PlayerAnimationSettings
+  settingsVersion: 5
+  animatorController: {fileID: 0}
+  idleClip: {fileID: 0}
+  walkClip: {fileID: 0}
+  runClip: {fileID: 0}
+  jumpClip: {fileID: 0}
+  fallClip: {fileID: 0}
+  landClip: {fileID: 0}
+  crouchIdleClip: {fileID: 0}
+  crouchWalkClip: {fileID: 0}
+  idleLoops: 1
+  walkLoops: 1
+  runLoops: 1
+  jumpLoops: 0
+  fallLoops: 0
+  landLoops: 0
+  crouchIdleLoops: 1
+  crouchWalkLoops: 1
+  configureFbxImports: 1
+  fbxRigType: 0
+  createAvatarFromFbx: 1
+  importAnimationClips: 1
+  importMaterials: 0
+  importCameras: 0
+  importLights: 0
+  optimizeFbxGameObjects: 0
+  speedParameterName: Speed
+  moveXParameterName: MoveX
+  moveYParameterName: MoveY
+  groundedParameterName: Grounded
+  verticalSpeedParameterName: VerticalSpeed
+  runningParameterName: Running
+  crouchingParameterName: Crouching
+  jumpingParameterName: Jumping
+  fallingParameterName: Falling
+  landedParameterName: Landed
+  idleThreshold: 0
+  walkThreshold: 0.1
+  runThreshold: 1.65
+  crouchWalkThreshold: 0.1
+  speedDampTime: 0.1
+  transitionDuration: 0.15
+  landingExitTime: 0.9
