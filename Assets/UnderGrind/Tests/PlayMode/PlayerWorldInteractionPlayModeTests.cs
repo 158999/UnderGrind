@@ -22,6 +22,7 @@ namespace UnderGrind.Tests
         private InventoryUISettings _uiSettings;
         private InputActionAsset _inputAsset;
         private PlayerInputSettings _inputSettings;
+        private PlayerLocomotionSettings _locomotionSettings;
 
         [UnityTest]
         public IEnumerator Interact_PicksUpWorldItemIntoInventory()
@@ -163,6 +164,8 @@ namespace UnderGrind.Tests
             var inventory = _player.AddComponent<PlayerInventory>();
             inventory.Configure(_inventorySettings);
             var locomotion = _player.AddComponent<HumanLocomotionController>();
+            _locomotionSettings = ScriptableObject.CreateInstance<PlayerLocomotionSettings>();
+            locomotion.ConfigureSettings(_locomotionSettings);
             locomotion.SetCursorCaptured(true);
             var ui = _player.AddComponent<PlayerInventoryUI>();
             ui.Configure(_uiSettings, _inputSettings, inventory, locomotion);
@@ -191,6 +194,7 @@ namespace UnderGrind.Tests
             if (_item != null) Object.Destroy(_item);
             if (_uiSettings != null) Object.Destroy(_uiSettings);
             if (_inputSettings != null) Object.Destroy(_inputSettings);
+            if (_locomotionSettings != null) Object.Destroy(_locomotionSettings);
             if (_inputAsset != null) Object.Destroy(_inputAsset);
             yield return null;
         }
