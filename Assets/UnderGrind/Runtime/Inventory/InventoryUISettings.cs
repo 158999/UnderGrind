@@ -6,6 +6,8 @@ namespace UnderGrind.Inventory
     [CreateAssetMenu(menuName = "UnderGrind/Inventory/UI Settings", fileName = "PlayerInventoryUISettings")]
     public sealed class InventoryUISettings : ScriptableObject
     {
+        [SerializeField, HideInInspector] private int settingsVersion;
+
         [Header("Testi")]
         [SerializeField] private string panelTitle;
         [SerializeField] private string weightTextFormat;
