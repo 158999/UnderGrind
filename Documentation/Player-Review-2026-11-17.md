@@ -8,7 +8,7 @@ Sono stati esaminati:
 
 - Responsabilità, correttezza, casi limite e copertura dei test dei componenti C#.
 - Gerarchia e limiti dei modelli sorgente ispezionati in Blendstra.
-- Formati effettivamente disponibili per i sei movimenti selezionati nella libreria PINOC.
+- Formati effettivamente disponibili per gli otto movimenti selezionati nella libreria PINOC.
 - Stato del repository e risultati delle esecuzioni GitHub Actions.
 
 Questa revisione riguarda codice e asset. Non costituisce una verifica visiva nell'Editor Unity.
@@ -25,7 +25,7 @@ I test precedenti di `PlayerVisualRig` utilizzano una gerarchia artificiale con 
 
 ### I formati PINOC hanno finalità differenti
 
-I sei movimenti selezionati espongono due famiglie di file FBX:
+Gli otto movimenti selezionati espongono due famiglie di file FBX:
 
 - `splat-skeleton-fbx`: scheletro MetaHuman di 441 ossa, comprese quelle facciali, senza mesh. È destinato ai personaggi PINOC utilizzati con Splat Engine e rig Generic.
 - `mixamo-fbx`: mesh X Bot e scheletro con nomi Mixamo. È destinato al retargeting tramite Blender o altri strumenti DCC.
@@ -52,7 +52,7 @@ Il generatore della scena di test esclude le clip di accovacciamento dalla selez
 - La linea di separazione della testa e i pesi automatici devono essere verificati sul modello derivato.
 - Non esiste ancora una mesh dedicata per braccia e mani in prima persona.
 - La verifica di collisione della telecamera usa una maschera di layer configurabile: il prefab definitivo deve escludere il layer del giocatore oppure il filtro deve impedire in modo affidabile le collisioni con il corpo stesso.
-- Il generatore della scena cerca attualmente clip incorporate in `humans.blend`; non importa né individua automaticamente i file FBX esterni provenienti da PINOC.
+- `LocomotionTestSceneBuilder` usa l'eventuale Avatar presente in `humans.blend` soltanto come fallback per il modello statico; non cerca clip nel file. `PlayerAnimationControllerBuilder` ora individua gli FBX in `Assets/UnderGrind/Animations`, configura l'importazione Humanoid e associa le clip tramite nome interno o nome del file. Gli otto FBX PINOC non sono ancora stati importati né retargettati sul rig UnderGrind.
 - Le soglie tra riposo, camminata e corsa sono tarate sui valori di 1,40 m/s e 1,8667 m/s, ma richiedono una verifica visiva durante la riproduzione.
 - Nel repository non è ancora presente un Animator Controller di produzione né un Avatar Humanoid verificato per il modello definitivo.
 
