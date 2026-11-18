@@ -38,6 +38,16 @@ namespace UnderGrind.Editor
                 return;
             }
 
+            var invalidParameters = GetInvalidAnimatorParameters(settings);
+            if (invalidParameters.Count > 0)
+            {
+                var message = "Impossibile costruire l'Animator Controller. Correggere i parametri configurati:\n- " +
+                              string.Join("\n- ", invalidParameters);
+                Debug.LogError("UnderGrind: " + message);
+                EditorUtility.DisplayDialog("Parametri Animator non validi", message, "OK");
+                return;
+            }
+
             EnsureFolder("Assets/UnderGrind/Generated");
             EnsureFolder(ControllerFolder);
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) != null)
@@ -213,6 +223,37 @@ namespace UnderGrind.Editor
             if (settings.CrouchIdleClip == null) missing.Add("Crouch Idle");
             if (settings.CrouchWalkClip == null) missing.Add("Crouch Walk");
             return missing;
+        }
+
+        private static List<string> GetInvalidAnimatorParameters(PlayerAnimationSettings settings)
+        {
+            var invalid = new List<string>();
+            var names = new HashSet<string>(StringComparer.Ordinal);
+            var parameters = new[]
+            {
+                new { Name = settings.SpeedParameterName, Label = "Speed" },
+                new { Name = settings.MoveXParameterName, Label = "MoveX" },
+                new { Name = settings.MoveYParameterName, Label = "MoveY" },
+                new { Name = settings.GroundedParameterName, Label = "Grounded" },
+                new { Name = settings.VerticalSpeedParameterName, Label = "VerticalSpeed" },
+                new { Name = settings.RunningParameterName, Label = "Running" },
+                new { Name = settings.CrouchingParameterName, Label = "Crouching" },
+                new { Name = settings.JumpingParameterName, Label = "Jumping" },
+                new { Name = settings.FallingParameterName, Label = "Falling" },
+                new { Name = settings.LandedParameterName, Label = "Landed" }
+            };
+
+            foreach (var parameter in parameters)
+            {
+                if (string.IsNullOrWhiteSpace(parameter.Name))
+                {
+                    invalid.Add(parameter.Label + ": nome non configurato.");
+                    continue;
+                }
+                if (!names.Add(parameter.Name))
+                    invalid.Add(parameter.Label + ": il nome '" + parameter.Name + "' è già utilizzato da un altro parametro.");
+            }
+            return invalid;
         }
 
         private static void AddParameters(AnimatorController controller, PlayerAnimationSettings settings)
