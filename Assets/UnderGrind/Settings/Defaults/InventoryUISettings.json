@@ -58,7 +58,7 @@
   },
   "gridStartCorner": 0,
   "gridStartAxis": 0,
-  "gridConstraint": 0,
+  "gridConstraint": 1,
   "titleAlignment": 3,
   "weightAlignment": 5,
   "slotAlignment": 7,
