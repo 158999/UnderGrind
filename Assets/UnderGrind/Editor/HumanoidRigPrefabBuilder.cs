@@ -7,16 +7,27 @@ using UnderGrind.Locomotion;
 namespace UnderGrind.Editor
 {
     /// <summary>
-    /// Configures an exported UnderGrind humanoid FBX as a Unity Humanoid model
-    /// and creates male/female prefabs from its named armature roots.
+    /// Validates a rigged Humanoid FBX and creates the configured male/female prefabs.
+    /// The source mesh must already contain a valid skeleton and a separate head renderer.
     /// </summary>
     public static class HumanoidRigPrefabBuilder
     {
         private const string OutputFolder = "Assets/UnderGrind/Generated/Prefabs";
+        private const string RigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
+        private const string LocomotionSettingsPath = "Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset";
 
         [MenuItem("UnderGrind/Player/Build Prefabs From Selected Rigged FBX")]
         public static void BuildFromSelected()
         {
+            PlayerGameplayAssetBuilder.EnsureAssets();
+            var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(RigSettingsPath);
+            var locomotionSettings = AssetDatabase.LoadAssetAtPath<PlayerLocomotionSettings>(LocomotionSettingsPath);
+            if (rigSettings == null || locomotionSettings == null)
+            {
+                Debug.LogError("UnderGrind: asset PlayerRigSettings o PlayerLocomotionSettings mancante.");
+                return;
+            }
+
             var path = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (string.IsNullOrEmpty(path) || !path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase))
             {
@@ -33,11 +44,11 @@ namespace UnderGrind.Editor
 
             importer.animationType = ModelImporterAnimationType.Human;
             importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-            importer.importAnimation = false;
-            importer.optimizeGameObjects = false;
+            importer.importAnimation = rigSettings.ImportAnimation;
+            importer.optimizeGameObjects = rigSettings.OptimizeGameObjects;
             importer.importCameras = false;
             importer.importLights = false;
-            importer.importVisibility = true;
+            importer.importVisibility = rigSettings.ImportVisibility;
             importer.SaveAndReimport();
 
             var source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
@@ -55,11 +66,13 @@ namespace UnderGrind.Editor
 
             EnsureFolder("Assets/UnderGrind/Generated");
             EnsureFolder(OutputFolder);
-            var male = BuildPrefab(source, avatar, "UG_Male_Armature", "Human_Male_Rigged", 1.78f);
-            var female = BuildPrefab(source, avatar, "UG_Female_Armature", "Human_Female_Rigged", 1.70f);
+            var male = BuildPrefab(source, avatar, rigSettings.MaleArmatureRootName,
+                rigSettings.MalePrefabName, locomotionSettings.CharacterHeight, rigSettings);
+            var female = BuildPrefab(source, avatar, rigSettings.FemaleArmatureRootName,
+                rigSettings.FemalePrefabName, locomotionSettings.FemaleCharacterHeight, rigSettings);
             if (male == null || female == null)
             {
-                Debug.LogError("UnderGrind: generazione prefab incompleta. Verificare i nomi degli armature root nel FBX.");
+                Debug.LogError("UnderGrind: generazione prefab incompleta. Verificare radici scheletro e renderer separati.");
                 return;
             }
 
@@ -67,14 +80,13 @@ namespace UnderGrind.Editor
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("UnderGrind",
                 "Prefab generati in " + OutputFolder + "\n" +
-                "Maschio: Human_Male_Rigged.prefab\n" +
-                "Femmina: Human_Female_Rigged.prefab\n\n" +
-                "Il binding testa è configurato. Le braccia FP dedicate richiedono ancora una mesh/posa separata.",
+                "Maschio: " + rigSettings.MalePrefabName + ".prefab\n" +
+                "Femmina: " + rigSettings.FemalePrefabName + ".prefab",
                 "OK");
         }
 
         private static GameObject BuildPrefab(GameObject source, Avatar avatar, string rootName,
-            string prefabName, float targetHeight)
+            string prefabName, float targetHeight, PlayerRigSettings rigSettings)
         {
             var sourceRoot = FindDeepChild(source.transform, rootName);
             if (sourceRoot == null)
@@ -92,18 +104,27 @@ namespace UnderGrind.Editor
 
             var visualRig = temporary.GetComponent<PlayerVisualRig>();
             if (visualRig == null) visualRig = temporary.AddComponent<PlayerVisualRig>();
-            if (!visualRig.ConfigureFromHierarchy(temporary.transform))
+            if (!visualRig.ConfigureFromHierarchy(temporary.transform, rigSettings))
             {
-                Debug.LogError("UnderGrind: nessun renderer separato *_Head trovato in " + rootName);
+                Debug.LogError("UnderGrind: il rig " + rootName +
+                    " non soddisfa la configurazione di renderer testa/braccia.");
                 UnityEngine.Object.DestroyImmediate(temporary);
                 return null;
             }
 
-            if (temporary.GetComponentsInChildren<Renderer>(true).All(x =>
-                    x.name.IndexOf("_FP_Arms", StringComparison.OrdinalIgnoreCase) < 0 &&
-                    x.name.IndexOf("_FP_Hands", StringComparison.OrdinalIgnoreCase) < 0))
+            var renderers = temporary.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length == 0)
+            {
+                Debug.LogError("UnderGrind: nessun Renderer presente nel rig " + rootName);
+                UnityEngine.Object.DestroyImmediate(temporary);
+                return null;
+            }
+
+            if (!rigSettings.RequireFirstPersonArms &&
+                !renderers.Any(x => x.name.IndexOf(rigSettings.FirstPersonArmsToken,
+                    StringComparison.OrdinalIgnoreCase) >= 0))
                 Debug.LogWarning("UnderGrind: " + prefabName +
-                    " non contiene renderer FP dedicati; in prima persona verrà mostrato il corpo riggato.");
+                    " non contiene renderer FP dedicati; in prima persona resterà visibile il corpo riggato.");
 
             FitToHeight(temporary, targetHeight);
             var prefabPath = OutputFolder + "/" + prefabName + ".prefab";
@@ -127,11 +148,9 @@ namespace UnderGrind.Editor
 
         private static void FitToHeight(GameObject model, float targetHeight)
         {
-            var renderers = model.GetComponentsInChildren<Renderer>(true);
-            if (renderers.Length == 0) return;
-            var bounds = renderers[0].bounds;
-            for (var i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
-            if (bounds.size.y < 0.05f) return;
+            var bounds = GetBounds(model);
+            if (bounds.size.y <= Mathf.Epsilon || targetHeight <= Mathf.Epsilon)
+                throw new InvalidOperationException("Altezza del rig o altezza obiettivo non valida.");
 
             model.transform.localScale *= targetHeight / bounds.size.y;
             bounds = GetBounds(model);
@@ -141,6 +160,7 @@ namespace UnderGrind.Editor
         private static Bounds GetBounds(GameObject model)
         {
             var renderers = model.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length == 0) return new Bounds(model.transform.position, Vector3.zero);
             var bounds = renderers[0].bounds;
             for (var i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
             return bounds;
