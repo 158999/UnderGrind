@@ -5,6 +5,10 @@ namespace UnderGrind.Locomotion
     [CreateAssetMenu(menuName = "UnderGrind/Player/Rig Settings", fileName = "PlayerRigSettings")]
     public sealed class PlayerRigSettings : ScriptableObject
     {
+        [Header("Sorgenti FBX separate")]
+        [SerializeField] private string maleSourceAssetPath;
+        [SerializeField] private string femaleSourceAssetPath;
+
         [Header("Radici degli scheletri")]
         [SerializeField] private string maleArmatureRootName;
         [SerializeField] private string femaleArmatureRootName;
@@ -27,6 +31,8 @@ namespace UnderGrind.Locomotion
         [SerializeField] private bool optimizeGameObjects;
         [SerializeField] private bool importVisibility;
 
+        public string MaleSourceAssetPath => maleSourceAssetPath;
+        public string FemaleSourceAssetPath => femaleSourceAssetPath;
         public string MaleArmatureRootName => maleArmatureRootName;
         public string FemaleArmatureRootName => femaleArmatureRootName;
         public string MalePrefabName => malePrefabName;
@@ -44,6 +50,8 @@ namespace UnderGrind.Locomotion
 
         private void OnValidate()
         {
+            maleSourceAssetPath = NormalizePath(maleSourceAssetPath);
+            femaleSourceAssetPath = NormalizePath(femaleSourceAssetPath);
             maleArmatureRootName = Normalize(maleArmatureRootName);
             femaleArmatureRootName = Normalize(femaleArmatureRootName);
             malePrefabName = Normalize(malePrefabName);
@@ -56,5 +64,6 @@ namespace UnderGrind.Locomotion
         }
 
         private static string Normalize(string value) => value != null ? value.Trim() : string.Empty;
+        private static string NormalizePath(string value) => Normalize(value).Replace("\\", "/");
     }
 }
