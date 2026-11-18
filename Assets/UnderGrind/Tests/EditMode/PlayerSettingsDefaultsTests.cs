@@ -93,6 +93,8 @@ namespace UnderGrind.Tests
             Assert.IsTrue(settings.Blocks.Any(x => x.ObjectName.Contains("Crouch tunnel")));
             Assert.IsTrue(settings.Blocks.Any(x => x.ObjectName.Contains("Narrow passage")));
             Assert.IsTrue(settings.Blocks.Any(x => x.ObjectName.Contains("Platform")));
+            Assert.AreEqual(0.25f, settings.Blocks.Single(x => x.ObjectName == "Platform A").Size.y);
+            Assert.AreEqual(0.35f, settings.Blocks.Single(x => x.ObjectName == "Platform B").Size.y);
             Assert.AreEqual(2, settings.Ramps.Length);
         }
         [Test]
