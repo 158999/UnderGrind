@@ -13,16 +13,16 @@ Il Player ha sistemi runtime distinti per locomozione, input, animazione, invent
 
 Il workflow GitHub attivo è `.github/workflows/standalone-tests.yml`: esegue i test diagnostici .NET su Windows. Non equivale a una compilazione Unity, né a test EditMode/PlayMode.
 
-## Architettura proposta per Agent Manager
+## Architettura e prima implementazione Agent Manager
 
-Una possibile implementazione locale è un servizio .NET/C# con SQLite come registro persistente. Non è necessario introdurre subito un sistema distribuito: un singolo processo Windows può coordinare task, processi locali e server MCP remoti.
+È stato aggiunto il primo nucleo locale in `Tools/AgentManager`, basato su .NET 10 e SQLite (`Microsoft.Data.Sqlite`). Non è necessario introdurre subito un sistema distribuito: un singolo processo Windows può coordinare task, processi locali e server MCP remoti.
 
-### Componenti
+### Componenti previsti e stato attuale
 
 - **Coordinator:** valida richieste, scompone task, assegna priorità e verifica le dipendenze.
-- **Task store SQLite:** conserva task, stato, tentativi, lease, input/output, riferimenti Git e timestamp.
-- **Scheduler:** seleziona task pronti, rispetta dipendenze e limiti di concorrenza per provider.
-- **Worker host:** avvia worker C# isolati per GitHub, Unity CLI, PINOC, Blendstra e altri endpoint MCP supportati.
+- **Task store SQLite — implementato:** conserva task, stato, priorità, provider, lease, risultato/errore e timestamp. Le dipendenze sono registrate in `TaskDependencies`; gli eventi sono scritti in `AuditLog`.
+- **Scheduler — parziale:** `TryLeaseNext` assegna il task con priorità più alta le cui dipendenze sono concluse; non esiste ancora un loop concorrente o un limite per provider.
+- **Worker host — non implementato:** il CLI può assegnare un task a un worker identificato, ma non avvia ancora processi o server MCP.
 - **Provider adapters:** un adapter per API REST o server MCP; non un adapter fittizio per ogni plugin ChatGPT.
 - **Git workspace manager:** legge HEAD, verifica file modificati, crea commit solo su richiesta di policy, controlla che il branch di destinazione sia quello previsto.
 - **Verifier:** esegue controlli statici, test .NET, test Unity e controlli specifici per asset.
@@ -77,9 +77,9 @@ Un Agent Manager può quindi funzionare in due modalità:
 
 La sessione ChatGPT corrente e i suoi plugin non possono essere assunti come un runtime persistente accessibile dal servizio esterno.
 
-## Piano di implementazione consigliato
+## Stato della prima implementazione e prossimi incrementi
 
-1. Implementare prima il nucleo locale .NET + SQLite, senza API LLM.
+1. **Completato come prima base:** progetto `Tools/AgentManager`, database SQLite, coda, dipendenze, lease, recupero lease scaduti, completamento/fallimento e audit log.
 2. Collegare GitHub REST e Unity CLI; aggiungere verifiche di repository, compilazione e test.
 3. Aggiungere PINOC e Mobbin tramite MCP remoto, con OAuth e scope minimi.
 4. Validare Blendstra e Magic Patterns con una connessione MCP indipendente prima di automatizzarli.
@@ -100,3 +100,19 @@ Questa ricognizione verifica struttura Git, configurazione Unity versionata, wor
 - Magic Patterns MCP: https://www.magicpatterns.com/product/mcp
 - Blendstra MCP registry entry: https://rmcp.dev/server/blendstra.com
 - Loupe MCP: https://ubermuda.github.io/loupe/using/mcp/
+
+
+## Comandi del prototipo
+
+Dalla root del repository, con .NET SDK 10 installato:
+
+```powershell
+dotnet run --project Tools/AgentManager -- init
+dotnet run --project Tools/AgentManager -- enqueue "Audit Player" "Verificare input, locomozione e test" 10 github
+dotnet run --project Tools/AgentManager -- list
+dotnet run --project Tools/AgentManager -- lease worker-local-01
+dotnet run --project Tools/AgentManager -- complete <task-id> worker-local-01 "Verifiche concluse"
+dotnet run --project Tools/AgentManager -- recover
+```
+
+Il prototipo non è ancora un orchestratore multi-agente autonomo: non contiene adapter MCP, autenticazione, gestione segreti, approvazioni, retry/backoff, esecuzione continua, isolamento dei worker o verifica del branch Git. La build non è stata eseguita in questo ambiente perché non è disponibile il .NET SDK.
