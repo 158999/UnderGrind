@@ -113,6 +113,14 @@ namespace UnderGrind.Editor
             var defaultVersion = template.FindProperty("settingsVersion");
             if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
             {
+                CopyBool(current, template, "configureFbxImports");
+                CopyInt(current, template, "fbxRigType");
+                CopyBool(current, template, "createAvatarFromFbx");
+                CopyBool(current, template, "importAnimationClips");
+                CopyBool(current, template, "importMaterials");
+                CopyBool(current, template, "importCameras");
+                CopyBool(current, template, "importLights");
+                CopyBool(current, template, "optimizeFbxGameObjects");
                 version.intValue = defaultVersion.intValue;
                 current.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(asset);
