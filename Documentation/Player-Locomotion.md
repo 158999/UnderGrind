@@ -1,56 +1,97 @@
-# Player and humanoid locomotion
+# Player e locomozione umanoide
 
-## Reference character and motion contract
+## Personaggio di riferimento e parametri di movimento
 
-The male base is the reference player at 1.78 m. The female base is 1.70 m in the current source artifact. Both source meshes are retained as immutable inputs; the rigged derivatives must remain separate from them.
+Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m. Il modello femminile presente nella sorgente misura 1,70 m. Entrambi i modelli originali sono input immutabili: scheletri, pesi e modifiche visive devono essere realizzati su derivati separati.
 
-Default locomotion values:
-- Walk: 1.40 m/s.
-- Run: walk × 4/3 = 1.8667 m/s.
-- Jump apex: 0.40 m above take-off under the current tuning.
-- Gravity: 9.81 m/s².
-- CharacterController height: 1.78 m.
-- Capsule radius: 0.28 m.
-- Crouch capsule height: 1.12 m.
+Valori iniziali della locomozione:
 
-The jump apex is a gameplay tuning parameter, not a claim of measured human biomechanics.
+- Camminata: 1,40 m/s.
+- Corsa: camminata × 4/3 = 1,8667 m/s.
+- Altezza massima teorica del salto: 0,40 m rispetto al punto di partenza.
+- Gravità: 9,81 m/s².
+- Altezza del CharacterController: 1,78 m.
+- Raggio della capsula: 0,28 m.
+- Altezza della capsula accovacciata: 1,12 m.
 
-## Runtime responsibilities
+L'altezza del salto è un parametro di bilanciamento del gioco e non una misurazione biomeccanica.
 
-`HumanLocomotionController` owns movement and the CharacterController. It supports keyboard, mouse and gamepad; acceleration/deceleration; buffered jump and coyote time; crouch clearance; and first-/third-person camera. `PlayerVisualRig` owns renderer visibility: head renderers are hidden in first person, explicitly marked first-person-only renderers are hidden in third person, and all other renderers preserve their original enabled state. `PlayerAnimationDriver` writes only parameters actually present in the assigned Animator Controller and disables root motion so the Animator cannot apply a second displacement.
+## Componenti di runtime
 
-Production prefabs should call `PlayerVisualRig.ConfigureFromHierarchy(rigRoot)` after importing the rig. It recognizes the generated naming convention:
-- `*_Head`: hidden in first person and restored in third person.
-- `*_FP_Arms` and `*_FP_Hands`: shown in first person and hidden in third person.
-- Other renderers remain visible in both modes unless explicitly configured.
+`HumanLocomotionController` gestisce il movimento e il componente Unity `CharacterController`. Comprende input da tastiera, mouse e gamepad, accelerazione e decelerazione, salto con input bufferizzato e coyote time, verifica dello spazio disponibile per rialzarsi e gestione della telecamera in prima e terza persona.
 
-If no separate head renderer is found, `ConfigureFromHierarchy` returns false and leaves the existing configuration unchanged. Explicit renderer arrays remain supported through `Configure`. Name-based heuristic discovery is only a prototype fallback.
+`PlayerVisualRig` gestisce la visibilità dei renderer:
 
-First person can hide the head only when the head is a separate Renderer or is explicitly assigned as a separate renderer group; it retains body and arm renderers. Third person restores the head and places the camera behind the player with a sphere-cast obstruction check. Important source limitation: the inspected `Human_Male` and `Human_Female` are each a single static mesh object. There is no separate head renderer, armature, or skinning in the original source version. A new Blendstra derivation is being attempted; until its exact saved result is inspected, the source meshes remain the only verified assets and first-person body visibility is not accepted.
+- In prima persona nasconde i renderer della testa.
+- In terza persona nasconde gli eventuali renderer destinati esclusivamente alle braccia e alle mani in prima persona.
+- Gli altri renderer mantengono lo stato di abilitazione originale.
 
-## Inputs
+`PlayerAnimationDriver` aggiorna soltanto i parametri effettivamente presenti nell'Animator Controller assegnato. Disabilita il root motion, evitando che l'Animator applichi uno spostamento aggiuntivo rispetto a quello gestito dal controller.
 
-| Action | Keyboard / mouse | Gamepad |
+## Associazione delle parti del modello
+
+Dopo l'importazione di un modello riggato, il prefab deve configurare il componente tramite `PlayerVisualRig.ConfigureFromHierarchy(rigRoot)`.
+
+La convenzione dei nomi è:
+
+- `*_Head`: testa, nascosta in prima persona e ripristinata in terza persona.
+- `*_FP_Arms`: braccia dedicate alla prima persona.
+- `*_FP_Hands`: mani dedicate alla prima persona.
+
+Le parti `*_FP_Arms` e `*_FP_Hands` sono visibili in prima persona e nascoste in terza persona. Gli altri renderer restano visibili in entrambe le modalità, salvo configurazione esplicita.
+
+Se non viene trovata una testa separata, `ConfigureFromHierarchy` restituisce `false` e non sostituisce la configurazione esistente. È inoltre disponibile `Configure`, che accetta gruppi espliciti di renderer. Le associazioni basate su parole presenti nei nomi sono una soluzione di ripiego per i prototipi, non il criterio previsto per i prefab di produzione.
+
+La visuale in prima persona può nascondere soltanto la testa quando questa è un renderer indipendente o appartiene a un gruppo di renderer assegnato esplicitamente. Il corpo e le braccia devono rimanere visibili. In terza persona la testa viene ripristinata e la telecamera si posiziona dietro il personaggio, verificando gli ostacoli tramite uno sphere cast.
+
+La sorgente attualmente ispezionata contiene una sola mesh statica completa per ciascun personaggio. Non dispone di una testa separata, di uno scheletro o di pesi di deformazione. Per questo motivo i test basati su gerarchie artificiali dimostrano il comportamento del componente, ma non dimostrano che la visuale in prima persona funzioni sul modello reale.
+
+## Comandi
+
+| Azione | Tastiera e mouse | Gamepad |
 |---|---|---|
-| Move | WASD / arrows | Left stick |
-| Look | Mouse | Right stick |
-| Run | Shift | — |
-| Jump | Space | South button |
-| Crouch | C | East button |
-| Toggle camera | F5 | North button |
-| Release cursor | Escape | — |
-| Re-lock cursor | Left click | — |
+| Movimento | WASD / frecce | Stick sinistro |
+| Visuale | Mouse | Stick destro |
+| Corsa | Shift | — |
+| Salto | Spazio | Pulsante sud |
+| Accovacciamento | C | Pulsante est |
+| Cambio telecamera | F5 | Pulsante nord |
+| Sblocco cursore | Esc | — |
+| Blocco cursore | Clic sinistro | — |
 
-## Animator parameters
+## Parametri dell'Animator
 
-`PlayerAnimationDriver` can write `Speed` (m/s), `MoveX`, `MoveY`, `Grounded`, `VerticalSpeed`, `Running`, `Crouching`, `Jumping` and `Falling`. It checks the Animator parameter list before writing, so a partially configured controller does not receive missing-parameter writes. The test-scene builder creates matching parameters and idle/walk/run/jump/crouch states when compatible clips and an Avatar are available. It does not fabricate animation clips or an Avatar when the Blender source lacks them.
+`PlayerAnimationDriver` può aggiornare i seguenti parametri:
 
-## Asset pipeline
+- `Speed`: velocità in metri al secondo.
+- `MoveX` e `MoveY`: direzione dell'input.
+- `Grounded`: contatto con il terreno.
+- `VerticalSpeed`: velocità verticale.
+- `Running`, `Crouching`, `Jumping` e `Falling`: stati del movimento.
 
-The selected PINOC library motions are Standing Idle, Walking, Running, Jump, Crouching Idle and Crouch Walk Forward. The library lookup confirms the selected clips are free to take. Their Mixamo FBX exports contain an X Bot mesh and Mixamo-named skeleton, suitable as a DCC retarget source; the X Bot is not the UnderGrind player body. Their separate Splat FBX exports are armature-only 441-bone MetaHuman clips and are intended for the PINOC Splat Engine Generic workflow, not the conventional Unity Humanoid retarget path. Neither family is imported into this repository yet. Confirm the provider's applicable usage terms before redistributing or shipping downloaded exports.
+Prima di aggiornare un parametro, il componente controlla che esista e che abbia il tipo corretto. La sostituzione del Runtime Animator Controller viene rilevata durante l'esecuzione.
 
-## Verification boundary
+Il generatore della scena di test crea i parametri e gli stati idle, camminata, corsa, salto e accovacciamento quando trova clip compatibili e un Avatar valido. Non crea animazioni o Avatar fittizi quando la sorgente Blender non li contiene.
 
-The original source meshes remain unchanged. A new Blendstra operation is running against the exact saved source version to create non-destructive male/female rigged derivatives, separate head renderers and automatic skin weights. The head boundary is a first-pass geometric estimate and must be inspected; automatic weights must be reviewed for deformation quality. Operation ID: `idem_4cc1109cda2da5f6371c7a8cb2022087f568b8c51cdac4299081f998b0254613`.
+## Pipeline delle animazioni
 
-The player code, renderer visibility policy, Animator bridge and Play Mode tests are committed to `main`. The newest renderer-name binding test was added after the earlier baseline tests and is awaiting its CI run. GitHub standalone diagnostics do not substitute for Unity EditMode/PlayMode or visual inspection. No Unity Editor visual inspection was performed in this session.
+I sei movimenti selezionati dalla libreria PINOC sono Standing Idle, Walking, Running, Jump, Crouching Idle e Crouch Walk Forward.
+
+Gli export Mixamo contengono una mesh X Bot e uno scheletro con nomi Mixamo: sono candidati per il retargeting sullo scheletro UnderGrind tramite uno strumento DCC. X Bot non è il corpo del giocatore. Gli export Splat sono invece animazioni senza mesh, basate su uno scheletro MetaHuman di 441 ossa; per Unity sono destinati al pacchetto Splat Engine e al rig Generic, non al normale retargeting Humanoid.
+
+Nessuna delle due famiglie di file è ancora importata nel repository o collegata al personaggio UnderGrind. Prima della distribuzione degli export devono essere verificate le condizioni d'uso del fornitore.
+
+## Stato delle verifiche
+
+Il modello sorgente maschile e quello femminile sono stati ispezionati e risultano distinti, statici e privi di rig. Il progetto Blendstra dei derivati non ha prodotto una versione utilizzabile: l'ultimo tentativo è terminato con l'errore `DUPLICATE_OR_INVALID_OBJECT_ID`. La generazione del rig, la separazione della testa e la verifica dei pesi sono quindi ancora da completare.
+
+Il codice del controller, la gestione della visibilità dei renderer, il collegamento con l'Animator e i relativi test sono presenti nel repository.
+
+Ultima esecuzione disponibile, 18 novembre 2026:
+
+- Test autonomi C#: 6 superati su 6.
+- Test Unity PlayMode: 7 superati su 7.
+- Test Unity EditMode: nessun test eseguito.
+- Verifica visiva nell'Editor: non effettuata.
+
+I risultati dei test automatici non sostituiscono l'ispezione del modello reale, la verifica delle animazioni nell'Editor e il controllo della scena durante il gioco.

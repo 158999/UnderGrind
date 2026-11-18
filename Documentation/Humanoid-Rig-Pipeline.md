@@ -1,49 +1,52 @@
-# UnderGrind humanoid rig pipeline
+# Pipeline di preparazione dei modelli umanoidi
 
-## Source and preservation
+## Modelli sorgente e conservazione
 
-The source project is [humans source in Blendstra](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3).
+Il progetto Blendstra [UnderGrind — Humans Source Separation](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3) contiene la versione sorgente ispezionata dei due personaggi:
 
-The inspected immutable source version contains:
-- `Human_Male`: 1.78 m, 260 source vertices / 486 source triangles.
-- `Human_Female`: 1.70 m, 284 source vertices / 529 source triangles.
+- `Human_Male`: altezza modellata di 1,78 m; 260 vertici e 486 triangoli nella mesh sorgente.
+- `Human_Female`: altezza modellata di 1,70 m; 284 vertici e 529 triangoli nella mesh sorgente.
 
-Both are single static mesh objects without an armature, skin weights or a separate head renderer. The source version is retained unchanged.
+Ogni personaggio è rappresentato da un'unica mesh statica completa. Le mesh sorgenti non hanno uno scheletro, pesi di deformazione o un renderer separato per la testa. I due modelli originali devono rimanere invariati: scheletri, pesi, suddivisioni e varianti vanno realizzati su derivati distinti.
 
-## Current derivative operation
+L'ispezione della versione sorgente ha rilevato anche modificatori e dati UV la cui configurazione non è coperta dall'esportazione di verifica utilizzata. Non è quindi possibile considerare verificati questi aspetti sulla sola base dei conteggi geometrici.
 
-A separate project is being used to avoid writing into or replacing the source project:
+## Stato della generazione dei derivati
 
-[UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999)
+Il progetto separato [UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999) è stato predisposto per non modificare il progetto sorgente.
 
-Operation ID: `idem_1c7680c7f652ee2803d5d9f346dfb9b95e600f595b751fde0f0690eace51c3bf`.
+L'ultimo tentativo di generazione è terminato con errore durante la risoluzione degli identificativi degli oggetti (`DUPLICATE_OR_INVALID_OBJECT_ID`). Il progetto dei derivati non contiene una versione salvata utilizzabile e non ha una sorgente associata nella versione attualmente aperta. Di conseguenza, non esiste ancora un modello riggato da importare in Unity.
 
-The current script attempts to:
-1. Duplicate each source mesh and bake its world transform into the derivative.
-2. Normalize ground contact and horizontal centering without changing source proportions.
-3. Create a separate `UG_Male_Armature` / `UG_Female_Armature` skeleton using Unity/Mixamo-recognizable humanoid bone names.
-4. Split a provisional head renderer at 87.5% of character height.
-5. Apply Blender automatic weights to body and head renderers.
+Il tentativo previsto comprendeva:
 
-The head split is a provisional geometric estimate, not an anatomically validated seam. Automatic weights are not accepted until deformation is inspected. The operation has not yet returned a saved result. Do not import or use it as a production character before those checks pass.
+1. Duplicazione delle mesh sorgenti e applicazione delle trasformazioni ai derivati.
+2. Sistemazione del contatto con il terreno e del centraggio, senza alterare le proporzioni.
+3. Creazione di scheletri distinti, `UG_Male_Armature` e `UG_Female_Armature`, con nomi delle ossa compatibili con il riconoscimento Humanoid di Unity.
+4. Separazione della testa in un renderer indipendente.
+5. Assegnazione automatica dei pesi alle mesh del corpo e della testa.
 
-## Unity import and prefab builder
+La soglia geometrica ipotizzata per separare la testa è soltanto una stima iniziale: la linea di separazione deve essere controllata sulle viste frontale, laterale e obliqua. Anche i pesi automatici devono essere verificati attraverso la deformazione delle articolazioni. Nessuno dei due passaggi è attualmente approvato.
 
-Once a reviewed FBX derivative is exported from Blendstra and imported into Unity:
+## Importazione in Unity e generazione dei prefab
 
-1. Select the FBX asset in the Project window.
-2. Run **UnderGrind → Player → Build Prefabs From Selected Rigged FBX**.
-3. The editor utility configures the FBX as Unity Humanoid, requests an Avatar from the model, disables optimized GameObject hierarchy, and creates:
+Dopo aver ottenuto e verificato un FBX derivato:
+
+1. Importare il file FBX nel progetto Unity.
+2. Selezionare l'asset nella finestra Project.
+3. Eseguire **UnderGrind → Player → Build Prefabs From Selected Rigged FBX**.
+4. Verificare che Unity riconosca il modello come Humanoid e generi un Avatar valido.
+5. Controllare i prefab prodotti:
    - `Assets/UnderGrind/Generated/Prefabs/Human_Male_Rigged.prefab`
    - `Assets/UnderGrind/Generated/Prefabs/Human_Female_Rigged.prefab`
-4. The builder requires valid Unity Humanoid Avatar data and the named roots `UG_Male_Armature` and `UG_Female_Armature`.
-5. It binds `*_Head` renderers through `PlayerVisualRig.ConfigureFromHierarchy`.
 
-The generated rig operation does not yet create dedicated camera-space first-person arms/hands. Until that asset exists, the prefab builder warns that first person will show the rigged body rather than a dedicated FP arms mesh. Do not mark the first-person presentation complete.
+Il generatore richiede le radici `UG_Male_Armature` e `UG_Female_Armature`. I renderer della testa devono seguire la convenzione `*_Head` e vengono associati tramite `PlayerVisualRig.ConfigureFromHierarchy`.
 
-## Animation sources
+Il generatore non produce ancora una geometria dedicata per braccia e mani in prima persona. In assenza di tale asset, la visuale in prima persona non può essere considerata completa: il personaggio non dispone ancora di un modello specifico per le braccia e le mani in camera.
 
-Six PINOC library clips were taken successfully at zero credits:
+## Sorgenti delle animazioni
+
+Sono stati individuati e acquisiti dalla libreria PINOC sei movimenti:
+
 - Standing Idle
 - Walking
 - Running
@@ -51,16 +54,22 @@ Six PINOC library clips were taken successfully at zero credits:
 - Crouching Idle
 - Crouch Walk Forward
 
-The default taken format is the armature-only 441-bone MetaHuman skeleton GLB. It has no mesh and is not the conventional Unity Humanoid retarget format. The same assets also expose `mixamo-fbx` (X Bot mesh plus Mixamo-named skeleton), which is the DCC retarget candidate. X Bot is only a retarget source and must not replace the UnderGrind body. The six clips are not yet in the repository or retargeted to the UnderGrind rig. Confirm applicable provider usage terms before redistribution or shipping.
+Per ciascun movimento sono disponibili due famiglie di esportazione FBX, con finalità differenti:
 
-## Acceptance checklist
+- `splat-skeleton-fbx`: scheletro MetaHuman di 441 ossa, comprensivo delle ossa facciali, senza mesh. È destinato ai personaggi PINOC utilizzati con il pacchetto Unity `com.viggle.splat-engine` dalla versione 0.2.2 e richiede il rig Generic.
+- `mixamo-fbx`: mesh X Bot e scheletro con nomenclatura Mixamo. È il formato candidato per il retargeting tramite Blender o altri strumenti DCC verso lo scheletro umanoide di UnderGrind.
 
-- [ ] Blendstra derivative saved and exact version inspected.
-- [ ] Original male/female topology retained and compared.
-- [ ] Head split seam inspected from front, side and oblique views.
-- [ ] Automatic weights checked for all major body regions.
-- [ ] Unity Humanoid Avatar valid for both rigs.
-- [ ] Male and female prefabs generated.
-- [ ] Dedicated first-person arms/hands renderer created and posed.
-- [ ] PINOC Mixamo clips retargeted and checked for foot sliding/root motion.
-- [ ] Play Mode and visual tests pass in Unity.
+X Bot è un modello di supporto per il retargeting e non deve sostituire il corpo del personaggio UnderGrind. I sei movimenti non sono ancora presenti nel repository né sono stati trasferiti sullo scheletro definitivo. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili del fornitore.
+
+## Criteri di completamento
+
+- [ ] Generazione dei derivati Blendstra completata e versione salvata identificata.
+- [ ] Integrità delle mesh maschile e femminile originali confrontata con i derivati.
+- [ ] Separazione della testa controllata da più angolazioni.
+- [ ] Pesi verificati su tutte le principali articolazioni.
+- [ ] Avatar Humanoid Unity valido per entrambi i personaggi.
+- [ ] Prefab maschile e femminile generati.
+- [ ] Mesh dedicate a braccia e mani in prima persona create e posate.
+- [ ] Animazioni PINOC in formato Mixamo trasferite sullo scheletro UnderGrind.
+- [ ] Cicli di camminata e corsa verificati per scivolamento dei piedi e movimento della radice.
+- [ ] Test PlayMode superati e resa visiva controllata nell'Editor Unity.
