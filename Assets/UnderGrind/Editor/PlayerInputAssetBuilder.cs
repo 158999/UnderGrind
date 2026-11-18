@@ -85,22 +85,22 @@ namespace UnderGrind.Editor
             var version = serialized.FindProperty("settingsVersion");
             if (version != null && version.intValue < defaults.settingsVersion)
             {
-            SetStringIfEmpty(serialized, "actionMapName", defaults.actionMapName);
-            SetStringIfEmpty(serialized, "moveActionName", defaults.moveActionName);
-            SetStringIfEmpty(serialized, "lookMouseActionName", defaults.lookMouseActionName);
-            SetStringIfEmpty(serialized, "lookGamepadActionName", defaults.lookGamepadActionName);
-            SetStringIfEmpty(serialized, "jumpActionName", defaults.jumpActionName);
-            SetStringIfEmpty(serialized, "runActionName", defaults.runActionName);
-            SetStringIfEmpty(serialized, "crouchActionName", defaults.crouchActionName);
-            SetStringIfEmpty(serialized, "toggleCameraActionName", defaults.toggleCameraActionName);
-            SetStringIfEmpty(serialized, "cancelActionName", defaults.cancelActionName);
-            SetStringIfEmpty(serialized, "captureCursorActionName", defaults.captureCursorActionName);
-            SetStringIfEmpty(serialized, "interactActionName", defaults.interactActionName);
-            SetStringIfEmpty(serialized, "dropActionName", defaults.dropActionName);
-            SetStringIfEmpty(serialized, "toggleInventoryActionName", defaults.toggleInventoryActionName);
-            SetStringIfEmpty(serialized, "nextSlotActionName", defaults.nextSlotActionName);
-            SetStringIfEmpty(serialized, "previousSlotActionName", defaults.previousSlotActionName);
-            SetStringIfEmpty(serialized, "overrideStorageKey", defaults.overrideStorageKey);
+                SetStringIfEmpty(serialized, "actionMapName", defaults.actionMapName);
+                SetStringIfEmpty(serialized, "moveActionName", defaults.moveActionName);
+                SetStringIfEmpty(serialized, "lookMouseActionName", defaults.lookMouseActionName);
+                SetStringIfEmpty(serialized, "lookGamepadActionName", defaults.lookGamepadActionName);
+                SetStringIfEmpty(serialized, "jumpActionName", defaults.jumpActionName);
+                SetStringIfEmpty(serialized, "runActionName", defaults.runActionName);
+                SetStringIfEmpty(serialized, "crouchActionName", defaults.crouchActionName);
+                SetStringIfEmpty(serialized, "toggleCameraActionName", defaults.toggleCameraActionName);
+                SetStringIfEmpty(serialized, "cancelActionName", defaults.cancelActionName);
+                SetStringIfEmpty(serialized, "captureCursorActionName", defaults.captureCursorActionName);
+                SetStringIfEmpty(serialized, "interactActionName", defaults.interactActionName);
+                SetStringIfEmpty(serialized, "dropActionName", defaults.dropActionName);
+                SetStringIfEmpty(serialized, "toggleInventoryActionName", defaults.toggleInventoryActionName);
+                SetStringIfEmpty(serialized, "nextSlotActionName", defaults.nextSlotActionName);
+                SetStringIfEmpty(serialized, "previousSlotActionName", defaults.previousSlotActionName);
+                SetStringIfEmpty(serialized, "overrideStorageKey", defaults.overrideStorageKey);
                 SetFloatIfNotPositive(serialized, "movementDeadzone", defaults.movementDeadzone);
                 SetFloatIfNotPositive(serialized, "gamepadLookDeadzone", defaults.gamepadLookDeadzone);
                 SetFloatIfNotPositive(serialized, "rebindTimeoutSeconds", defaults.rebindTimeoutSeconds);
