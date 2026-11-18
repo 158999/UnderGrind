@@ -32,6 +32,7 @@ namespace UnderGrind.Locomotion
         [SerializeField, Range(0.01f, 1f)] private float stanceOverlapRadiusMultiplier;
         [SerializeField] private LayerMask characterCollisionLayers;
         [SerializeField, Min(0f)] private float characterStepOffset;
+        [SerializeField, Min(0f)] private float characterStepOffsetHeightRatio;
         [SerializeField, Range(0f, 90f)] private float characterSlopeLimit;
         [SerializeField, Min(0f)] private float characterMinMoveDistance;
 
@@ -44,6 +45,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private Vector3 thirdPersonCameraOffset;
         [SerializeField, Min(0.1f)] private float thirdPersonDistance;
         [SerializeField, Min(0.001f)] private float cameraCollisionRadius;
+        [SerializeField, Min(0f)] private float cameraCollisionSurfaceOffset;
         [SerializeField] private LayerMask cameraCollisionLayers;
         [SerializeField, Min(0.001f)] private float cameraFollowSharpness;
         [SerializeField, Min(0.001f)] private float thirdPersonRotationSharpness;
@@ -72,6 +74,7 @@ namespace UnderGrind.Locomotion
         public float StanceOverlapRadiusMultiplier => stanceOverlapRadiusMultiplier;
         public LayerMask CharacterCollisionLayers => characterCollisionLayers;
         public float CharacterStepOffset => characterStepOffset;
+        public float CharacterStepOffsetHeightRatio => characterStepOffsetHeightRatio;
         public float CharacterSlopeLimit => characterSlopeLimit;
         public float CharacterMinMoveDistance => characterMinMoveDistance;
         public float MouseSensitivity => mouseSensitivity;
@@ -82,6 +85,7 @@ namespace UnderGrind.Locomotion
         public Vector3 ThirdPersonCameraOffset => thirdPersonCameraOffset;
         public float ThirdPersonDistance => thirdPersonDistance;
         public float CameraCollisionRadius => cameraCollisionRadius;
+        public float CameraCollisionSurfaceOffset => cameraCollisionSurfaceOffset;
         public LayerMask CameraCollisionLayers => cameraCollisionLayers;
         public float CameraFollowSharpness => cameraFollowSharpness;
         public float ThirdPersonRotationSharpness => thirdPersonRotationSharpness;
@@ -113,6 +117,7 @@ namespace UnderGrind.Locomotion
             standingClearance = Mathf.Max(0f, standingClearance);
             stanceOverlapRadiusMultiplier = Mathf.Clamp01(stanceOverlapRadiusMultiplier);
             characterStepOffset = Mathf.Max(0f, characterStepOffset);
+            characterStepOffsetHeightRatio = Mathf.Max(0f, characterStepOffsetHeightRatio);
             characterSlopeLimit = Mathf.Clamp(characterSlopeLimit, 0f, 90f);
             characterMinMoveDistance = Mathf.Max(0f, characterMinMoveDistance);
             mouseSensitivity = Mathf.Max(0.001f, mouseSensitivity);
@@ -122,6 +127,7 @@ namespace UnderGrind.Locomotion
             crouchingViewHeight = Mathf.Max(0f, crouchingViewHeight);
             thirdPersonDistance = Mathf.Max(0.1f, thirdPersonDistance);
             cameraCollisionRadius = Mathf.Max(0.001f, cameraCollisionRadius);
+            cameraCollisionSurfaceOffset = Mathf.Max(0f, cameraCollisionSurfaceOffset);
             cameraFollowSharpness = Mathf.Max(0.001f, cameraFollowSharpness);
             thirdPersonRotationSharpness = Mathf.Max(0.001f, thirdPersonRotationSharpness);
             cameraNearClipPlane = Mathf.Max(0.001f, cameraNearClipPlane);
