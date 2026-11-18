@@ -35,6 +35,7 @@ function Invoke-DotNetCaptured {
     $timedOut = $false
     $exitCode = 1
     $process = $null
+    $stderrFailure = $null
     try {
         $process = Start-Process -FilePath $dotnetCommand.Source -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
         if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
