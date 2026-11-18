@@ -31,8 +31,9 @@ namespace UnderGrind.Locomotion
                 $"Salto: {_movement.JumpHeight:0.00} m  |  v₀ {_movement.JumpVelocity:0.00} m/s",
                 $"Altezza: {_movement.CharacterHeight:0.00} m  |  Gravità: {_movement.Gravity:0.00} m/s²",
                 $"Stato: {(_movement.IsGrounded ? "a terra" : "in aria")}  |  {(_movement.IsRunning ? "corsa" : "cammino")}",
-                $"Inventario: {(_movement.IsOverloaded ? "sovraccarico" : "peso regolare")}  |  " +
-                    $"corsa: {(_movement.CanRun ? "sì" : "no")}  |  salto: {(_movement.CanJump ? "sì" : "no")}",
+                $"Peso: {_movement.InventoryWeightKg:0.0} / {_movement.InventoryWeightCapacityKg:0.0} kg  |  " +
+                    $"{(_movement.IsOverloaded ? "sovraccarico" : "regolare")}",
+                $"Corsa: {(_movement.CanRun ? "sì" : "no")}  |  salto: {(_movement.CanJump ? "sì" : "no")}",
                 $"Visuale: {(_movement.IsThirdPerson ? "terza persona" : "prima persona")}"
             };
 
