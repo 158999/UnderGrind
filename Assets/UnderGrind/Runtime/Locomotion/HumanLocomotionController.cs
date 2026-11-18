@@ -19,6 +19,7 @@ namespace UnderGrind.Locomotion
 
         private CharacterController _characterController;
         private PlayerAnimationDriver _animationDriver;
+        private PlayerInputRebindingController _inputRebinding;
         private PlayerVisualRig _visualRig;
         private InputActionMap _inputMap;
         private InputAction _moveAction;
@@ -46,6 +47,7 @@ namespace UnderGrind.Locomotion
 
         public PlayerLocomotionSettings Settings => settings;
         public PlayerInputSettings InputSettings => inputSettings;
+        public PlayerInputRebindingController InputRebinding => _inputRebinding;
         public PlayerAnimationSettings AnimationSettings => animationSettings;
         public PlayerInventory Inventory => inventory;
         public float CharacterHeight => settings != null ? settings.CharacterHeight : 0f;
@@ -93,6 +95,7 @@ namespace UnderGrind.Locomotion
             if (_inputMap != null) _inputMap.Disable();
             inputSettings = value;
             BindInputActions();
+            ConfigureRebindingController();
             if (inputSettings != null && inputSettings.LockCursorOnStart && playerCamera != null)
                 SetCursorLocked(true);
         }
@@ -145,6 +148,7 @@ namespace UnderGrind.Locomotion
             if (settings != null) _currentHeight = settings.CharacterHeight;
             ApplyCharacterDimensions();
             BindInputActions();
+            ConfigureRebindingController();
             SetCursorLocked(inputSettings != null && inputSettings.LockCursorOnStart && playerCamera != null);
             _visualRig.SetThirdPerson(_thirdPerson);
             ApplyCameraMode();
@@ -197,6 +201,13 @@ namespace UnderGrind.Locomotion
             MoveCharacter();
             UpdateCamera();
             UpdateAnimator();
+        }
+
+        private void ConfigureRebindingController()
+        {
+            if (_inputRebinding == null) _inputRebinding = GetComponent<PlayerInputRebindingController>();
+            if (_inputRebinding == null) _inputRebinding = gameObject.AddComponent<PlayerInputRebindingController>();
+            _inputRebinding.Configure(inputSettings);
         }
 
         private void BindInputActions()
