@@ -122,6 +122,15 @@ namespace UnderGrind.Editor
             SetInt(serialized, "columns", 6);
             SetVector2(serialized, "slotSize", new Vector2(96f, 96f));
             SetVector2(serialized, "slotSpacing", new Vector2(8f, 8f));
+            var iconAnchorMax = serialized.FindProperty("iconAnchorMax");
+            if (iconAnchorMax != null && iconAnchorMax.vector2Value == Vector2.zero)
+            {
+                SetVector2(serialized, "iconAnchorMin", new Vector2(0.12f, 0.28f));
+                SetVector2(serialized, "iconAnchorMax", new Vector2(0.88f, 0.92f));
+                SetVector2(serialized, "labelAnchorMin", Vector2.zero);
+                SetVector2(serialized, "labelAnchorMax", new Vector2(1f, 0.34f));
+                SetBool(serialized, "preserveIconAspect", true);
+            }
             SetInt(serialized, "panelPadding", 20);
             SetFloat(serialized, "headerHeight", 48f);
             SetInt(serialized, "maxVisibleSlots", 24);
