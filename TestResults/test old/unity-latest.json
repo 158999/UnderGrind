@@ -1,0 +1,74 @@
+﻿{
+    "runId":  "20261118-120257-443",
+    "startedUtc":  "2026-11-18T11:02:57.4435132Z",
+    "finishedUtc":  "2026-11-18T11:03:15.7772487Z",
+    "status":  "Failed",
+    "environmentErrors":  [
+
+                          ],
+    "totals":  {
+                   "total":  0,
+                   "passed":  0,
+                   "skipped":  0,
+                   "inconclusive":  0,
+                   "failed":  0
+               },
+    "platforms":  [
+                      {
+                          "platform":  "EditMode",
+                          "exitCode":  1,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity Ã¨ terminato con codice 1.",
+                                                   "Unity non ha prodotto un XML nuovo e valido per questa piattaforma.",
+                                                   "Compilazione: Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                   "Compilazione: Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                   "Compilazione: Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                   "Compilazione: Scripts have compiler errors."
+                                               ],
+                          "compilerDiagnostics":  [
+                                                      "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                      "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                      "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                      "Scripts have compiler errors."
+                                                  ],
+                          "resultFile":  "TestResults/test/Unity/EditMode.xml",
+                          "logFile":  "TestResults/test/Unity/EditMode.log",
+                          "totals":  {
+                                         "inconclusive":  0,
+                                         "failed":  0,
+                                         "skipped":  0,
+                                         "total":  0,
+                                         "passed":  0
+                                     }
+                      },
+                      {
+                          "platform":  "PlayMode",
+                          "exitCode":  1,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity Ã¨ terminato con codice 1.",
+                                                   "Unity non ha prodotto un XML nuovo e valido per questa piattaforma.",
+                                                   "Compilazione: Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                   "Compilazione: Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                   "Compilazione: Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                   "Compilazione: Scripts have compiler errors."
+                                               ],
+                          "compilerDiagnostics":  [
+                                                      "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                      "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                      "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
+                                                      "Scripts have compiler errors."
+                                                  ],
+                          "resultFile":  "TestResults/test/Unity/PlayMode.xml",
+                          "logFile":  "TestResults/test/Unity/PlayMode.log",
+                          "totals":  {
+                                         "inconclusive":  0,
+                                         "failed":  0,
+                                         "skipped":  0,
+                                         "total":  0,
+                                         "passed":  0
+                                     }
+                      }
+                  ]
+}

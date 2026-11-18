@@ -1,0 +1,7 @@
+﻿UnderGrind standalone tests
+Diagnostics build: Passed
+Status: Passed
+Total: 6 | Passed: 6 | Failed: 0 | Skipped: 0
+Duration: 11.224s
+Errors: 
+Run details: TestResults/test/
