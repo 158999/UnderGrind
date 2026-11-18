@@ -8,7 +8,7 @@ namespace UnderGrind.Editor
     [InitializeOnLoad]
     public static class PlayerInputAssetBuilder
     {
-        private const string InputAssetPath = "Assets/UnderGrind/Settings/PlayerInputActions.inputactions";
+        private const string InputAssetPath = "Assets/UnderGrind/Settings/PlayerInputActions.asset";
         private const string SettingsAssetPath = "Assets/UnderGrind/Settings/PlayerInputSettings.asset";
 
         static PlayerInputAssetBuilder()
