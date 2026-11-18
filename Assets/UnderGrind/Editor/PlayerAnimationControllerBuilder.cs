@@ -25,7 +25,7 @@ namespace UnderGrind.Editor
                 return;
             }
 
-            PrepareAnimationImports();
+            PrepareAnimationImports(settings);
             RefreshClipReferences(settings);
             var missing = GetMissingRequiredClips(settings);
             if (missing.Count > 0)
@@ -76,7 +76,7 @@ namespace UnderGrind.Editor
             public string AssetName;
         }
 
-        private static void PrepareAnimationImports()
+        private static void PrepareAnimationImports(PlayerAnimationSettings settings)
         {
             var guids = AssetDatabase.FindAssets("t:Model", new[] { AnimationFolder });
             foreach (var guid in guids)
@@ -101,6 +101,32 @@ namespace UnderGrind.Editor
                     importer.importAnimation = true;
                     changed = true;
                 }
+
+                var loopMode = GetLoopMode(Normalize(System.IO.Path.GetFileNameWithoutExtension(path)), settings);
+                if (loopMode.HasValue)
+                {
+                    var clipAnimations = importer.clipAnimations;
+                    if (clipAnimations == null || clipAnimations.Length == 0)
+                        clipAnimations = importer.defaultClipAnimations;
+                    if (clipAnimations != null)
+                    {
+                        foreach (var clipAnimation in clipAnimations)
+                        {
+                            if (clipAnimation.loopTime != loopMode.Value)
+                            {
+                                clipAnimation.loopTime = loopMode.Value;
+                                changed = true;
+                            }
+                            if (clipAnimation.loopPose != loopMode.Value)
+                            {
+                                clipAnimation.loopPose = loopMode.Value;
+                                changed = true;
+                            }
+                        }
+                        importer.clipAnimations = clipAnimations;
+                    }
+                }
+
                 if (changed) importer.SaveAndReimport();
 
                 var assets = AssetDatabase.LoadAllAssetsAtPath(path);
@@ -114,6 +140,19 @@ namespace UnderGrind.Editor
                 if (!hasValidAvatar)
                     Debug.LogWarning("UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
             }
+        }
+
+        private static bool? GetLoopMode(string assetName, PlayerAnimationSettings settings)
+        {
+            if (assetName.Contains("standingidle")) return settings.IdleLoops;
+            if (assetName.Contains("walking")) return settings.WalkLoops;
+            if (assetName.Contains("running")) return settings.RunLoops;
+            if (assetName.Contains("jump")) return settings.JumpLoops;
+            if (assetName.Contains("fall")) return settings.FallLoops;
+            if (assetName.Contains("landing")) return settings.LandLoops;
+            if (assetName.Contains("crouchingidle")) return settings.CrouchIdleLoops;
+            if (assetName.Contains("crouchwalk")) return settings.CrouchWalkLoops;
+            return null;
         }
 
         private static void RefreshClipReferences(PlayerAnimationSettings settings)
