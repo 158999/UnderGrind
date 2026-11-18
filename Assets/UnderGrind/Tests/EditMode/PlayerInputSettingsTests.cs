@@ -19,8 +19,8 @@ namespace UnderGrind.Tests
             _asset = ScriptableObject.CreateInstance<InputActionAsset>();
             _map = new InputActionMap("Player");
             _asset.AddActionMap(_map);
-            _map.AddAction("Move", InputActionType.Value, expectedControlType: "Vector2");
-            _map.AddAction("Jump", InputActionType.Button, expectedControlType: "Button")
+            _map.AddAction("Move", InputActionType.Value, expectedControlLayout: "Vector2");
+            _map.AddAction("Jump", InputActionType.Button, expectedControlLayout: "Button")
                 .AddBinding("<Keyboard>/space");
 
             _settings = ScriptableObject.CreateInstance<PlayerInputSettings>();
