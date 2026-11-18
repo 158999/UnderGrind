@@ -22,14 +22,14 @@ Tutti i parametri che regolano il movimento, la postura, la capsula di collision
 
 Le proprietà sono organizzate in otto gruppi:
 
-1. **Velocità di camminata**: velocità base e moltiplicatore della corsa.
-2. **Velocità di corsa**: è derivata dalla velocità di camminata moltiplicata per il moltiplicatore configurato.
+1. **Velocità di camminata**: velocità base.
+2. **Velocità di corsa**: moltiplicatore rispetto alla camminata; la velocità effettiva è derivata.
 3. **Salto**: altezza teorica e velocità iniziale, calcolata a partire da altezza e gravità.
-4. **Gravità e comportamento in aria**: gravità, controllo aereo e soglie degli stati di salto.
-5. **Accelerazione e decelerazione**: variazione della velocità orizzontale, coyote time e jump buffer.
+4. **Gravità e comportamento in aria**: gravità, controllo aereo e soglia di passaggio tra salita e discesa.
+5. **Accelerazione e decelerazione**: variazione della velocità orizzontale.
 6. **Accovacciamento e collisioni**: altezza della postura, velocità accovacciata, dimensioni della capsula, controllo dello spazio per rialzarsi, step offset, pendenza, skin width e opzioni del CharacterController.
 7. **Camera e sensibilità**: sensibilità mouse/gamepad, angolo massimo, altezza del punto di vista, offset e distanza in terza persona, collisione camera, interpolazione, FOV e near clip.
-8. **Tempi di tolleranza dell'input**: coyote time e jump buffer sono modificabili separatamente dall'Inspector.
+8. **Coyote time e jump buffer**: finestre temporali di tolleranza per il salto, configurabili indipendentemente.
 
 I valori iniziali sono contenuti nell'asset, non nel codice. Il controller richiede un asset assegnato: se manca, segnala l'errore e non applica il movimento. Il generatore della scena di test assegna automaticamente l'asset al Player e usa la stessa configurazione per dimensionare il CharacterController e la camera.
 
