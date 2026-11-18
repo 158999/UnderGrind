@@ -48,6 +48,12 @@ namespace UnderGrind.Editor
             JsonUtility.FromJsonOverwrite(File.ReadAllText(defaultsPath), defaults);
             var current = new SerializedObject(asset);
             var template = new SerializedObject(defaults);
+            var version = current.FindProperty("settingsVersion");
+            if (version == null || version.intValue >= 1)
+            {
+                Object.DestroyImmediate(defaults);
+                return;
+            }
 
             if (current.FindProperty("panelAnchorMax").vector2Value == Vector2.zero)
             {
@@ -82,6 +88,7 @@ namespace UnderGrind.Editor
                 CopyBool(current, template, "preserveIconAspect");
             }
 
+            version.intValue = 1;
             current.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
             Object.DestroyImmediate(defaults);
