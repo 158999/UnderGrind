@@ -1,0 +1,11 @@
+Running Unity EditMode tests...
+Unity EditMode : 31 superati, 2 falliti, 33 totali
+  FALLITO: UnderGrind.Tests.PlayerInputSettingsTests.BindingOverridesCanBeSavedResetAndRestored - Expected: True
+  But was:  False
+  FALLITO: UnderGrind.Tests.HumanLocomotionTuningTests.FemaleVariantAppliesFemaleCharacterControllerHeight - Expected: 1.70000005f +/- 9.99999975E-05f
+  But was:  2.0f
+Running Unity PlayMode tests...
+Unity PlayMode : 11 superati, 2 falliti, 13 totali
+  FALLITO: UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.DisablingInventoryUI_RestoresPreviousCursorCapture - System.ArgumentException : Invalid path
+  FALLITO: UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.InventoryUI_RefreshesWhenConfiguredAfterAwake - System.ArgumentException : Invalid path
+Unity status: Failed

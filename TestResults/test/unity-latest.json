@@ -1,0 +1,74 @@
+﻿{
+    "runId":  "20261118-140952-334",
+    "startedUtc":  "2026-11-18T13:09:52.3355075Z",
+    "finishedUtc":  "2026-11-18T13:10:38.1236856Z",
+    "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
+    "unityTimeoutSeconds":  600,
+    "status":  "Failed",
+    "environmentErrors":  [
+
+                          ],
+    "totals":  {
+                   "total":  46,
+                   "passed":  46,
+                   "skipped":  0,
+                   "inconclusive":  0,
+                   "failed":  0
+               },
+    "platforms":  [
+                      {
+                          "platform":  "EditMode",
+                          "timeoutSeconds":  600,
+                          "timedOut":  false,
+                          "exitCode":  null,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity Ã¨ terminato con codice ."
+                                               ],
+                          "compilerDiagnostics":  [
+
+                                                  ],
+                          "failures":  [
+
+                                       ],
+                          "resultFile":  "TestResults/test/Unity/EditMode.xml",
+                          "logFile":  "TestResults/test/Unity/EditMode.log",
+                          "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
+                          "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
+                          "totals":  {
+                                         "total":  33,
+                                         "passed":  33,
+                                         "skipped":  0,
+                                         "inconclusive":  0,
+                                         "failed":  0
+                                     }
+                      },
+                      {
+                          "platform":  "PlayMode",
+                          "timeoutSeconds":  600,
+                          "timedOut":  false,
+                          "exitCode":  null,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity Ã¨ terminato con codice ."
+                                               ],
+                          "compilerDiagnostics":  [
+
+                                                  ],
+                          "failures":  [
+
+                                       ],
+                          "resultFile":  "TestResults/test/Unity/PlayMode.xml",
+                          "logFile":  "TestResults/test/Unity/PlayMode.log",
+                          "stdoutFile":  "TestResults/test/Unity/PlayMode.stdout.log",
+                          "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
+                          "totals":  {
+                                         "total":  13,
+                                         "passed":  13,
+                                         "skipped":  0,
+                                         "inconclusive":  0,
+                                         "failed":  0
+                                     }
+                      }
+                  ]
+}

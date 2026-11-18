@@ -1,0 +1,9 @@
+UnderGrind PlayMode test results
+Completed: 2026-11-18 14:04:22
+Passed: 11
+Failed: 2
+Skipped: 0
+Inconclusive: 0
+Total: 13
+Result: Failed(Child)
+XML: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\UnderGrind\PlayMode.xml

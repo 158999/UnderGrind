@@ -1,0 +1,41 @@
+﻿{
+    "runId":  "20261118-140323-590",
+    "startedUtc":  "2026-11-18T13:03:23.5908631Z",
+    "finishedUtc":  "2026-11-18T13:03:36.9071869Z",
+    "durationSeconds":  13.316,
+    "diagnosticsBuild":  "Passed",
+    "buildTimeoutSeconds":  180,
+    "testTimeoutSeconds":  180,
+    "status":  "Passed",
+    "errors":  [
+
+               ],
+    "totals":  {
+                   "failed":  0,
+                   "skipped":  0,
+                   "total":  6,
+                   "passed":  6
+               },
+    "projects":  [
+                     {
+                         "project":  "Tests\\Standalone\\UnderGrind.Diagnostics.Standalone.Tests.csproj",
+                         "exitCode":  0,
+                         "timedOut":  false,
+                         "timeoutSeconds":  180,
+                         "trx":  "UnderGrind.Diagnostics.Standalone.Tests.trx",
+                         "log":  "UnderGrind.Diagnostics.Standalone.Tests.log",
+                         "totals":  {
+                                        "failed":  0,
+                                        "skipped":  0,
+                                        "total":  6,
+                                        "passed":  6
+                                    },
+                         "failures":  [
+
+                                      ],
+                         "validationErrors":  [
+
+                                              ]
+                     }
+                 ]
+}
