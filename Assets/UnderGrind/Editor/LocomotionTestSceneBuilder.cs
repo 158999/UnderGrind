@@ -65,28 +65,30 @@ namespace UnderGrind.Editor
             {
                 AssetDatabase.ImportAsset(HumanModelPath,
                     ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
-                var maleSource = ResolveHumanModel("male");
-                var femaleSource = ResolveHumanModel("female");
-                if (maleSource == null || femaleSource == null)
-                {
-                    const string message = "Non sono disponibili entrambi i prefab riggati e Unity non riesce a importare " +
-                        "le mesh 'male' e 'female' da humans.blend. La scena esistente non è stata modificata.";
-                    Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
-                    EditorUtility.DisplayDialog("Modelli umani non disponibili", message, "OK");
-                    return;
-                }
-
                 if (malePrefab == null)
-                    malePrefab = CreateHumanPrefab(maleSource, "Human_Male", locomotionSettings.CharacterHeight);
+                {
+                    var maleSource = ResolveHumanModel("male");
+                    if (maleSource != null)
+                        malePrefab = CreateHumanPrefab(maleSource, "Human_Male", locomotionSettings.CharacterHeight);
+                }
                 if (femalePrefab == null)
-                    femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", locomotionSettings.FemaleCharacterHeight);
+                {
+                    var femaleSource = ResolveHumanModel("female");
+                    if (femaleSource != null)
+                        femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", locomotionSettings.FemaleCharacterHeight);
+                }
             }
 
-            if (malePrefab == null || femalePrefab == null)
+            if (malePrefab == null)
             {
-                Debug.LogError("UnderGrind: impossibile generare o caricare entrambi i prefab del personaggio.");
+                const string message = "Non è disponibile il prefab maschile riggato e Unity non riesce a importare " +
+                    "la mesh maschile da humans.blend. La scena esistente non è stata modificata.";
+                Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
+                EditorUtility.DisplayDialog("Modello maschile non disponibile", message, "OK");
                 return;
             }
+            if (femalePrefab == null)
+                Debug.LogWarning("UnderGrind: prefab femminile non disponibile. La scena di test maschile verrà comunque creata.");
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
