@@ -87,6 +87,9 @@ namespace UnderGrind.Editor
                 controller.height * locomotionSettings.CharacterStepOffsetHeightRatio);
             controller.slopeLimit = locomotionSettings.CharacterSlopeLimit;
             controller.minMoveDistance = locomotionSettings.CharacterMinMoveDistance;
+            controller.skinWidth = locomotionSettings.CharacterSkinWidth;
+            controller.detectCollisions = locomotionSettings.CharacterDetectCollisions;
+            controller.enableOverlapRecovery = locomotionSettings.CharacterEnableOverlapRecovery;
 
             var visualRoot = new GameObject("Visual");
             visualRoot.transform.SetParent(player.transform, false);
