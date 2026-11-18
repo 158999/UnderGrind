@@ -25,7 +25,7 @@ namespace UnderGrind.Locomotion
     public sealed class PlayerInputSettings : ScriptableObject
     {
         [Header("Asset e action map")]
-        [SerializeField] private int settingsVersion;
+        [SerializeField, HideInInspector] private int settingsVersion;
         [SerializeField] private InputActionAsset actionAsset;
         [SerializeField] private string actionMapName;
 
