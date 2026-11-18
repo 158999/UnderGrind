@@ -1,9 +1,12 @@
-﻿  Individuazione dei progetti da ripristinare...
-  Tutti i progetti sono aggiornati per il ripristino.
+﻿=== STDOUT ===
+  Individuazione dei progetti da ripristinare...
+  C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tools\Diagnostics\UnderGrind.Diagnostics.Standalone.csproj ripristinato (in 23 ms).
   UnderGrind.Diagnostics.Standalone -> C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tools\Diagnostics\bin\Release\netstandard2.1\UnderGrind.Diagnostics.Standalone.dll
 
 Compilazione completata.
     Avvisi: 0
     Errori: 0
 
-Tempo trascorso 00:00:01.56
+Tempo trascorso 00:00:02.31
+
+=== STDERR ===
