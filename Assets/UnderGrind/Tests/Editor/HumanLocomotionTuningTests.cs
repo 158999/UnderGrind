@@ -62,11 +62,12 @@ namespace UnderGrind.Tests
             var serialized = new SerializedObject(_settings);
             var fields = new[]
             {
-                "walkSpeed", "runMultiplier", "jumpHeight", "gravity",
-                "acceleration", "deceleration", "airControl", "coyoteTime", "jumpBufferTime",
-                "crouchHeight", "capsuleRadius", "characterStepOffset", "characterSlopeLimit",
+                "walkSpeed", "runMultiplier", "jumpHeight", "gravity", "airControl",
+                "acceleration", "deceleration", "coyoteTime", "jumpBufferTime",
+                "characterHeight", "femaleCharacterHeight", "crouchHeight", "capsuleRadius",
+                "characterStepOffset", "characterSlopeLimit", "characterSkinWidth",
                 "mouseSensitivity", "gamepadLookSensitivity", "maxLookAngle",
-                "thirdPersonDistance", "cameraCollisionRadius", "cameraFollowSharpness"
+                "thirdPersonDistance", "cameraCollisionRadius", "cameraFollowSharpness", "cameraFieldOfView"
             };
             foreach (var field in fields)
                 Assert.That(serialized.FindProperty(field), Is.Not.Null, "Missing serialized setting: " + field);
