@@ -1,0 +1,251 @@
+using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+using UnderGrind.Locomotion;
+
+namespace UnderGrind.Editor
+{
+    public static class PlayerAnimationControllerBuilder
+    {
+        private const string SettingsPath = "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset";
+        private const string AnimationFolder = "Assets/UnderGrind/Animations";
+        private const string ControllerFolder = "Assets/UnderGrind/Generated/Animation";
+        private const string ControllerPath = ControllerFolder + "/PlayerAnimator.controller";
+
+        [MenuItem("UnderGrind/Player/Refresh Clips and Build Animator Controller")]
+        public static void BuildFromSettings()
+        {
+            PlayerGameplayAssetBuilder.EnsureAssets();
+            var settings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(SettingsPath);
+            if (settings == null)
+            {
+                Debug.LogError("UnderGrind: PlayerAnimationSettings non disponibile.");
+                return;
+            }
+
+            RefreshClipReferences(settings);
+            var missing = GetMissingRequiredClips(settings);
+            if (missing.Count > 0)
+            {
+                var message = "Impossibile costruire l'Animator Controller. Mancano queste clip:\n- " +
+                              string.Join("\n- ", missing) +
+                              "\n\nImportare i file FBX nella cartella Animations e ripetere l'operazione.";
+                Debug.LogWarning("UnderGrind: " + message);
+                EditorUtility.DisplayDialog("Clip Player mancanti", message, "OK");
+                return;
+            }
+
+            EnsureFolder("Assets/UnderGrind/Generated");
+            EnsureFolder(ControllerFolder);
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) != null)
+                AssetDatabase.DeleteAsset(ControllerPath);
+
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
+            if (controller == null)
+            {
+                Debug.LogError("UnderGrind: creazione Animator Controller fallita.");
+                return;
+            }
+
+            AddParameters(controller, settings);
+            BuildStateMachine(controller.layers[0].stateMachine, settings);
+            var serialized = new SerializedObject(settings);
+            serialized.FindProperty("animatorController").objectReferenceValue = controller;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Selection.activeObject = settings;
+            Debug.Log("UnderGrind: Animator Controller creato in " + ControllerPath);
+        }
+
+        private static void RefreshClipReferences(PlayerAnimationSettings settings)
+        {
+            var clips = new List<AnimationClip>();
+            var guids = AssetDatabase.FindAssets(string.Empty, new[] { AnimationFolder });
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(path))
+                    if (asset is AnimationClip clip && !clip.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase))
+                        clips.Add(clip);
+            }
+
+            var serialized = new SerializedObject(settings);
+            AssignIfMissing(serialized, "idleClip", clips, "standingidle", "idle");
+            AssignIfMissing(serialized, "walkClip", clips, "walking", "walk");
+            AssignIfMissing(serialized, "runClip", clips, "running", "run");
+            AssignIfMissing(serialized, "jumpClip", clips, "jump");
+            AssignIfMissing(serialized, "fallClip", clips, "falling", "fall");
+            AssignIfMissing(serialized, "landClip", clips, "hardlanding", "landing", "land");
+            AssignIfMissing(serialized, "crouchIdleClip", clips, "crouchingidle", "crouchidle");
+            AssignIfMissing(serialized, "crouchWalkClip", clips, "crouchwalkforward", "crouchwalk");
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(settings);
+        }
+
+        private static void AssignIfMissing(SerializedObject serialized, string propertyName,
+            List<AnimationClip> clips, params string[] names)
+        {
+            var property = serialized.FindProperty(propertyName);
+            if (property == null || property.objectReferenceValue != null) return;
+            foreach (var clip in clips)
+            {
+                var normalized = Normalize(clip.name);
+                foreach (var name in names)
+                {
+                    var target = Normalize(name);
+                    if (normalized == target || normalized.Contains(target))
+                    {
+                        property.objectReferenceValue = clip;
+                        return;
+                    }
+                }
+            }
+        }
+
+        private static List<string> GetMissingRequiredClips(PlayerAnimationSettings settings)
+        {
+            var missing = new List<string>();
+            if (settings.IdleClip == null) missing.Add("Idle / Standing Idle");
+            if (settings.WalkClip == null) missing.Add("Walk / Walking");
+            if (settings.RunClip == null) missing.Add("Run / Running");
+            if (settings.JumpClip == null) missing.Add("Jump");
+            if (settings.CrouchIdleClip == null) missing.Add("Crouch Idle");
+            if (settings.CrouchWalkClip == null) missing.Add("Crouch Walk");
+            return missing;
+        }
+
+        private static void AddParameters(AnimatorController controller, PlayerAnimationSettings settings)
+        {
+            AddParameter(controller, settings.SpeedParameterName, AnimatorControllerParameterType.Float);
+            AddParameter(controller, settings.MoveXParameterName, AnimatorControllerParameterType.Float);
+            AddParameter(controller, settings.MoveYParameterName, AnimatorControllerParameterType.Float);
+            AddParameter(controller, settings.GroundedParameterName, AnimatorControllerParameterType.Bool);
+            AddParameter(controller, settings.VerticalSpeedParameterName, AnimatorControllerParameterType.Float);
+            AddParameter(controller, settings.RunningParameterName, AnimatorControllerParameterType.Bool);
+            AddParameter(controller, settings.CrouchingParameterName, AnimatorControllerParameterType.Bool);
+            AddParameter(controller, settings.JumpingParameterName, AnimatorControllerParameterType.Bool);
+            AddParameter(controller, settings.FallingParameterName, AnimatorControllerParameterType.Bool);
+            AddParameter(controller, settings.LandedParameterName, AnimatorControllerParameterType.Bool);
+        }
+
+        private static void AddParameter(AnimatorController controller, string name,
+            AnimatorControllerParameterType type)
+        {
+            if (!string.IsNullOrWhiteSpace(name))
+                controller.AddParameter(name, type);
+        }
+
+        private static void BuildStateMachine(AnimatorStateMachine stateMachine, PlayerAnimationSettings settings)
+        {
+            var locomotionTree = CreateBlendTree("Locomotion Blend", settings.SpeedParameterName,
+                settings.IdleClip, settings.IdleThreshold,
+                settings.WalkClip, settings.WalkThreshold,
+                settings.RunClip, settings.RunThreshold);
+            AssetDatabase.AddObjectToAsset(locomotionTree, stateMachine);
+            var locomotion = stateMachine.AddState("Locomotion");
+            locomotion.motion = locomotionTree;
+            stateMachine.defaultState = locomotion;
+
+            var crouchTree = CreateBlendTree("Crouch Blend", settings.SpeedParameterName,
+                settings.CrouchIdleClip, settings.IdleThreshold,
+                settings.CrouchWalkClip, settings.CrouchWalkThreshold);
+            AssetDatabase.AddObjectToAsset(crouchTree, stateMachine);
+            var crouch = stateMachine.AddState("Crouch");
+            crouch.motion = crouchTree;
+
+            var jump = stateMachine.AddState("Jump");
+            jump.motion = settings.JumpClip;
+            var fall = settings.FallClip != null ? stateMachine.AddState("Fall") : null;
+            if (fall != null) fall.motion = settings.FallClip;
+            var land = settings.LandClip != null ? stateMachine.AddState("Land") : null;
+            if (land != null) land.motion = settings.LandClip;
+
+            AddConditionTransition(locomotion, crouch, settings, settings.CrouchingParameterName,
+                AnimatorConditionMode.If, 0f);
+            AddConditionTransition(crouch, locomotion, settings, settings.CrouchingParameterName,
+                AnimatorConditionMode.IfNot, 0f);
+            AddConditionTransition(stateMachine, jump, settings, settings.JumpingParameterName,
+                AnimatorConditionMode.If, 0f);
+
+            if (fall != null)
+                AddConditionTransition(jump, fall, settings, settings.FallingParameterName,
+                    AnimatorConditionMode.If, 0f);
+
+            if (land != null)
+            {
+                var landingSource = fall != null ? fall : jump;
+                AddConditionTransition(landingSource, land, settings, settings.LandedParameterName,
+                    AnimatorConditionMode.If, 0f);
+                var exit = land.AddTransition(locomotion);
+                exit.hasExitTime = true;
+                exit.exitTime = settings.LandingExitTime;
+                exit.duration = settings.TransitionDuration;
+            }
+            else
+            {
+                var groundedSource = fall != null ? fall : jump;
+                AddConditionTransition(groundedSource, locomotion, settings, settings.GroundedParameterName,
+                    AnimatorConditionMode.If, 0f);
+            }
+        }
+
+        private static BlendTree CreateBlendTree(string name, string parameterName,
+            AnimationClip first, float firstThreshold, AnimationClip second, float secondThreshold,
+            AnimationClip third = null, float thirdThreshold = 0f)
+        {
+            var tree = new BlendTree
+            {
+                name = name,
+                blendType = BlendTreeType.Simple1D,
+                blendParameter = parameterName,
+                useAutomaticThresholds = false
+            };
+            if (first != null) tree.AddChild(first, firstThreshold);
+            if (second != null) tree.AddChild(second, secondThreshold);
+            if (third != null) tree.AddChild(third, thirdThreshold);
+            return tree;
+        }
+
+        private static void AddConditionTransition(AnimatorState source, AnimatorState destination,
+            PlayerAnimationSettings settings, string parameter, AnimatorConditionMode mode, float threshold)
+        {
+            if (source == null || destination == null || string.IsNullOrWhiteSpace(parameter)) return;
+            var transition = source.AddTransition(destination);
+            transition.hasExitTime = false;
+            transition.duration = settings.TransitionDuration;
+            transition.AddCondition(mode, threshold, parameter);
+        }
+
+        private static void AddConditionTransition(AnimatorStateMachine source, AnimatorState destination,
+            PlayerAnimationSettings settings, string parameter, AnimatorConditionMode mode, float threshold)
+        {
+            if (destination == null || string.IsNullOrWhiteSpace(parameter)) return;
+            var transition = source.AddAnyStateTransition(destination);
+            transition.hasExitTime = false;
+            transition.duration = settings.TransitionDuration;
+            transition.canTransitionToSelf = false;
+            transition.AddCondition(mode, threshold, parameter);
+        }
+
+        private static string Normalize(string value)
+        {
+            return value.Replace(" ", string.Empty).Replace("_", string.Empty)
+                .Replace("-", string.Empty).ToLowerInvariant();
+        }
+
+        private static void EnsureFolder(string path)
+        {
+            if (AssetDatabase.IsValidFolder(path)) return;
+            var parent = System.IO.Path.GetDirectoryName(path)?.Replace("\\", "/");
+            var name = System.IO.Path.GetFileName(path);
+            if (!string.IsNullOrEmpty(parent) && !AssetDatabase.IsValidFolder(parent))
+                EnsureFolder(parent);
+            if (!string.IsNullOrEmpty(parent) && !AssetDatabase.IsValidFolder(path))
+                AssetDatabase.CreateFolder(parent, name);
+        }
+    }
+}
