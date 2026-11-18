@@ -5,6 +5,9 @@ namespace UnderGrind.Locomotion
     [CreateAssetMenu(menuName = "UnderGrind/Player/Rig Settings", fileName = "PlayerRigSettings")]
     public sealed class PlayerRigSettings : ScriptableObject
     {
+        [Header("Configurazione asset")]
+        [SerializeField] private int settingsVersion = 2;
+
         [Header("Sorgenti FBX separate")]
         [SerializeField] private string maleSourceAssetPath;
         [SerializeField] private string femaleSourceAssetPath;
@@ -31,6 +34,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private bool optimizeGameObjects;
         [SerializeField] private bool importVisibility;
 
+        public int SettingsVersion => settingsVersion;
         public string MaleSourceAssetPath => maleSourceAssetPath;
         public string FemaleSourceAssetPath => femaleSourceAssetPath;
         public string MaleArmatureRootName => maleArmatureRootName;
