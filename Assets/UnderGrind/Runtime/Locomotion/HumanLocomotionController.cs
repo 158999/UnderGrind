@@ -219,8 +219,12 @@ namespace UnderGrind.Locomotion
             var look = Vector2.zero;
             if (_lookMouseAction != null)
                 look += _lookMouseAction.ReadValue<Vector2>() * settings.MouseSensitivity;
-            if (_lookGamepadAction != null)
-                look += _lookGamepadAction.ReadValue<Vector2>() * settings.GamepadLookSensitivity * Time.deltaTime;
+            if (_lookGamepadAction != null && inputSettings != null)
+            {
+                var gamepadLook = ApplyRadialDeadzone(
+                    _lookGamepadAction.ReadValue<Vector2>(), inputSettings.GamepadLookDeadzone);
+                look += gamepadLook * settings.GamepadLookSensitivity * Time.deltaTime;
+            }
             transform.Rotate(Vector3.up, look.x, Space.World);
             _pitch = Mathf.Clamp(_pitch - look.y, -settings.MaxLookAngle, settings.MaxLookAngle);
             if (viewPivot != null) viewPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
@@ -228,9 +232,17 @@ namespace UnderGrind.Locomotion
 
         private void ReadMovementInput()
         {
-            _moveInput = _moveAction != null
-                ? Vector2.ClampMagnitude(_moveAction.ReadValue<Vector2>(), 1f)
+            _moveInput = _moveAction != null && inputSettings != null
+                ? ApplyRadialDeadzone(_moveAction.ReadValue<Vector2>(), inputSettings.MovementDeadzone)
                 : Vector2.zero;
+        }
+
+        private static Vector2 ApplyRadialDeadzone(Vector2 value, float deadzone)
+        {
+            var magnitude = Mathf.Clamp01(value.magnitude);
+            if (magnitude <= deadzone) return Vector2.zero;
+            var normalizedMagnitude = (magnitude - deadzone) / Mathf.Max(1f - deadzone, 0.0001f);
+            return value.normalized * Mathf.Clamp01(normalizedMagnitude);
         }
 
         private void UpdateStance()
