@@ -155,14 +155,16 @@ namespace UnderGrind.Editor
         private static GameObject CreatePrefabInstance(GameObject source, Avatar avatar, string rootName,
             string prefabName, float targetHeight, PlayerRigSettings rigSettings)
         {
-            var sourceRoot = FindDeepChild(source.transform, rootName);
-            if (sourceRoot == null)
+            var sourceArmature = FindDeepChild(source.transform, rootName);
+            if (sourceArmature == null)
             {
                 Debug.LogError("UnderGrind: armature root non trovato in " + source.name + ": " + rootName);
                 return null;
             }
 
-            var temporary = UnityEngine.Object.Instantiate(sourceRoot.gameObject);
+            // Keep the FBX root: the skinned meshes are often siblings of the armature,
+            // not children of the armature transform itself.
+            var temporary = UnityEngine.Object.Instantiate(source);
             temporary.name = prefabName;
             var animator = temporary.GetComponent<Animator>();
             if (animator == null) animator = temporary.AddComponent<Animator>();
