@@ -265,8 +265,7 @@ namespace UnderGrind.Inventory
             _slotIcons.Clear();
             _slotLabels.Clear();
 
-            var font = settings.Font != null
-                ? settings.Font : Resources.GetBuiltinResource<Font>(settings.FallbackFontResourceName);
+            var font = ResolveFont();
             for (var i = 0; i < count; i++)
             {
                 var slot = CreateUiObject("Slot " + (i + 1), _grid.transform);
@@ -301,8 +300,7 @@ namespace UnderGrind.Inventory
         {
             var textObject = CreateUiObject(objectName, parent);
             var text = textObject.AddComponent<Text>();
-            text.font = assignedFont != null ? assignedFont :
-                settings.Font != null ? settings.Font : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = assignedFont != null ? assignedFont : ResolveFont();
             text.text = value;
             text.fontSize = fontSize;
             text.alignment = alignment;
@@ -310,6 +308,27 @@ namespace UnderGrind.Inventory
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Overflow;
             return text;
+        }
+
+        private Font ResolveFont()
+        {
+            if (settings.Font != null) return settings.Font;
+
+            var resourceName = string.IsNullOrWhiteSpace(settings.FallbackFontResourceName)
+                ? "LegacyRuntime.ttf"
+                : settings.FallbackFontResourceName.Trim();
+
+            try
+            {
+                return Resources.GetBuiltinResource<Font>(resourceName);
+            }
+            catch (System.ArgumentException)
+            {
+                if (resourceName == "LegacyRuntime.ttf") throw;
+                Debug.LogWarning("UnderGrind: font incorporato non trovato: " + resourceName +
+                    ". Verrà usato LegacyRuntime.ttf.", this);
+                return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            }
         }
 
         private static GameObject CreateUiObject(string objectName, Transform parent)
