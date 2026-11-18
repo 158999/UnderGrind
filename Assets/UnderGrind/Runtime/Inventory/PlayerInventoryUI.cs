@@ -65,9 +65,16 @@ namespace UnderGrind.Inventory
 
             IsOpen = false;
             if (_panel != null) _panel.SetActive(false);
-            if (locomotion != null) locomotion.SetInputSuppressed(false);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (locomotion != null)
+            {
+                locomotion.SetInputSuppressed(false);
+                locomotion.SetCursorCaptured(_cursorWasCaptured);
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
 
         private void BindInventoryEvents()
