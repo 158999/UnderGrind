@@ -292,7 +292,7 @@ namespace UnderGrind.Editor
 
             var pivot = new GameObject("View Pivot").transform;
             pivot.SetParent(player.transform, false);
-            pivot.localPosition = Vector3.up * locomotionSettings.StandingViewHeight;
+            pivot.localPosition = Vector3.up * locomotionSettings.GetStandingViewHeight(characterVariantId);
 
             var cameraObject = new GameObject("Player Camera");
             cameraObject.tag = "MainCamera";
@@ -309,6 +309,7 @@ namespace UnderGrind.Editor
             rebindingController.Configure(inputSettings);
 
             var movement = player.AddComponent<HumanLocomotionController>();
+            movement.ConfigureCharacterVariant(characterVariantId);
             movement.ConfigureSettings(locomotionSettings);
             movement.ConfigureInputSettings(inputSettings);
             movement.ConfigureAnimationSettings(animationSettings);

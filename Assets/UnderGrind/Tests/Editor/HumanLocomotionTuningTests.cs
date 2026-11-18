@@ -73,6 +73,16 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void FemaleCameraHeightsScaleWithFemaleCharacterHeight()
+        {
+            var ratio = _settings.FemaleCharacterHeight / _settings.CharacterHeight;
+            Assert.That(_settings.GetStandingViewHeight(PlayerCharacterVariant.Female),
+                Is.EqualTo(_settings.StandingViewHeight * ratio).Within(0.0001f));
+            Assert.That(_settings.GetCrouchingViewHeight(PlayerCharacterVariant.Female),
+                Is.EqualTo(_settings.CrouchingViewHeight * ratio).Within(0.0001f));
+        }
+
+        [Test]
         public void FemaleVariantAppliesFemaleCharacterControllerHeight()
         {
             var player = new GameObject("Female height test");
