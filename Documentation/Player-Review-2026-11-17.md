@@ -79,7 +79,7 @@ Il generatore della scena di test esclude le clip di accovacciamento dalla selez
 - `PlayerVisualRig` supporta associazioni esplicite e convenzioni di nome per testa e parti dedicate alla prima persona.
 - `PlayerAnimationDriver` controlla i parametri effettivamente presenti nell'Animator e disabilita il root motion. `PlayerAnimationSettings` configura anche il loop separato per ciascuna delle otto clip; il generatore applica queste opzioni ai rispettivi import FBX.
 - `PlayerAnimationControllerBuilder` genera il controller a partire dalle clip importate e da `PlayerAnimationSettings.asset`. Otto movimenti PINOC sono stati aggiunti alla libreria personale; i relativi export `mixamo-fbx` sono disponibili ma non sono ancora stati importati nel repository né retargettati sul rig UnderGrind.
-- `HumanoidRigPrefabBuilder` configura l'importazione Humanoid e genera prefab da un FBX con entrambe le radici scheletriche.
+- `HumanoidRigPrefabBuilder` importa due FBX distinti, uno maschile e uno femminile, dai percorsi configurati in `PlayerRigSettings.asset`; genera due Avatar Humanoid e prefab separati.
 - La scena di test preferisce il prefab maschile riggato quando disponibile; la mesh statica resta soltanto un fallback visivo.
 - La versione Blendstra `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` conserva le mesh originali, contiene copie con topologia invariata e due armature. La separazione per isole disconnesse ha confermato che ogni corpo è una singola isola connessa: non esiste una testa già separabile tramite loose parts. Il GLB dichiara zero animazioni. Posizione delle ossa e pesi restano non verificati; la testa non è un renderer separato. Il prototipo non è accettato come rig di produzione.
 
