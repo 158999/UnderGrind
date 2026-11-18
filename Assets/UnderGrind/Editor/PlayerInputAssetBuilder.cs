@@ -12,6 +12,7 @@ namespace UnderGrind.Editor
     {
         private const string SettingsFolder = "Assets/UnderGrind/Settings";
         private const string InputAssetPath = SettingsFolder + "/PlayerInputActions.inputactions";
+        private const string LegacyInputAssetPath = SettingsFolder + "/PlayerInputActions.asset";
         private const string SettingsAssetPath = SettingsFolder + "/PlayerInputSettings.asset";
         private const string DefaultsPath = SettingsFolder + "/Defaults/PlayerInputSettings.json";
 
@@ -84,12 +85,17 @@ namespace UnderGrind.Editor
             }
 
             var serialized = new SerializedObject(settings);
-            if (serialized.FindProperty("actionAsset").objectReferenceValue == null)
+            var actionAssetProperty = serialized.FindProperty("actionAsset");
+            if (actionAssetProperty.objectReferenceValue == null)
                 SetObject(serialized, "actionAsset", actions);
 
             var version = serialized.FindProperty("settingsVersion");
             if (version != null && version.intValue < defaults.settingsVersion)
             {
+                var currentAsset = actionAssetProperty.objectReferenceValue as InputActionAsset;
+                var currentAssetPath = currentAsset != null ? AssetDatabase.GetAssetPath(currentAsset) : string.Empty;
+                if (string.IsNullOrEmpty(currentAssetPath) || currentAssetPath == LegacyInputAssetPath)
+                    actionAssetProperty.objectReferenceValue = actions;
                 SetStringIfEmpty(serialized, "actionMapName", defaults.actionMapName);
                 SetStringIfEmpty(serialized, "moveActionName", defaults.moveActionName);
                 SetStringIfEmpty(serialized, "lookMouseActionName", defaults.lookMouseActionName);
