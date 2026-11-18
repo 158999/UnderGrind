@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261118-100635-055",
-    "finishedUtc":  "2026-11-18T09:06:35.3365483Z",
-    "status":  "Passed",
+    "runId":  "20261118-101936-324",
+    "finishedUtc":  "2026-11-18T09:19:36.4970629Z",
+    "status":  "Failed",
     "totals":  {
                    "failed":  0,
                    "skipped":  0,
@@ -11,7 +11,12 @@
     "platforms":  [
                       {
                           "platform":  "EditMode",
-                          "exitCode":  0,
+                          "exitCode":  null,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity did not produce the expected XML result file.",
+                                                   "Unity did not produce the expected log file."
+                                               ],
                           "resultFile":  "EditMode.xml",
                           "logFile":  "EditMode.log",
                           "totals":  {
@@ -23,7 +28,12 @@
                       },
                       {
                           "platform":  "PlayMode",
-                          "exitCode":  0,
+                          "exitCode":  null,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity did not produce the expected XML result file.",
+                                                   "Unity did not produce the expected log file."
+                                               ],
                           "resultFile":  "PlayMode.xml",
                           "logFile":  "PlayMode.log",
                           "totals":  {
