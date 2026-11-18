@@ -6,6 +6,8 @@
   "headRendererSuffix": "_Head",
   "firstPersonArmsToken": "_FP_Arms",
   "firstPersonHandsToken": "_FP_Hands",
+  "thirdPersonArmsToken": "_TP_Arms",
+  "thirdPersonHandsToken": "_TP_Hands",
   "requireSeparateHead": true,
   "requireFirstPersonArms": false,
   "importAnimation": false,
