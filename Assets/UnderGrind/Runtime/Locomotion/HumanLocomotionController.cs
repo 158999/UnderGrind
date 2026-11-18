@@ -62,6 +62,8 @@ namespace UnderGrind.Locomotion
         public float EffectiveWalkSpeed => walkSpeed * (IsOverloaded ? inventory.OverloadedWalkSpeedMultiplier : 1f);
         public float RunSpeed => walkSpeed * runMultiplier;
         public bool IsOverloaded => inventory != null && inventory.IsOverloaded;
+        public float InventoryWeightKg => inventory != null ? inventory.CurrentWeightKg : 0f;
+        public float InventoryWeightCapacityKg => inventory != null ? inventory.MaxWeightKg : 0f;
         public bool CanRun => !IsOverloaded;
         public bool CanJump => !IsOverloaded;
         public float RunMultiplier => runMultiplier;
