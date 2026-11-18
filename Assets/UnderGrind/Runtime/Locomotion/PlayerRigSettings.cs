@@ -17,6 +17,8 @@ namespace UnderGrind.Locomotion
         [SerializeField] private string headRendererSuffix;
         [SerializeField] private string firstPersonArmsToken;
         [SerializeField] private string firstPersonHandsToken;
+        [SerializeField] private string thirdPersonArmsToken;
+        [SerializeField] private string thirdPersonHandsToken;
         [SerializeField] private bool requireSeparateHead;
         [SerializeField] private bool requireFirstPersonArms;
 
@@ -32,6 +34,8 @@ namespace UnderGrind.Locomotion
         public string HeadRendererSuffix => headRendererSuffix;
         public string FirstPersonArmsToken => firstPersonArmsToken;
         public string FirstPersonHandsToken => firstPersonHandsToken;
+        public string ThirdPersonArmsToken => thirdPersonArmsToken;
+        public string ThirdPersonHandsToken => thirdPersonHandsToken;
         public bool RequireSeparateHead => requireSeparateHead;
         public bool RequireFirstPersonArms => requireFirstPersonArms;
         public bool ImportAnimation => importAnimation;
@@ -47,6 +51,8 @@ namespace UnderGrind.Locomotion
             headRendererSuffix = Normalize(headRendererSuffix);
             firstPersonArmsToken = Normalize(firstPersonArmsToken);
             firstPersonHandsToken = Normalize(firstPersonHandsToken);
+            thirdPersonArmsToken = Normalize(thirdPersonArmsToken);
+            thirdPersonHandsToken = Normalize(thirdPersonHandsToken);
         }
 
         private static string Normalize(string value) => value != null ? value.Trim() : string.Empty;
