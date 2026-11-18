@@ -11,7 +11,7 @@ La struttura versionata contiene 284 elementi nel tree GitHub, tra cui 45 file C
 
 Il Player ha sistemi runtime distinti per locomozione, input, animazione, inventario, interazione e rig visuale. I parametri principali sono esposti tramite asset di configurazione. La scena di test versionata è precedente al generatore attuale e non dimostra l'integrazione completa di input, inventario, UI e Animator.
 
-Il workflow GitHub attivo è `.github/workflows/standalone-tests.yml`: esegue i test diagnostici .NET su Windows. Non equivale a una compilazione Unity, né a test EditMode/PlayMode.
+Il workflow GitHub `.github/workflows/standalone-tests.yml` esegue i test diagnostici .NET e compila il progetto Agent Manager su Windows. Non equivale a una compilazione Unity, né a test EditMode/PlayMode.
 
 ## Architettura e prima implementazione Agent Manager
 
