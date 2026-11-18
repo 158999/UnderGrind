@@ -7,6 +7,7 @@ param(
 $ErrorActionPreference = "Stop"
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "../.."))
 $results = Join-Path $root "TestResults"
+$callbackResults = Join-Path $results "UnderGrind"
 $runId = Get-Date -Format "yyyyMMdd-HHmmss-fff"
 $runDir = Join-Path $results "Unity-$runId"
 New-Item -ItemType Directory -Path $runDir -Force | Out-Null
@@ -33,7 +34,9 @@ if ($testAssemblies.Count -eq 0) {
 $platforms = if ($Platform -eq "All") { @("EditMode", "PlayMode") } else { @($Platform) }
 $items = [System.Collections.Generic.List[object]]::new()
 $exit = 0
+$runStartedUtc = [DateTime]::UtcNow
 foreach ($target in $platforms) {
+    $platformStartedUtc = [DateTime]::UtcNow
     $xmlName = "$target.xml"
     $logName = "$target.log"
     $xmlPath = Join-Path $runDir $xmlName
@@ -47,9 +50,6 @@ foreach ($target in $platforms) {
         "-logFile", $logPath
     )
     Write-Host "Running Unity $target tests..."
-    # Unity.exe can return before its editor child process has finished. Waiting
-    # on the call operator may launch the next platform against a locked project
-    # and inspect result files before they exist. Wait for the process tree.
     $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
         if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
     }))
@@ -68,11 +68,32 @@ foreach ($target in $platforms) {
         $validationErrors.Add("Unity exited with code $code.")
     }
 
-    if (Test-Path $xmlPath) {
+    $actualResultPath = $xmlPath
+    if (-not (Test-Path $actualResultPath) -and (Test-Path $callbackResults)) {
+        # LocomotionTestResultsRunner writes TestRunner API XML into the project
+        # results folder. Its root is test-suite, not the CLI test-run schema.
+        # Accept only a report written during this platform invocation.
+        $callbackReport = Get-ChildItem $callbackResults -Filter ($target + "_*.xml") -File |
+            Where-Object {
+                $_.Name -ne ($target + "_Latest.xml") -and
+                $_.LastWriteTimeUtc -ge $platformStartedUtc.AddSeconds(-2)
+            } |
+            Sort-Object LastWriteTimeUtc -Descending |
+            Select-Object -First 1
+        if ($callbackReport) {
+            $actualResultPath = $callbackReport.FullName
+            Write-Host "Using fresh TestRunner callback report: $($callbackReport.FullName.Substring($root.Length + 1))"
+        }
+    }
+
+    if (Test-Path $actualResultPath) {
         try {
-            [xml]$testXml = Get-Content $xmlPath -Raw
-            $suite = $testXml.SelectSingleNode("//*[local-name()='test-run']")
-            if ($suite) {
+            [xml]$testXml = Get-Content $actualResultPath -Raw
+            $suite = $testXml.DocumentElement
+            if ($suite -and $suite.LocalName -notin @("test-run", "test-suite")) {
+                $suite = $testXml.SelectSingleNode("//*[local-name()='test-run' or local-name()='test-suite'][@name='UnderGrind']")
+            }
+            if ($suite -and $suite.LocalName -in @("test-run", "test-suite")) {
                 $counts.total = [int]$suite.total
                 $counts.passed = [int]$suite.passed
                 $counts.failed = [int]$suite.failed
@@ -83,14 +104,17 @@ foreach ($target in $platforms) {
                     $validationErrors.Add("Unity produced a test result with zero executed or discovered tests.")
                 }
                 if ($suite.result -ne "Passed") {
-                    $validationErrors.Add("Unity test-run result is '$($suite.result)', not Passed.")
+                    $validationErrors.Add("Unity test result is '$($suite.result)', not Passed.")
+                }
+                if ($counts.failed -gt 0) {
+                    $validationErrors.Add("Unity reported $($counts.failed) failed tests.")
                 }
                 if ($counts.inconclusive -gt 0) {
                     $validationErrors.Add("Unity reported $($counts.inconclusive) inconclusive tests.")
                 }
             }
             else {
-                $validationErrors.Add("The XML result does not contain a Unity test-run node.")
+                $validationErrors.Add("The XML result root is not a Unity test-run or test-suite node.")
             }
         }
         catch {
@@ -98,7 +122,7 @@ foreach ($target in $platforms) {
         }
     }
     else {
-        $validationErrors.Add("Unity did not produce the expected XML result file.")
+        $validationErrors.Add("Unity did not produce a fresh XML result for this platform.")
     }
 
     if (Test-Path $logPath) {
@@ -112,12 +136,15 @@ foreach ($target in $platforms) {
     }
 
     $resultValid = $hasValidResult -and $counts.total -gt 0 -and $validationErrors.Count -eq 0
+    $resultFile = if (Test-Path $actualResultPath) {
+        $actualResultPath.Substring($root.Length + 1).Replace("\", "/")
+    } else { $xmlName }
     $items.Add([ordered]@{
         platform = $target
         exitCode = $code
         resultValid = $resultValid
         validationErrors = @($validationErrors)
-        resultFile = $xmlName
+        resultFile = $resultFile
         logFile = $logName
         totals = $counts
     })
@@ -133,6 +160,7 @@ $totals = @{
 }
 $report = [ordered]@{
     runId = $runId
+    startedUtc = $runStartedUtc.ToString("O")
     finishedUtc = [DateTime]::UtcNow.ToString("O")
     status = if ($exit -eq 0) { "Passed" } else { "Failed" }
     totals = $totals
