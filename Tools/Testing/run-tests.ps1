@@ -26,7 +26,7 @@ function Invoke-DotNetCaptured {
     $stdoutPath = "$OutputPath.stdout.tmp"
     $stderrPath = "$OutputPath.stderr.tmp"
     $quotedArguments = @($DotNetArguments | ForEach-Object {
-        '"' + ([string]$_).Replace('"', '\\"') + '"'
+        '"' + [string]$_ + '"'
     })
     $argumentLine = [string]::Join(" ", $quotedArguments)
     $process = Start-Process -FilePath $dotnetCommand.Source -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath

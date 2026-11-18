@@ -22,7 +22,7 @@ $environmentErrors = [System.Collections.Generic.List[string]]::new()
 if ([string]::IsNullOrWhiteSpace($UnityEditorPath)) {
     $projectVersionFile = Join-Path $root "ProjectSettings/ProjectVersion.txt"
     $projectVersion = if (Test-Path -LiteralPath $projectVersionFile) {
-        (Select-String -LiteralPath $projectVersionFile -Pattern "^m_EditorVersion:\\s*(.+)$").Matches.Groups[1].Value.Trim()
+        (Select-String -LiteralPath $projectVersionFile -Pattern "^m_EditorVersion:\s*(.+)$").Matches.Groups[1].Value.Trim()
     } else { "" }
 
     $editorRoots = @(
