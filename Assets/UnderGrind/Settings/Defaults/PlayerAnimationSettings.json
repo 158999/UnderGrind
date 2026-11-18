@@ -33,7 +33,7 @@
   "speedDampTime": 0.1,
   "transitionDuration": 0.15,
   "landingExitTime": 0.9,
-  "settingsVersion": 3,
+  "settingsVersion": 4,
   "configureFbxImports": true,
   "fbxRigType": 0,
   "createAvatarFromFbx": true,

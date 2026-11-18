@@ -5,71 +5,42 @@
 - Unity **6000.6.7f1**.
 - Pacchetti del progetto: Input System e Unity Test Framework.
 - Il modello sorgente è `Assets/UnderGrind/Art/Source/humans.blend`.
-- Unity importa i file Blender tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, aprire **Edit → Preferences → External Tools** e verificare che Unity trovi l'eseguibile Blender; poi selezionare il file e usare **Reimport**.
+- Unity importa i file Blender tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, verificare **Edit → Preferences → External Tools** e ripetere Reimport.
 
-Il builder esegue una reimportazione forzata del modello prima di creare la scena. Se non trova geometria importata, interrompe la generazione e mostra un errore: non sostituisce più il personaggio reale con un manichino placeholder. Inoltre seleziona il GameObject radice del modello, non un singolo figlio (ad esempio torso o arto).
+Il builder richiede i due prefab Humanoid maschile e femminile configurati in `PlayerRigSettings.asset`. Verifica Animator, Avatar Humanoid valido, SkinnedMeshRenderer, testa, corpo e gruppi renderer FP/TP. Se i prefab non superano la validazione, la scena non viene creata: non viene usato un manichino statico come sostituto.
 
 ## Creazione della scena
 
-1. Attendere che Unity termini l'importazione di `humans.blend`.
-2. Verificare in **Edit → Project Settings → Player → Other Settings → Active Input Handling** che sia attivo **Input System Package (New)** oppure **Both**.
+1. Verificare che Unity abbia completato l'importazione dei due FBX configurati.
+2. Verificare **Edit → Project Settings → Player → Other Settings → Active Input Handling**: Input System Package (New) oppure Both.
 3. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
 4. Aprire `Assets/UnderGrind/Scenes/LocomotionTest.unity` e premere Play.
 
-La scena contiene pavimento, marcatori di distanza, gradini, ostacoli, rampa e piattaforme con materiali distinti. Anche il personaggio riceve un materiale dedicato, distinto dal pavimento. Il builder sceglie lo shader in base alla pipeline effettivamente attiva: il progetto attuale non ha un URP Render Pipeline Asset assegnato in Graphics Settings, quindi usa lo shader Standard invece di URP/Lit (che in questo assetto viene visualizzato magenta). I modelli maschile e femminile vengono scalati alle rispettive altezze definite nell’asset PlayerLocomotionSettings (1,78 m e 1,70 m nel profilo iniziale). Le animazioni vengono collegate solo se il modello espone clip e Avatar compatibili; la locomozione non dipende dalla presenza di animazioni.
+Il graybox è generato da `PlayerGrayboxSettings.asset` e comprende marcatori di distanza, gradini, scala, pareti, rampe, tunnel, passaggio stretto, slalom, ostacoli e piattaforme.
 
-## Configurazione del Player dall'Inspector
+## Configurazione del Player
 
-Selezionare **Player - Human 1.78m** nella Hierarchy. Il componente **Human Locomotion Controller** contiene il riferimento all'asset `PlayerLocomotionSettings`, oltre ai riferimenti al rig camera e all'inventario. I valori di gameplay non sono duplicati sul componente.
+Selezionare il Player nella Hierarchy. `HumanLocomotionController` usa l'asset `PlayerLocomotionSettings.asset`: i parametri di gameplay non sono duplicati sul componente. L'asset contiene gli otto gruppi di velocità, salto, gravità, accelerazione, postura/collisioni, camera/sensibilità e timing del salto. I valori iniziali effettivi sono quelli serializzati nell'asset.
 
-L'asset di riferimento è `Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset`. Selezionandolo nella finestra Project si possono modificare tutti gli otto gruppi:
+Input, interazione, UI inventario, animazioni, rig e graybox sono configurati nei rispettivi ScriptableObject. I valori iniziali sono forniti dai JSON in `Assets/UnderGrind/Settings/Defaults`; le migrazioni versionate compilano i campi aggiunti senza sovrascrivere le modifiche già fatte dall'Inspector.
 
-- velocità di camminata;
-- moltiplicatore e velocità di corsa;
-- salto e altezza teorica;
-- gravità e controllo aereo;
-- accelerazione e decelerazione;
-- postura accovacciata e collisioni;
-- camera, sensibilità e distanza;
-- coyote time e jump buffer.
+## Test e report
 
-Valori iniziali dell'asset:
+I runner sono:
 
-| Parametro | Valore iniziale |
-|---|---:|
-| Altezza personaggio | 1,78 m |
-| Camminata | 1,80 m/s |
-| Corsa | 2,40 m/s |
-| Moltiplicatore corsa | 1,3333× |
-| Altezza teorica salto | 0,40 m |
-| Gravità | 9,81 m/s² |
-| Controllo aereo | 0,65 |
-| Altezza accovacciata | 1,12 m |
+- `Tools/Testing/run-tests.ps1`: build diagnostica e test C# standalone.
+- `Tools/Testing/run-unity-tests.ps1`: test Unity EditMode e PlayMode, in sequenza.
+- `Tools/Testing/run-all-tests.ps1`: esegue entrambe le suite come un'unica esecuzione e produce anche `all-latest.json` e `all-latest.txt`.
 
-Il custom Inspector del controller mostra i valori derivati e permette di selezionare l'asset. Le modifiche vanno effettuate sull'asset, così tutti i Player che lo referenziano condividono la stessa configurazione. Se il riferimento manca, il controller segnala l'errore e non esegue il movimento.
+La conservazione è limitata a due cartelle nella root `TestResults`:
 
-## Controlli e overlay
+- `TestResults/test`: esecuzione corrente.
+- `TestResults/test old`: esecuzione precedente.
 
-- WASD / frecce: movimento
-- Shift: corsa
-- Spazio: salto
-- F5: alterna prima e terza persona
-- Esc: libera il mouse; clic sinistro per riacquisirlo
+A ogni nuova esecuzione viene eliminata la vecchia `test old`, la cartella `test` viene spostata in `test old` e viene creata una nuova `test`. Le esecuzioni autonome e Unity avviate separatamente applicano ciascuna una rotazione; `run-all-tests.ps1` esegue invece entrambe le suite nella stessa cartella con una sola rotazione. I risultati del Test Runner avviato dall'Editor vengono salvati in `TestResults/test/UnderGrind` con nomi fissi, senza creare una directory per ogni esecuzione.
 
-L'overlay è ancorato all'area sicura dello schermo e mostra velocità effettiva, velocità nominali, moltiplicatore di corsa, salto, altezza, gravità, stato e visuale.
-
-## Test e report automatici
-
-Sono presenti assembly separati per EditMode e PlayMode. Dal menu **UnderGrind → Tests**:
-
-- **Run EditMode Tests + Save Results**
-- **Run PlayMode Tests + Save Results**
-- **Choose Results Folder...**
-
-La cartella predefinita è `TestResults/UnderGrind` nella root del progetto. È possibile scegliere una cartella diversa, purché interna al progetto. L'esportazione è automatica sia lanciando i test dai comandi UnderGrind sia dalla finestra standard **Window → General → Test Runner**: non serve premere Save Results. A fine esecuzione vengono salvati un XML con timestamp, un XML `Latest` e un riepilogo TXT. I callback vengono ripristinati anche dopo il domain reload che può avvenire durante i test PlayMode.
-
-I report sono output generati e non vengono inclusi nei commit (la cartella `TestResults` è esclusa dal `.gitignore`).
+I report JSON distinguono esecuzioni superate, fallite e non configurate. XML assente, non valido o con zero test non può essere considerato un successo. Gli errori di compilazione C# sono riportati nei dettagli della suite Unity.
 
 ## Limiti della verifica
 
-La modifica dei file nel repository non equivale a una verifica nell'Editor Unity. Importazione Blender, compilazione C#, rendering effettivo, EditMode e PlayMode devono essere eseguiti sul progetto aperto in Unity. In particolare, se il modello non viene importato dal Blender installato sul computer, il builder si ferma intenzionalmente invece di mostrare un placeholder ambiguo.
+La modifica dei file nel repository non equivale a una verifica nell'Editor Unity. Importazione Blender, compilazione C#, rendering, EditMode e PlayMode devono essere eseguiti sul progetto aperto in Unity. La presenza di FBX, Avatar Humanoid e Animator validi deve essere verificata sui modelli definitivi.

@@ -34,6 +34,16 @@ namespace UnderGrind.Locomotion
         [SerializeField] private bool crouchIdleLoops;
         [SerializeField] private bool crouchWalkLoops;
 
+        [Header("Importazione FBX")]
+        [SerializeField] private bool configureFbxImports = true;
+        [SerializeField] private PlayerAnimationRigType fbxRigType = PlayerAnimationRigType.Humanoid;
+        [SerializeField] private bool createAvatarFromFbx = true;
+        [SerializeField] private bool importAnimationClips = true;
+        [SerializeField] private bool importMaterials;
+        [SerializeField] private bool importCameras;
+        [SerializeField] private bool importLights;
+        [SerializeField] private bool optimizeFbxGameObjects;
+
         [Header("Parametri Animator")]
         [SerializeField] private string speedParameterName;
         [SerializeField] private string moveXParameterName;

@@ -1,9 +1,0 @@
-UnderGrind PlayMode test results
-Completed: 2026-11-17 11:40:46
-Passed: 1
-Failed: 0
-Skipped: 0
-Inconclusive: 0
-Total: 1
-Result: Passed
-XML: C:\Users\cgr\Desktop\eee\varie\UnderGrind\TestResults\UnderGrind\PlayMode_20261117_114046.xml

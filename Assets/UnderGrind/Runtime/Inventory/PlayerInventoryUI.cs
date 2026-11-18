@@ -55,10 +55,7 @@ namespace UnderGrind.Inventory
             InitializeUI();
         }
 
-        private void OnEnable()
-        {
-            BindInventoryEvents();
-        }
+        private void OnEnable() => BindInventoryEvents();
 
         private void OnDisable()
         {
@@ -162,6 +159,14 @@ namespace UnderGrind.Inventory
                     ? settings.EmptySlotText
                     : slot.Item.DisplayName + "\n×" + slot.Quantity;
             }
+        }
+
+        // PlayerInventory.Changed carries the inventory instance; the UI refreshes
+        // only when the event belongs to the inventory currently displayed.
+        private void Refresh(PlayerInventory changedInventory)
+        {
+            if (changedInventory == null || changedInventory != inventory) return;
+            Refresh();
         }
 
         private void InitializeUI()

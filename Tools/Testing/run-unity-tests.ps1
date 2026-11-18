@@ -1,184 +1,181 @@
 [CmdletBinding()]
 param(
     [ValidateSet("EditMode", "PlayMode", "All")][string]$Platform = "All",
-    [string]$UnityEditorPath = $env:UNITY_EDITOR_PATH
+    [string]$UnityEditorPath = $env:UNITY_EDITOR_PATH,
+    [switch]$ReuseCurrentRun
 )
 
 $ErrorActionPreference = "Stop"
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "../.."))
 $results = Join-Path $root "TestResults"
-$callbackResults = Join-Path $results "UnderGrind"
+. (Join-Path $PSScriptRoot "TestResults.Retention.ps1")
+$runDir = Initialize-UnderGrindTestRun -ProjectRoot $root -ReuseCurrentRun:$ReuseCurrentRun
+$callbackResults = Join-Path $runDir "UnderGrind"
+$unityOutput = Join-Path $runDir "Unity"
+New-Item -ItemType Directory -Path $unityOutput -Force | Out-Null
 $runId = Get-Date -Format "yyyyMMdd-HHmmss-fff"
-$runDir = Join-Path $results "Unity-$runId"
-New-Item -ItemType Directory -Path $runDir -Force | Out-Null
+$runStartedUtc = [DateTime]::UtcNow
+$items = [System.Collections.Generic.List[object]]::new()
+$exit = 0
+$environmentErrors = [System.Collections.Generic.List[string]]::new()
 
 if ([string]::IsNullOrWhiteSpace($UnityEditorPath)) {
     $candidates = @(
         "$env:ProgramFiles/Unity/Hub/Editor/6000.6.7f1/Editor/Unity.exe",
         "$env:LOCALAPPDATA/Programs/Unity/Hub/Editor/6000.6.7f1/Editor/Unity.exe"
     )
-    $UnityEditorPath = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+    $UnityEditorPath = $candidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
 }
-if ([string]::IsNullOrWhiteSpace($UnityEditorPath) -or -not (Test-Path $UnityEditorPath)) {
-    Write-Host "Unity Editor not found. Set UNITY_EDITOR_PATH or pass -UnityEditorPath."
-    exit 2
+if ([string]::IsNullOrWhiteSpace($UnityEditorPath) -or -not (Test-Path -LiteralPath $UnityEditorPath)) {
+    $environmentErrors.Add("Unity Editor non trovato. Impostare UNITY_EDITOR_PATH o passare -UnityEditorPath.")
+    $exit = 2
 }
+else {
+    $testAssemblies = @(Get-ChildItem (Join-Path $root "Assets") -Filter "*.asmdef" -File -Recurse |
+        Where-Object { $_.DirectoryName -match "Tests" })
+    if ($testAssemblies.Count -eq 0) {
+        $environmentErrors.Add("Nessuna assembly Unity di test trovata sotto Assets.")
+        $exit = 2
+    }
+    else {
+        $platforms = if ($Platform -eq "All") { @("EditMode", "PlayMode") } else { @($Platform) }
+        foreach ($target in $platforms) {
+            $platformStartedUtc = [DateTime]::UtcNow
+            $callbackPath = Join-Path $callbackResults ($target + ".xml")
+            $callbackBaseline = if (Test-Path -LiteralPath $callbackPath) {
+                (Get-Item -LiteralPath $callbackPath).LastWriteTimeUtc
+            } else { [DateTime]::MinValue }
 
-$testAssemblies = @(Get-ChildItem (Join-Path $root "Assets") -Filter "*.asmdef" -File -Recurse |
-    Where-Object { $_.DirectoryName -match "Tests" })
-if ($testAssemblies.Count -eq 0) {
-    Write-Host "No Unity test assemblies found. No tests were executed."
-    exit 2
-}
+            $xmlName = "$target.xml"
+            $logName = "$target.log"
+            $xmlPath = Join-Path $unityOutput $xmlName
+            $logPath = Join-Path $unityOutput $logName
+            $arguments = @(
+                "-batchmode", "-nographics", "-accept-apiupdate",
+                "-projectPath", $root,
+                "-runTests",
+                "-testPlatform", $target,
+                "-testResults", $xmlPath,
+                "-logFile", $logPath
+            )
+            Write-Host "Running Unity $target tests..."
+            $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
+                if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
+            }))
+            $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0; inconclusive = 0 }
+            $validationErrors = [System.Collections.Generic.List[string]]::new()
+            $compilerDiagnostics = @()
+            $hasValidResult = $false
+            $code = 1
 
-$platforms = if ($Platform -eq "All") { @("EditMode", "PlayMode") } else { @($Platform) }
-$items = [System.Collections.Generic.List[object]]::new()
-$exit = 0
-$runStartedUtc = [DateTime]::UtcNow
-foreach ($target in $platforms) {
-    $platformStartedUtc = [DateTime]::UtcNow
-    $callbackBaseline = @{}
-    if (Test-Path $callbackResults) {
-        Get-ChildItem $callbackResults -Filter ($target + "_*.xml") -File |
-            ForEach-Object { $callbackBaseline[$_.FullName] = $_.LastWriteTimeUtc }
-    }
-    $xmlName = "$target.xml"
-    $logName = "$target.log"
-    $xmlPath = Join-Path $runDir $xmlName
-    $logPath = Join-Path $runDir $logName
-    $arguments = @(
-        "-batchmode", "-nographics", "-accept-apiupdate",
-        "-projectPath", $root,
-        "-runTests",
-        "-testPlatform", $target,
-        "-testResults", $xmlPath,
-        "-logFile", $logPath
-    )
-    Write-Host "Running Unity $target tests..."
-    $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
-        if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
-    }))
-    $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0; inconclusive = 0 }
-    $validationErrors = [System.Collections.Generic.List[string]]::new()
-    $hasValidResult = $false
-    $code = 1
-    try {
-        $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow
-        $code = $process.ExitCode
-    }
-    catch {
-        $validationErrors.Add("Unity process could not be started or awaited: $($_.Exception.Message)")
-    }
-    if ($code -ne 0) {
-        $validationErrors.Add("Unity exited with code $code.")
-    }
-
-    $actualResultPath = $xmlPath
-    if (-not (Test-Path $actualResultPath) -and (Test-Path $callbackResults)) {
-        # LocomotionTestResultsRunner writes TestRunner API XML into the project
-        # results folder. Its root is test-suite, not the CLI test-run schema.
-        # Accept only a report written during this platform invocation.
-        $callbackReport = Get-ChildItem $callbackResults -Filter ($target + "_*.xml") -File |
-            Where-Object {
-                $_.Name -ne ($target + "_Latest.xml") -and
-                (-not $callbackBaseline.ContainsKey($_.FullName) -or
-                 $_.LastWriteTimeUtc -gt $callbackBaseline[$_.FullName]) -and
-                $_.LastWriteTimeUtc -ge $platformStartedUtc
-            } |
-            Sort-Object LastWriteTimeUtc -Descending |
-            Select-Object -First 1
-        if ($callbackReport) {
-            $actualResultPath = $callbackReport.FullName
-            Write-Host "Using fresh TestRunner callback report: $($callbackReport.FullName.Substring($root.Length + 1))"
-        }
-    }
-
-    if (Test-Path $actualResultPath) {
-        try {
-            [xml]$testXml = Get-Content $actualResultPath -Raw
-            $suite = $testXml.DocumentElement
-            if ($suite -and $suite.LocalName -notin @("test-run", "test-suite")) {
-                $suite = $testXml.SelectSingleNode("//*[local-name()='test-run' or local-name()='test-suite'][@name='UnderGrind']")
+            try {
+                $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow
+                $code = $process.ExitCode
             }
-            if ($suite -and $suite.LocalName -in @("test-run", "test-suite")) {
-                $counts.total = [int]$suite.total
-                $counts.passed = [int]$suite.passed
-                $counts.failed = [int]$suite.failed
-                $counts.skipped = [int]$suite.skipped
-                $counts.inconclusive = [int]$suite.inconclusive
-                $hasValidResult = $true
-                if ($counts.total -le 0) {
-                    $validationErrors.Add("Unity produced a test result with zero executed or discovered tests.")
+            catch {
+                $validationErrors.Add("Impossibile avviare o attendere Unity: $($_.Exception.Message)")
+            }
+            if ($code -ne 0) { $validationErrors.Add("Unity è terminato con codice $code.") }
+
+            $actualResultPath = $xmlPath
+            if (-not (Test-Path -LiteralPath $actualResultPath) -and (Test-Path -LiteralPath $callbackPath)) {
+                $callbackInfo = Get-Item -LiteralPath $callbackPath
+                if ($callbackInfo.LastWriteTimeUtc -gt $callbackBaseline -and
+                    $callbackInfo.LastWriteTimeUtc -ge $platformStartedUtc) {
+                    $actualResultPath = $callbackPath
+                    Write-Host "Usato report TestRunner API aggiornato: TestResults/test/UnderGrind/$target.xml"
                 }
-                if ($suite.result -ne "Passed") {
-                    $validationErrors.Add("Unity test result is '$($suite.result)', not Passed.")
+            }
+
+            if (Test-Path -LiteralPath $actualResultPath) {
+                try {
+                    [xml]$testXml = Get-Content -LiteralPath $actualResultPath -Raw
+                    $suite = $testXml.DocumentElement
+                    if ($suite -and $suite.LocalName -notin @("test-run", "test-suite")) {
+                        $suite = $testXml.SelectSingleNode("//*[local-name()='test-run' or local-name()='test-suite'][@name='UnderGrind']")
+                    }
+                    if ($suite -and $suite.LocalName -in @("test-run", "test-suite")) {
+                        $counts.total = [int]$suite.total
+                        $counts.passed = [int]$suite.passed
+                        $counts.failed = [int]$suite.failed
+                        $counts.skipped = [int]$suite.skipped
+                        $counts.inconclusive = [int]$suite.inconclusive
+                        $hasValidResult = $true
+                        if ($counts.total -le 0) { $validationErrors.Add("Il report Unity non contiene test eseguiti o scoperti.") }
+                        if ($suite.result -ne "Passed") { $validationErrors.Add("Il risultato Unity è '$($suite.result)', non Passed.") }
+                        if ($counts.failed -gt 0) { $validationErrors.Add("Unity ha riportato $($counts.failed) test falliti.") }
+                        if ($counts.inconclusive -gt 0) { $validationErrors.Add("Unity ha riportato $($counts.inconclusive) test inconcludenti.") }
+                    }
+                    else {
+                        $validationErrors.Add("La radice XML non è un nodo test-run o test-suite.")
+                    }
                 }
-                if ($counts.failed -gt 0) {
-                    $validationErrors.Add("Unity reported $($counts.failed) failed tests.")
-                }
-                if ($counts.inconclusive -gt 0) {
-                    $validationErrors.Add("Unity reported $($counts.inconclusive) inconclusive tests.")
+                catch {
+                    $validationErrors.Add("Il risultato XML non è leggibile: $($_.Exception.Message)")
                 }
             }
             else {
-                $validationErrors.Add("The XML result root is not a Unity test-run or test-suite node.")
+                $validationErrors.Add("Unity non ha prodotto un XML nuovo e valido per questa piattaforma.")
             }
-        }
-        catch {
-            $validationErrors.Add("The XML result could not be parsed: $($_.Exception.Message)")
-        }
-    }
-    else {
-        $validationErrors.Add("Unity did not produce a fresh XML result for this platform.")
-    }
 
-    if (Test-Path $logPath) {
-        $unityLog = Get-Content $logPath -Raw
-        if ($unityLog -match "Scripts have compiler errors\.|error CS\d+|multiple assembly definition files") {
-            $validationErrors.Add("Unity reported script compilation errors or invalid assembly-definition layout.")
+            if (Test-Path -LiteralPath $logPath) {
+                $unityLog = Get-Content -LiteralPath $logPath -Raw
+                $compilerDiagnostics = @($unityLog -split "`r?`n" | Where-Object {
+                    $_ -match "error CS\d+|Scripts have compiler errors\.|multiple assembly definition files"
+                })
+                foreach ($diagnostic in $compilerDiagnostics) {
+                    $validationErrors.Add("Compilazione: $diagnostic")
+                }
+            }
+            else {
+                $validationErrors.Add("Unity non ha prodotto il log atteso.")
+            }
+
+            $resultValid = $hasValidResult -and $counts.total -gt 0 -and $validationErrors.Count -eq 0
+            $resultFile = if (Test-Path -LiteralPath $actualResultPath) {
+                $actualResultPath.Substring($root.Length + 1).Replace("\", "/")
+            } else { "TestResults/test/Unity/$xmlName" }
+            $items.Add([ordered]@{
+                platform = $target
+                exitCode = $code
+                resultValid = $resultValid
+                validationErrors = @($validationErrors)
+                compilerDiagnostics = @($compilerDiagnostics)
+                resultFile = $resultFile
+                logFile = "TestResults/test/Unity/$logName"
+                totals = $counts
+            })
+            if ($code -ne 0 -or -not $resultValid) { $exit = 1 }
+            Write-Host "Unity $target : $($counts.passed) superati, $($counts.failed) falliti, $($counts.total) totali"
         }
     }
-    else {
-        $validationErrors.Add("Unity did not produce the expected log file.")
-    }
-
-    $resultValid = $hasValidResult -and $counts.total -gt 0 -and $validationErrors.Count -eq 0
-    $resultFile = if (Test-Path $actualResultPath) {
-        $actualResultPath.Substring($root.Length + 1).Replace("\", "/")
-    } else { $xmlName }
-    $items.Add([ordered]@{
-        platform = $target
-        exitCode = $code
-        resultValid = $resultValid
-        validationErrors = @($validationErrors)
-        resultFile = $resultFile
-        logFile = $logName
-        totals = $counts
-    })
-    if ($code -ne 0 -or $counts.failed -gt 0 -or -not $resultValid) { $exit = 1 }
 }
 
-$totals = @{
-    total = ($items | ForEach-Object { [int]$_.totals.total } | Measure-Object -Sum).Sum
-    passed = ($items | ForEach-Object { [int]$_.totals.passed } | Measure-Object -Sum).Sum
-    failed = ($items | ForEach-Object { [int]$_.totals.failed } | Measure-Object -Sum).Sum
-    skipped = ($items | ForEach-Object { [int]$_.totals.skipped } | Measure-Object -Sum).Sum
-    inconclusive = ($items | ForEach-Object { [int]$_.totals.inconclusive } | Measure-Object -Sum).Sum
+$totals = @{ total = 0; passed = 0; failed = 0; skipped = 0; inconclusive = 0 }
+foreach ($item in $items) {
+    $totals.total += [int]$item.totals.total
+    $totals.passed += [int]$item.totals.passed
+    $totals.failed += [int]$item.totals.failed
+    $totals.skipped += [int]$item.totals.skipped
+    $totals.inconclusive += [int]$item.totals.inconclusive
 }
+$status = if ($exit -eq 0) { "Passed" } elseif ($exit -eq 2) { "NotConfigured" } else { "Failed" }
 $report = [ordered]@{
     runId = $runId
     startedUtc = $runStartedUtc.ToString("O")
     finishedUtc = [DateTime]::UtcNow.ToString("O")
-    status = if ($exit -eq 0) { "Passed" } else { "Failed" }
+    status = $status
+    environmentErrors = @($environmentErrors)
     totals = $totals
     platforms = @($items)
 }
-$report | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $results "unity-latest.json") -Encoding utf8
+$report | ConvertTo-Json -Depth 10 | Set-Content (Join-Path $runDir "unity-latest.json") -Encoding utf8
 @(
     "UnderGrind Unity tests"
-    "Status: $($report.status)"
+    "Status: $status"
     "Total: $($totals.total) | Passed: $($totals.passed) | Failed: $($totals.failed) | Skipped: $($totals.skipped) | Inconclusive: $($totals.inconclusive)"
-    "Run details: TestResults/Unity-$runId/"
-) | Set-Content (Join-Path $results "unity-latest.txt") -Encoding utf8
-Write-Host "Unity status: $($report.status)"
+    "Environment errors: $($environmentErrors -join ' | ')"
+    "Run details: TestResults/test/Unity/"
+) | Set-Content (Join-Path $runDir "unity-latest.txt") -Encoding utf8
+Write-Host "Unity status: $status"
 exit $exit

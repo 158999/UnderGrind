@@ -2,9 +2,9 @@
 
 ## Personaggio di riferimento
 
-Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile presente nella sorgente misura 1,70 m. Entrambe le altezze sono configurabili.
+Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile misura 1,70 m. Entrambe le altezze sono configurabili nell'asset di rig.
 
-La versione Blendstra corrente contiene due armature e sei mesh separate per personaggio: corpo, testa, braccia e mani dedicate alla prima e alla terza persona. La sorgente `.blend` nel repository non è stata sostituita automaticamente: l'exporter `Tools/Blender/export-undergrind-humans.py` valida i pesi e produce i due FBX configurati in `PlayerRigSettings.asset`.
+La sorgente Blendstra disponibile contiene due armature e copie delle mesh originali. La separazione della testa non è ancora verificata: l'ispezione delle isole geometriche ha rilevato una singola isola connessa per corpo. Il file sorgente Blender del repository non è stato sostituito automaticamente; l'exporter `Tools/Blender/export-undergrind-humans.py` valida pesi e gerarchia prima di produrre i due FBX configurati in `PlayerRigSettings.asset`.
 
 ## Configurazione della locomozione
 
@@ -21,11 +21,11 @@ Le proprietà sono organizzate in otto gruppi:
 7. **Camera e sensibilità**: sensibilità mouse/gamepad, angolo massimo, altezza del punto di vista, offset e distanza in terza persona, collisioni, interpolazione, FOV e near clip.
 8. **Coyote time e jump buffer**: finestre temporali indipendenti per il salto.
 
-I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I modelli iniziali dei parametri di input, interazione, UI, animazione e rig sono file JSON in `Assets/UnderGrind/Settings/Defaults`; i builder li applicano soltanto quando creano il relativo ScriptableObject. Dopo la creazione, le modifiche all'asset Inspector non vengono sovrascritte dal builder. Se manca il file JSON necessario, il builder segnala l'errore e non crea un asset vuoto. La scena di test assegna lo stesso asset al controller e al dimensionamento iniziale del CharacterController.
+I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I modelli iniziali dei parametri di input, interazione, UI, animazione, rig e graybox sono file JSON in `Assets/UnderGrind/Settings/Defaults`; i builder li applicano quando creano il relativo ScriptableObject. Le migrazioni versionate compilano i nuovi campi senza sovrascrivere le modifiche successive effettuate nell'Inspector.
 
 ## Input e controlli
 
-`PlayerInputSettings.asset` collega gli identificatori logici del Player ai nomi delle azioni dell'`InputActionAsset`. L'asset iniziale è `Assets/UnderGrind/Settings/PlayerInputActions.inputactions`, importato da Unity e modificabile nell'Input Actions editor. **UnderGrind → Player → Create or Repair Input Actions** collega l'asset e ripara i riferimenti mancanti. Le binding predefinite sono dati dell'asset, non costanti del controller.
+`PlayerInputSettings.asset` collega gli identificatori logici del Player ai nomi delle azioni dell'`InputActionAsset`. L'asset iniziale è `Assets/UnderGrind/Settings/PlayerInputActions.inputactions`, modificabile nell'Input Actions editor. Le binding sono dati dell'asset e non costanti del controller.
 
 | Azione | Tastiera e mouse | Gamepad |
 |---|---|---|
@@ -36,96 +36,42 @@ I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I mod
 | Accovacciamento | C | Pulsante est |
 | Cambio telecamera | F5 | Pulsante nord |
 | Sblocco cursore | Esc | Start |
-| Cattura cursore | Clic sinistro | — |
 | Interazione/raccolta | E | Pulsante ovest |
 | Rilascio oggetto | G | D-pad giù |
 | Apri/chiudi inventario | Tab | Select |
 | Slot successivo/precedente | ] / [ | D-pad destra/sinistra |
 
-Le dead zone radiali di movimento e visuale gamepad, la sensibilità, il comportamento del cursore, il timeout di rimappatura e la chiave di persistenza sono configurati nei rispettivi asset `PlayerInputSettings.asset` e `PlayerLocomotionSettings.asset`. La stessa action map viene condivisa da locomozione, inventario e interazione.
+Le dead zone radiali, la sensibilità, il comportamento del cursore, il timeout di rimappatura e la chiave di persistenza sono configurati nei rispettivi asset. `PlayerInputRebindingController` supporta rimappatura interattiva, annullamento, visualizzazione della binding, salvataggio e reset degli override. La schermata UI dedicata alla rimappatura non è ancora presente.
 
-`HumanLocomotionController` crea o riutilizza `PlayerInputRebindingController` e carica gli override prima di abilitare la action map. L'API consente di avviare una rimappatura con `BeginRebind(PlayerInputActionId, bindingIndex)`, annullarla con `CancelRebind()`, ottenere l'etichetta del controllo con `GetBindingDisplayString()` e ripristinare le binding originali con `ResetOverrides()`. Le rimappature vengono salvate in `PlayerPrefs`; `RebindTimeoutSeconds` e `OverrideStorageKey` sono configurabili in `PlayerInputSettings.asset`. Il componente espone l'evento `RebindCompleted`.
+## Sovraccarico e inventario
 
-Il runtime supporta la rimappatura, ma non è ancora presente una schermata UI dedicata alle impostazioni dei controlli.
+`PlayerInventory` calcola il peso trasportato sommando peso unitario e quantità. La soglia di peso non limita la raccolta. Quando il peso supera la soglia configurata, corsa e salto vengono disabilitati e la velocità di camminata viene ridotta della percentuale definita nell'asset; la penalità si applica anche alla camminata accovacciata. Un salto già iniziato non viene interrotto. Quando il peso torna uguale o inferiore alla soglia, le capacità vengono ripristinate.
 
-## Sovraccarico da inventario
+`PlayerInventoryUI` visualizza slot, icone, quantità, selezione e peso. `PlayerInteractionController` raccoglie oggetti tramite SphereCast dalla camera e rilascia lo stack selezionato. `WorldItemPickup` conserva la quantità che non trova spazio nell'inventario. Salvataggio/caricamento, equipaggiamento e uso degli oggetti non sono ancora implementati.
 
-Il componente `PlayerInventory` calcola il peso trasportato sommando il peso unitario di ogni oggetto per la relativa quantità. Il peso massimo è una soglia di penalità, non un limite alla raccolta.
+## Rig, visuale e animazioni
 
-Quando il peso corrente supera `MaxCarryWeightKg`:
+`PlayerRigSettings.asset` contiene i percorsi FBX distinti per personaggio maschile e femminile, i requisiti di Avatar Humanoid e i token per i renderer. Il builder richiede entrambi i prefab validi e interrompe la generazione della scena se uno dei due manca o non soddisfa i requisiti. Non viene creato un prefab statico di ripiego.
 
-- la corsa viene disabilitata;
-- il salto viene disabilitato e l'eventuale input bufferizzato viene annullato;
-- la velocità di camminata viene ridotta della percentuale configurata;
-- la penalità si applica anche alla camminata accovacciata.
+`PlayerVisualRig` gestisce gruppi separati per testa, corpo, arti FP e arti TP. In prima persona la testa viene nascosta e il corpo viene mostrato quando la visuale guarda verso il basso, secondo soglie e isteresi configurabili. La logica è implementata; la verifica sui prefab definitivi è ancora da eseguire.
 
-Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità normale vengono ripristinati. Un salto già iniziato non viene interrotto a mezz'aria. I valori iniziali dell'asset inventario sono 24 slot, 50 kg e riduzione del 25%.
+`PlayerAnimationSettings.asset` configura clip, loop, parametri Animator, soglie, transizioni e opzioni di importazione FBX. Il builder genera un controller con gli stati Idle, Walk, Run, Jump, Fall, Land, Crouch Idle e Crouch Walk. Le otto animazioni PINOC in formato `mixamo-fbx` non sono ancora importate nel repository né retargettate sul rig definitivo.
 
-## Componenti di runtime
+## Graybox
 
-- `HumanLocomotionController`: movimento tramite `CharacterController`, input, accelerazione, decelerazione, salto, postura e gestione delle camere in prima e terza persona.
-- `PlayerInventory`: slot, quantità, peso derivato, operazioni e stato di sovraccarico.
-- `PlayerInventoryUI`: interfaccia overlay con slot, icone, quantità, selezione e peso. Layout e stile sono configurati in `PlayerInventoryUISettings.asset`.
-- `PlayerInteractionController`: raccolta tramite SphereCast dalla camera e rilascio dello stack selezionato. Distanza, raggio, layer, quantità e impulso sono configurati in `PlayerInteractionSettings.asset`.
-- `WorldItemPickup`: componente di un oggetto nel mondo; conserva l'eventuale quantità non trasferita all'inventario.
-- `PlayerVisualRig`: visibilità di testa e corpo in prima persona, arti dedicati alla prima persona e arti dedicati alla terza persona.
-- `PlayerAnimationDriver`: invia lo stato della locomozione all'Animator senza applicare root motion.
+`PlayerGrayboxSettings.asset` configura pavimento, marcatori di distanza, gradini, scala, pareti, rampe, tunnel, passaggio stretto, slalom, ostacoli e piattaforme. La scena di test deve essere rigenerata nell'Editor Unity con i due prefab Humanoid validi prima della verifica in Play Mode.
 
-## Rig e visibilità del modello
+## Risultati dei test e conservazione
 
-`PlayerRigSettings.asset` contiene due percorsi FBX distinti, uno per il modello maschile e uno per quello femminile. Ogni file deve contenere il proprio scheletro e il proprio Avatar Humanoid: i due prefab non condividono lo stesso Avatar. I percorsi predefiniti sono:
+Gli script PowerShell `Tools/Testing/run-tests.ps1` e `Tools/Testing/run-unity-tests.ps1` salvano i report in `TestResults/test`. La cartella `TestResults/test old` conserva l'esecuzione immediatamente precedente. A ogni nuova esecuzione la precedente cartella `test old` viene eliminata, `test` diventa `test old` e viene creata una nuova `test`. Il comando `Tools/Testing/run-all-tests.ps1` esegue entrambe le suite nella stessa cartella, effettuando una sola rotazione.
 
-- `Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx`
-- `Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx`
+Ogni suite produce un JSON riepilogativo, un TXT, i log e i report XML/TRX disponibili. Un report assente, non valido o con zero test non viene considerato superato. I log Unity riportano separatamente gli errori di compilazione.
 
-Dopo aver importato entrambi i file, **UnderGrind → Player → Build Male and Female Prefabs From Configured FBX** prepara separatamente i due Model Importer, valida i rispettivi Avatar e genera i prefab. L'operazione si interrompe se manca uno dei file, se i percorsi coincidono, se l'Avatar non è valido o se la gerarchia non soddisfa i requisiti di renderer.
+### Ultima esecuzione disponibile nel repository
 
-Convenzioni dei renderer:
+- Test autonomi C#: **6/6 superati**, build diagnostica riuscita.
+- Unity EditMode: **non eseguito**; compilazione bloccata da errori CS0123 in `PlayerInventoryUI.cs` e CS0103 in `PlayerAnimationSettings.cs`.
+- Unity PlayMode: **non eseguito** per gli stessi errori di compilazione.
+- Nessun conteggio pari a zero è interpretabile come test superati: Unity non ha prodotto XML valido per le due piattaforme.
 
-- `*_Head`: testa, nascosta in prima persona e ripristinata in terza persona.
-- `*_Body`: corpo, nascosto quando la visuale in prima persona guarda avanti e mostrato quando il giocatore guarda verso il basso.
-- `*_TP_Arms` e `*_TP_Hands`: arti visibili soltanto in terza persona.
-- `*_FP_Arms` e `*_FP_Hands`: arti visibili soltanto in prima persona.
-
-`PlayerVisualRig` applica le convenzioni tramite `PlayerRigSettings`. Le soglie `FirstPersonBodyRevealPitch` e `FirstPersonBodyHidePitch` configurano la rivelazione del corpo con isteresi, evitando cambi continui vicino alla soglia. `RequireSeparateHead` e `RequireFirstPersonArms` rendono obbligatorie le rispettive parti durante la generazione del prefab.
-
-Il generatore della scena richiede entrambi i prefab riggati, ciascuno con Animator, Avatar Humanoid valido, SkinnedMeshRenderer e gruppi renderer richiesti. Se i prefab mancano, avvia il builder configurato; se non riesce a generarli, interrompe la creazione della scena. Non crea prefab statici di ripiego.
-
-## Animazioni
-
-`PlayerAnimationSettings.asset` contiene i riferimenti alle clip, il Runtime Animator Controller, i nomi e i tipi dei parametri, le soglie dei blend, le durate di transizione e l'opzione di loop separata per ciascuna delle otto clip.
-
-Dopo aver importato le clip in `Assets/UnderGrind/Animations`, il comando **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti mancanti e genera `Assets/UnderGrind/Generated/Animation/PlayerAnimator.controller`.
-
-Le clip richieste sono Idle, Walk, Run, Jump, Fall, Land, Crouch Idle e Crouch Walk. Tutte e otto sono necessarie per generare il controller completo. Il generatore individua le clip sia dal nome interno sia dal nome del file FBX. Le opzioni di importazione sono configurabili in `PlayerAnimationSettings.asset`: attivazione della configurazione automatica, rig Humanoid o Generic, creazione dell'Avatar, importazione delle animazioni, materiali, camere, luci e ottimizzazione dei GameObject. Il profilo iniziale usa Humanoid, crea l'Avatar dal singolo FBX e importa le animazioni; le impostazioni vengono applicate soltanto ai file FBX nella cartella Animations. Le soglie di velocità e le transizioni sono lette dall'asset di configurazione. Il controller usa blend tree per locomozione e accovacciamento e stati separati per salto, caduta e atterraggio.
-
-`PlayerAnimationDriver` aggiorna soltanto parametri presenti nel controller e con tipo corretto. Il root motion è disabilitato perché lo spostamento del personaggio è gestito da `HumanLocomotionController`.
-
-Otto movimenti sono ora presenti nella libreria PINOC dell'utente: Standing Idle, Walking, Running, Jump, Crouching Idle, Crouch Walk Forward, Fall down e Hard Landing. Per il rig Humanoid UnderGrind è disponibile l'export `mixamo-fbx`, con X Bot e scheletro Mixamo, da retargettare sul rig definitivo. Il formato predefinito preso dalla libreria è invece un GLB armature-only MetaHuman a 441 ossa, destinato al workflow Splat e non direttamente compatibile con questo controller. Gli FBX Mixamo non sono ancora importati in `Assets/UnderGrind/Animations` né trasferiti sul rig definitivo.
-
-## Scena di test
-
-**UnderGrind → Build First Locomotion Test Scene** crea o aggiorna `Assets/UnderGrind/Scenes/LocomotionTest.unity`. Il generatore assegna gli asset di configurazione e aggiunge inventario, UI, interazione, locomozione e diagnostica. Se sono presenti i prefab Humanoid configurati, utilizza quelli; altrimenti importa le mesh sorgente da `humans.blend` e crea prefab statici di riferimento. Il comando chiede conferma prima di sostituire una scena già esistente e verifica il salvataggio delle scene aperte con modifiche non salvate.
-
-### Stato della scena versionata
-
-Il file `LocomotionTest.unity` attualmente versionato non corrisponde ancora alla configurazione prodotta dal generatore aggiornato. Il GameObject Player contiene un `CharacterController`, `HumanLocomotionController` e `LocomotionDebugOverlay`. Il controller ha assegnato `PlayerLocomotionSettings.asset`, ma il riferimento a `PlayerInputSettings` non è assegnato e il riferimento all'inventario è nullo. La scena non serializza `PlayerInventory`, `PlayerInventoryUI`, `PlayerInteractionController` o `PlayerAnimationDriver`.
-
-La visuale è composta da parti mesh primitive separate (testa, torso e arti), non da un modello Humanoid animabile. La scena non contiene uno `SkinnedMeshRenderer` né un `Animator`. Il controller può aggiungere alcuni componenti di fallback durante `Awake`, ma senza gli asset di input, animazione e rig non ripristina la configurazione completa.
-
-Di conseguenza, la scena versionata è un prototipo visivo precedente e non costituisce una verifica del Player integrato attuale. Il generatore contiene già la configurazione aggiornata, ma la scena deve essere ricreata nell'Editor Unity e verificata in Play Mode prima di poter essere considerata operativa.
-
-## Stato delle verifiche
-
-Risultati effettivamente presenti nel repository:
-
-- Test autonomi C#: 6/6 superati.
-- Unity EditMode: 12/12 superati nel report \`TestResults/UnderGrind/EditMode_20261118_103737.xml\`. Il report precede le nuove prove di input e i test aggiunti successivamente all'inventario.
-- Unity PlayMode: 7/7 superati nel report \`TestResults/UnderGrind/PlayMode_20261118_092745.xml\`. Questo report precede i test aggiunti successivamente per sovraccarico, raccolta, rilascio e UI.
-- La suite presente nel codice contiene attualmente 28 test EditMode e 13 test PlayMode. Il conteggio è ricavato dai metodi NUnit presenti nei sei file di test; non è un risultato di esecuzione.
-- La successiva esecuzione batch ha prodotto un report EditMode valido da 12 test, ma il processo PlayMode è terminato con codice 1 prima di produrre un report valido. Il JSON aggregato è marcato Failed e non va interpretato come zero test effettivi.
-- Il runner è stato aggiornato per accettare l'XML \`test-suite\` prodotto da \`TestRunner API\`, selezionare solo report creati durante l'esecuzione corrente e rifiutare report obsoleti. Il runner aggiornato e le suite complete non sono ancora stati eseguiti nell'Editor Unity.
-- La compilazione delle assembly runtime e di test è riuscita nel log EditMode del 18 novembre. Non è una prova di esecuzione PlayMode o di correttezza visiva.
-- Verifica visiva del modello riggato e della scena: non documentata.
-
-La verifica finale richiede una nuova esecuzione dei due script PowerShell di test sul commit aggiornato e un controllo visivo in Unity.
+La correzione delle firme evento e dei campi serializzati FBX è stata applicata nel sorgente; deve ancora essere verificata eseguendo nuovamente Unity 6000.6.7f1 e le suite aggiornate. La verifica visiva di scena, modelli, deformazione e animazioni non è documentata.
