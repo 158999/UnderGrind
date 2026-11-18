@@ -161,6 +161,10 @@ else {
                     validationErrors = @($validationErrors)
                 })
                 Write-Host "[$code] $($project.Name): $($counts.passed) superati, $($counts.failed) falliti, $($counts.total) totali"
+                if ($testResult.TimedOut) {
+                    $errors.Add("Esecuzione interrotta dopo il timeout del progetto $($project.Name); i progetti successivi non verranno avviati.")
+                    break
+                }
             }
         }
     }
