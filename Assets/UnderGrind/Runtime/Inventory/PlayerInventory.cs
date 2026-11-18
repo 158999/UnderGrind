@@ -124,10 +124,9 @@ namespace UnderGrind.Inventory
 
             if (destination.Item != source.Item) return false;
             var available = source.Item.MaxStackSize - destination.Quantity;
-            var moved = Mathf.Min(quantity, available);
-            if (moved <= 0) return false;
-            destination.Set(destination.Item, destination.Quantity + moved);
-            source.Set(source.Item, source.Quantity - moved);
+            if (available < quantity) return false;
+            destination.Set(destination.Item, destination.Quantity + quantity);
+            source.Set(source.Item, source.Quantity - quantity);
             Changed?.Invoke(this);
             return true;
         }
