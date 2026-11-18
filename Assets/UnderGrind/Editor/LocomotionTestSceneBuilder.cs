@@ -47,7 +47,7 @@ namespace UnderGrind.Editor
                 return;
             }
 
-            var malePrefab = CreateHumanPrefab(maleSource, "Human_Male", HumanLocomotionController.DefaultCharacterHeight);
+            var malePrefab = CreateHumanPrefab(maleSource, "Human_Male", locomotionSettings.CharacterHeight);
             var femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", 1.70f);
             if (malePrefab == null || femalePrefab == null)
             {
@@ -99,7 +99,7 @@ namespace UnderGrind.Editor
 
             var pivot = new GameObject("View Pivot").transform;
             pivot.SetParent(player.transform, false);
-            pivot.localPosition = new Vector3(0f, 1.62f, 0f);
+            pivot.localPosition = Vector3.up * locomotionSettings.StandingViewHeight;
 
             var cameraObject = new GameObject("Player Camera");
             cameraObject.tag = "MainCamera";
