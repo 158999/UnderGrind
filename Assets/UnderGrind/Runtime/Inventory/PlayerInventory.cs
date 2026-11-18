@@ -9,12 +9,16 @@ namespace UnderGrind.Inventory
     {
         [SerializeField] private InventorySettings settings;
         [SerializeField] private List<InventorySlot> slots = new List<InventorySlot>();
+        [SerializeField, Min(0)] private int selectedSlotIndex;
 
         public event Action<PlayerInventory> Changed;
 
         public InventorySettings Settings => settings;
         public IReadOnlyList<InventorySlot> Slots => slots;
-        public int SlotCapacity => settings != null ? settings.MaxSlots : slots.Count;
+        public int SlotCapacity => slots != null ? slots.Count : 0;
+        public int ConfiguredSlotCapacity => settings != null ? settings.MaxSlots : SlotCapacity;
+        public int SelectedSlotIndex => SlotCapacity > 0 ? Mathf.Clamp(selectedSlotIndex, 0, SlotCapacity - 1) : 0;
+        public InventorySlot SelectedSlot => SlotCapacity > 0 ? slots[SelectedSlotIndex] : null;
         public float MaxWeightKg => settings != null ? settings.MaxCarryWeightKg : 0f;
         public float CurrentWeightKg
         {
@@ -48,7 +52,7 @@ namespace UnderGrind.Inventory
 
         public InventorySlot GetSlot(int index)
         {
-            if (index < 0 || index >= Mathf.Min(slots.Count, SlotCapacity))
+            if (index < 0 || index >= SlotCapacity)
                 throw new ArgumentOutOfRangeException(nameof(index));
             return slots[index];
         }
@@ -61,7 +65,7 @@ namespace UnderGrind.Inventory
             EnsureSlotCount();
 
             var remaining = quantity;
-            var usableSlotCount = Mathf.Min(slots.Count, SlotCapacity);
+            var usableSlotCount = slots.Count;
             for (var i = 0; i < usableSlotCount && remaining > 0; i++)
             {
                 var slot = slots[i];
@@ -71,7 +75,8 @@ namespace UnderGrind.Inventory
                 remaining -= amount;
             }
 
-            for (var i = 0; i < usableSlotCount && remaining > 0; i++)
+            var emptySlotLimit = settings != null ? Mathf.Min(settings.MaxSlots, slots.Count) : slots.Count;
+            for (var i = 0; i < emptySlotLimit && remaining > 0; i++)
             {
                 var slot = slots[i];
                 if (!slot.IsEmpty) continue;
@@ -91,7 +96,7 @@ namespace UnderGrind.Inventory
             if (quantity < 0) throw new ArgumentOutOfRangeException(nameof(quantity));
             var remaining = quantity;
 
-            for (var i = 0; i < slots.Count && remaining > 0; i++)
+            for (var i = 0; i < SlotCapacity && remaining > 0; i++)
             {
                 var slot = slots[i];
                 if (slot.IsEmpty || slot.Item != item) continue;
@@ -103,6 +108,29 @@ namespace UnderGrind.Inventory
             var result = new InventoryOperationResult(quantity, quantity - remaining);
             if (result.Processed > 0) Changed?.Invoke(this);
             return result;
+        }
+
+        public bool SelectSlot(int index)
+        {
+            ValidateIndex(index);
+            if (selectedSlotIndex == index) return false;
+            selectedSlotIndex = index;
+            Changed?.Invoke(this);
+            return true;
+        }
+
+        public InventoryOperationResult RemoveFromSlot(int index, int quantity)
+        {
+            ValidateIndex(index);
+            if (quantity < 0) throw new ArgumentOutOfRangeException(nameof(quantity));
+            if (quantity == 0) return new InventoryOperationResult(0, 0);
+
+            var slot = slots[index];
+            if (slot.IsEmpty) return new InventoryOperationResult(quantity, 0);
+            var amount = Mathf.Min(quantity, slot.Quantity);
+            slot.Set(slot.Item, slot.Quantity - amount);
+            Changed?.Invoke(this);
+            return new InventoryOperationResult(quantity, amount);
         }
 
         public bool MoveStack(int sourceIndex, int destinationIndex, int quantity)
@@ -159,11 +187,13 @@ namespace UnderGrind.Inventory
                 if (last != null && !last.IsEmpty) break;
                 slots.RemoveAt(slots.Count - 1);
             }
+            if (slots.Count == 0) selectedSlotIndex = 0;
+            else selectedSlotIndex = Mathf.Clamp(selectedSlotIndex, 0, slots.Count - 1);
         }
 
         private void ValidateIndex(int index)
         {
-            if (index < 0 || index >= Mathf.Min(slots.Count, SlotCapacity))
+            if (index < 0 || index >= SlotCapacity)
                 throw new ArgumentOutOfRangeException(nameof(index));
         }
     }
