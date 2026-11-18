@@ -78,6 +78,7 @@ namespace UnderGrind.Locomotion
 
             if (configuration.RequireSeparateHead && heads.Count == 0) return false;
             if (configuration.RequireFirstPersonArms && firstPersonOnly.Count == 0) return false;
+            if (configuration.RequireThirdPersonArms && thirdPersonOnly.Count == 0) return false;
 
             rigSettings = configuration;
             Configure(heads.ToArray(), bodies.ToArray(), thirdPersonOnly.ToArray(), firstPersonOnly.ToArray());
