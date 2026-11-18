@@ -11,6 +11,7 @@ namespace UnderGrind.Editor
         private const string InteractionSettingsPath = "Assets/UnderGrind/Settings/PlayerInteractionSettings.asset";
         private const string InventoryUISettingsPath = "Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset";
         private const string AnimationSettingsPath = "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset";
+        private const string RigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
 
         static PlayerGameplayAssetBuilder()
         {
@@ -25,7 +26,34 @@ namespace UnderGrind.Editor
             EnsureInteractionSettings();
             EnsureInventoryUISettings();
             EnsureAnimationSettings();
+            EnsureRigSettings();
             AssetDatabase.SaveAssets();
+        }
+
+        private static void EnsureRigSettings()
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(RigSettingsPath);
+            if (asset == null)
+            {
+                asset = ScriptableObject.CreateInstance<PlayerRigSettings>();
+                AssetDatabase.CreateAsset(asset, RigSettingsPath);
+            }
+
+            var serialized = new SerializedObject(asset);
+            SetString(serialized, "maleArmatureRootName", "UG_Male_Armature");
+            SetString(serialized, "femaleArmatureRootName", "UG_Female_Armature");
+            SetString(serialized, "malePrefabName", "Human_Male_Rigged");
+            SetString(serialized, "femalePrefabName", "Human_Female_Rigged");
+            SetString(serialized, "headRendererSuffix", "_Head");
+            SetString(serialized, "firstPersonArmsToken", "_FP_Arms");
+            SetString(serialized, "firstPersonHandsToken", "_FP_Hands");
+            SetBool(serialized, "requireSeparateHead", true);
+            SetBool(serialized, "requireFirstPersonArms", false);
+            SetBool(serialized, "importAnimation", false);
+            SetBool(serialized, "optimizeGameObjects", false);
+            SetBool(serialized, "importVisibility", true);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(asset);
         }
 
         private static void EnsureAnimationSettings()
@@ -143,6 +171,12 @@ namespace UnderGrind.Editor
         {
             var property = obj.FindProperty(name);
             if (property != null) property.vector2Value = value;
+        }
+
+        private static void SetBool(SerializedObject obj, string name, bool value)
+        {
+            var property = obj.FindProperty(name);
+            if (property != null) property.boolValue = value;
         }
 
         private static void SetColor(SerializedObject obj, string name, Color value)
