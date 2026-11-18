@@ -327,6 +327,7 @@ namespace UnderGrind.Inventory
         {
             if (inventory == null) inventory = GetComponent<PlayerInventory>();
             if (locomotion == null) locomotion = GetComponent<HumanLocomotionController>();
+            if (uiCamera == null) uiCamera = GetComponentInChildren<Camera>(true);
         }
 #endif
     }
