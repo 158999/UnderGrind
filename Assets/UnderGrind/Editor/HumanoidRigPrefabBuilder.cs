@@ -122,8 +122,14 @@ namespace UnderGrind.Editor
         private static bool TryPrepareSource(string path, PlayerRigSettings settings,
             out GameObject source, out Avatar avatar)
         {
-            source = null;
+            source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             avatar = null;
+            if (source == null)
+            {
+                Debug.LogError("UnderGrind: FBX sorgente non trovato: " + path);
+                return false;
+            }
+
             var importer = AssetImporter.GetAtPath(path) as ModelImporter;
             if (importer == null)
             {
@@ -131,14 +137,48 @@ namespace UnderGrind.Editor
                 return false;
             }
 
-            importer.animationType = ModelImporterAnimationType.Human;
-            importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-            importer.importAnimation = settings.ImportAnimation;
-            importer.optimizeGameObjects = settings.OptimizeGameObjects;
-            importer.importCameras = false;
-            importer.importLights = false;
-            importer.importVisibility = settings.ImportVisibility;
-            importer.SaveAndReimport();
+            var changed = false;
+            if (importer.animationType != ModelImporterAnimationType.Human)
+            {
+                importer.animationType = ModelImporterAnimationType.Human;
+                changed = true;
+            }
+            if (importer.avatarSetup != ModelImporterAvatarSetup.CreateFromThisModel)
+            {
+                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                changed = true;
+            }
+            if (importer.importAnimation != settings.ImportAnimation)
+            {
+                importer.importAnimation = settings.ImportAnimation;
+                changed = true;
+            }
+            if (importer.importMaterials != settings.ImportMaterials)
+            {
+                importer.importMaterials = settings.ImportMaterials;
+                changed = true;
+            }
+            if (importer.importCameras != settings.ImportCameras)
+            {
+                importer.importCameras = settings.ImportCameras;
+                changed = true;
+            }
+            if (importer.importLights != settings.ImportLights)
+            {
+                importer.importLights = settings.ImportLights;
+                changed = true;
+            }
+            if (importer.optimizeGameObjects != settings.OptimizeGameObjects)
+            {
+                importer.optimizeGameObjects = settings.OptimizeGameObjects;
+                changed = true;
+            }
+            if (importer.importVisibility != settings.ImportVisibility)
+            {
+                importer.importVisibility = settings.ImportVisibility;
+                changed = true;
+            }
+            if (changed) importer.SaveAndReimport();
 
             source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             avatar = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Avatar>()
@@ -151,7 +191,6 @@ namespace UnderGrind.Editor
             }
             return true;
         }
-
         private static GameObject CreatePrefabInstance(GameObject source, Avatar avatar, string rootName,
             string prefabName, float targetHeight, PlayerRigSettings rigSettings)
         {
