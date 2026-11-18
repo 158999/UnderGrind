@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnderGrind.Inventory;
 using UnderGrind.Locomotion;
+using UnderGrind.Testing;
 
 namespace UnderGrind.Editor
 {
@@ -15,6 +16,7 @@ namespace UnderGrind.Editor
         private const string InventoryUISettingsPath = SettingsFolder + "/PlayerInventoryUISettings.asset";
         private const string AnimationSettingsPath = SettingsFolder + "/PlayerAnimationSettings.asset";
         private const string RigSettingsPath = SettingsFolder + "/PlayerRigSettings.asset";
+        private const string GrayboxSettingsPath = SettingsFolder + "/PlayerGrayboxSettings.asset";
 
         static PlayerGameplayAssetBuilder()
         {
@@ -39,6 +41,8 @@ namespace UnderGrind.Editor
             var rigSettings = EnsureAsset<PlayerRigSettings>(
                 RigSettingsPath, DefaultsFolder + "/PlayerRigSettings.json");
             MigrateRigSettings(rigSettings, DefaultsFolder + "/PlayerRigSettings.json");
+            EnsureAsset<PlayerGrayboxSettings>(
+                GrayboxSettingsPath, DefaultsFolder + "/PlayerGrayboxSettings.json");
 
             AssetDatabase.SaveAssets();
         }
