@@ -103,8 +103,8 @@ La successiva esecuzione batch del 18 novembre ha lanciato EditMode e PlayMode i
 
 Dopo quei report sono stati aggiunti altri test:
 
-- EditMode: 5 test per `PlayerInputSettings`, 6 test per i template JSON/Input Actions, e 4 ulteriori test inventario.
-- PlayMode: 1 test di sovraccarico e 4 test per raccolta, rilascio, aggiornamento UI e ciclo di vita del cursore.
+- EditMode: 5 test per `PlayerInputSettings`, 6 test per i template JSON/Input Actions, 4 ulteriori test inventario e 1 ulteriore test di configurazione locomozione.
+- PlayMode: 1 test di sovraccarico, 4 test per raccolta/rilascio/UI/cursore e 1 ulteriore test locomozione.
 
 Il numero atteso dal codice corrente è quindi 28 test EditMode e 13 PlayMode. Questi nuovi test non sono ancora stati eseguiti. Anche il runner aggiornato non è stato ancora verificato con Windows PowerShell 5.1 e Unity 6000.6.7f1.
 
