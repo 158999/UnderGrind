@@ -142,15 +142,23 @@ namespace UnderGrind.Editor
             CopyStringIfEmpty(current, template, "thirdPersonArmsToken");
             CopyStringIfEmpty(current, template, "thirdPersonHandsToken");
             CopyStringIfEmpty(current, template, "bodyRendererToken");
-            if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
+            if (version != null && defaultVersion != null)
             {
-                current.FindProperty("firstPersonBodyRevealPitch").floatValue =
-                    template.FindProperty("firstPersonBodyRevealPitch").floatValue;
-                current.FindProperty("firstPersonBodyHidePitch").floatValue =
-                    template.FindProperty("firstPersonBodyHidePitch").floatValue;
-                current.FindProperty("requireFirstPersonArms").boolValue =
-                    template.FindProperty("requireFirstPersonArms").boolValue;
-                version.intValue = defaultVersion.intValue;
+                if (version.intValue < 3)
+                {
+                    CopyBool(current, template, "importMaterials");
+                    CopyBool(current, template, "importCameras");
+                    CopyBool(current, template, "importLights");
+                }
+                if (version.intValue < 4)
+                {
+                    current.FindProperty("firstPersonBodyRevealPitch").floatValue =
+                        template.FindProperty("firstPersonBodyRevealPitch").floatValue;
+                    current.FindProperty("firstPersonBodyHidePitch").floatValue =
+                        template.FindProperty("firstPersonBodyHidePitch").floatValue;
+                }
+                if (version.intValue < defaultVersion.intValue)
+                    version.intValue = defaultVersion.intValue;
             }
 
             current.ApplyModifiedPropertiesWithoutUndo();
