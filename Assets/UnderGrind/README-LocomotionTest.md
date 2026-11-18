@@ -16,24 +16,37 @@ Il builder esegue una reimportazione forzata del modello prima di creare la scen
 3. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
 4. Aprire `Assets/UnderGrind/Scenes/LocomotionTest.unity` e premere Play.
 
-La scena contiene pavimento, marcatori di distanza, gradini, ostacoli, rampa e piattaforme con materiali distinti. Anche il personaggio riceve un materiale dedicato, distinto dal pavimento. Il builder sceglie lo shader in base alla pipeline effettivamente attiva: il progetto attuale non ha un URP Render Pipeline Asset assegnato in Graphics Settings, quindi usa lo shader Standard invece di URP/Lit (che in questo assetto viene visualizzato magenta). Il modello viene scalato a 1,78 m. Le animazioni vengono collegate solo se il modello espone clip e Avatar compatibili; la locomozione non dipende dalla presenza di animazioni.
+La scena contiene pavimento, marcatori di distanza, gradini, ostacoli, rampa e piattaforme con materiali distinti. Anche il personaggio riceve un materiale dedicato, distinto dal pavimento. Il builder sceglie lo shader in base alla pipeline effettivamente attiva: il progetto attuale non ha un URP Render Pipeline Asset assegnato in Graphics Settings, quindi usa lo shader Standard invece di URP/Lit (che in questo assetto viene visualizzato magenta). Il modello maschile viene scalato all’altezza definita nell’asset PlayerLocomotionSettings (1,78 m nel profilo iniziale). Le animazioni vengono collegate solo se il modello espone clip e Avatar compatibili; la locomozione non dipende dalla presenza di animazioni.
 
 ## Configurazione del Player dall'Inspector
 
-Selezionare **Player - Human 1.78m** nella Hierarchy. Il componente **Human Locomotion Controller** espone direttamente:
+Selezionare **Player - Human 1.78m** nella Hierarchy. Il componente **Human Locomotion Controller** contiene il riferimento all'asset `PlayerLocomotionSettings`, oltre ai riferimenti al rig camera e all'inventario. I valori di gameplay non sono duplicati sul componente.
 
-| Parametro | Valore iniziale | Significato |
-|---|---:|---|
-| Character Height | 1,78 m | Altezza del controller |
-| Walk Speed | 1,40 m/s | Velocità di camminata |
-| Run Multiplier | 1,3333× | Corsa = camminata × moltiplicatore |
-| Jump Height | 0,40 m | Altezza teorica del salto verticale |
-| Gravity | 9,81 m/s² | Accelerazione gravitazionale |
-| Air Control | 0,65 | Controllo direzionale in aria |
+L'asset di riferimento è `Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset`. Selezionandolo nella finestra Project si possono modificare tutti gli otto gruppi:
 
-Il custom Inspector mostra anche velocità di corsa e velocità iniziale del salto calcolate. Il pulsante **Ripristina parametri umani iniziali** ripristina i valori di riferimento. Le modifiche ai parametri vengono salvate nella scena/prefab come normali proprietà serializzate Unity.
+- velocità di camminata;
+- moltiplicatore e velocità di corsa;
+- salto e altezza teorica;
+- gravità e controllo aereo;
+- accelerazione e decelerazione;
+- postura accovacciata e collisioni;
+- camera, sensibilità e distanza;
+- coyote time e jump buffer.
 
-La velocità di camminata iniziale è un riferimento umano medio, non un limite: aumentare **Walk Speed** direttamente sull'oggetto Player se si desidera una risposta più rapida. Il rapporto corsa/camminata rimane configurabile separatamente.
+Valori iniziali dell'asset:
+
+| Parametro | Valore iniziale |
+|---|---:|
+| Altezza personaggio | 1,78 m |
+| Camminata | 1,80 m/s |
+| Corsa | 2,40 m/s |
+| Moltiplicatore corsa | 1,3333× |
+| Altezza teorica salto | 0,40 m |
+| Gravità | 9,81 m/s² |
+| Controllo aereo | 0,65 |
+| Altezza accovacciata | 1,12 m |
+
+Il custom Inspector del controller mostra i valori derivati e permette di selezionare l'asset. Le modifiche vanno effettuate sull'asset, così tutti i Player che lo referenziano condividono la stessa configurazione. Se il riferimento manca, il controller segnala l'errore e non esegue il movimento.
 
 ## Controlli e overlay
 
