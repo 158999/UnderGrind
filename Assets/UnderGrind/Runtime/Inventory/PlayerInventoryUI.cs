@@ -247,18 +247,19 @@ namespace UnderGrind.Inventory
                 background.color = settings.SlotColor;
                 var iconObject = CreateUiObject("Icon", slot.transform);
                 var iconRect = iconObject.GetComponent<RectTransform>();
-                iconRect.anchorMin = new Vector2(0.12f, 0.28f);
-                iconRect.anchorMax = new Vector2(0.88f, 0.92f);
+                iconRect.anchorMin = settings.IconAnchorMin;
+                iconRect.anchorMax = settings.IconAnchorMax;
                 iconRect.offsetMin = Vector2.zero;
                 iconRect.offsetMax = Vector2.zero;
                 var icon = iconObject.AddComponent<Image>();
-                icon.preserveAspect = true;
+                icon.preserveAspect = settings.PreserveIconAspect;
 
                 var label = CreateText("Label", slot.transform, string.Empty, settings.SlotFontSize,
                     TextAnchor.LowerCenter, font);
                 var labelRect = label.rectTransform;
                 labelRect.anchorMin = Vector2.zero;
-                labelRect.anchorMax = new Vector2(1f, 0.34f);
+                labelRect.anchorMax = settings.LabelAnchorMax;
+                labelRect.anchorMin = settings.LabelAnchorMin;
                 labelRect.offsetMin = Vector2.zero;
                 labelRect.offsetMax = Vector2.zero;
 
