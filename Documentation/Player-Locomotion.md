@@ -93,7 +93,7 @@ La sorgente attualmente ispezionata non dimostra ancora una separazione della te
 
 ## Animazioni
 
-`PlayerAnimationSettings.asset` contiene i riferimenti alle clip, il Runtime Animator Controller, i nomi e i tipi dei parametri, le soglie dei blend e le durate di transizione.
+`PlayerAnimationSettings.asset` contiene i riferimenti alle clip, il Runtime Animator Controller, i nomi e i tipi dei parametri, le soglie dei blend, le durate di transizione e l'opzione di loop separata per ciascuna delle otto clip.
 
 Dopo aver importato le clip in `Assets/UnderGrind/Animations`, il comando **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti mancanti e genera `Assets/UnderGrind/Generated/Animation/PlayerAnimator.controller`.
 
@@ -122,7 +122,7 @@ Risultati effettivamente presenti nel repository:
 - Test autonomi C#: 6/6 superati.
 - Unity EditMode: 12/12 superati nel report \`TestResults/UnderGrind/EditMode_20261118_103737.xml\`. Il report precede le nuove prove di input e i test aggiunti successivamente all'inventario.
 - Unity PlayMode: 7/7 superati nel report \`TestResults/UnderGrind/PlayMode_20261118_092745.xml\`. Questo report precede i test aggiunti successivamente per sovraccarico, raccolta, rilascio e UI.
-- La suite presente nel codice contiene attualmente 21 test EditMode e 12 test PlayMode. Il conteggio è ricavato dai metodi NUnit presenti nei sei file di test; non è un risultato di esecuzione.
+- La suite presente nel codice contiene attualmente 22 test EditMode e 12 test PlayMode. Il conteggio è ricavato dai metodi NUnit presenti nei sei file di test; non è un risultato di esecuzione.
 - La successiva esecuzione batch ha prodotto un report EditMode valido da 12 test, ma il processo PlayMode è terminato con codice 1 prima di produrre un report valido. Il JSON aggregato è marcato Failed e non va interpretato come zero test effettivi.
 - Il runner è stato aggiornato per accettare l'XML \`test-suite\` prodotto da \`TestRunner API\`, selezionare solo report creati durante l'esecuzione corrente e rifiutare report obsoleti. Il runner aggiornato e le suite complete non sono ancora stati eseguiti nell'Editor Unity.
 - La compilazione delle assembly runtime e di test è riuscita nel log EditMode del 18 novembre. Non è una prova di esecuzione PlayMode o di correttezza visiva.
