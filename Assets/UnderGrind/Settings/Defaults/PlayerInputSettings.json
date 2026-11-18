@@ -1,5 +1,5 @@
 {
-  "settingsVersion": 1,
+  "settingsVersion": 2,
   "actionMapName": "Player",
   "moveActionName": "Move",
   "lookMouseActionName": "LookMouse",
