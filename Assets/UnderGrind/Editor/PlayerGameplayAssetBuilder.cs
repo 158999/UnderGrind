@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnderGrind.Inventory;
+using UnderGrind.Locomotion;
 
 namespace UnderGrind.Editor
 {
@@ -9,6 +10,7 @@ namespace UnderGrind.Editor
     {
         private const string InteractionSettingsPath = "Assets/UnderGrind/Settings/PlayerInteractionSettings.asset";
         private const string InventoryUISettingsPath = "Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset";
+        private const string AnimationSettingsPath = "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset";
 
         static PlayerGameplayAssetBuilder()
         {
@@ -22,7 +24,39 @@ namespace UnderGrind.Editor
             EnsureFolder("Assets/UnderGrind/Settings");
             EnsureInteractionSettings();
             EnsureInventoryUISettings();
+            EnsureAnimationSettings();
             AssetDatabase.SaveAssets();
+        }
+
+        private static void EnsureAnimationSettings()
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(AnimationSettingsPath);
+            if (asset == null)
+            {
+                asset = ScriptableObject.CreateInstance<PlayerAnimationSettings>();
+                AssetDatabase.CreateAsset(asset, AnimationSettingsPath);
+            }
+
+            var serialized = new SerializedObject(asset);
+            SetString(serialized, "speedParameterName", "Speed");
+            SetString(serialized, "moveXParameterName", "MoveX");
+            SetString(serialized, "moveYParameterName", "MoveY");
+            SetString(serialized, "groundedParameterName", "Grounded");
+            SetString(serialized, "verticalSpeedParameterName", "VerticalSpeed");
+            SetString(serialized, "runningParameterName", "Running");
+            SetString(serialized, "crouchingParameterName", "Crouching");
+            SetString(serialized, "jumpingParameterName", "Jumping");
+            SetString(serialized, "fallingParameterName", "Falling");
+            SetString(serialized, "landedParameterName", "Landed");
+            SetFloat(serialized, "idleThreshold", 0f);
+            SetFloat(serialized, "walkThreshold", 0.1f);
+            SetFloat(serialized, "runThreshold", 2f);
+            SetFloat(serialized, "crouchWalkThreshold", 0.1f);
+            SetFloat(serialized, "speedDampTime", 0.1f);
+            SetFloat(serialized, "transitionDuration", 0.15f);
+            SetFloat(serialized, "landingExitTime", 0.9f);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(asset);
         }
 
         private static void EnsureInteractionSettings()
