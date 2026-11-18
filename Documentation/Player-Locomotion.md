@@ -21,7 +21,7 @@ Le proprietà sono organizzate in otto gruppi:
 7. **Camera e sensibilità**: sensibilità mouse/gamepad, angolo massimo, altezza del punto di vista, offset e distanza in terza persona, collisioni, interpolazione, FOV e near clip.
 8. **Coyote time e jump buffer**: finestre temporali indipendenti per il salto.
 
-I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. Se manca l'asset, il controller segnala l'errore e non applica il movimento. La scena di test assegna lo stesso asset al controller e al dimensionamento iniziale del CharacterController.
+I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I modelli iniziali dei parametri di input, interazione, UI, animazione e rig sono file JSON in `Assets/UnderGrind/Settings/Defaults`; i builder li applicano soltanto quando creano il relativo ScriptableObject. Dopo la creazione, le modifiche all'asset Inspector non vengono sovrascritte dal builder. Se manca il file JSON necessario, il builder segnala l'errore e non crea un asset vuoto. La scena di test assegna lo stesso asset al controller e al dimensionamento iniziale del CharacterController.
 
 ## Input e controlli
 
