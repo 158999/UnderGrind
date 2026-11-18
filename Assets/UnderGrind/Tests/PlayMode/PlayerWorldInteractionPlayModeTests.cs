@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using UnderGrind.Inventory;
 
 namespace UnderGrind.Tests
@@ -17,6 +18,8 @@ namespace UnderGrind.Tests
         private PlayerInteractionSettings _interactionSettings;
         private ItemDefinition _item;
         private InventoryUISettings _uiSettings;
+        private InputActionAsset _inputAsset;
+        private PlayerInputSettings _inputSettings;
 
         [UnityTest]
         public IEnumerator Interact_PicksUpWorldItemIntoInventory()
@@ -36,7 +39,7 @@ namespace UnderGrind.Tests
             pickup.Configure(_item, 1);
 
             var interaction = _player.AddComponent<PlayerInteractionController>();
-            interaction.Configure(null, _interactionSettings, inventory, null, null, camera);
+            interaction.Configure(_inputSettings, _interactionSettings, inventory, null, null, camera);
             Physics.SyncTransforms();
             yield return null;
 
@@ -61,7 +64,7 @@ namespace UnderGrind.Tests
             inventory.AddItem(_item, 2);
 
             var interaction = _player.AddComponent<PlayerInteractionController>();
-            interaction.Configure(null, _interactionSettings, inventory, null, null, null);
+            interaction.Configure(_inputSettings, _interactionSettings, inventory, null, null, null);
 
             Assert.IsTrue(interaction.DropSelectedStack());
             Assert.AreEqual(1, inventory.GetSlot(0).Quantity);
@@ -108,7 +111,7 @@ namespace UnderGrind.Tests
             var inventory = _player.AddComponent<PlayerInventory>();
             inventory.Configure(_inventorySettings);
             var ui = _player.AddComponent<PlayerInventoryUI>();
-            ui.Configure(_uiSettings, null, inventory, null);
+            ui.Configure(_uiSettings, _inputSettings, inventory, null);
             inventory.AddItem(_item, 1);
             yield return null;
 
@@ -128,6 +131,8 @@ namespace UnderGrind.Tests
             if (_interactionSettings != null) Object.Destroy(_interactionSettings);
             if (_item != null) Object.Destroy(_item);
             if (_uiSettings != null) Object.Destroy(_uiSettings);
+            if (_inputSettings != null) Object.Destroy(_inputSettings);
+            if (_inputAsset != null) Object.Destroy(_inputAsset);
             yield return null;
         }
 
@@ -152,6 +157,16 @@ namespace UnderGrind.Tests
             SetField(_item, "displayName", "World test item");
             SetField(_item, "maxStackSize", 10);
             SetField(_item, "unitWeightKg", 1f);
+            _inputAsset = ScriptableObject.CreateInstance<InputActionAsset>();
+            var playerMap = new InputActionMap("Player");
+            _inputAsset.AddActionMap(playerMap);
+            playerMap.AddAction("Interact", InputActionType.Button);
+            playerMap.AddAction("Drop", InputActionType.Button);
+            _inputSettings = ScriptableObject.CreateInstance<PlayerInputSettings>();
+            SetField(_inputSettings, "actionAsset", _inputAsset);
+            SetField(_inputSettings, "actionMapName", "Player");
+            SetField(_inputSettings, "interactActionName", "Interact");
+            SetField(_inputSettings, "dropActionName", "Drop");
         }
 
         private static void SetField<T>(T target, string name, object value)
