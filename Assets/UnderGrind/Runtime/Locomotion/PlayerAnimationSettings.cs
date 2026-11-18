@@ -17,14 +17,14 @@ namespace UnderGrind.Locomotion
         [SerializeField] private AnimationClip crouchWalkClip;
 
         [Header("Ciclo delle clip")]
-        [SerializeField] private bool idleLoops = true;
-        [SerializeField] private bool walkLoops = true;
-        [SerializeField] private bool runLoops = true;
+        [SerializeField] private bool idleLoops;
+        [SerializeField] private bool walkLoops;
+        [SerializeField] private bool runLoops;
         [SerializeField] private bool jumpLoops;
         [SerializeField] private bool fallLoops;
         [SerializeField] private bool landLoops;
-        [SerializeField] private bool crouchIdleLoops = true;
-        [SerializeField] private bool crouchWalkLoops = true;
+        [SerializeField] private bool crouchIdleLoops;
+        [SerializeField] private bool crouchWalkLoops;
 
         [Header("Parametri Animator")]
         [SerializeField] private string speedParameterName;
