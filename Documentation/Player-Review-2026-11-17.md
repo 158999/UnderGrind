@@ -56,24 +56,57 @@ Il generatore della scena di test esclude le clip di accovacciamento dalla selez
 - Le soglie tra riposo, camminata e corsa sono tarate sui valori di 1,40 m/s e 1,8667 m/s, ma richiedono una verifica visiva durante la riproduzione.
 - Nel repository non è ancora presente un Animator Controller di produzione né un Avatar Humanoid verificato per il modello definitivo.
 
-## Modifiche già presenti nel codice
+## Modifiche presenti nel repository al 18 novembre 2026
 
-- Le associazioni esplicite di `PlayerVisualRig` sono state rese prioritarie rispetto alla ricerca euristica.
-- È stata aggiunta l'associazione tramite la convenzione stabile dei nomi delle parti.
-- Sono stati aggiunti test PlayMode per la precedenza delle associazioni esplicite e per la ricerca tramite gerarchia.
-- È stato aggiunto il controllo dei tipi dei parametri Animator e il rilevamento delle sostituzioni del controller.
-- Le clip di accovacciamento sono state escluse dalla selezione degli stati di locomozione ordinaria.
-- La documentazione dei formati PINOC è stata corretta distinguendo gli export Splat da quelli Mixamo.
+### Locomozione e configurazione
 
-## Verifiche
+- `PlayerLocomotionSettings` centralizza gli otto gruppi di parametri della locomozione.
+- `HumanLocomotionController` usa l'asset per velocità, salto, gravità, postura, collisioni e camera.
+- L'inventario applica la soglia di sovraccarico definita dall'utente: oltre soglia disabilita corsa e salto e riduce la camminata del 25% nel profilo iniziale.
+- L'input è collegato tramite `PlayerInputSettings` e `PlayerInputActions.asset`. Le azioni e le binding sono modificabili nell'Inspector.
+- L'interfaccia inventario sopprime il movimento e la visuale mentre è aperta; il cursore non viene ricatturato dal clic durante questa condizione.
 
-Al momento della revisione del 17 novembre, i controlli autonomi C# associati ai commit esaminati risultavano superati. I test Unity eseguiti in precedenza avevano superato la baseline, ma le modifiche successive dovevano ancora essere verificate nell'Editor.
+### Inventario e interazione
 
-Aggiornamento dei risultati disponibili al 18 novembre 2026:
+- `PlayerInventory` gestisce slot, stack, selezione, peso e operazioni di trasferimento.
+- `PlayerInventoryUI` visualizza slot, icone, quantità, selezione e peso tramite una Canvas overlay.
+- `PlayerInteractionController` raccoglie oggetti con una SphereCast dalla camera e rilascia il contenuto dello slot selezionato.
+- `WorldItemPickup` conserva la quantità che non trova spazio nell'inventario.
+- I parametri di interazione e UI sono contenuti in asset ScriptableObject.
 
-- Test autonomi C#: 6 superati su 6.
-- Test Unity PlayMode: 7 superati su 7.
-- Test Unity EditMode: risultato non verificabile. Il riepilogo JSON riporta zero test e codice di uscita 0, mentre il log di Unity termina con codice di uscita 1 e manca il file XML dei risultati.
-- Ispezione visiva del modello e della scena: non effettuata.
+### Rig e animazioni
 
-Il completamento del Player non può essere dichiarato finché i prefab maschile e femminile non dispongono di un rig Humanoid verificato, parti di testa e arti separatamente indirizzabili, animazioni compatibili, importazione Unity corretta, test superati e verifica visiva.
+- `PlayerVisualRig` supporta associazioni esplicite e convenzioni di nome per testa e parti dedicate alla prima persona.
+- `PlayerAnimationDriver` controlla i parametri effettivamente presenti nell'Animator e disabilita il root motion.
+- `PlayerAnimationControllerBuilder` genera il controller a partire dalle clip importate e da `PlayerAnimationSettings.asset`.
+- `HumanoidRigPrefabBuilder` configura l'importazione Humanoid e genera prefab da un FBX con entrambe le radici scheletriche.
+- La scena di test preferisce il prefab maschile riggato quando disponibile; la mesh statica resta soltanto un fallback visivo.
+- La versione Blendstra più recente contiene un prototipo con copie delle mesh e due armature, ma posizione delle ossa e pesi non sono verificati. La testa non è ancora un renderer separato; il prototipo non è accettato come rig di produzione.
+
+### Correzioni emerse dalla revisione
+
+- Il runner Unity ora attende il completamento di ogni processo prima di lanciare la piattaforma successiva.
+- Il report distingue test non eseguiti, XML assente, risultati inconcludenti, test falliti e codice di uscita non zero.
+- L'UI si sottoscrive all'evento inventario anche quando i riferimenti vengono assegnati dopo `Awake`.
+- L'apertura dell'inventario cancella il salto bufferizzato e impedisce la ricattura del cursore tramite clic.
+
+## Verifiche e limiti
+
+Risultati effettivamente presenti nei file di test:
+
+- Test autonomi C#: 6/6 superati nel report `TestResults/latest.json`.
+- Unity EditMode: 12/12 superati in `TestResults/Unity-20261118-103717-325/EditMode.xml`. Comprendeva 7 test inventario e 5 test di configurazione locomozione.
+- Unity PlayMode: 7/7 superati in `TestResults/UnderGrind/PlayMode_20261118_092745.xml`. Quel report comprendeva la suite locomozione precedente alle nuove prove di sovraccarico, interazione e UI.
+
+La successiva esecuzione batch del 18 novembre ha lanciato EditMode e PlayMode in parallelo. Il log EditMode documenta 12 test superati e codice di uscita 0; il log PlayMode termina con codice 1 prima dell'esecuzione, perché il progetto era già aperto dal processo EditMode. Il JSON aggregato è correttamente marcato Failed, ma i suoi conteggi a zero non rappresentano l'esito dei 12 test EditMode.
+
+Dopo quei report sono stati aggiunti altri test:
+
+- EditMode: 3 test per `PlayerInputSettings` e 3 ulteriori test inventario.
+- PlayMode: 1 test di sovraccarico, 2 test di raccolta/rilascio e 1 test di aggiornamento UI.
+
+Il numero atteso dal codice corrente è quindi 18 test EditMode e 11 PlayMode. Questi nuovi test non sono ancora stati eseguiti. Anche il runner aggiornato non è stato ancora verificato con Windows PowerShell 5.1 e Unity 6000.6.7f1.
+
+Non risultano verifiche GitHub Actions associate agli ultimi commit. La compilazione delle assembly runtime e di test è riuscita nel log EditMode citato, ma non dimostra il corretto funzionamento delle nuove suite PlayMode. Non è documentata una verifica visiva della scena né del modello riggato finale.
+
+Il Player non può essere dichiarato completo finché non sono superati i test aggiornati, verificati i prefab Humanoid reali, separate e controllate le parti necessarie alla visuale in prima persona e validate le animazioni sul rig definitivo.
