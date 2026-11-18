@@ -66,8 +66,11 @@ else {
 
             $xmlName = "$target.xml"
             $logName = "$target.log"
+            $stdoutPath = Join-Path $unityOutput "$target.stdout.log"
+            $stderrPath = Join-Path $unityOutput "$target.stderr.log"
             $xmlPath = Join-Path $unityOutput $xmlName
             $logPath = Join-Path $unityOutput $logName
+            Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
             $arguments = @(
                 "-batchmode", "-nographics", "-accept-apiupdate",
                 "-projectPath", $root,
@@ -89,7 +92,7 @@ else {
 
             $timedOut = $false
             try {
-                $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow
+                $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
                 if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
                     $timedOut = $true
                     $validationErrors.Add("Timeout: Unity $target ha superato $TimeoutSeconds secondi. Il processo verrà terminato.")
@@ -188,6 +191,8 @@ else {
                 failures = @($failures)
                 resultFile = $resultFile
                 logFile = "TestResults/test/Unity/$logName"
+                stdoutFile = "TestResults/test/Unity/$target.stdout.log"
+                stderrFile = "TestResults/test/Unity/$target.stderr.log"
                 totals = $counts
             })
             if ($code -ne 0 -or -not $resultValid) { $exit = 1 }
