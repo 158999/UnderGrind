@@ -51,7 +51,7 @@ foreach ($target in $platforms) {
     # on the call operator may launch the next platform against a locked project
     # and inspect result files before they exist. Wait for the process tree.
     $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
-        if ($_ -match '[\s"]') { '"' + $_.Replace('"', '\\"') + '"' } else { $_ }
+        if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
     }))
     $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow
     $code = $process.ExitCode
