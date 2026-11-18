@@ -2,6 +2,12 @@ using UnityEngine;
 
 namespace UnderGrind.Locomotion
 {
+    public enum PlayerCharacterVariant
+    {
+        Male,
+        Female
+    }
+
     [CreateAssetMenu(menuName = "UnderGrind/Player/Rig Settings", fileName = "PlayerRigSettings")]
     public sealed class PlayerRigSettings : ScriptableObject
     {
@@ -20,6 +26,9 @@ namespace UnderGrind.Locomotion
         [SerializeField] private string malePrefabName;
         [SerializeField] private string femalePrefabName;
 
+        [Header("Personaggio predefinito nella scena di test")]
+        [SerializeField] private PlayerCharacterVariant defaultCharacter;
+
         [Header("Nomenclatura delle parti")]
         [SerializeField] private string headRendererSuffix;
         [SerializeField] private string firstPersonArmsToken;
@@ -31,6 +40,7 @@ namespace UnderGrind.Locomotion
         [SerializeField, Range(0f, 89f)] private float firstPersonBodyHidePitch;
         [SerializeField] private bool requireSeparateHead;
         [SerializeField] private bool requireFirstPersonArms;
+        [SerializeField] private bool requireThirdPersonArms;
 
         [Header("Importazione FBX")]
         [SerializeField] private bool importAnimation;
@@ -41,6 +51,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private bool importVisibility;
 
         public int SettingsVersion => settingsVersion;
+        public PlayerCharacterVariant DefaultCharacter => defaultCharacter;
         public string MaleSourceAssetPath => maleSourceAssetPath;
         public string FemaleSourceAssetPath => femaleSourceAssetPath;
         public string MaleArmatureRootName => maleArmatureRootName;

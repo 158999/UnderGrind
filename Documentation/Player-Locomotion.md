@@ -53,7 +53,7 @@ Le dead zone radiali, la sensibilità, il comportamento del cursore, il timeout 
 
 ## Rig, visuale e animazioni
 
-`PlayerRigSettings.asset` contiene i percorsi FBX distinti per personaggio maschile e femminile, i requisiti di Avatar Humanoid e i token per i renderer. Il builder richiede entrambi i prefab validi e interrompe la generazione della scena se uno dei due manca o non soddisfa i requisiti. Non viene creato un prefab statico di ripiego.
+`PlayerRigSettings.asset` contiene i percorsi FBX distinti per personaggio maschile e femminile, i requisiti di Avatar Humanoid, i token per i renderer e la variante predefinita della scena di test (`Male` o `Female`). Il builder valida entrambi i prefab e istanzia la variante selezionata; l'altezza del CharacterController proviene da `PlayerLocomotionSettings`, evitando un secondo valore dimensionale nell'asset rig. Il builder richiede entrambi i prefab validi e interrompe la generazione della scena se uno dei due manca o non soddisfa i requisiti. Non viene creato un prefab statico di ripiego.
 
 `PlayerVisualRig` gestisce gruppi separati per testa, corpo, arti FP e arti TP. In prima persona la testa viene nascosta e il corpo viene mostrato quando la visuale guarda verso il basso, secondo soglie e isteresi configurabili. La logica è implementata; la verifica sui prefab definitivi è ancora da eseguire.
 

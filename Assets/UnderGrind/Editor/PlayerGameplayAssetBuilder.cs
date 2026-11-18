@@ -158,25 +158,29 @@ namespace UnderGrind.Editor
             CopyStringIfEmpty(current, template, "bodyRendererToken");
             if (version != null && defaultVersion != null)
             {
-                if (version.intValue < 3)
+                var previousVersion = version.intValue;
+                if (previousVersion < 3)
                 {
                     CopyBool(current, template, "importMaterials");
                     CopyBool(current, template, "importCameras");
                     CopyBool(current, template, "importLights");
                 }
-                if (version.intValue < 4)
+                if (previousVersion < 4)
                 {
                     current.FindProperty("firstPersonBodyRevealPitch").floatValue =
                         template.FindProperty("firstPersonBodyRevealPitch").floatValue;
                     current.FindProperty("firstPersonBodyHidePitch").floatValue =
                         template.FindProperty("firstPersonBodyHidePitch").floatValue;
                 }
-                if (version.intValue < 5)
-                {
+                if (previousVersion < 5)
                     CopyBool(current, template, "requireFirstPersonArms");
+                if (previousVersion < 6)
+                {
+                    // This field was present in the defaults JSON but missing from the old ScriptableObject.
                     CopyBool(current, template, "requireThirdPersonArms");
+                    CopyInt(current, template, "defaultCharacter");
                 }
-                if (version.intValue < defaultVersion.intValue)
+                if (previousVersion < defaultVersion.intValue)
                     version.intValue = defaultVersion.intValue;
             }
 

@@ -54,7 +54,7 @@ namespace UnderGrind.Tests
             Assert.IsTrue(settings.RunLoops);
             Assert.IsFalse(settings.JumpLoops);
             Assert.AreEqual("Speed", settings.SpeedParameterName);
-            Assert.AreEqual(2f, settings.RunThreshold);
+            Assert.AreEqual(1.65f, settings.RunThreshold);
             Assert.IsTrue(settings.ConfigureFbxImports);
             Assert.AreEqual(PlayerAnimationRigType.Humanoid, settings.FbxRigType);
             Assert.IsTrue(settings.CreateAvatarFromFbx);
@@ -80,6 +80,7 @@ namespace UnderGrind.Tests
             Assert.IsTrue(settings.RequireSeparateHead);
             Assert.IsTrue(settings.RequireFirstPersonArms);
             Assert.IsTrue(settings.RequireThirdPersonArms);
+            Assert.AreEqual(PlayerCharacterVariant.Male, settings.DefaultCharacter);
         }
 
         [Test]

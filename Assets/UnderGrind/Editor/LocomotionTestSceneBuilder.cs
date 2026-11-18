@@ -92,11 +92,18 @@ namespace UnderGrind.Editor
                     "OK");
                 return;
             }
+            var useFemale = rigSettings.DefaultCharacter == PlayerCharacterVariant.Female;
+            var selectedPrefab = useFemale ? femalePrefab : malePrefab;
+            var selectedHeight = useFemale
+                ? locomotionSettings.FemaleCharacterHeight
+                : locomotionSettings.CharacterHeight;
+            var selectedVariant = useFemale ? "Female" : "Male";
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting(grayboxSettings);
             CreateCourse(grayboxSettings);
-            CreatePlayer(malePrefab, locomotionSettings, inputSettings, inventorySettings,
-                interactionSettings, inventoryUISettings, rigSettings, animationSettings, grayboxSettings);
+            CreatePlayer(selectedPrefab, selectedHeight, selectedVariant, locomotionSettings, inputSettings,
+                inventorySettings, interactionSettings, inventoryUISettings, rigSettings, animationSettings, grayboxSettings);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -109,20 +116,20 @@ namespace UnderGrind.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("UnderGrind",
-                "Scena creata: " + ScenePath + "\n\nApri la scena e premi Play. Controlli: WASD, mouse, SHIFT, SPAZIO, C, F5, E, G, TAB, [ e ].",
+                "Scena creata: " + ScenePath + "\nPersonaggio: " + selectedVariant + "\n\nApri la scena e premi Play. Controlli: WASD, mouse, SHIFT, SPAZIO, C, F5, E, G, TAB, [ e ].",
                 "OK");
         }
 
-        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings,
-            PlayerInputSettings inputSettings, InventorySettings inventorySettings,
+        private static void CreatePlayer(GameObject human, float characterHeight, string characterVariant,
+            PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings, InventorySettings inventorySettings,
             PlayerInteractionSettings interactionSettings, InventoryUISettings inventoryUISettings,
             PlayerRigSettings rigSettings, PlayerAnimationSettings animationSettings,
             PlayerGrayboxSettings grayboxSettings)
         {
-            var player = new GameObject("Player - Human " + locomotionSettings.CharacterHeight.ToString("0.00") + "m");
+            var player = new GameObject("Player - Human " + characterVariant + " " + characterHeight.ToString("0.00") + "m");
             player.transform.position = grayboxSettings.PlayerSpawnPosition;
             var controller = player.AddComponent<CharacterController>();
-            controller.height = locomotionSettings.CharacterHeight;
+            controller.height = characterHeight;
             controller.radius = locomotionSettings.CapsuleRadius;
             controller.center = Vector3.up * (controller.height * 0.5f);
             controller.stepOffset = Mathf.Min(locomotionSettings.CharacterStepOffset,

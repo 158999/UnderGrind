@@ -9,7 +9,7 @@
 - Prima di esportare, trasferire la versione Blendstra nel file `humans.blend`, aprirlo in Blender ed eseguire `Tools/Blender/export-undergrind-humans.py`. Lo script interrompe l'export se non trova tutte le mesh, i gruppi di pesi o i modificatori Armature richiesti.
 - Unity importa i file FBX tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, verificare **Edit → Preferences → External Tools** e ripetere Reimport.
 
-Il builder richiede i due prefab Humanoid maschile e femminile configurati in `PlayerRigSettings.asset`. Verifica Animator, Avatar Humanoid valido, SkinnedMeshRenderer, testa, corpo e gruppi renderer FP/TP. Se i prefab non superano la validazione, la scena non viene creata: non viene usato un manichino statico come sostituto.
+Il builder richiede i due prefab Humanoid maschile e femminile configurati in `PlayerRigSettings.asset`. Verifica Animator, Avatar Humanoid valido, SkinnedMeshRenderer, testa, corpo e gruppi renderer FP/TP. La proprietà `DefaultCharacter` dell'asset sceglie quale variante istanziare nella scena; entrambe vengono comunque validate. L'altezza del CharacterController è letta da `PlayerLocomotionSettings`, la stessa fonte usata per normalizzare il prefab. Se i prefab non superano la validazione, la scena non viene creata: non viene usato un manichino statico come sostituto.
 
 ## Animazioni
 
