@@ -15,6 +15,7 @@ namespace UnderGrind.Editor
         private const string ScenePath = "Assets/UnderGrind/Scenes/LocomotionTest.unity";
         private const string HumanModelPath = "Assets/UnderGrind/Art/Source/humans.blend";
         private const string GeneratedPath = "Assets/UnderGrind/Generated";
+        private const string LocomotionSettingsPath = "Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset";
 
         [MenuItem("UnderGrind/Build First Locomotion Test Scene")]
         public static void BuildScene()
@@ -22,6 +23,15 @@ namespace UnderGrind.Editor
             EnsureFolder("Assets/UnderGrind/Scenes");
             EnsureFolder("Assets/UnderGrind/Art/Source");
             EnsureFolder(GeneratedPath);
+
+            var locomotionSettings = AssetDatabase.LoadAssetAtPath<PlayerLocomotionSettings>(LocomotionSettingsPath);
+            if (locomotionSettings == null)
+            {
+                EditorUtility.DisplayDialog("Configurazione Player mancante",
+                    "Non è stato trovato l'asset " + LocomotionSettingsPath + ". La scena non è stata modificata.",
+                    "OK");
+                return;
+            }
 
             AssetDatabase.ImportAsset(HumanModelPath,
                 ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
@@ -48,7 +58,7 @@ namespace UnderGrind.Editor
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
             CreateCourse();
-            CreatePlayer(malePrefab);
+            CreatePlayer(malePrefab, locomotionSettings);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -65,16 +75,18 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static void CreatePlayer(GameObject human)
+        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings)
         {
             var player = new GameObject("Player - Human 1.78m");
             player.transform.position = new Vector3(0f, 0.05f, 0f);
             var controller = player.AddComponent<CharacterController>();
-            controller.height = HumanLocomotionController.DefaultCharacterHeight;
-            controller.radius = 0.28f;
-            controller.center = new Vector3(0f, 0.89f, 0f);
-            controller.stepOffset = 0.32f;
-            controller.slopeLimit = 48f;
+            controller.height = locomotionSettings.CharacterHeight;
+            controller.radius = locomotionSettings.CapsuleRadius;
+            controller.center = Vector3.up * (controller.height * 0.5f);
+            controller.stepOffset = Mathf.Min(locomotionSettings.CharacterStepOffset,
+                controller.height * locomotionSettings.CharacterStepOffsetHeightRatio);
+            controller.slopeLimit = locomotionSettings.CharacterSlopeLimit;
+            controller.minMoveDistance = locomotionSettings.CharacterMinMoveDistance;
 
             var visualRoot = new GameObject("Visual");
             visualRoot.transform.SetParent(player.transform, false);
@@ -93,8 +105,8 @@ namespace UnderGrind.Editor
             cameraObject.tag = "MainCamera";
             cameraObject.transform.SetParent(pivot, false);
             var camera = cameraObject.AddComponent<Camera>();
-            camera.fieldOfView = 75f;
-            camera.nearClipPlane = 0.04f;
+            camera.fieldOfView = locomotionSettings.CameraFieldOfView;
+            camera.nearClipPlane = locomotionSettings.CameraNearClipPlane;
             cameraObject.AddComponent<AudioListener>();
 
             var inventory = player.AddComponent<PlayerInventory>();
@@ -103,6 +115,7 @@ namespace UnderGrind.Editor
             if (inventorySettings != null) inventory.Configure(inventorySettings);
 
             var movement = player.AddComponent<HumanLocomotionController>();
+            movement.ConfigureSettings(locomotionSettings);
             movement.ConfigureViewRig(pivot, camera);
             player.AddComponent<LocomotionDebugOverlay>();
         }
