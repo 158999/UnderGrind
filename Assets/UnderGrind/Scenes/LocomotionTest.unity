@@ -378,16 +378,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa2add9b276e61642819fff870d8dbe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnderGrind.Runtime::UnderGrind.Locomotion.HumanLocomotionController
-  characterHeight: 1.78
-  walkSpeed: 1.8
-  runMultiplier: 1.3333334
-  jumpHeight: 0.4
-  gravity: 9.81
-  airControl: 0.65
+  settings: {fileID: 11400000, guid: 9d3f1b7a6c4e42a8b5f0d1e7c9a3b652, type: 2}
+  inventory: {fileID: 0}
   viewPivot: {fileID: 934433779}
   playerCamera: {fileID: 886744495}
-  mouseSensitivity: 0.12
-  thirdPersonDistance: 3.25
 --- !u!143 &56476097
 CharacterController:
   m_ObjectHideFlags: 0
