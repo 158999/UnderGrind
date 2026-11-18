@@ -1,8 +1,10 @@
 ﻿{
-    "runId":  "20261118-103717-325",
-    "finishedUtc":  "2026-11-18T09:37:17.3564184Z",
+    "runId":  "20261118-113704-201",
+    "startedUtc":  "2026-11-18T10:37:04.3216221Z",
+    "finishedUtc":  "2026-11-18T10:37:29.8726857Z",
     "status":  "Failed",
     "totals":  {
+                   "inconclusive":  0,
                    "failed":  0,
                    "skipped":  0,
                    "total":  0,
@@ -11,15 +13,17 @@
     "platforms":  [
                       {
                           "platform":  "EditMode",
-                          "exitCode":  0,
+                          "exitCode":  1,
                           "resultValid":  false,
                           "validationErrors":  [
-                                                   "Unity did not produce the expected XML result file.",
-                                                   "Unity did not produce the expected log file."
+                                                   "Unity exited with code 1.",
+                                                   "Unity did not produce a fresh XML result for this platform.",
+                                                   "Unity reported script compilation errors or invalid assembly-definition layout."
                                                ],
                           "resultFile":  "EditMode.xml",
                           "logFile":  "EditMode.log",
                           "totals":  {
+                                         "inconclusive":  0,
                                          "failed":  0,
                                          "skipped":  0,
                                          "total":  0,
@@ -28,15 +32,17 @@
                       },
                       {
                           "platform":  "PlayMode",
-                          "exitCode":  0,
+                          "exitCode":  1,
                           "resultValid":  false,
                           "validationErrors":  [
-                                                   "Unity did not produce the expected XML result file.",
-                                                   "Unity did not produce the expected log file."
+                                                   "Unity exited with code 1.",
+                                                   "Unity did not produce a fresh XML result for this platform.",
+                                                   "Unity reported script compilation errors or invalid assembly-definition layout."
                                                ],
                           "resultFile":  "PlayMode.xml",
                           "logFile":  "PlayMode.log",
                           "totals":  {
+                                         "inconclusive":  0,
                                          "failed":  0,
                                          "skipped":  0,
                                          "total":  0,
