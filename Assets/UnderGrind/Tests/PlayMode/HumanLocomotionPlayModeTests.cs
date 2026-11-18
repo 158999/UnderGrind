@@ -43,13 +43,13 @@ namespace UnderGrind.Tests
         {
             var settings = ScriptableObject.CreateInstance<PlayerLocomotionSettings>();
             Set(settings, "characterHeight", 1.78f);
-            Set(settings, "walkSpeed", 1.4f);
+            Set(settings, "walkSpeed", 1.8f);
             Set(settings, "runMultiplier", 4f / 3f);
             Set(settings, "jumpHeight", 0.4f);
             Set(settings, "gravity", 9.81f);
             Set(settings, "acceleration", 12f);
             Set(settings, "deceleration", 16f);
-            Set(settings, "airControl", 0.35f);
+            Set(settings, "airControl", 0.65f);
             Set(settings, "coyoteTime", 0.1f);
             Set(settings, "jumpBufferTime", 0.12f);
             Set(settings, "groundedStickVelocity", 2f);
