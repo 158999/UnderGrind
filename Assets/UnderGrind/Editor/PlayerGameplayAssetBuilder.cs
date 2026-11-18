@@ -1,6 +1,6 @@
+using System.IO;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using UnderGrind.Inventory;
 using UnderGrind.Locomotion;
 
@@ -9,247 +9,58 @@ namespace UnderGrind.Editor
     [InitializeOnLoad]
     public static class PlayerGameplayAssetBuilder
     {
-        private const string InteractionSettingsPath = "Assets/UnderGrind/Settings/PlayerInteractionSettings.asset";
-        private const string InventoryUISettingsPath = "Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset";
-        private const string AnimationSettingsPath = "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset";
-        private const string RigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
+        private const string SettingsFolder = "Assets/UnderGrind/Settings";
+        private const string DefaultsFolder = SettingsFolder + "/Defaults";
+        private const string InteractionSettingsPath = SettingsFolder + "/PlayerInteractionSettings.asset";
+        private const string InventoryUISettingsPath = SettingsFolder + "/PlayerInventoryUISettings.asset";
+        private const string AnimationSettingsPath = SettingsFolder + "/PlayerAnimationSettings.asset";
+        private const string RigSettingsPath = SettingsFolder + "/PlayerRigSettings.asset";
 
         static PlayerGameplayAssetBuilder()
         {
             EditorApplication.delayCall += EnsureAssets;
         }
 
-        [MenuItem("UnderGrind/Player/Create or Repair Player Assets")]
+        [MenuItem("UnderGrind/Player/Create or Repair Inventory Assets")]
         public static void EnsureAssets()
         {
             EnsureFolder("Assets/UnderGrind");
-            EnsureFolder("Assets/UnderGrind/Settings");
-            EnsureInteractionSettings();
-            EnsureInventoryUISettings();
-            EnsureAnimationSettings();
-            EnsureRigSettings();
+            EnsureFolder(SettingsFolder);
+            EnsureFolder(DefaultsFolder);
+
+            EnsureAsset<PlayerInteractionSettings>(
+                InteractionSettingsPath, DefaultsFolder + "/PlayerInteractionSettings.json");
+            EnsureAsset<InventoryUISettings>(
+                InventoryUISettingsPath, DefaultsFolder + "/InventoryUISettings.json");
+            EnsureAsset<PlayerAnimationSettings>(
+                AnimationSettingsPath, DefaultsFolder + "/PlayerAnimationSettings.json");
+            EnsureAsset<PlayerRigSettings>(
+                RigSettingsPath, DefaultsFolder + "/PlayerRigSettings.json");
+
             AssetDatabase.SaveAssets();
         }
 
-        private static void EnsureRigSettings()
+        private static T EnsureAsset<T>(string assetPath, string defaultsPath) where T : ScriptableObject
         {
-            var asset = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(RigSettingsPath);
-            if (asset != null) return;
-            asset = ScriptableObject.CreateInstance<PlayerRigSettings>();
-            AssetDatabase.CreateAsset(asset, RigSettingsPath);
+            var asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
+            if (asset != null) return asset;
 
-            var serialized = new SerializedObject(asset);
-            SetString(serialized, "maleArmatureRootName", "UG_Male_Armature");
-            SetString(serialized, "femaleArmatureRootName", "UG_Female_Armature");
-            SetString(serialized, "malePrefabName", "Human_Male_Rigged");
-            SetString(serialized, "femalePrefabName", "Human_Female_Rigged");
-            SetString(serialized, "headRendererSuffix", "_Head");
-            SetString(serialized, "firstPersonArmsToken", "_FP_Arms");
-            SetString(serialized, "firstPersonHandsToken", "_FP_Hands");
-            SetBool(serialized, "requireSeparateHead", true);
-            SetBool(serialized, "requireFirstPersonArms", false);
-            SetBool(serialized, "importAnimation", false);
-            SetBool(serialized, "optimizeGameObjects", false);
-            SetBool(serialized, "importVisibility", true);
-            serialized.ApplyModifiedPropertiesWithoutUndo();
+            asset = ScriptableObject.CreateInstance<T>();
+            if (File.Exists(defaultsPath))
+                JsonUtility.FromJsonOverwrite(File.ReadAllText(defaultsPath), asset);
+            else
+                Debug.LogError("UnderGrind: file di configurazione non trovato: " + defaultsPath);
+
+            AssetDatabase.CreateAsset(asset, assetPath);
             EditorUtility.SetDirty(asset);
-        }
-
-        private static void EnsureAnimationSettings()
-        {
-            var asset = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(AnimationSettingsPath);
-            if (asset != null) return;
-            asset = ScriptableObject.CreateInstance<PlayerAnimationSettings>();
-            AssetDatabase.CreateAsset(asset, AnimationSettingsPath);
-
-            var serialized = new SerializedObject(asset);
-            SetString(serialized, "speedParameterName", "Speed");
-            SetString(serialized, "moveXParameterName", "MoveX");
-            SetString(serialized, "moveYParameterName", "MoveY");
-            SetString(serialized, "groundedParameterName", "Grounded");
-            SetString(serialized, "verticalSpeedParameterName", "VerticalSpeed");
-            SetString(serialized, "runningParameterName", "Running");
-            SetString(serialized, "crouchingParameterName", "Crouching");
-            SetString(serialized, "jumpingParameterName", "Jumping");
-            SetString(serialized, "fallingParameterName", "Falling");
-            SetString(serialized, "landedParameterName", "Landed");
-            SetFloat(serialized, "idleThreshold", 0f);
-            SetFloat(serialized, "walkThreshold", 0.1f);
-            SetFloat(serialized, "runThreshold", 2f);
-            SetFloat(serialized, "crouchWalkThreshold", 0.1f);
-            SetFloat(serialized, "speedDampTime", 0.1f);
-            SetFloat(serialized, "transitionDuration", 0.15f);
-            SetFloat(serialized, "landingExitTime", 0.9f);
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(asset);
-        }
-
-        private static void EnsureInteractionSettings()
-        {
-            var asset = AssetDatabase.LoadAssetAtPath<PlayerInteractionSettings>(InteractionSettingsPath);
-            if (asset != null) return;
-            asset = ScriptableObject.CreateInstance<PlayerInteractionSettings>();
-            AssetDatabase.CreateAsset(asset, InteractionSettingsPath);
-
-            var serialized = new SerializedObject(asset);
-            SetFloat(serialized, "interactionDistance", 2.5f);
-            SetFloat(serialized, "pickupRayRadius", 0.08f);
-            SetLayerMask(serialized, "interactionLayers", -1);
-            SetFloat(serialized, "dropForwardDistance", 0.9f);
-            SetFloat(serialized, "dropHeightOffset", 0.25f);
-            SetFloat(serialized, "dropImpulse", 1.5f);
-            SetInt(serialized, "dropQuantityPerAction", 1);
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(asset);
-        }
-
-        private static void EnsureInventoryUISettings()
-        {
-            var asset = AssetDatabase.LoadAssetAtPath<InventoryUISettings>(InventoryUISettingsPath);
-            var created = asset == null;
-            if (created)
-            {
-                asset = ScriptableObject.CreateInstance<InventoryUISettings>();
-                AssetDatabase.CreateAsset(asset, InventoryUISettingsPath);
-            }
-
-            var serialized = new SerializedObject(asset);
-            if (created)
-            {
-                SetString(serialized, "panelTitle", "INVENTARIO");
-                SetString(serialized, "weightTextFormat", "Peso: {0:0.0} / {1:0.0} kg");
-                SetString(serialized, "emptySlotText", "Vuoto");
-                SetInt(serialized, "titleFontSize", 24);
-                SetInt(serialized, "bodyFontSize", 18);
-                SetInt(serialized, "slotFontSize", 14);
-                SetInt(serialized, "canvasRenderMode", (int)RenderMode.ScreenSpaceOverlay);
-                SetInt(serialized, "canvasScaleMode", (int)CanvasScaler.ScaleMode.ScaleWithScreenSize);
-                SetVector2(serialized, "referenceResolution", new Vector2(1920f, 1080f));
-                SetVector2(serialized, "panelAnchorMin", new Vector2(0.5f, 0.5f));
-                SetVector2(serialized, "panelAnchorMax", new Vector2(0.5f, 0.5f));
-                SetVector2(serialized, "panelPivot", new Vector2(0.5f, 0.5f));
-                SetVector2(serialized, "titleAnchorMin", new Vector2(0f, 1f));
-                SetVector2(serialized, "titleAnchorMax", new Vector2(1f, 1f));
-                SetVector2(serialized, "titlePivot", new Vector2(0.5f, 1f));
-                SetVector2(serialized, "weightAnchorMin", new Vector2(0f, 1f));
-                SetVector2(serialized, "weightAnchorMax", new Vector2(1f, 1f));
-                SetVector2(serialized, "weightPivot", new Vector2(0.5f, 1f));
-                SetVector2(serialized, "gridAnchorMin", Vector2.zero);
-                SetVector2(serialized, "gridAnchorMax", Vector2.one);
-                SetInt(serialized, "gridStartCorner", (int)GridLayoutGroup.Corner.UpperLeft);
-                SetInt(serialized, "gridStartAxis", (int)GridLayoutGroup.Axis.Horizontal);
-                SetInt(serialized, "gridConstraint", (int)GridLayoutGroup.Constraint.FixedColumnCount);
-                SetInt(serialized, "titleAlignment", (int)TextAnchor.MiddleLeft);
-                SetInt(serialized, "weightAlignment", (int)TextAnchor.MiddleRight);
-                SetInt(serialized, "slotAlignment", (int)TextAnchor.LowerCenter);
-                SetInt(serialized, "gridChildAlignment", (int)TextAnchor.UpperLeft);
-                SetVector2(serialized, "panelSize", new Vector2(720f, 520f));
-                SetVector2(serialized, "panelOffset", Vector2.zero);
-                SetInt(serialized, "columns", 6);
-                SetVector2(serialized, "slotSize", new Vector2(96f, 96f));
-                SetVector2(serialized, "slotSpacing", new Vector2(8f, 8f));
-                SetInt(serialized, "panelPadding", 20);
-                SetFloat(serialized, "headerHeight", 48f);
-                SetInt(serialized, "maxVisibleSlots", 0);
-                SetInt(serialized, "sortingOrder", 10);
-                SetColor(serialized, "panelColor", new Color(0.06f, 0.07f, 0.08f, 0.94f));
-                SetColor(serialized, "slotColor", new Color(0.16f, 0.18f, 0.20f, 1f));
-                SetColor(serialized, "selectedSlotColor", new Color(0.78f, 0.62f, 0.30f, 1f));
-                SetColor(serialized, "textColor", Color.white);
-                SetColor(serialized, "overloadedWeightColor", new Color(0.95f, 0.28f, 0.24f, 1f));
-            }
-
-            // One-time migration for assets created before canvas and slot layout became configurable.
-            var panelAnchorMax = serialized.FindProperty("panelAnchorMax");
-            if (panelAnchorMax != null && panelAnchorMax.vector2Value == Vector2.zero)
-            {
-                SetInt(serialized, "canvasRenderMode", (int)RenderMode.ScreenSpaceOverlay);
-                SetInt(serialized, "canvasScaleMode", (int)CanvasScaler.ScaleMode.ScaleWithScreenSize);
-                SetVector2(serialized, "panelAnchorMin", new Vector2(0.5f, 0.5f));
-                SetVector2(serialized, "panelAnchorMax", new Vector2(0.5f, 0.5f));
-                SetVector2(serialized, "panelPivot", new Vector2(0.5f, 0.5f));
-                SetVector2(serialized, "titleAnchorMin", new Vector2(0f, 1f));
-                SetVector2(serialized, "titleAnchorMax", new Vector2(1f, 1f));
-                SetVector2(serialized, "titlePivot", new Vector2(0.5f, 1f));
-                SetVector2(serialized, "weightAnchorMin", new Vector2(0f, 1f));
-                SetVector2(serialized, "weightAnchorMax", new Vector2(1f, 1f));
-                SetVector2(serialized, "weightPivot", new Vector2(0.5f, 1f));
-                SetVector2(serialized, "gridAnchorMin", Vector2.zero);
-                SetVector2(serialized, "gridAnchorMax", Vector2.one);
-                SetInt(serialized, "gridStartCorner", (int)GridLayoutGroup.Corner.UpperLeft);
-                SetInt(serialized, "gridStartAxis", (int)GridLayoutGroup.Axis.Horizontal);
-                SetInt(serialized, "gridConstraint", (int)GridLayoutGroup.Constraint.FixedColumnCount);
-                SetInt(serialized, "titleAlignment", (int)TextAnchor.MiddleLeft);
-                SetInt(serialized, "weightAlignment", (int)TextAnchor.MiddleRight);
-                SetInt(serialized, "slotAlignment", (int)TextAnchor.LowerCenter);
-                SetInt(serialized, "gridChildAlignment", (int)TextAnchor.UpperLeft);
-            }
-
-            // One-time migration for assets created before configurable slot bounds existed.
-            var iconAnchorMax = serialized.FindProperty("iconAnchorMax");
-            if (iconAnchorMax != null && iconAnchorMax.vector2Value == Vector2.zero)
-            {
-                SetVector2(serialized, "iconAnchorMin", new Vector2(0.12f, 0.28f));
-                SetVector2(serialized, "iconAnchorMax", new Vector2(0.88f, 0.92f));
-                SetVector2(serialized, "labelAnchorMin", Vector2.zero);
-                SetVector2(serialized, "labelAnchorMax", new Vector2(1f, 0.34f));
-                SetBool(serialized, "preserveIconAspect", true);
-                var maxVisibleSlots = serialized.FindProperty("maxVisibleSlots");
-                if (!created && maxVisibleSlots != null && maxVisibleSlots.intValue == 24)
-                    maxVisibleSlots.intValue = 0;
-            }
-
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(asset);
-        }
-
-        private static void SetString(SerializedObject obj, string name, string value)
-        {
-            var property = obj.FindProperty(name);
-            if (property != null) property.stringValue = value;
-        }
-
-        private static void SetInt(SerializedObject obj, string name, int value)
-        {
-            var property = obj.FindProperty(name);
-            if (property != null) property.intValue = value;
-        }
-
-        private static void SetFloat(SerializedObject obj, string name, float value)
-        {
-            var property = obj.FindProperty(name);
-            if (property != null) property.floatValue = value;
-        }
-
-        private static void SetLayerMask(SerializedObject obj, string name, int value)
-        {
-            var property = obj.FindProperty(name);
-            if (property != null) property.intValue = value;
-        }
-
-        private static void SetVector2(SerializedObject obj, string name, Vector2 value)
-        {
-            var property = obj.FindProperty(name);
-            if (property != null) property.vector2Value = value;
-        }
-
-        private static void SetBool(SerializedObject obj, string name, bool value)
-        {
-            var property = obj.FindProperty(name);
-            if (property != null) property.boolValue = value;
-        }
-
-        private static void SetColor(SerializedObject obj, string name, Color value)
-        {
-            var property = obj.FindProperty(name);
-            if (property != null) property.colorValue = value;
+            return asset;
         }
 
         private static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;
-            var parent = System.IO.Path.GetDirectoryName(path)?.Replace("\\", "/");
-            var name = System.IO.Path.GetFileName(path);
+            var parent = Path.GetDirectoryName(path)?.Replace("\\", "/");
+            var name = Path.GetFileName(path);
             if (!string.IsNullOrEmpty(parent) && !AssetDatabase.IsValidFolder(parent))
                 EnsureFolder(parent);
             if (!string.IsNullOrEmpty(parent) && !AssetDatabase.IsValidFolder(path))
