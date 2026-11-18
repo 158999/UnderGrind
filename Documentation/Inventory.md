@@ -51,7 +51,7 @@ Le operazioni che modificano il contenuto restituiscono un `InventoryOperationRe
 
 `InventoryUISettings` si trova in `Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset`. Dimensioni, spaziatura, numero di colonne, colori, font, testi, risoluzione di riferimento e aree di icona/etichetta sono modificabili nell'Inspector. Con `MaxVisibleSlots = 0` vengono mostrati tutti gli slot; con un valore maggiore la navigazione si limita agli slot visibili. Il componente aggiorna la vista tramite l'evento `PlayerInventory.Changed`.
 
-La UI si apre e si chiude con Tab. Quando è aperta, il cursore viene liberato; alla chiusura viene ripristinato lo stato precedente. Le parentesi quadre destra e sinistra cambiano lo slot selezionato. Il gamepad usa Select per aprire l'inventario e il D-pad orizzontale per cambiare slot.
+La UI si apre e si chiude con Tab. Quando è aperta, il cursore viene liberato; alla chiusura o alla disattivazione del componente UI vengono ripristinati lo stato di cattura del cursore e l'input di locomozione precedenti. Le parentesi quadre destra e sinistra cambiano lo slot selezionato. Il gamepad usa Select per aprire l'inventario e il D-pad orizzontale per cambiare slot.
 
 ## Raccolta e rilascio nel mondo
 
