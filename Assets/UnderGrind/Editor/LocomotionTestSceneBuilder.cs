@@ -118,7 +118,7 @@ namespace UnderGrind.Editor
             if (instance == null) instance = UnityEngine.Object.Instantiate(human);
             instance.name = "Human Base - imported from humans.blend";
             instance.transform.SetParent(visualRoot.transform, false);
-            ConfigureAnimations(instance);
+            ConfigureAnimations(instance, animationSettings);
             Debug.Log("UnderGrind: modello umano importato da " + HumanModelPath);
 
             var pivot = new GameObject("View Pivot").transform;
@@ -229,192 +229,34 @@ namespace UnderGrind.Editor
             model.transform.position += new Vector3(parentPosition.x - fitted.center.x, parentPosition.y - fitted.min.y, parentPosition.z - fitted.center.z);
         }
 
-        private static void ApplyPlayerMaterial(GameObject model)
+        private static void ConfigureAnimations(GameObject model, PlayerAnimationSettings settings)
         {
-            var playerMaterial = MakeMaterial("Human Base", new Color(0.43f, 0.61f, 0.68f));
-            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
-            {
-                var materials = renderer.sharedMaterials;
-                if (materials.Length == 0)
-                    renderer.sharedMaterial = playerMaterial;
-                else
-                {
-                    for (var i = 0; i < materials.Length; i++)
-                        materials[i] = playerMaterial;
-                    renderer.sharedMaterials = materials;
-                }
-            }
-        }
+            if (model == null || settings == null) return;
 
-        private static void ConfigureAnimations(GameObject model)
-        {
-            var clips = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<AnimationClip>()
-                .Where(x => !x.name.StartsWith("__preview", StringComparison.OrdinalIgnoreCase)).ToArray();
-            if (clips.Length == 0) return;
-            bool HasToken(AnimationClip clip, string token) =>
-                clip.name.IndexOf(token, StringComparison.OrdinalIgnoreCase) >= 0;
-            AnimationClip FindLocomotion(params string[] tokens) => clips
-                .Where(clip => !HasToken(clip, "crouch") && tokens.Any(token => HasToken(clip, token)))
-                .OrderBy(clip => tokens.Any(token => string.Equals(clip.name, token, StringComparison.OrdinalIgnoreCase)) ? 0 : 1)
-                .FirstOrDefault();
-            AnimationClip FindAll(string[] tokens) => clips.FirstOrDefault(clip =>
-                tokens.All(token => HasToken(clip, token)));
+            var animator = model.GetComponentInChildren<Animator>(true);
+            var avatar = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<Avatar>()
+                .FirstOrDefault(candidate => candidate != null && candidate.isValid);
 
-            var idle = FindLocomotion("idle", "standing");
-            var walk = FindLocomotion("walk", "walking");
-            var run = FindLocomotion("run", "running");
-            var jump = FindLocomotion("jump");
-            var crouchIdle = FindAll(new[] { "crouch", "idle" });
-            var crouchWalk = FindAll(new[] { "crouch", "walk" });
-            if (idle == null && walk == null && run == null) return;
-
-            var controllerPath = GeneratedPath + "/LocomotionTest.controller";
-            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(controllerPath) != null)
-                AssetDatabase.DeleteAsset(controllerPath);
-            var animatorController = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
-            animatorController.AddParameter("Speed", AnimatorControllerParameterType.Float);
-            animatorController.AddParameter("MoveX", AnimatorControllerParameterType.Float);
-            animatorController.AddParameter("MoveY", AnimatorControllerParameterType.Float);
-            animatorController.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
-            animatorController.AddParameter("VerticalSpeed", AnimatorControllerParameterType.Float);
-            animatorController.AddParameter("Running", AnimatorControllerParameterType.Bool);
-            animatorController.AddParameter("Crouching", AnimatorControllerParameterType.Bool);
-            animatorController.AddParameter("Jumping", AnimatorControllerParameterType.Bool);
-            animatorController.AddParameter("Falling", AnimatorControllerParameterType.Bool);
-            var machine = animatorController.layers[0].stateMachine;
-
-            AnimatorState AddState(string name, AnimationClip clip, Vector3 position)
-            {
-                if (clip == null) return null;
-                var state = machine.AddState(name, position);
-                state.motion = clip;
-                return state;
-            }
-
-            var idleState = AddState("Idle", idle, new Vector3(250, 100));
-            var walkState = AddState("Walk", walk, new Vector3(500, 100));
-            var runState = AddState("Run", run, new Vector3(750, 100));
-            var jumpState = AddState("Jump", jump, new Vector3(500, 300));
-            var crouchIdleState = AddState("Crouch Idle", crouchIdle, new Vector3(250, 500));
-            var crouchWalkState = AddState("Crouch Walk", crouchWalk, new Vector3(500, 500));
-            machine.defaultState = idleState ?? walkState ?? runState ?? crouchIdleState ?? jumpState;
-
-            void Transition(AnimatorState from, AnimatorState to, string parameter, AnimatorConditionMode mode, float threshold = 0f)
-            {
-                if (from == null || to == null || from == to) return;
-                var transition = from.AddTransition(to);
-                transition.hasExitTime = false;
-                transition.duration = 0.12f;
-                transition.AddCondition(mode, threshold, parameter);
-            }
-
-            Transition(idleState, walkState, "Speed", AnimatorConditionMode.Greater, 0.1f);
-            Transition(idleState, runState, "Speed", AnimatorConditionMode.Greater, 1.6f);
-            Transition(walkState, idleState, "Speed", AnimatorConditionMode.Less, 0.1f);
-            Transition(walkState, runState, "Speed", AnimatorConditionMode.Greater, 1.6f);
-            Transition(runState, walkState, "Speed", AnimatorConditionMode.Less, 1.6f);
-            Transition(runState, idleState, "Speed", AnimatorConditionMode.Less, 0.1f);
-
-            foreach (var state in new[] { idleState, walkState, runState })
-            {
-                if (state == null || crouchIdleState == null) continue;
-                var toCrouch = state.AddTransition(crouchIdleState);
-                toCrouch.hasExitTime = false;
-                toCrouch.duration = 0.12f;
-                toCrouch.AddCondition(AnimatorConditionMode.If, 0f, "Crouching");
-            }
-
-            if (crouchIdleState != null && crouchWalkState != null)
-            {
-                var startMove = crouchIdleState.AddTransition(crouchWalkState);
-                startMove.hasExitTime = false;
-                startMove.duration = 0.12f;
-                startMove.AddCondition(AnimatorConditionMode.Greater, 0.1f, "Speed");
-                var stopMove = crouchWalkState.AddTransition(crouchIdleState);
-                stopMove.hasExitTime = false;
-                stopMove.duration = 0.12f;
-                stopMove.AddCondition(AnimatorConditionMode.Less, 0.1f, "Speed");
-
-                void AddCrouchExit(AnimatorState from, AnimatorState to, AnimatorConditionMode speedMode, float threshold)
-                {
-                    if (from == null || to == null) return;
-                    var transition = from.AddTransition(to);
-                    transition.hasExitTime = false;
-                    transition.duration = 0.12f;
-                    transition.AddCondition(AnimatorConditionMode.IfNot, 0f, "Crouching");
-                    transition.AddCondition(speedMode, threshold, "Speed");
-                }
-
-                AddCrouchExit(crouchIdleState, idleState, AnimatorConditionMode.Less, 0.1f);
-                AddCrouchExit(crouchIdleState, walkState, AnimatorConditionMode.Greater, 0.1f);
-                AddCrouchExit(crouchWalkState, idleState, AnimatorConditionMode.Less, 0.1f);
-                AddCrouchExit(crouchWalkState, walkState, AnimatorConditionMode.Greater, 0.1f);
-            }
-
-            if (jumpState != null)
-            {
-                var any = machine.AddAnyStateTransition(jumpState);
-                any.hasExitTime = false;
-                any.duration = 0.08f;
-                any.canTransitionToSelf = false;
-                any.AddCondition(AnimatorConditionMode.If, 0f, "Jumping");
-                foreach (var state in new[] { idleState, walkState, runState, crouchIdleState, crouchWalkState })
-                    Transition(jumpState, state, "Grounded", AnimatorConditionMode.If);
-            }
-
-            var animator = model.GetComponentInChildren<Animator>();
-            var avatar = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<Avatar>().FirstOrDefault();
             if (animator == null && avatar != null)
                 animator = model.AddComponent<Animator>();
-            if (animator != null && animator.avatar == null && avatar != null)
-                animator.avatar = avatar;
-            if (animator == null || animator.avatar == null)
+            if (animator == null)
             {
-                AssetDatabase.DeleteAsset(controllerPath);
-                Debug.LogWarning("UnderGrind: clip trovate, ma nessun Avatar valido nel modello. Animazioni non collegate.");
+                Debug.LogWarning("UnderGrind: il modello importato non contiene un Animator. " +
+                    "Le animazioni saranno disponibili dopo l'importazione di un prefab riggato.", model);
                 return;
             }
-            animator.runtimeAnimatorController = animatorController;
+
+            if (animator.avatar == null && avatar != null) animator.avatar = avatar;
+            if (animator.avatar == null || !animator.avatar.isValid)
+            {
+                Debug.LogWarning("UnderGrind: nessun Avatar valido sul modello. " +
+                    "Il PlayerAnimationDriver non potrà animare questo modello.", model);
+                return;
+            }
+
+            if (settings.AnimatorController != null)
+                animator.runtimeAnimatorController = settings.AnimatorController;
             animator.applyRootMotion = false;
-            animator.SetBool("Grounded", true);
-        }
-
-        private static void CreateFallbackHumanoid(Transform parent)
-        {
-            var skin = MakeMaterial("Fallback Skin", new Color(0.72f, 0.55f, 0.43f));
-            var shirt = MakeMaterial("Fallback Shirt", new Color(0.28f, 0.34f, 0.38f));
-            var trousers = MakeMaterial("Fallback Trousers", new Color(0.18f, 0.20f, 0.23f));
-            Part("Torso", PrimitiveType.Capsule, parent, new Vector3(0f, 1.18f, 0f), new Vector3(0.36f, 0.35f, 0.22f), shirt);
-            Part("Head", PrimitiveType.Sphere, parent, new Vector3(0f, 1.65f, 0f), new Vector3(0.23f, 0.26f, 0.22f), skin);
-            Part("Pelvis", PrimitiveType.Cube, parent, new Vector3(0f, 0.88f, 0f), new Vector3(0.34f, 0.25f, 0.20f), trousers);
-            Limb("Left Upper Arm", parent, new Vector3(-0.22f, 1.43f, 0f), new Vector3(-0.34f, 1.13f, 0f), 0.105f, shirt);
-            Limb("Right Upper Arm", parent, new Vector3(0.22f, 1.43f, 0f), new Vector3(0.34f, 1.13f, 0f), 0.105f, shirt);
-            Limb("Left Forearm", parent, new Vector3(-0.34f, 1.13f, 0f), new Vector3(-0.36f, 0.88f, 0.03f), 0.075f, skin);
-            Limb("Right Forearm", parent, new Vector3(0.34f, 1.13f, 0f), new Vector3(0.36f, 0.88f, 0.03f), 0.075f, skin);
-            Limb("Left Thigh", parent, new Vector3(-0.10f, 0.82f, 0f), new Vector3(-0.12f, 0.46f, 0f), 0.115f, trousers);
-            Limb("Right Thigh", parent, new Vector3(0.10f, 0.82f, 0f), new Vector3(0.12f, 0.46f, 0f), 0.115f, trousers);
-            Limb("Left Shin", parent, new Vector3(-0.12f, 0.46f, 0f), new Vector3(-0.12f, 0.08f, 0.02f), 0.075f, trousers);
-            Limb("Right Shin", parent, new Vector3(0.12f, 0.46f, 0f), new Vector3(0.12f, 0.08f, 0.02f), 0.075f, trousers);
-        }
-
-        private static void Limb(string name, Transform parent, Vector3 a, Vector3 b, float radius, Material material)
-        {
-            var part = Part(name, PrimitiveType.Capsule, parent, (a + b) * 0.5f,
-                new Vector3(radius * 2f, Vector3.Distance(a, b) * 0.5f, radius * 2f), material);
-            part.transform.localRotation = Quaternion.FromToRotation(Vector3.up, b - a);
-        }
-
-        private static GameObject Part(string name, PrimitiveType type, Transform parent, Vector3 position, Vector3 scale, Material material)
-        {
-            var item = GameObject.CreatePrimitive(type);
-            item.name = name;
-            item.transform.SetParent(parent, false);
-            item.transform.localPosition = position;
-            item.transform.localScale = scale;
-            item.GetComponent<Renderer>().sharedMaterial = material;
-            var collider = item.GetComponent<Collider>();
-            if (collider != null) UnityEngine.Object.DestroyImmediate(collider);
-            return item;
         }
 
         private static Material MakeMaterial(string name, Color color)
