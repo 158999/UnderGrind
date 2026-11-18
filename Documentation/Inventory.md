@@ -18,7 +18,7 @@ Il peso deve essere finito e non negativo. Gli oggetti a peso zero sono ammessi.
 
 La capacità in slot e il peso massimo sono due regole distinte:
 
-- La capacità in slot limita le posizioni utilizzabili per nuove unità.
+- La capacità in slot limita le posizioni utilizzabili per nuove unità. Se viene ridotta mentre gli slot oltre il nuovo limite contengono oggetti, tali contenuti vengono preservati come overflow e non ricevono nuovi oggetti finché non rientrano nella capacità configurata.
 - Il peso massimo è una soglia di penalità, non un blocco alla raccolta. L'inventario può superarla.
 - Il peso corrente è derivato dal contenuto degli slot e non può essere modificato direttamente.
 
