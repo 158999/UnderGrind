@@ -294,7 +294,7 @@ namespace UnderGrind.Inventory
 
         private void SelectRelativeSlot(int direction)
         {
-            var count = inventory.SlotCapacity;
+            var count = VisibleSlotCount();
             if (count <= 0) return;
             var next = (inventory.SelectedSlotIndex + direction + count) % count;
             inventory.SelectSlot(next);
