@@ -118,6 +118,44 @@ namespace UnderGrind.Tests
             Assert.IsFalse(_inventory.IsOverloaded);
         }
 
+        [Test]
+        public void SelectSlot_ChangesActiveSlotAndRejectsOutOfRangeIndices()
+        {
+            Assert.AreEqual(0, _inventory.SelectedSlotIndex);
+            Assert.IsTrue(_inventory.SelectSlot(2));
+            Assert.AreEqual(2, _inventory.SelectedSlotIndex);
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => _inventory.SelectSlot(3));
+        }
+
+        [Test]
+        public void RemoveFromSlot_RemovesOnlyRequestedQuantityAndUpdatesWeight()
+        {
+            _inventory.AddItem(_item, 4);
+            var result = _inventory.RemoveFromSlot(0, 2);
+
+            Assert.AreEqual(2, result.Processed);
+            Assert.AreEqual(2, _inventory.GetSlot(0).Quantity);
+            Assert.AreEqual(8f, _inventory.CurrentWeightKg);
+        }
+
+        [Test]
+        public void WorldPickup_PartiallyTransfersWhenInventoryHasOneFreeSlot()
+        {
+            SetField(_item, "maxStackSize", 1);
+            _inventory.AddItem(_item, 2);
+            var pickupObject = new GameObject("World pickup test");
+            var pickup = pickupObject.AddComponent<WorldItemPickup>();
+            Assert.IsTrue(pickup.Configure(_item, 2));
+
+            Assert.IsTrue(pickup.TryPickup(_inventory));
+
+            Assert.AreEqual(1, pickup.Quantity);
+            Assert.AreEqual(3, _inventory.Slots.Count);
+            Assert.AreEqual(3f, _inventory.Slots[0].Quantity +
+                _inventory.Slots[1].Quantity + _inventory.Slots[2].Quantity);
+            Object.DestroyImmediate(pickupObject);
+        }
+
         private static void SetField<T>(T target, string name, object value)
         {
             typeof(T).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(target, value);
