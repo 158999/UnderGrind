@@ -15,6 +15,7 @@ $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "../.."))
 $runDir = Initialize-UnderGrindTestRun -ProjectRoot $root
 $standaloneScript = Join-Path $PSScriptRoot "run-tests.ps1"
 $unityScript = Join-Path $PSScriptRoot "run-unity-tests.ps1"
+$script:overallDeadline = [DateTime]::UtcNow.AddSeconds($OverallTimeoutSeconds)
 
 function Invoke-TestScript {
     param([string]$ScriptPath, [string[]]$ScriptArguments)
@@ -22,8 +23,13 @@ function Invoke-TestScript {
     $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
         if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
     }))
+    $remainingSeconds = [int][Math]::Ceiling(($script:overallDeadline - [DateTime]::UtcNow).TotalSeconds)
+    if ($remainingSeconds -le 0) {
+        Write-Warning "Timeout globale raggiunto prima di avviare $ScriptPath."
+        return 124
+    }
     $process = Start-Process -FilePath "powershell.exe" -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow
-    if (-not $process.WaitForExit($OverallTimeoutSeconds * 1000)) {
+    if (-not $process.WaitForExit($remainingSeconds * 1000)) {
         Write-Warning "Timeout: $ScriptPath ha superato $OverallTimeoutSeconds secondi."
         try { & taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null } catch { }
         try {
