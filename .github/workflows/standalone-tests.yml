@@ -27,7 +27,7 @@ jobs:
 
       - name: Run standalone tests
         shell: pwsh
-        run: ./run-tests.ps1
+        run: ./Tools/Testing/run-tests.ps1
 
       - name: Upload test reports
         if: always()
