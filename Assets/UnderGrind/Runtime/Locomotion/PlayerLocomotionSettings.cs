@@ -5,25 +5,29 @@ namespace UnderGrind.Locomotion
     [CreateAssetMenu(menuName = "UnderGrind/Player/Locomotion Settings", fileName = "PlayerLocomotionSettings")]
     public sealed class PlayerLocomotionSettings : ScriptableObject
     {
-        [Header("Antropometria e movimento")]
-        [SerializeField, Min(0.1f)] private float characterHeight;
+        [Header("1. Velocità di camminata")]
         [SerializeField, Min(0.1f)] private float walkSpeed;
-        [SerializeField, Min(1f)] private float runMultiplier;
-        [SerializeField, Min(0.01f)] private float jumpHeight;
-        [SerializeField, Min(0.01f)] private float gravity;
 
-        [Header("Accelerazione e controllo")]
-        [SerializeField, Min(0f)] private float acceleration;
-        [SerializeField, Min(0f)] private float deceleration;
+        [Header("2. Velocità di corsa")]
+        [SerializeField, Min(1f)] private float runMultiplier;
+
+        [Header("3. Salto")]
+        [SerializeField, Min(0.01f)] private float jumpHeight;
+
+        [Header("4. Gravità e controllo in aria")]
+        [SerializeField, Min(0.01f)] private float gravity;
         [SerializeField, Range(0f, 1f)] private float airControl;
-        [SerializeField, Min(0f)] private float coyoteTime;
-        [SerializeField, Min(0f)] private float jumpBufferTime;
         [SerializeField, Min(0f)] private float groundedStickVelocity;
-        [SerializeField, Min(0f)] private float movementInputThreshold;
-        [SerializeField, Min(0f)] private float directionThreshold;
         [SerializeField, Min(0f)] private float jumpApexStateThreshold;
 
-        [Header("Accovacciamento e capsula")]
+        [Header("5. Accelerazione e decelerazione")]
+        [SerializeField, Min(0f)] private float acceleration;
+        [SerializeField, Min(0f)] private float deceleration;
+        [SerializeField, Min(0f)] private float movementInputThreshold;
+        [SerializeField, Min(0f)] private float directionThreshold;
+
+        [Header("6. Accovacciamento e collisioni")]
+        [SerializeField, Min(0.1f)] private float characterHeight;
         [SerializeField, Min(0.1f)] private float crouchHeight;
         [SerializeField, Range(0.01f, 1f)] private float crouchSpeedMultiplier;
         [SerializeField, Min(0.01f)] private float stanceChangeSpeed;
@@ -39,7 +43,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private bool characterDetectCollisions;
         [SerializeField] private bool characterEnableOverlapRecovery;
 
-        [Header("Camera e visuale")]
+        [Header("7. Camera, sensibilità e distanza")]
         [SerializeField, Min(0.001f)] private float mouseSensitivity;
         [SerializeField, Min(0.001f)] private float gamepadLookSensitivity;
         [SerializeField, Range(1f, 89f)] private float maxLookAngle;
@@ -54,6 +58,10 @@ namespace UnderGrind.Locomotion
         [SerializeField, Min(0.001f)] private float thirdPersonRotationSharpness;
         [SerializeField, Min(0.001f)] private float cameraNearClipPlane;
         [SerializeField, Range(1f, 179f)] private float cameraFieldOfView;
+
+        [Header("8. Coyote time e jump buffer")]
+        [SerializeField, Min(0f)] private float coyoteTime;
+        [SerializeField, Min(0f)] private float jumpBufferTime;
 
         public float CharacterHeight => characterHeight;
         public float WalkSpeed => walkSpeed;
@@ -102,21 +110,19 @@ namespace UnderGrind.Locomotion
 
         private void OnValidate()
         {
+            capsuleRadius = Mathf.Max(0.05f, capsuleRadius);
             characterHeight = Mathf.Max(capsuleRadius * 2f, characterHeight);
             walkSpeed = Mathf.Max(0.1f, walkSpeed);
             runMultiplier = Mathf.Max(1f, runMultiplier);
             jumpHeight = Mathf.Max(0.01f, jumpHeight);
             gravity = Mathf.Max(0.01f, gravity);
+            airControl = Mathf.Clamp01(airControl);
+            groundedStickVelocity = Mathf.Max(0f, groundedStickVelocity);
+            jumpApexStateThreshold = Mathf.Max(0f, jumpApexStateThreshold);
             acceleration = Mathf.Max(0f, acceleration);
             deceleration = Mathf.Max(0f, deceleration);
-            airControl = Mathf.Clamp01(airControl);
-            coyoteTime = Mathf.Max(0f, coyoteTime);
-            jumpBufferTime = Mathf.Max(0f, jumpBufferTime);
-            groundedStickVelocity = Mathf.Max(0f, groundedStickVelocity);
             movementInputThreshold = Mathf.Max(0f, movementInputThreshold);
             directionThreshold = Mathf.Max(0f, directionThreshold);
-            jumpApexStateThreshold = Mathf.Max(0f, jumpApexStateThreshold);
-            capsuleRadius = Mathf.Max(0.05f, capsuleRadius);
             crouchHeight = Mathf.Clamp(crouchHeight, capsuleRadius * 2f, characterHeight);
             crouchSpeedMultiplier = Mathf.Clamp01(crouchSpeedMultiplier);
             stanceChangeSpeed = Mathf.Max(0.01f, stanceChangeSpeed);
@@ -139,6 +145,8 @@ namespace UnderGrind.Locomotion
             thirdPersonRotationSharpness = Mathf.Max(0.001f, thirdPersonRotationSharpness);
             cameraNearClipPlane = Mathf.Max(0.001f, cameraNearClipPlane);
             cameraFieldOfView = Mathf.Clamp(cameraFieldOfView, 1f, 179f);
+            coyoteTime = Mathf.Max(0f, coyoteTime);
+            jumpBufferTime = Mathf.Max(0f, jumpBufferTime);
         }
     }
 }
