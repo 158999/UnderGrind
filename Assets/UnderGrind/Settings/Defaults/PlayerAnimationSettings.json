@@ -32,5 +32,6 @@
   "crouchWalkThreshold": 0.1,
   "speedDampTime": 0.1,
   "transitionDuration": 0.15,
-  "landingExitTime": 0.9
+  "landingExitTime": 0.9,
+  "settingsVersion": 2
 }
