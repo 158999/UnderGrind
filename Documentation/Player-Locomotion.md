@@ -25,7 +25,7 @@ I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I mod
 
 ## Input e controlli
 
-`PlayerInputSettings` collega il Player a un `InputActionAsset`. L'asset iniziale è il file `Assets/UnderGrind/Settings/PlayerInputActions.inputactions`, importato da Unity e modificabile nell'Input Actions editor. **UnderGrind → Player → Create or Repair Input Actions** collega questo asset a `PlayerInputSettings.asset` e ripara i riferimenti mancanti; le associazioni tra identificatori logici e nomi delle azioni sono in `PlayerInputSettings.asset`. Le singole binding di tastiera, mouse e gamepad sono modificabili direttamente nell'Input Actions asset.
+`PlayerInputSettings.asset` collega gli identificatori logici del Player ai nomi delle azioni dell'`InputActionAsset`. L'asset iniziale è `Assets/UnderGrind/Settings/PlayerInputActions.inputactions`, importato da Unity e modificabile nell'Input Actions editor. **UnderGrind → Player → Create or Repair Input Actions** collega l'asset e ripara i riferimenti mancanti. Le binding predefinite sono dati dell'asset, non costanti del controller.
 
 | Azione | Tastiera e mouse | Gamepad |
 |---|---|---|
@@ -36,21 +36,17 @@ I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I mod
 | Accovacciamento | C | Pulsante est |
 | Cambio telecamera | F5 | Pulsante nord |
 | Sblocco cursore | Esc | Start |
-| Blocca nuovamente il cursore | Clic sinistro | — |
+| Cattura cursore | Clic sinistro | — |
 | Interazione/raccolta | E | Pulsante ovest |
 | Rilascio oggetto | G | D-pad giù |
 | Apri/chiudi inventario | Tab | Select |
 | Slot successivo/precedente | ] / [ | D-pad destra/sinistra |
 
-Le azioni vengono lette dalla stessa action map. Il cursore viene bloccato all'avvio se l'opzione è attiva e può essere liberato o catturato nuovamente tramite le azioni configurate. Le dead zone radiali per movimento e visuale gamepad, il timeout di rimappatura e la chiave di persistenza sono configurati in `PlayerInputSettings.asset`. `PlayerInputRebindingController` espone l'API per avviare, annullare, salvare e ripristinare una rimappatura e salva gli override in PlayerPrefs. Non è ancora presente una schermata di configurazione dei tasti nel menu di gioco.
+Le dead zone radiali di movimento e visuale gamepad, la sensibilità, il comportamento del cursore, il timeout di rimappatura e la chiave di persistenza sono configurati nei rispettivi asset `PlayerInputSettings.asset` e `PlayerLocomotionSettings.asset`. La stessa action map viene condivisa da locomozione, inventario e interazione.
 
-\`PlayerInputSettings\` espone due dead zone radiali configurabili: \`MovementDeadzone\` per lo stick di movimento e \`GamepadLookDeadzone\` per lo stick visuale. La sensibilità del mouse e del gamepad resta nell'asset \`PlayerLocomotionSettings\`. Le dead zone vengono applicate prima di trasferire l'input alla locomozione.
+`HumanLocomotionController` crea o riutilizza `PlayerInputRebindingController` e carica gli override prima di abilitare la action map. L'API consente di avviare una rimappatura con `BeginRebind(PlayerInputActionId, bindingIndex)`, annullarla con `CancelRebind()`, ottenere l'etichetta del controllo con `GetBindingDisplayString()` e ripristinare le binding originali con `ResetOverrides()`. Le rimappature vengono salvate in `PlayerPrefs`; `RebindTimeoutSeconds` e `OverrideStorageKey` sono configurabili in `PlayerInputSettings.asset`. Il componente espone l'evento `RebindCompleted`.
 
-\`PlayerInputRebindingController\` viene collegato automaticamente al Player. \`BeginRebind(PlayerInputActionId, bindingIndex)\` avvia la rimappatura della singola binding; \`GetBindingDisplayString\` restituisce l'etichetta da mostrare nell'interfaccia. Una rimappatura completata viene salvata in \`PlayerPrefs\` usando la chiave configurabile \`OverrideStorageKey\`. Il timeout è configurato da \`RebindTimeoutSeconds\`; \`ResetOverrides\` ripristina le binding originali.
-
-Il controller espone l'API di rimappatura, ma nel progetto non è ancora presente una schermata di impostazioni che la richiami: la UI di configurazione dei controlli resta da integrare.
-
-`HumanLocomotionController` crea o riutilizza `PlayerInputRebindingController` quando viene configurato l'input. Il controller espone `InputRebinding` per avviare la rimappatura di una singola binding, leggere la descrizione del controllo, annullare l'operazione e ripristinare le associazioni predefinite. Le rimappature vengono salvate in `PlayerPrefs` come JSON e ricaricate alla configurazione successiva. Timeout e chiave di archiviazione sono configurabili tramite `RebindTimeoutSeconds` e `OverrideStorageKey` in `PlayerInputSettings.asset`. Il runtime espone le API di rimappatura; non è ancora presente una schermata UI dedicata alla configurazione dei controlli.
+Il runtime supporta la rimappatura, ma non è ancora presente una schermata UI dedicata alle impostazioni dei controlli.
 
 ## Sovraccarico da inventario
 
