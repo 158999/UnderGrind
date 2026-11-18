@@ -6,7 +6,7 @@ namespace UnderGrind.Inventory
     public sealed class WorldItemPickup : MonoBehaviour
     {
         [SerializeField] private ItemDefinition item;
-        [SerializeField, Min(1)] private int quantity = 1;
+        [SerializeField, Min(1)] private int quantity;
 
         public ItemDefinition Item => item;
         public int Quantity => quantity;
@@ -32,7 +32,8 @@ namespace UnderGrind.Inventory
 
         private void OnValidate()
         {
-            quantity = Mathf.Max(1, quantity);
+            if (quantity < 1)
+                Debug.LogWarning("UnderGrind: imposta una quantità positiva per il pickup.", this);
         }
     }
 }
