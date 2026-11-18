@@ -53,6 +53,7 @@ foreach ($target in $platforms) {
     $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
         if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
     }))
+    $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0; inconclusive = 0 }
     $validationErrors = [System.Collections.Generic.List[string]]::new()
     $hasValidResult = $false
     $code = 1
