@@ -1,8 +1,13 @@
 {
   "name": "UnderGrind.EditModeTests",
   "rootNamespace": "UnderGrind.Tests",
-  "references": ["UnderGrind.Runtime"],
-  "includePlatforms": ["Editor"],
+  "references": [
+    "UnderGrind.Runtime",
+    "Unity.InputSystem"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
   "overrideReferences": false,
@@ -11,5 +16,7 @@
   "defineConstraints": [],
   "versionDefines": [],
   "noEngineReferences": false,
-  "optionalUnityReferences": ["TestAssemblies"]
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
 }
