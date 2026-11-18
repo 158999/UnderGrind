@@ -61,6 +61,22 @@ namespace UnderGrind.Editor
             }
             else if (serialized.FindProperty("actionAsset").objectReferenceValue == null)
                 SetObject(serialized, "actionAsset", actions);
+
+            SetStringIfEmpty(serialized, "actionMapName", "Player");
+            SetStringIfEmpty(serialized, "moveActionName", "Move");
+            SetStringIfEmpty(serialized, "lookMouseActionName", "LookMouse");
+            SetStringIfEmpty(serialized, "lookGamepadActionName", "LookGamepad");
+            SetStringIfEmpty(serialized, "jumpActionName", "Jump");
+            SetStringIfEmpty(serialized, "runActionName", "Run");
+            SetStringIfEmpty(serialized, "crouchActionName", "Crouch");
+            SetStringIfEmpty(serialized, "toggleCameraActionName", "ToggleCamera");
+            SetStringIfEmpty(serialized, "cancelActionName", "Cancel");
+            SetStringIfEmpty(serialized, "captureCursorActionName", "CaptureCursor");
+            SetStringIfEmpty(serialized, "interactActionName", "Interact");
+            SetStringIfEmpty(serialized, "dropActionName", "Drop");
+            SetStringIfEmpty(serialized, "toggleInventoryActionName", "ToggleInventory");
+            SetStringIfEmpty(serialized, "nextSlotActionName", "NextSlot");
+            SetStringIfEmpty(serialized, "previousSlotActionName", "PreviousSlot");
             serialized.ApplyModifiedPropertiesWithoutUndo();
 
             EditorUtility.SetDirty(settings);
@@ -116,6 +132,13 @@ namespace UnderGrind.Editor
         {
             var property = serialized.FindProperty(propertyName);
             if (property != null) property.objectReferenceValue = value;
+        }
+
+        private static void SetStringIfEmpty(SerializedObject serialized, string propertyName, string value)
+        {
+            var property = serialized.FindProperty(propertyName);
+            if (property != null && string.IsNullOrWhiteSpace(property.stringValue))
+                property.stringValue = value;
         }
 
         private static void SetString(SerializedObject serialized, string propertyName, string value)
