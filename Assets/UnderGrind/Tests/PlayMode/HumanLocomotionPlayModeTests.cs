@@ -256,6 +256,64 @@ namespace UnderGrind.Tests
         }
 
         [UnityTest]
+        public IEnumerator VisualRigSwitchesThirdPersonAndFirstPersonLimbGroups()
+        {
+            var player = new GameObject("Visual rig limb group test");
+            var head = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var thirdPersonArms = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var thirdPersonHands = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var firstPersonArms = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var firstPersonHands = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var settings = ScriptableObject.CreateInstance<PlayerRigSettings>();
+            try
+            {
+                head.name = "Human_Male_Head";
+                body.name = "Human_Male_Body";
+                thirdPersonArms.name = "Human_Male_TP_Arms";
+                thirdPersonHands.name = "Human_Male_TP_Hands";
+                firstPersonArms.name = "Human_Male_FP_Arms";
+                firstPersonHands.name = "Human_Male_FP_Hands";
+                foreach (var part in new[] { head, body, thirdPersonArms, thirdPersonHands, firstPersonArms, firstPersonHands })
+                    part.transform.SetParent(player.transform, false);
+
+                SetRigField(settings, "headRendererSuffix", "_Head");
+                SetRigField(settings, "thirdPersonArmsToken", "_TP_Arms");
+                SetRigField(settings, "thirdPersonHandsToken", "_TP_Hands");
+                SetRigField(settings, "firstPersonArmsToken", "_FP_Arms");
+                SetRigField(settings, "firstPersonHandsToken", "_FP_Hands");
+                SetRigField(settings, "requireSeparateHead", true);
+                SetRigField(settings, "requireFirstPersonArms", true);
+
+                var rig = player.AddComponent<PlayerVisualRig>();
+                yield return null;
+                Assert.That(rig.ConfigureFromHierarchy(player.transform, settings), Is.True);
+
+                rig.SetThirdPerson(false);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(thirdPersonArms.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(thirdPersonHands.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(firstPersonArms.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(firstPersonHands.GetComponent<Renderer>().enabled, Is.True);
+
+                rig.SetThirdPerson(true);
+                Assert.That(head.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(thirdPersonArms.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(thirdPersonHands.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(firstPersonArms.GetComponent<Renderer>().enabled, Is.False);
+                Assert.That(firstPersonHands.GetComponent<Renderer>().enabled, Is.False);
+            }
+            finally
+            {
+                Object.Destroy(settings);
+                Object.Destroy(player);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator ExplicitVisualRigBindingsOverrideNameDiscovery()
         {
             var player = new GameObject("Explicit visual rig test");
