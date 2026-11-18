@@ -35,6 +35,7 @@ namespace UnderGrind.Inventory
         public void Configure(InventoryUISettings uiSettings, PlayerInputSettings playerInput,
             PlayerInventory playerInventory, HumanLocomotionController playerLocomotion)
         {
+            UnbindInventoryEvents();
             settings = uiSettings;
             inputSettings = playerInput;
             inventory = playerInventory;
