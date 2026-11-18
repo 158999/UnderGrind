@@ -48,7 +48,7 @@ Il timeout complessivo predefinito è di 1800 secondi. I timeout delle singole f
 
 ## Risultati
 
-I report correnti vengono scritti in `TestResults/test/`; l'esecuzione precedente viene conservata in `TestResults/test old/`. I report includono stato, durata, conteggi, errori, log e file XML/TRX. Questi risultati sono artefatti generati e non devono essere versionati.
+I report correnti vengono scritti in `TestResults/test/`; l'esecuzione precedente viene conservata in `TestResults/test old/`. I report includono stato, durata, conteggi, errori, dettagli dei singoli test Unity falliti, log e file XML/TRX. `run-all-tests.ps1` salva inoltre gli stream di output dei processi figli in `executor-*.stdout.log` e `executor-*.stderr.log`; Unity salva separatamente stdout e stderr per ciascuna piattaforma in `TestResults/test/Unity/`. I processi figli vengono avviati con gli stream reindirizzati su file, per evitare che handle della console condivisi mantengano agganciato il processo orchestratore dopo la conclusione dei test. Questi risultati sono artefatti generati e non devono essere versionati.
 
 ## Limiti della CI
 
