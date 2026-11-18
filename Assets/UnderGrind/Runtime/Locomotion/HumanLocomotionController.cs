@@ -112,6 +112,7 @@ namespace UnderGrind.Locomotion
             if (suppressed)
             {
                 _moveInput = Vector2.zero;
+                _jumpBufferedUntil = float.NegativeInfinity;
                 IsRunning = false;
             }
         }
