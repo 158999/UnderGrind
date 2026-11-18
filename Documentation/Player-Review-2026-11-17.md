@@ -85,6 +85,7 @@ Il generatore della scena di test esclude le clip di accovacciamento dalla selez
 
 ### Correzioni emerse dalla revisione
 
+- I valori iniziali di input, interazione, UI, animazione e rig sono stati spostati in file JSON sotto `Assets/UnderGrind/Settings/Defaults`; i builder li usano soltanto per creare gli asset ScriptableObject mancanti e non sovrascrivono quelli esistenti.
 - Il runner Unity ora attende il completamento di ogni processo prima di lanciare la piattaforma successiva.
 - Il report distingue test non eseguiti, XML assente, risultati inconcludenti, test falliti e codice di uscita non zero.
 - L'UI si sottoscrive all'evento inventario anche quando i riferimenti vengono assegnati dopo `Awake`.
