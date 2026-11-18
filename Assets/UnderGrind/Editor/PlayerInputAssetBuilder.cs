@@ -11,7 +11,7 @@ namespace UnderGrind.Editor
     public static class PlayerInputAssetBuilder
     {
         private const string SettingsFolder = "Assets/UnderGrind/Settings";
-        private const string InputAssetPath = SettingsFolder + "/PlayerInputActions.asset";
+        private const string InputAssetPath = SettingsFolder + "/PlayerInputActions.inputactions";
         private const string SettingsAssetPath = SettingsFolder + "/PlayerInputSettings.asset";
         private const string DefaultsPath = SettingsFolder + "/Defaults/PlayerInputSettings.json";
 
@@ -65,8 +65,13 @@ namespace UnderGrind.Editor
             var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputAssetPath);
             if (actions == null)
             {
-                actions = CreateDefaultActions();
-                AssetDatabase.CreateAsset(actions, InputAssetPath);
+                AssetDatabase.ImportAsset(InputAssetPath, ImportAssetOptions.ForceSynchronousImport);
+                actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputAssetPath);
+            }
+            if (actions == null)
+            {
+                Debug.LogError("UnderGrind: impossibile importare l'asset Input Actions: " + InputAssetPath);
+                return;
             }
 
             var settings = AssetDatabase.LoadAssetAtPath<PlayerInputSettings>(SettingsAssetPath);
@@ -110,50 +115,6 @@ namespace UnderGrind.Editor
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssets();
-        }
-
-        private static InputActionAsset CreateDefaultActions()
-        {
-            var asset = ScriptableObject.CreateInstance<InputActionAsset>();
-            asset.name = "PlayerInputActions";
-            var map = new InputActionMap("Player");
-            asset.AddActionMap(map);
-
-            var move = map.AddAction("Move", InputActionType.Value, expectedControlType: "Vector2");
-            move.AddCompositeBinding("2DVector")
-                .With("Up", "<Keyboard>/w")
-                .With("Down", "<Keyboard>/s")
-                .With("Left", "<Keyboard>/a")
-                .With("Right", "<Keyboard>/d");
-            move.AddCompositeBinding("2DVector")
-                .With("Up", "<Keyboard>/upArrow")
-                .With("Down", "<Keyboard>/downArrow")
-                .With("Left", "<Keyboard>/leftArrow")
-                .With("Right", "<Keyboard>/rightArrow");
-            move.AddBinding("<Gamepad>/leftStick");
-
-            map.AddAction("LookMouse", InputActionType.Value, expectedControlType: "Vector2")
-                .AddBinding("<Mouse>/delta");
-            map.AddAction("LookGamepad", InputActionType.Value, expectedControlType: "Vector2")
-                .AddBinding("<Gamepad>/rightStick");
-            AddButton(map, "Jump", "<Keyboard>/space", "<Gamepad>/buttonSouth");
-            AddButton(map, "Run", "<Keyboard>/leftShift", "<Gamepad>/leftStickPress");
-            AddButton(map, "Crouch", "<Keyboard>/c", "<Gamepad>/buttonEast");
-            AddButton(map, "ToggleCamera", "<Keyboard>/f5", "<Gamepad>/buttonNorth");
-            AddButton(map, "Cancel", "<Keyboard>/escape", "<Gamepad>/start");
-            AddButton(map, "CaptureCursor", "<Mouse>/leftButton");
-            AddButton(map, "Interact", "<Keyboard>/e", "<Gamepad>/buttonWest");
-            AddButton(map, "Drop", "<Keyboard>/g", "<Gamepad>/dpad/down");
-            AddButton(map, "ToggleInventory", "<Keyboard>/tab", "<Gamepad>/select");
-            AddButton(map, "NextSlot", "<Keyboard>/rightBracket", "<Gamepad>/dpad/right");
-            AddButton(map, "PreviousSlot", "<Keyboard>/leftBracket", "<Gamepad>/dpad/left");
-            return asset;
-        }
-
-        private static void AddButton(InputActionMap map, string name, params string[] bindings)
-        {
-            var action = map.AddAction(name, InputActionType.Button, expectedControlType: "Button");
-            foreach (var binding in bindings) action.AddBinding(binding);
         }
 
         private static void SetObject(SerializedObject serialized, string propertyName, UnityEngine.Object value)
