@@ -25,7 +25,7 @@ Il prototipo non è quindi un rig Humanoid approvato per la produzione. In parti
 
 Il progetto separato [UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999) non contiene una versione salvata: il tentativo precedente è terminato con `DUPLICATE_OR_INVALID_OBJECT_ID`.
 
-Una revisione successiva è stata avviata per separare soltanto le isole geometriche già disconnesse, senza classificare automaticamente una parte come testa in base alla posizione. Il risultato deve essere ispezionato prima di assegnare nomi semantici o considerarlo utilizzabile.
+La revisione successiva `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` ha eseguito una separazione per sole isole geometriche disconnesse. Il risultato contiene ancora una sola mesh per personaggio, con gli stessi conteggi (260/486 per il maschio e 284/529 per la femmina): ciascun corpo è quindi un'unica isola connessa nel dato analizzato. La testa non può essere separata con questa operazione topologica. Non è stata applicata una divisione spaziale arbitraria. Il GLB risultante dichiara zero clip di animazione. Il risultato è stato ispezionato e non risolve ancora i requisiti di testa separata, pesi verificati o animazioni.
 
 ## Importazione in Unity e generazione dei prefab
 
