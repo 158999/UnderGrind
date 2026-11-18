@@ -13,7 +13,6 @@ namespace UnderGrind.Editor
     public static class LocomotionTestSceneBuilder
     {
         private const string ScenePath = "Assets/UnderGrind/Scenes/LocomotionTest.unity";
-        private const string HumanModelPath = "Assets/UnderGrind/Art/Source/humans.blend";
         private const string GeneratedPath = "Assets/UnderGrind/Generated";
         private const string LocomotionSettingsPath = "Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset";
 
@@ -76,34 +75,23 @@ namespace UnderGrind.Editor
 
             if (malePrefab == null || femalePrefab == null)
             {
-                if (System.IO.File.Exists(HumanModelPath))
-                    AssetDatabase.ImportAsset(HumanModelPath,
-                        ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
-                if (malePrefab == null)
-                {
-                    var maleSource = ResolveHumanModel("male");
-                    if (maleSource != null)
-                        malePrefab = CreateHumanPrefab(maleSource, "Human_Male", locomotionSettings.CharacterHeight);
-                }
-                if (femalePrefab == null)
-                {
-                    var femaleSource = ResolveHumanModel("female");
-                    if (femaleSource != null)
-                        femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", locomotionSettings.FemaleCharacterHeight);
-                }
+                HumanoidRigPrefabBuilder.BuildFromConfiguredSources();
+                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                malePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(maleRiggedPath);
+                femalePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(femaleRiggedPath);
             }
 
-            if (malePrefab == null)
+            var maleValid = ValidateRiggedPrefab(malePrefab, "maschile", rigSettings, out var maleError);
+            var femaleValid = ValidateRiggedPrefab(femalePrefab, "femminile", rigSettings, out var femaleError);
+            if (!maleValid || !femaleValid)
             {
-                const string message = "Non è disponibile il prefab maschile riggato e Unity non riesce a importare " +
-                    "la mesh maschile da humans.blend. La scena esistente non è stata modificata.";
-                Debug.LogError("UnderGrind: " + message + " Percorso: " + HumanModelPath);
-                EditorUtility.DisplayDialog("Modello maschile non disponibile", message, "OK");
+                var message = !maleValid ? maleError : femaleError;
+                Debug.LogError("UnderGrind: " + message);
+                EditorUtility.DisplayDialog("Prefab Humanoid non valido",
+                    message + "\n\nLa scena non è stata creata. Genera e verifica entrambi i prefab Humanoid prima di procedere.",
+                    "OK");
                 return;
             }
-            if (femalePrefab == null)
-                Debug.LogWarning("UnderGrind: prefab femminile non disponibile. La scena di test maschile verrà comunque creata.");
-
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting(grayboxSettings);
             CreateCourse(grayboxSettings);
@@ -152,13 +140,10 @@ namespace UnderGrind.Editor
             instance.name = "Human Base - " + human.name;
             instance.transform.SetParent(visualRoot.transform, false);
             ConfigureAnimations(instance, animationSettings);
-            if (instance.GetComponentInChildren<PlayerVisualRig>(true) == null)
-            {
-                var visualRig = player.AddComponent<PlayerVisualRig>();
-                if (!visualRig.ConfigureFromHierarchy(instance.transform, rigSettings))
-                    Debug.LogWarning("UnderGrind: il prefab corrente non espone renderer separati secondo PlayerRigSettings.", instance);
-            }
-            Debug.Log("UnderGrind: prefab umano selezionato: " + human.name);
+            var visualRig = instance.GetComponentInChildren<PlayerVisualRig>(true);
+            if (visualRig == null || !visualRig.IsConfigured)
+                throw new InvalidOperationException("Il prefab " + human.name + " non contiene un PlayerVisualRig configurato.");
+            Debug.Log("UnderGrind: prefab Humanoid selezionato: " + human.name);
 
             var pivot = new GameObject("View Pivot").transform;
             pivot.SetParent(player.transform, false);
@@ -190,116 +175,55 @@ namespace UnderGrind.Editor
             player.AddComponent<LocomotionDebugOverlay>();
         }
 
-        private static GameObject CreateHumanPrefab(GameObject source, string prefabName, float targetHeight)
+        private static bool ValidateRiggedPrefab(GameObject prefab, string characterName,
+            PlayerRigSettings settings, out string error)
         {
-            var prefabPath = GeneratedPath + "/Prefabs/" + prefabName + ".prefab";
-            EnsureFolder(GeneratedPath + "/Prefabs");
-            var temporary = UnityEngine.Object.Instantiate(source);
-            temporary.name = prefabName;
-            FitModelToHeight(temporary, targetHeight);
-            var prefab = PrefabUtility.SaveAsPrefabAsset(temporary, prefabPath);
-            UnityEngine.Object.DestroyImmediate(temporary);
             if (prefab == null)
-                Debug.LogError("UnderGrind: salvataggio prefab fallito: " + prefabPath);
-            else
-                Debug.Log("UnderGrind: prefab creato: " + prefabPath + " | altezza " + targetHeight + " m");
-            return prefab;
-        }
-
-        private static GameObject ResolveHumanModel(string sex)
-        {
-            // Inspect the imported hierarchy, but only consider subtrees with human-sized
-            // bounds. This avoids choosing the whole Blender scene (which may contain more
-            // than one body) or an isolated limb/torso as the player model.
-            var candidates = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<GameObject>()
-                .SelectMany(root => root.GetComponentsInChildren<Transform>(true).Select(t => t.gameObject))
-                .Distinct()
-                .Where(x => x.GetComponentInChildren<Renderer>(true) != null)
-                .Where(x =>
-                {
-                    var size = GetCombinedBounds(x).size;
-                    return size.y >= 0.5f && size.y <= 250f;
-                }).ToList();
-            if (candidates.Count == 0) return null;
-
-            bool MatchesSex(GameObject item)
             {
-                var name = item.name.ToLowerInvariant();
-                if (sex == "female")
-                    return name == "female" || name.Contains("female") || name.Contains("woman") || name.Contains("femmina");
-                return name == "male" || (name.Contains("male") && !name.Contains("female")) ||
-                    name.Contains("maschio") || name.Contains("uomo");
+                error = "Prefab " + characterName + " mancante. Verifica i due percorsi FBX in PlayerRigSettings.";
+                return false;
             }
 
-            int Score(GameObject item)
+            var animator = prefab.GetComponentInChildren<Animator>(true);
+            if (animator == null || animator.avatar == null || !animator.avatar.isValid || !animator.avatar.isHuman)
             {
-                var name = item.name.ToLowerInvariant();
-                if (!MatchesSex(item)) return int.MinValue;
-                var bounds = GetCombinedBounds(item);
-                var score = name == sex ? 1000 : 100;
-                if (name.Contains("human") || name.Contains("person") || name.Contains("character")) score += 20;
-                if (bounds.size.y >= 0.5f && bounds.size.y <= 4f) score += 20;
-                return score;
+                error = "Il prefab " + characterName + " non contiene un Animator con Avatar Humanoid valido.";
+                return false;
             }
 
-            var selected = candidates.Where(MatchesSex).OrderByDescending(Score)
-                .ThenByDescending(x => GetCombinedBounds(x).size.y).FirstOrDefault();
-            if (selected != null)
-                Debug.Log("UnderGrind: candidato umano selezionato: " + selected.name + " | bounds " + GetCombinedBounds(selected).size);
-            return selected;
-        }
+            if (prefab.GetComponentsInChildren<SkinnedMeshRenderer>(true).Length == 0)
+            {
+                error = "Il prefab " + characterName + " non contiene SkinnedMeshRenderer.";
+                return false;
+            }
 
-        private static Bounds GetCombinedBounds(GameObject root)
-        {
-            var renderers = root.GetComponentsInChildren<Renderer>(true);
-            if (renderers.Length == 0) return new Bounds(root.transform.position, Vector3.zero);
-            var bounds = renderers[0].bounds;
-            for (var i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
-            return bounds;
-        }
+            var visualRig = prefab.GetComponentInChildren<PlayerVisualRig>(true);
+            if (visualRig == null || !visualRig.IsConfigured || visualRig.HeadRendererCount == 0 ||
+                visualRig.BodyRendererCount == 0 ||
+                (settings.RequireFirstPersonArms && visualRig.FirstPersonRendererCount == 0) ||
+                (settings.RequireThirdPersonArms && visualRig.ThirdPersonRendererCount == 0))
+            {
+                error = "Il prefab " + characterName + " non soddisfa i gruppi renderer richiesti in PlayerRigSettings.";
+                return false;
+            }
 
-        private static void FitModelToHeight(GameObject model, float targetHeight)
-        {
-            model.transform.localPosition = Vector3.zero;
-            model.transform.localRotation = Quaternion.identity;
-            var initial = GetCombinedBounds(model);
-            if (initial.size.y < 0.05f) return;
-            model.transform.localScale *= targetHeight / initial.size.y;
-            var fitted = GetCombinedBounds(model);
-            var parentPosition = model.transform.parent != null ? model.transform.parent.position : Vector3.zero;
-            model.transform.position += new Vector3(parentPosition.x - fitted.center.x, parentPosition.y - fitted.min.y, parentPosition.z - fitted.center.z);
+            error = string.Empty;
+            return true;
         }
 
         private static void ConfigureAnimations(GameObject model, PlayerAnimationSettings settings)
         {
-            if (model == null || settings == null) return;
-
             var animator = model.GetComponentInChildren<Animator>(true);
-            var avatar = AssetDatabase.LoadAllAssetsAtPath(HumanModelPath).OfType<Avatar>()
-                .FirstOrDefault(candidate => candidate != null && candidate.isValid);
-
-            if (animator == null && avatar != null)
-                animator = model.AddComponent<Animator>();
-            if (animator == null)
-            {
-                Debug.LogWarning("UnderGrind: il modello importato non contiene un Animator. " +
-                    "Le animazioni saranno disponibili dopo l'importazione di un prefab riggato.", model);
-                return;
-            }
-
-            if (animator.avatar == null && avatar != null) animator.avatar = avatar;
-            if (animator.avatar == null || !animator.avatar.isValid)
-            {
-                Debug.LogWarning("UnderGrind: nessun Avatar valido sul modello. " +
-                    "Il PlayerAnimationDriver non potrà animare questo modello.", model);
-                return;
-            }
+            if (animator == null || animator.avatar == null || !animator.avatar.isValid || !animator.avatar.isHuman)
+                throw new InvalidOperationException("Il modello deve avere un Avatar Humanoid valido prima di configurare le animazioni.");
 
             if (settings.AnimatorController != null)
                 animator.runtimeAnimatorController = settings.AnimatorController;
+            else
+                Debug.LogWarning("UnderGrind: Avatar Humanoid valido, ma AnimatorController non ancora generato. Importa le otto clip e usa Refresh Clips and Build Animator Controller.", model);
+
             animator.applyRootMotion = false;
         }
-
         private static Material MakeMaterial(string name, Color color)
         {
             var safeName = string.Concat(name.Select(c => char.IsLetterOrDigit(c) ? c : '_'));

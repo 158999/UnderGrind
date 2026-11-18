@@ -58,7 +58,7 @@ Il builder rifiuta una sorgente se manca l'armatura configurata, l'Avatar Humano
 
 I gruppi dedicati alla prima e alla terza persona sono opzionali e configurabili. Se un gruppo non esiste, il sistema non inventa una mesh sostitutiva; resta visibile il corpo disponibile. Il renderer del corpo è identificato da `BodyRendererToken`. In prima persona il corpo viene nascosto quando la visuale è frontale e mostrato quando il giocatore guarda verso il basso: `FirstPersonBodyRevealPitch` definisce la soglia di comparsa e `FirstPersonBodyHidePitch` quella di scomparsa, con isteresi per evitare lampeggi vicino al limite. Entrambi i valori sono configurabili nell'Inspector.
 
-La scena di test usa i prefab riggati configurati quando esistono. Se il prefab maschile non è disponibile, può usare la mesh statica maschile come fallback visivo; in quel caso il personaggio si muove ma non dispone di un rig animabile.
+La scena di test richiede entrambi i prefab riggati e verifica Animator, Avatar Humanoid, SkinnedMeshRenderer, testa, corpo e gruppi di arti. Se uno dei prefab manca, avvia la generazione dai due FBX configurati; se la validazione fallisce, interrompe la creazione della scena. Non usa mesh statiche come fallback.
 
 La versione Blendstra più recente contiene quattro mesh separate per testa e corpo e le due armature hanno i nomi esatti richiesti. Questo supera il limite geometrico della prima revisione, ma non certifica ancora pesi, deformazioni, configurazione dei modificatori, UV o Avatar Humanoid. Il builder può quindi verificare gerarchia e renderer solo dopo l'esportazione e l'importazione dei due FBX; l'accettazione del rig resta subordinata ai test di deformazione in Unity.
 

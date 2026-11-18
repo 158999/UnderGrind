@@ -24,6 +24,11 @@ namespace UnderGrind.Locomotion
         private bool _initialized;
 
         public bool IsThirdPerson => _thirdPerson;
+        public bool IsConfigured => rigSettings != null && headRenderers.Length > 0 && bodyRenderers.Length > 0;
+        public int HeadRendererCount => headRenderers.Length;
+        public int BodyRendererCount => bodyRenderers.Length;
+        public int FirstPersonRendererCount => firstPersonOnlyRenderers.Length;
+        public int ThirdPersonRendererCount => thirdPersonOnlyRenderers.Length;
         public PlayerRigSettings RigSettings => rigSettings;
 
         private void Awake()
@@ -72,7 +77,9 @@ namespace UnderGrind.Locomotion
             }
 
             if (configuration.RequireSeparateHead && heads.Count == 0) return false;
+            if (!string.IsNullOrWhiteSpace(configuration.BodyRendererToken) && bodies.Count == 0) return false;
             if (configuration.RequireFirstPersonArms && firstPersonOnly.Count == 0) return false;
+            if (configuration.RequireThirdPersonArms && thirdPersonOnly.Count == 0) return false;
 
             rigSettings = configuration;
             Configure(heads.ToArray(), bodies.ToArray(), thirdPersonOnly.ToArray(), firstPersonOnly.ToArray());

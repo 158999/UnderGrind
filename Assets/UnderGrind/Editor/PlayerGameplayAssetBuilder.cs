@@ -161,6 +161,11 @@ namespace UnderGrind.Editor
                     current.FindProperty("firstPersonBodyHidePitch").floatValue =
                         template.FindProperty("firstPersonBodyHidePitch").floatValue;
                 }
+                if (version.intValue < 5)
+                {
+                    CopyBool(current, template, "requireFirstPersonArms");
+                    CopyBool(current, template, "requireThirdPersonArms");
+                }
                 if (version.intValue < defaultVersion.intValue)
                     version.intValue = defaultVersion.intValue;
             }

@@ -1,113 +1,131 @@
-# Revisione dell'implementazione del Player — 17 novembre 2026
+# Revisione dell'implementazione del Player — 18 novembre 2026
 
-## Ambito della revisione
+## Ambito e criteri approvati
 
-La revisione ha confrontato il codice del Player, i test, la gerarchia dei modelli sorgente e i formati delle animazioni disponibili.
+La revisione copre i quattro blocchi di sviluppo approvati:
 
-Sono stati esaminati:
+1. **Character:** modelli maschile e femminile reali, proporzioni, materiali, rig e Avatar Humanoid validi. Nessun placeholder presentato come personaggio definitivo.
+2. **Locomotion:** camminata, corsa, accelerazione, salto, gravità e collisioni, con parametri modificabili nell'Inspector. Profilo iniziale: altezza 1,78 m, camminata 1,40 m/s, corsa 1,8667 m/s, salto 0,40 m, gravità 9,81 m/s².
+3. **Visual:** prima e terza persona, corpo visibile quando la visuale guarda verso il basso, mani e gruppi di mesh dedicati.
+4. **Graybox:** ostacoli, scale, rampe, distanze e piattaforme per verificare il movimento.
 
-- Responsabilità, correttezza, casi limite e copertura dei test dei componenti C#.
-- Gerarchia e limiti dei modelli sorgente ispezionati in Blendstra.
-- Formati effettivamente disponibili per gli otto movimenti selezionati nella libreria PINOC.
-- Stato del repository e risultati delle esecuzioni GitHub Actions.
+Questa revisione distingue implementazione presente, risultati di test effettivamente eseguiti e attività ancora non verificate nell'Editor Unity.
 
-Questa revisione riguarda codice e asset. Non costituisce una verifica visiva nell'Editor Unity.
+## Stato dei quattro blocchi
 
-## Risultati
+### 1. Character — sorgente pronta, prefab non ancora verificati
 
-### I modelli sorgente non consentono di nascondere soltanto la testa
+La versione Blendstra corrente è [`version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3&version=version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07). L'ispezione registra 16 oggetti: due armature, sei mesh derivate per personaggio (corpo, testa, braccia e mani FP/TP) e le due mesh sorgenti originali.
 
-La versione ispezionata contiene due oggetti mesh: una mesh statica completa per `Human_Male` e una per `Human_Female`. Nessuna delle due ha uno scheletro, pesi di deformazione o un renderer separato per la testa.
+Lo script di generazione costruisce una gerarchia di 22 ossa per personaggio e assegna pesi automatici, con fallback basato sulla prossimità. L'ispezione sorgente non espone la configurazione completa dei modificatori né i pesi effettivi: la struttura visibile non basta a certificare la deformazione.
 
-I test precedenti di `PlayerVisualRig` utilizzano una gerarchia artificiale con renderer distinti per testa, corpo e braccia. Dimostrano la logica di visibilità del componente, ma non verificano il comportamento sul modello sorgente reale.
+È stato aggiunto `Tools/Blender/export-undergrind-humans.py`. Prima di esportare, verifica ossa Humanoid, mesh separate, parent, modificatori Armature, gruppi di pesi e peso deformante valido per ogni vertice. Valida entrambi i personaggi prima di produrre i due FBX configurati in `PlayerRigSettings.asset`.
 
-È stato predisposto un progetto Blendstra separato per creare derivati riggati senza alterare le mesh originali. Il tentativo di generazione disponibile è però terminato con l'errore `DUPLICATE_OR_INVALID_OBJECT_ID`; non è stata salvata una versione utilizzabile. La separazione della testa e la pesatura delle mesh restano quindi da realizzare e verificare.
+**Non ancora verificato:** la sorgente Blendstra più recente non è stata sostituita automaticamente al file `Assets/UnderGrind/Art/Source/humans.blend` del repository; l'export FBX non è stato eseguito; i due Avatar Humanoid e i prefab Unity non sono ancora stati generati e verificati.
 
-### I formati PINOC hanno finalità differenti
+Il builder Unity ora richiede entrambi i prefab riggati. Verifica Animator, Avatar Humanoid, SkinnedMeshRenderer, testa, corpo e gruppi di arti FP/TP. Il fallback statico è stato rimosso: se i prefab non sono disponibili o non superano la validazione, la scena non viene creata.
 
-Gli otto movimenti selezionati espongono due famiglie di file FBX:
+### 2. Locomotion — implementata e configurabile
 
-- `splat-skeleton-fbx`: scheletro MetaHuman di 441 ossa, comprese quelle facciali, senza mesh. È destinato ai personaggi PINOC utilizzati con Splat Engine e rig Generic.
-- `mixamo-fbx`: mesh X Bot e scheletro con nomi Mixamo. È destinato al retargeting tramite Blender o altri strumenti DCC.
+I valori iniziali nell'asset `Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset` sono:
 
-Per il normale rig umanoide di UnderGrind, il formato Mixamo è il candidato pertinente. X Bot è soltanto un modello di supporto al retargeting e non deve sostituire il corpo del giocatore. I sei movimenti risultano disponibili nella libreria, ma non sono ancora importati nel repository né trasferiti sul rig UnderGrind.
+| Parametro | Valore |
+|---|---:|
+| Altezza maschile | 1,78 m |
+| Altezza femminile | 1,70 m |
+| Camminata | 1,40 m/s |
+| Moltiplicatore corsa | 1,3333334 |
+| Corsa derivata | 1,8667 m/s |
+| Altezza salto teorica | 0,40 m |
+| Gravità | 9,81 m/s² |
 
-### Associazione dei renderer
+L'asset contiene anche accelerazione, decelerazione, controllo aereo, coyote time, jump buffer, accovacciamento, dimensioni della capsula, step offset, pendenza, skin width, collisioni, sensibilità e parametri delle camere. Il controller legge questi valori dall'asset.
 
-- Le associazioni esplicite di `PlayerVisualRig` hanno priorità sulla ricerca euristica per nome.
-- `ConfigureFromHierarchy` riconosce la convenzione `*_Head`, `*_FP_Arms` e `*_FP_Hands`.
-- Un test PlayMode verifica la convenzione dei nomi, la visibilità della testa e delle braccia in prima persona e il mantenimento della visibilità di renderer non pertinenti, come i capelli.
-- Il test utilizza una gerarchia sintetica: non certifica il modello generato.
+L'inventario usa una soglia di peso, non un limite di raccolta. Oltre soglia disabilita corsa e salto e riduce la velocità di camminata del 25%; la penalità si applica anche alla camminata accovacciata. Il salto già iniziato non viene interrotto.
 
-### Sicurezza dei parametri Animator
+### 3. Visual — logica implementata, modello reale da verificare
 
-`PlayerAnimationDriver` rileva la sostituzione del Runtime Animator Controller durante l'esecuzione e controlla l'esistenza e il tipo dei parametri prima di chiamare `SetFloat` o `SetBool`.
+`PlayerVisualRig` gestisce gruppi separati per testa, corpo, arti FP e arti TP. Il corpo in prima persona usa le soglie configurabili `FirstPersonBodyRevealPitch` e `FirstPersonBodyHidePitch`, con isteresi per evitare lampeggi vicino alla soglia.
 
-### Selezione delle clip
+I token predefiniti corrispondono ai nomi delle mesh generate: `_Head`, `_Body`, `_FP_Arms`, `_FP_Hands`, `_TP_Arms` e `_TP_Hands`. La configurazione predefinita richiede testa, corpo e gruppi di arti FP/TP.
 
-Il generatore della scena di test esclude le clip di accovacciamento dalla selezione degli stati normali di riposo, camminata, corsa e salto. Per gli stati di accovacciamento richiede invece clip con i relativi termini identificativi.
+La camera supporta prima e terza persona, collisioni configurabili, distanza, offset, FOV e near clip. I test PlayMode verificano la logica su gerarchie sintetiche; il comportamento sui prefab definitivi non è ancora verificato.
 
-## Criticità ancora aperte
+### 4. Graybox — configurazione implementata
 
-- La linea di separazione della testa e i pesi automatici devono essere verificati sul modello derivato.
-- Non esiste ancora una mesh dedicata per braccia e mani in prima persona.
-- La verifica di collisione della telecamera usa una maschera di layer configurabile: il prefab definitivo deve escludere il layer del giocatore oppure il filtro deve impedire in modo affidabile le collisioni con il corpo stesso.
-- `LocomotionTestSceneBuilder` usa l'eventuale Avatar presente in `humans.blend` soltanto come fallback per il modello statico; non cerca clip nel file. `PlayerAnimationControllerBuilder` ora individua gli FBX in `Assets/UnderGrind/Animations`, configura l'importazione Humanoid e associa le clip tramite nome interno o nome del file. Gli otto FBX PINOC non sono ancora stati importati né retargettati sul rig UnderGrind.
-- Le soglie tra riposo, camminata e corsa sono tarate sui valori di 1,40 m/s e 1,8667 m/s, ma richiedono una verifica visiva durante la riproduzione.
-- Nel repository non è ancora presente un Animator Controller di produzione né un Avatar Humanoid verificato per il modello definitivo.
+`Assets/UnderGrind/Settings/PlayerGrayboxSettings.asset` viene creato dal template JSON e controlla dimensioni, posizioni, colori, illuminazione, marcatori, blocchi e rampe.
 
-## Modifiche presenti nel repository al 18 novembre 2026
+Il percorso iniziale contiene:
 
-### Locomozione e configurazione
+- pavimento 50 × 50 m e marcatori ogni 2 m fino a 40 m;
+- gradini per salti da 0,20, 0,40 e 0,60 m;
+- scala a cinque gradini;
+- pareti da 0,80, 1,00 e 1,20 m;
+- rampa da 15° e rampa da 25°;
+- tunnel basso per verificare l'accovacciamento;
+- passaggio stretto e slalom;
+- ostacoli bassi da 0,30 e 0,50 m;
+- quattro piattaforme con altezze progressive e intervalli di salto;
+- punto di spawn configurabile.
 
-- `PlayerLocomotionSettings` centralizza gli otto gruppi di parametri della locomozione.
-- `HumanLocomotionController` usa l'asset per velocità, salto, gravità, postura, collisioni e camera.
-- L'inventario applica la soglia di sovraccarico definita dall'utente: oltre soglia disabilita corsa e salto e riduce la camminata del 25% nel profilo iniziale.
-- L'input è collegato tramite `PlayerInputSettings` e `PlayerInputActions.asset`. Le azioni e le binding sono modificabili nell'Inspector. Le dead zone radiali di movimento e visuale sono configurabili; `PlayerInputRebindingController` espone rimappatura interattiva, visualizzazione della binding, salvataggio persistente e reset degli override. La schermata di impostazioni che richiama questa API non è ancora presente.
-- L'interfaccia inventario sopprime il movimento e la visuale mentre è aperta; il cursore non viene ricatturato dal clic durante questa condizione.
+Le definizioni sono serializzate nell'asset e modificabili nell'Inspector. La scena deve ancora essere rigenerata nell'Editor Unity.
+
+## Input, inventario e animazioni
+
+### Input
+
+- `PlayerInputActions.inputactions` contiene la action map `Player` e le binding predefinite, modificabili nell'Input Actions editor.
+- `PlayerInputSettings.asset` collega gli identificatori logici ai nomi delle azioni e configura dead zone, cursore, timeout e persistenza delle rimappature.
+- `PlayerInputRebindingController` carica gli override prima di abilitare la action map, supporta rimappatura interattiva, annullamento, visualizzazione, salvataggio e reset.
+- Non è ancora presente una schermata UI dedicata alla rimappatura.
 
 ### Inventario e interazione
 
-- `PlayerInventory` gestisce slot, stack, selezione, peso e operazioni di trasferimento.
-- `PlayerInventoryUI` visualizza slot, icone, quantità, selezione e peso tramite una Canvas overlay.
-- `PlayerInteractionController` raccoglie oggetti con una SphereCast dalla camera e rilascia il contenuto dello slot selezionato.
-- `WorldItemPickup` conserva la quantità che non trova spazio nell'inventario.
-- I parametri di interazione e UI sono contenuti in asset ScriptableObject.
+- `PlayerInventory`: slot, stack, selezione, peso derivato e operazioni di trasferimento.
+- `PlayerInventoryUI`: Canvas overlay, icone, quantità, selezione e peso; layout e stile configurabili.
+- `PlayerInteractionController`: raccolta tramite SphereCast e rilascio dello stack selezionato.
+- `WorldItemPickup`: conserva la quantità non trasferita.
+- `ItemDefinition`: dati dell'oggetto e prefab da usare nel mondo.
 
-### Rig e animazioni
+I valori iniziali dell'inventario sono 24 slot, 50 kg di soglia e riduzione della camminata del 25%. Non sono ancora presenti salvataggio/caricamento dell'inventario, equipaggiamento o uso degli oggetti.
 
-- `PlayerVisualRig` supporta gruppi separati per testa, arti dedicati alla prima persona e arti dedicati alla terza persona, tramite riferimenti espliciti o token configurati.
-- `PlayerAnimationDriver` controlla i parametri effettivamente presenti nell'Animator e disabilita il root motion. `PlayerAnimationSettings` configura anche il loop separato per ciascuna delle otto clip; il generatore applica queste opzioni ai rispettivi import FBX.
-- `PlayerAnimationControllerBuilder` configura l'importazione dei FBX nella cartella Animations (Humanoid/Generic, Avatar, clip, materiali, luci, camere e ottimizzazione) tramite `PlayerAnimationSettings.asset`, quindi genera il controller dalle clip importate. Otto movimenti PINOC sono stati aggiunti alla libreria personale; i relativi export `mixamo-fbx` sono disponibili ma non sono ancora stati importati nel repository né retargettati sul rig UnderGrind.
-- `HumanoidRigPrefabBuilder` importa due FBX distinti, uno maschile e uno femminile, dai percorsi configurati in `PlayerRigSettings.asset`; genera due Avatar Humanoid e prefab separati.
-- La scena di test preferisce il prefab maschile riggato quando disponibile; la mesh statica resta soltanto un fallback visivo.
-- La versione Blendstra `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` conserva le mesh originali, contiene copie con topologia invariata e due armature. La separazione per isole disconnesse ha confermato che ogni corpo è una singola isola connessa: non esiste una testa già separabile tramite loose parts. Il GLB dichiara zero animazioni. Posizione delle ossa e pesi restano non verificati; la testa non è un renderer separato. Il prototipo non è accettato come rig di produzione.
+### Animazioni
 
-### Correzioni emerse dalla revisione
+`PlayerAnimationSettings.asset` configura clip, parametri Animator, soglie, transizioni, loop e opzioni di importazione FBX. `PlayerAnimationControllerBuilder` prepara i soli FBX in `Assets/UnderGrind/Animations` e genera il controller dalle otto clip richieste: Idle, Walk, Run, Jump, Fall, Land, Crouch Idle e Crouch Walk.
 
-- I valori iniziali di input, interazione, UI, animazione e rig sono stati spostati in file JSON sotto `Assets/UnderGrind/Settings/Defaults`; i builder li usano soltanto per creare gli asset ScriptableObject mancanti e non sovrascrivono quelli esistenti.
-- Il runner Unity ora attende il completamento di ogni processo prima di lanciare la piattaforma successiva.
-- Il report distingue test non eseguiti, XML assente, risultati inconcludenti, test falliti e codice di uscita non zero.
-- L'UI si sottoscrive all'evento inventario anche quando i riferimenti vengono assegnati dopo `Awake`.
-- L'apertura dell'inventario cancella il salto bufferizzato e impedisce la ricattura del cursore tramite clic.
+Gli otto movimenti sono disponibili nella libreria PINOC in formato `mixamo-fbx`, ma non sono ancora importati nel repository né retargettati sul rig UnderGrind. Di conseguenza il controller definitivo non è ancora stato generato e verificato.
 
-## Verifiche e limiti
+## Configurazione iniziale e migrazioni
 
-Risultati effettivamente presenti nei file di test:
+I valori iniziali di input, interazione, UI, animazione, rig e graybox sono file JSON in `Assets/UnderGrind/Settings/Defaults`. I builder li applicano quando creano gli asset ScriptableObject mancanti; non sovrascrivono le modifiche successive effettuate nell'Inspector. Le migrazioni versionate riempiono soltanto i campi introdotti nelle versioni successive, preservando i valori già configurati.
 
-- Test autonomi C#: 6/6 superati nel report `TestResults/latest.json`.
-- Unity EditMode: 12/12 superati in `TestResults/Unity-20261118-103717-325/EditMode.xml`. Comprendeva 7 test inventario e 5 test di configurazione locomozione.
-- Unity PlayMode: 7/7 superati in `TestResults/UnderGrind/PlayMode_20261118_092745.xml`. Quel report comprendeva la suite locomozione precedente alle nuove prove di sovraccarico, interazione e UI.
+## Verifiche
 
-La successiva esecuzione batch del 18 novembre ha lanciato EditMode e PlayMode in parallelo. Il log EditMode documenta 12 test superati e codice di uscita 0; il log PlayMode termina con codice 1 prima dell'esecuzione, perché il progetto era già aperto dal processo EditMode. Il JSON aggregato è correttamente marcato Failed, ma i suoi conteggi a zero non rappresentano l'esito dei 12 test EditMode.
+### Risultati effettivamente eseguiti
 
-Dopo quei report sono stati aggiunti altri test:
+- Test autonomi C#: **6/6 superati** nel report `TestResults/latest.json`.
+- Unity EditMode: **12/12 superati** nel report `TestResults/Unity-20261118-103717-325/EditMode.xml`.
+- Unity PlayMode: **7/7 superati** nel report `TestResults/UnderGrind/PlayMode_20261118_092745.xml`.
 
-- EditMode: 5 test per `PlayerInputSettings`, 6 test per i template JSON/Input Actions, 4 ulteriori test inventario e 1 ulteriore test di configurazione locomozione.
-- PlayMode: 1 test di sovraccarico, 4 test per raccolta/rilascio/UI/cursore e 1 ulteriore test locomozione.
+Questi report precedono una parte dei test aggiunti successivamente. La successiva esecuzione batch ha lanciato EditMode e PlayMode in parallelo: EditMode ha completato 12 test; PlayMode è terminato con codice 1 prima di produrre un report valido perché il progetto era ancora occupato dal processo EditMode. I conteggi a zero nel JSON aggregato non rappresentano l'esito reale di EditMode.
 
-Il numero atteso dal codice corrente è quindi 28 test EditMode e 13 PlayMode. Questi nuovi test non sono ancora stati eseguiti. Anche il runner aggiornato non è stato ancora verificato con Windows PowerShell 5.1 e Unity 6000.6.7f1.
+### Suite presenti nel codice, non ancora eseguite dopo le ultime modifiche
 
-Non risultano verifiche GitHub Actions associate agli ultimi commit. La compilazione delle assembly runtime e di test è riuscita nel log EditMode citato, ma non dimostra il corretto funzionamento delle nuove suite PlayMode. Non è documentata una verifica visiva della scena né del modello riggato finale.
+- EditMode: **29 test**.
+- PlayMode: **13 test**.
 
-Il Player non può essere dichiarato completo finché non sono superati i test aggiornati, verificati i prefab Humanoid reali, separate e controllate le parti necessarie alla visuale in prima persona e validate le animazioni sul rig definitivo.
+Il runner PowerShell è stato modificato per attendere il completamento di ogni processo Unity, rifiutare XML assenti o non validi e non accettare report obsoleti. Il runner aggiornato e le suite complete non sono ancora stati eseguiti con Windows PowerShell 5.1 e Unity 6000.6.7f1.
+
+Non risultano verifiche GitHub Actions associate agli ultimi commit. Non sono documentati test visivi nell'Editor Unity, validazione dei due Avatar, deformazione dei modelli o riproduzione delle otto animazioni sul rig definitivo.
+
+## Attività necessarie per chiudere i quattro blocchi
+
+1. Salvare la versione Blendstra corrente in `Assets/UnderGrind/Art/Source/humans.blend`.
+2. Eseguire l'exporter Blender e verificare i due FBX prodotti.
+3. Importare i FBX in Unity e generare i prefab Humanoid maschile e femminile.
+4. Importare gli otto FBX Mixamo, generare l'Animator Controller e verificare il retargeting.
+5. Rigenerare `LocomotionTest.unity` con il graybox configurato.
+6. Eseguire i due script PowerShell di test e verificare i report aggiornati.
+7. In Play Mode controllare camminata, corsa, salto, collisioni, tunnel, scale, rampe, piattaforme, visibilità del corpo e deformazione delle mesh.
+
+Fino al completamento di queste verifiche, i quattro blocchi sono implementati in larga parte nel codice e negli asset di configurazione, ma non possono essere dichiarati verificati end-to-end.
