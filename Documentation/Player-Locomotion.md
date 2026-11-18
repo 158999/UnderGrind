@@ -6,8 +6,8 @@ Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 
 
 Valori iniziali della locomozione:
 
-- Camminata: 1,40 m/s.
-- Corsa: camminata × 4/3 = 1,8667 m/s.
+- Camminata: 1,80 m/s.
+- Corsa: camminata × 4/3 = 2,40 m/s.
 - Altezza massima teorica del salto: 0,40 m rispetto al punto di partenza.
 - Gravità: 9,81 m/s².
 - Altezza del CharacterController: 1,78 m.
@@ -15,6 +15,23 @@ Valori iniziali della locomozione:
 - Altezza della capsula accovacciata: 1,12 m.
 
 L'altezza del salto è un parametro di bilanciamento del gioco e non una misurazione biomeccanica.
+
+## Configurazione della locomozione
+
+Tutti i parametri che regolano il movimento, la postura, la capsula di collisione e la visuale sono contenuti nell'asset `Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset`. L'asset è un `PlayerLocomotionSettings` e può essere modificato direttamente nell'Inspector. Il componente `HumanLocomotionController` conserva soltanto i riferimenti all'asset, all'inventario e al rig della visuale: non contiene copie dei valori di bilanciamento.
+
+Le proprietà sono organizzate in otto gruppi:
+
+1. **Velocità di camminata**: velocità base e moltiplicatore della corsa.
+2. **Velocità di corsa**: è derivata dalla velocità di camminata moltiplicata per il moltiplicatore configurato.
+3. **Salto**: altezza teorica e velocità iniziale, calcolata a partire da altezza e gravità.
+4. **Gravità e comportamento in aria**: gravità, controllo aereo e soglie degli stati di salto.
+5. **Accelerazione e decelerazione**: variazione della velocità orizzontale, coyote time e jump buffer.
+6. **Accovacciamento e collisioni**: altezza della postura, velocità accovacciata, dimensioni della capsula, controllo dello spazio per rialzarsi, step offset, pendenza, skin width e opzioni del CharacterController.
+7. **Camera e sensibilità**: sensibilità mouse/gamepad, angolo massimo, altezza del punto di vista, offset e distanza in terza persona, collisione camera, interpolazione, FOV e near clip.
+8. **Tempi di tolleranza dell'input**: coyote time e jump buffer sono modificabili separatamente dall'Inspector.
+
+I valori iniziali sono contenuti nell'asset, non nel codice. Il controller richiede un asset assegnato: se manca, segnala l'errore e non applica il movimento. Il generatore della scena di test assegna automaticamente l'asset al Player e usa la stessa configurazione per dimensionare il CharacterController e la camera.
 
 ## Sovraccarico da inventario
 
