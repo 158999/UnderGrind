@@ -152,6 +152,8 @@ else {
                 $items.Add([ordered]@{
                     project = $project.FullName.Substring($root.Length + 1)
                     exitCode = $code
+                    timedOut = $testResult.TimedOut
+                    timeoutSeconds = $TestTimeoutSeconds
                     trx = $trxName
                     log = $logName
                     totals = $counts
