@@ -23,9 +23,19 @@ Il codice che ha generato il prototipo colloca le ossa usando proporzioni ricava
 
 Il prototipo non è quindi un rig Humanoid approvato per la produzione. In particolare, ogni personaggio ha ancora una sola mesh del corpo: non è presente un renderer separato per testa/viso. Non è possibile nascondere soltanto la testa in prima persona.
 
-Il progetto separato [UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999) non contiene una versione salvata: il tentativo precedente è terminato con `DUPLICATE_OR_INVALID_OBJECT_ID`.
+Il progetto separato [UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999) contiene ora la versione salvata `version_3f8ecc6facc3cfa2f4f9a2234af25ae75c6cedf4dd39d94edbf0c485066935c0`, generata usando la regione del vertex group `Head` con soglia di peso 0,35.
 
-La revisione successiva `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` ha eseguito una separazione per sole isole geometriche disconnesse. Il risultato contiene ancora una sola mesh per personaggio, con gli stessi conteggi (260/486 per il maschio e 284/529 per la femmina): ciascun corpo è quindi un'unica isola connessa nel dato analizzato. La testa non può essere separata con questa operazione topologica. Non è stata applicata una divisione spaziale arbitraria. Il GLB risultante dichiara zero clip di animazione. Il risultato è stato ispezionato e non risolve ancora i requisiti di testa separata, pesi verificati o animazioni.
+L'ispezione della sorgente registra quattro mesh derivate distinte:
+- `UG_Male_Head`: 67 vertici e 130 triangoli.
+- `UG_Male_Body`: 202 vertici e 400 triangoli.
+- `UG_Female_Head`: 30 vertici e 53 triangoli.
+- `UG_Female_Body`: 266 vertici e 528 triangoli.
+
+Le mesh originali restano nel progetto sorgente importato. Il risultato include copie delle armature e mantiene i riferimenti ai componenti sorgente. L'ispezione registra ancora controlli non supportati per configurazione dei modificatori e coordinate UV valutate; il GLB esportato dichiara zero animazioni e non contiene materiali assegnati. La separazione della testa è quindi stata eseguita geometricamente, ma non è una prova di correttezza dei pesi, della deformazione o della topologia dei bordi.
+
+Nella prima esportazione le copie delle armature hanno ricevuto il suffisso automatico `.001`, mentre il builder Unity richiede i nomi esatti `UG_Male_Armature` e `UG_Female_Armature`. È stata avviata una revisione Blendstra per rinominare le armature sorgente importate e assegnare alle copie i nomi attesi; la revisione non è ancora terminata. Il modello non è stato importato nel repository e non è accettato come prefab Humanoid di produzione.
+
+La revisione precedente `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` aveva eseguito una separazione per sole isole geometriche disconnesse. Il risultato conteneva una sola mesh per personaggio: ciascun corpo era un'unica isola connessa e la testa non poteva essere separata con quell'operazione topologica. La successiva separazione per regione pesata descritta sopra è un'operazione distinta.
 
 ## Importazione in Unity e generazione dei prefab
 
