@@ -21,7 +21,7 @@
   "markerLineDepth": 0.025,
   "markerSurfaceOffset": 0.006,
   "markerLabelOffset": {
-    "x": -1.8,
+    "x": -2.5,
     "y": 0.05,
     "z": 0
   },
@@ -182,7 +182,7 @@
     {
       "objectName": "Wall 0.80m",
       "position": {
-        "x": -6,
+        "x": -7.5,
         "y": 0.4,
         "z": 10
       },
@@ -197,7 +197,7 @@
     {
       "objectName": "Wall 1.00m",
       "position": {
-        "x": -3.5,
+        "x": -4.5,
         "y": 0.5,
         "z": 10
       },
@@ -212,7 +212,7 @@
     {
       "objectName": "Wall 1.20m",
       "position": {
-        "x": 2.8,
+        "x": 3,
         "y": 0.6,
         "z": 10
       },
