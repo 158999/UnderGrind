@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using UnderGrind.Inventory;
 using UnderGrind.Locomotion;
 
