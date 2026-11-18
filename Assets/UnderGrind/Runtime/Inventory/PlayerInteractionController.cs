@@ -93,6 +93,12 @@ namespace UnderGrind.Inventory
                     " non ha un World Prefab assegnato e non può essere rilasciato.", slot.Item);
                 return false;
             }
+            if (slot.Item.WorldPrefab.GetComponentInChildren<Collider>(true) == null)
+            {
+                Debug.LogWarning("UnderGrind: il World Prefab di " + slot.Item.ItemId +
+                    " non contiene un Collider; il pickup non sarebbe raccoglibile.", slot.Item);
+                return false;
+            }
 
             var quantity = Mathf.Min(settings.DropQuantityPerAction, slot.Quantity);
             var origin = playerCamera != null ? playerCamera.transform : transform;
