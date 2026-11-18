@@ -19,8 +19,8 @@
 *.tmp
 
 # Test and diagnostic output
-/TestResults/*
-!/TestResults/.gitkeep
+# /TestResults/*
+# !/TestResults/.gitkeep
 
 # OS
 .DS_Store

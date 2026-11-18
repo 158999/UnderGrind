@@ -1,0 +1,37 @@
+﻿{
+    "runId":  "20261118-092549-501",
+    "finishedUtc":  "2026-11-18T08:25:49.6407309Z",
+    "status":  "Passed",
+    "totals":  {
+                   "failed":  0,
+                   "skipped":  0,
+                   "total":  0,
+                   "passed":  0
+               },
+    "platforms":  [
+                      {
+                          "platform":  "EditMode",
+                          "exitCode":  0,
+                          "resultFile":  "EditMode.xml",
+                          "logFile":  "EditMode.log",
+                          "totals":  {
+                                         "failed":  0,
+                                         "skipped":  0,
+                                         "total":  0,
+                                         "passed":  0
+                                     }
+                      },
+                      {
+                          "platform":  "PlayMode",
+                          "exitCode":  0,
+                          "resultFile":  "PlayMode.xml",
+                          "logFile":  "PlayMode.log",
+                          "totals":  {
+                                         "failed":  0,
+                                         "skipped":  0,
+                                         "total":  0,
+                                         "passed":  0
+                                     }
+                      }
+                  ]
+}
