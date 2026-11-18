@@ -63,8 +63,9 @@ namespace UnderGrind.Editor
 
             if (malePrefab == null || femalePrefab == null)
             {
-                AssetDatabase.ImportAsset(HumanModelPath,
-                    ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+                if (System.IO.File.Exists(HumanModelPath))
+                    AssetDatabase.ImportAsset(HumanModelPath,
+                        ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
                 if (malePrefab == null)
                 {
                     var maleSource = ResolveHumanModel("male");
