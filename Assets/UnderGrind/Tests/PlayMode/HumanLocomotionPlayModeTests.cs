@@ -111,6 +111,8 @@ namespace UnderGrind.Tests
                 arms.transform.SetParent(player.transform, false);
                 var rig = player.AddComponent<PlayerVisualRig>();
                 yield return null;
+                rig.Configure(new[] { head.GetComponent<Renderer>() },
+                    new[] { arms.GetComponent<Renderer>() });
 
                 rig.SetThirdPerson(false);
                 Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
@@ -141,6 +143,8 @@ namespace UnderGrind.Tests
                 head.GetComponent<Renderer>().enabled = false;
                 var rig = player.AddComponent<PlayerVisualRig>();
                 yield return null;
+                rig.Configure(new[] { head.GetComponent<Renderer>() },
+                    System.Array.Empty<Renderer>());
                 rig.SetThirdPerson(true);
                 Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
             }
@@ -179,6 +183,8 @@ namespace UnderGrind.Tests
                 head.transform.SetParent(player.transform, false);
                 var rig = player.AddComponent<PlayerVisualRig>();
                 yield return null;
+                rig.Configure(new[] { head.GetComponent<Renderer>() },
+                    System.Array.Empty<Renderer>());
 
                 rig.SetThirdPerson(false);
                 Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
@@ -213,9 +219,15 @@ namespace UnderGrind.Tests
                 unrelatedHair.transform.SetParent(player.transform, false);
 
                 var rig = player.AddComponent<PlayerVisualRig>();
+                var rigSettings = ScriptableObject.CreateInstance<PlayerRigSettings>();
+                SetRigField(rigSettings, "headRendererSuffix", "_Head");
+                SetRigField(rigSettings, "firstPersonArmsToken", "_FP_Arms");
+                SetRigField(rigSettings, "firstPersonHandsToken", "_FP_Hands");
+                SetRigField(rigSettings, "requireSeparateHead", true);
+                SetRigField(rigSettings, "requireFirstPersonArms", false);
                 yield return null;
 
-                Assert.That(rig.ConfigureFromHierarchy(player.transform), Is.True);
+                Assert.That(rig.ConfigureFromHierarchy(player.transform, rigSettings), Is.True);
                 rig.SetThirdPerson(false);
                 Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
                 Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
@@ -226,12 +238,21 @@ namespace UnderGrind.Tests
                 Assert.That(head.GetComponent<Renderer>().enabled, Is.True);
                 Assert.That(fpArms.GetComponent<Renderer>().enabled, Is.False);
                 Assert.That(unrelatedHair.GetComponent<Renderer>().enabled, Is.True);
+                Object.Destroy(rigSettings);
             }
             finally
             {
                 Object.Destroy(player);
             }
             yield return null;
+        }
+
+        private static void SetRigField<T>(PlayerRigSettings settings, string fieldName, T value)
+        {
+            var field = typeof(PlayerRigSettings).GetField(fieldName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(field, Is.Not.Null, "Missing rig setting: " + fieldName);
+            field.SetValue(settings, value);
         }
 
         [UnityTest]
