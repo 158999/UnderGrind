@@ -7,8 +7,8 @@ using UnderGrind.Locomotion;
 namespace UnderGrind.Editor
 {
     /// <summary>
-    /// Validates a rigged Humanoid FBX and creates the configured male/female prefabs.
-    /// The source mesh must already contain a valid skeleton and a separate head renderer.
+    /// Creates separate male and female Humanoid prefabs from their own rigged FBX sources.
+    /// Each prefab receives the Avatar imported from its corresponding FBX.
     /// </summary>
     public static class HumanoidRigPrefabBuilder
     {
@@ -16,8 +16,8 @@ namespace UnderGrind.Editor
         private const string RigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
         private const string LocomotionSettingsPath = "Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset";
 
-        [MenuItem("UnderGrind/Player/Build Prefabs From Selected Rigged FBX")]
-        public static void BuildFromSelected()
+        [MenuItem("UnderGrind/Player/Build Male and Female Prefabs From Configured FBX")]
+        public static void BuildFromConfiguredSources()
         {
             PlayerGameplayAssetBuilder.EnsureAssets();
             var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(RigSettingsPath);
@@ -28,17 +28,25 @@ namespace UnderGrind.Editor
                 return;
             }
 
-            var path = AssetDatabase.GetAssetPath(Selection.activeObject);
-            if (string.IsNullOrEmpty(path) || !path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase))
+            var malePath = rigSettings.MaleSourceAssetPath;
+            var femalePath = rigSettings.FemaleSourceAssetPath;
+            if (!IsFbxPath(malePath) || !IsFbxPath(femalePath) ||
+                string.Equals(malePath, femalePath, StringComparison.OrdinalIgnoreCase))
             {
-                EditorUtility.DisplayDialog("UnderGrind", "Seleziona il file FBX riggato nel Project window.", "OK");
+                EditorUtility.DisplayDialog("Sorgenti rig non valide",
+                    "Configura due percorsi FBX distinti in PlayerRigSettings: uno per il modello maschile e uno per quello femminile.",
+                    "OK");
                 return;
             }
 
-            var importer = AssetImporter.GetAtPath(path) as ModelImporter;
-            if (importer == null)
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(malePath) == null ||
+                AssetDatabase.LoadAssetAtPath<GameObject>(femalePath) == null)
             {
-                Debug.LogError("UnderGrind: il file selezionato non ha un ModelImporter: " + path);
+                EditorUtility.DisplayDialog("FBX riggati mancanti",
+                    "Non trovo entrambi i file configurati in PlayerRigSettings.\n\nMaschile: " + malePath +
+                    "\nFemminile: " + femalePath +
+                    "\n\nImporta i due FBX nel progetto e ripeti l'operazione.",
+                    "OK");
                 return;
             }
 
@@ -48,69 +56,108 @@ namespace UnderGrind.Editor
                 OutputFolder + "/" + rigSettings.FemalePrefabName + ".prefab"
             };
             var existingPrefabPaths = prefabPaths
-                .Where(prefabPath => AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
+                .Where(path => AssetDatabase.LoadAssetAtPath<GameObject>(path) != null)
                 .ToArray();
             var overwriteDetails = existingPrefabPaths.Length > 0
                 ? "\n\nPrefab esistenti da sostituire:\n- " + string.Join("\n- ", existingPrefabPaths)
                 : "\n\nNon esistono ancora prefab di destinazione.";
 
             if (!EditorUtility.DisplayDialog(
-                "Configurare il FBX e generare i prefab?",
-                "Le impostazioni di importazione del FBX selezionato verranno impostate su Humanoid e Avatar From This Model. " +
-                "La generazione può sostituire i prefab già presenti." + overwriteDetails,
+                "Generare i prefab Humanoid?",
+                "Verranno importati due FBX distinti, ciascuno con il proprio Avatar Humanoid. " +
+                "Le sorgenti sono:\nMaschile: " + malePath + "\nFemminile: " + femalePath +
+                overwriteDetails,
                 "Continua", "Annulla"))
                 return;
 
-            importer.animationType = ModelImporterAnimationType.Human;
-            importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-            importer.importAnimation = rigSettings.ImportAnimation;
-            importer.optimizeGameObjects = rigSettings.OptimizeGameObjects;
-            importer.importCameras = false;
-            importer.importLights = false;
-            importer.importVisibility = rigSettings.ImportVisibility;
-            importer.SaveAndReimport();
+            if (!TryPrepareSource(malePath, rigSettings, out var maleSource, out var maleAvatar) ||
+                !TryPrepareSource(femalePath, rigSettings, out var femaleSource, out var femaleAvatar))
+                return;
 
-            var source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            var avatar = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Avatar>()
-                .FirstOrDefault(x => x != null && x.isHuman && x.isValid);
-            if (source == null || avatar == null)
+            if (maleAvatar == femaleAvatar)
             {
-                Debug.LogError("UnderGrind: Unity non ha generato un Avatar Humanoid valido per " + path +
-                    ". Controlla il mapping delle ossa nel Model Importer.");
-                EditorUtility.DisplayDialog("Avatar Humanoid non valido",
-                    "Il FBX è stato configurato come Humanoid, ma Unity non ha generato un Avatar valido. " +
-                    "I prefab non sono stati creati.", "OK");
+                Debug.LogError("UnderGrind: i due FBX hanno restituito lo stesso Avatar. I prefab non verranno generati.");
+                return;
+            }
+
+            var maleTemporary = CreatePrefabInstance(maleSource, maleAvatar,
+                rigSettings.MaleArmatureRootName, rigSettings.MalePrefabName,
+                locomotionSettings.CharacterHeight, rigSettings);
+            var femaleTemporary = CreatePrefabInstance(femaleSource, femaleAvatar,
+                rigSettings.FemaleArmatureRootName, rigSettings.FemalePrefabName,
+                locomotionSettings.FemaleCharacterHeight, rigSettings);
+
+            if (maleTemporary == null || femaleTemporary == null)
+            {
+                if (maleTemporary != null) UnityEngine.Object.DestroyImmediate(maleTemporary);
+                if (femaleTemporary != null) UnityEngine.Object.DestroyImmediate(femaleTemporary);
+                Debug.LogError("UnderGrind: validazione dei due rig non superata. Nessun nuovo prefab salvato.");
                 return;
             }
 
             EnsureFolder("Assets/UnderGrind/Generated");
             EnsureFolder(OutputFolder);
-            var male = BuildPrefab(source, avatar, rigSettings.MaleArmatureRootName,
-                rigSettings.MalePrefabName, locomotionSettings.CharacterHeight, rigSettings);
-            var female = BuildPrefab(source, avatar, rigSettings.FemaleArmatureRootName,
-                rigSettings.FemalePrefabName, locomotionSettings.FemaleCharacterHeight, rigSettings);
-            if (male == null || female == null)
+            var malePrefab = PrefabUtility.SaveAsPrefabAsset(maleTemporary,
+                OutputFolder + "/" + rigSettings.MalePrefabName + ".prefab");
+            var femalePrefab = PrefabUtility.SaveAsPrefabAsset(femaleTemporary,
+                OutputFolder + "/" + rigSettings.FemalePrefabName + ".prefab");
+            UnityEngine.Object.DestroyImmediate(maleTemporary);
+            UnityEngine.Object.DestroyImmediate(femaleTemporary);
+
+            if (malePrefab == null || femalePrefab == null)
             {
-                Debug.LogError("UnderGrind: generazione prefab incompleta. Verificare radici scheletro e renderer separati.");
+                Debug.LogError("UnderGrind: salvataggio di uno o entrambi i prefab non riuscito.");
                 return;
             }
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("UnderGrind",
-                "Prefab generati in " + OutputFolder + "\n" +
-                "Maschio: " + rigSettings.MalePrefabName + ".prefab\n" +
-                "Femmina: " + rigSettings.FemalePrefabName + ".prefab",
+                "Prefab generati in " + OutputFolder + "\nMaschio: " + rigSettings.MalePrefabName +
+                "\nFemmina: " + rigSettings.FemalePrefabName,
                 "OK");
         }
 
-        private static GameObject BuildPrefab(GameObject source, Avatar avatar, string rootName,
+        private static bool TryPrepareSource(string path, PlayerRigSettings settings,
+            out GameObject source, out Avatar avatar)
+        {
+            source = null;
+            avatar = null;
+            var importer = AssetImporter.GetAtPath(path) as ModelImporter;
+            if (importer == null)
+            {
+                Debug.LogError("UnderGrind: ModelImporter non disponibile per " + path);
+                return false;
+            }
+
+            importer.animationType = ModelImporterAnimationType.Human;
+            importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            importer.importAnimation = settings.ImportAnimation;
+            importer.optimizeGameObjects = settings.OptimizeGameObjects;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.importVisibility = settings.ImportVisibility;
+            importer.SaveAndReimport();
+
+            source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            avatar = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Avatar>()
+                .FirstOrDefault(item => item != null && item.isHuman && item.isValid);
+            if (source == null || avatar == null)
+            {
+                Debug.LogError("UnderGrind: Unity non ha generato un Avatar Humanoid valido per " + path +
+                    ". Controlla il mapping delle ossa nel Model Importer.");
+                return false;
+            }
+            return true;
+        }
+
+        private static GameObject CreatePrefabInstance(GameObject source, Avatar avatar, string rootName,
             string prefabName, float targetHeight, PlayerRigSettings rigSettings)
         {
             var sourceRoot = FindDeepChild(source.transform, rootName);
             if (sourceRoot == null)
             {
-                Debug.LogError("UnderGrind: armature root non trovato: " + rootName);
+                Debug.LogError("UnderGrind: armature root non trovato in " + source.name + ": " + rootName);
                 return null;
             }
 
@@ -131,28 +178,30 @@ namespace UnderGrind.Editor
                 return null;
             }
 
-            var renderers = temporary.GetComponentsInChildren<Renderer>(true);
-            if (renderers.Length == 0)
+            if (temporary.GetComponentsInChildren<Renderer>(true).Length == 0)
             {
                 Debug.LogError("UnderGrind: nessun Renderer presente nel rig " + rootName);
                 UnityEngine.Object.DestroyImmediate(temporary);
                 return null;
             }
 
-            if (!rigSettings.RequireFirstPersonArms &&
-                !renderers.Any(x => x.name.IndexOf(rigSettings.FirstPersonArmsToken,
-                    StringComparison.OrdinalIgnoreCase) >= 0))
-                Debug.LogWarning("UnderGrind: " + prefabName +
-                    " non contiene renderer FP dedicati; in prima persona resterà visibile il corpo riggato.");
-
-            FitToHeight(temporary, targetHeight);
-            var prefabPath = OutputFolder + "/" + prefabName + ".prefab";
-            var prefab = PrefabUtility.SaveAsPrefabAsset(temporary, prefabPath);
-            UnityEngine.Object.DestroyImmediate(temporary);
-            if (prefab == null) Debug.LogError("UnderGrind: salvataggio prefab fallito: " + prefabPath);
-            else Debug.Log("UnderGrind: prefab creato: " + prefabPath);
-            return prefab;
+            try
+            {
+                FitToHeight(temporary, targetHeight);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError("UnderGrind: impossibile normalizzare l'altezza di " + prefabName + ": " + exception.Message);
+                UnityEngine.Object.DestroyImmediate(temporary);
+                return null;
+            }
+            return temporary;
         }
+
+        private static bool IsFbxPath(string path) =>
+            !string.IsNullOrWhiteSpace(path) &&
+            path.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase) &&
+            path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase);
 
         private static Transform FindDeepChild(Transform root, string targetName)
         {
@@ -181,7 +230,8 @@ namespace UnderGrind.Editor
             var renderers = model.GetComponentsInChildren<Renderer>(true);
             if (renderers.Length == 0) return new Bounds(model.transform.position, Vector3.zero);
             var bounds = renderers[0].bounds;
-            for (var i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+            for (var i = 1; i < renderers.Length; i++)
+                bounds.Encapsulate(renderers[i].bounds);
             return bounds;
         }
 
