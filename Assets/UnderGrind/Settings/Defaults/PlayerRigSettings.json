@@ -12,5 +12,7 @@
   "requireFirstPersonArms": false,
   "importAnimation": false,
   "optimizeGameObjects": false,
-  "importVisibility": true
+  "importVisibility": true,
+  "maleSourceAssetPath": "Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx",
+  "femaleSourceAssetPath": "Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx"
 }
