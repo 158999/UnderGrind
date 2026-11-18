@@ -24,6 +24,7 @@ namespace UnderGrind.Editor
             EnsureFolder("Assets/UnderGrind/Art/Source");
             EnsureFolder(GeneratedPath);
             PlayerInputAssetBuilder.EnsureAssets();
+            PlayerGameplayAssetBuilder.EnsureAssets();
 
             var inputSettings = AssetDatabase.LoadAssetAtPath<PlayerInputSettings>(
                 "Assets/UnderGrind/Settings/PlayerInputSettings.asset");
@@ -36,10 +37,17 @@ namespace UnderGrind.Editor
             }
 
             var locomotionSettings = AssetDatabase.LoadAssetAtPath<PlayerLocomotionSettings>(LocomotionSettingsPath);
-            if (locomotionSettings == null)
+            var inventorySettings = AssetDatabase.LoadAssetAtPath<InventorySettings>(
+                "Assets/UnderGrind/Settings/PlayerInventorySettings.asset");
+            var interactionSettings = AssetDatabase.LoadAssetAtPath<PlayerInteractionSettings>(
+                "Assets/UnderGrind/Settings/PlayerInteractionSettings.asset");
+            var inventoryUISettings = AssetDatabase.LoadAssetAtPath<InventoryUISettings>(
+                "Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset");
+            if (locomotionSettings == null || inventorySettings == null ||
+                interactionSettings == null || inventoryUISettings == null)
             {
                 EditorUtility.DisplayDialog("Configurazione Player mancante",
-                    "Non è stato trovato l'asset " + LocomotionSettingsPath + ". La scena non è stata modificata.",
+                    "Uno o più asset di configurazione Player non sono disponibili. La scena non è stata modificata.",
                     "OK");
                 return;
             }
@@ -69,7 +77,7 @@ namespace UnderGrind.Editor
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
             CreateCourse();
-            CreatePlayer(malePrefab, locomotionSettings, inputSettings);
+            CreatePlayer(malePrefab, locomotionSettings, inputSettings, inventorySettings, interactionSettings, inventoryUISettings);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -86,7 +94,7 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings)
+        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings, InventorySettings inventorySettings, PlayerInteractionSettings interactionSettings, InventoryUISettings inventoryUISettings)
         {
             var player = new GameObject("Player - Human " + locomotionSettings.CharacterHeight.ToString("0.00") + "m");
             player.transform.position = new Vector3(0f, 0.05f, 0f);
@@ -124,14 +132,17 @@ namespace UnderGrind.Editor
             cameraObject.AddComponent<AudioListener>();
 
             var inventory = player.AddComponent<PlayerInventory>();
-            var inventorySettings = AssetDatabase.LoadAssetAtPath<InventorySettings>(
-                "Assets/UnderGrind/Settings/PlayerInventorySettings.asset");
-            if (inventorySettings != null) inventory.Configure(inventorySettings);
+            inventory.Configure(inventorySettings);
 
             var movement = player.AddComponent<HumanLocomotionController>();
             movement.ConfigureSettings(locomotionSettings);
             movement.ConfigureInputSettings(inputSettings);
             movement.ConfigureViewRig(pivot, camera);
+
+            var inventoryUI = player.AddComponent<PlayerInventoryUI>();
+            inventoryUI.Configure(inventoryUISettings, inputSettings, inventory, movement);
+            var interaction = player.AddComponent<PlayerInteractionController>();
+            interaction.Configure(inputSettings, interactionSettings, inventory, movement, inventoryUI, camera);
             player.AddComponent<LocomotionDebugOverlay>();
         }
 
