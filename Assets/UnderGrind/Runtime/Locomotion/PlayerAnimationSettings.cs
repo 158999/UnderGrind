@@ -16,6 +16,16 @@ namespace UnderGrind.Locomotion
         [SerializeField] private AnimationClip crouchIdleClip;
         [SerializeField] private AnimationClip crouchWalkClip;
 
+        [Header("Ciclo delle clip")]
+        [SerializeField] private bool idleLoops = true;
+        [SerializeField] private bool walkLoops = true;
+        [SerializeField] private bool runLoops = true;
+        [SerializeField] private bool jumpLoops;
+        [SerializeField] private bool fallLoops;
+        [SerializeField] private bool landLoops;
+        [SerializeField] private bool crouchIdleLoops = true;
+        [SerializeField] private bool crouchWalkLoops = true;
+
         [Header("Parametri Animator")]
         [SerializeField] private string speedParameterName;
         [SerializeField] private string moveXParameterName;
@@ -37,6 +47,14 @@ namespace UnderGrind.Locomotion
         [SerializeField, Min(0f)] private float transitionDuration;
         [SerializeField, Range(0f, 1f)] private float landingExitTime;
 
+        public bool IdleLoops => idleLoops;
+        public bool WalkLoops => walkLoops;
+        public bool RunLoops => runLoops;
+        public bool JumpLoops => jumpLoops;
+        public bool FallLoops => fallLoops;
+        public bool LandLoops => landLoops;
+        public bool CrouchIdleLoops => crouchIdleLoops;
+        public bool CrouchWalkLoops => crouchWalkLoops;
         public RuntimeAnimatorController AnimatorController => animatorController;
         public AnimationClip IdleClip => idleClip;
         public AnimationClip WalkClip => walkClip;
