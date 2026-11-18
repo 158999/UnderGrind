@@ -215,12 +215,12 @@ namespace UnderGrind.Locomotion
             if (grounded) _lastGroundedTime = Time.time;
             var jumpPressed = keyboard != null && keyboard.spaceKey.wasPressedThisFrame ||
                               gamepad != null && gamepad.buttonSouth.wasPressedThisFrame;
-            if (IsOverloaded)
+            if (!CanJump)
                 _jumpBufferedUntil = float.NegativeInfinity;
             else if (jumpPressed)
                 _jumpBufferedUntil = Time.time + jumpBufferTime;
 
-            if (!IsOverloaded && Time.time <= _jumpBufferedUntil &&
+            if (CanJump && Time.time <= _jumpBufferedUntil &&
                 Time.time - _lastGroundedTime <= coyoteTime)
             {
                 _verticalVelocity = JumpVelocity;
@@ -245,6 +245,8 @@ namespace UnderGrind.Locomotion
             var rate = moving ? acceleration : deceleration;
             var control = grounded ? 1f : airControl;
             _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, rate * control * dt);
+            if (IsOverloaded && _horizontalVelocity.sqrMagnitude > EffectiveWalkSpeed * EffectiveWalkSpeed)
+                _horizontalVelocity = _horizontalVelocity.normalized * EffectiveWalkSpeed;
 
             if (_thirdPerson && moving && direction.sqrMagnitude > 0.001f)
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction),
