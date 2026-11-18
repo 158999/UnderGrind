@@ -38,6 +38,7 @@ namespace UnderGrind.Locomotion
         private bool _cursorLocked;
         private bool _missingSettingsReported;
         private bool _missingInputReported;
+        private bool _inputSuppressed;
         private Vector3 _horizontalVelocity;
         private float _measuredSpeed;
         private Vector2 _moveInput;
@@ -93,6 +94,16 @@ namespace UnderGrind.Locomotion
             if (viewPivot != null && viewPivot != transform && !viewPivot.IsChildOf(transform))
                 viewPivot.SetParent(transform, true);
             ApplyCameraMode();
+        }
+
+        public void SetInputSuppressed(bool suppressed)
+        {
+            _inputSuppressed = suppressed;
+            if (suppressed)
+            {
+                _moveInput = Vector2.zero;
+                IsRunning = false;
+            }
         }
 
         public void SetCursorCaptured(bool captured)
@@ -165,8 +176,9 @@ namespace UnderGrind.Locomotion
                 if (_toggleCameraAction != null && _toggleCameraAction.WasPressedThisFrame())
                     SetCameraMode(!_thirdPerson);
 
-                if (_cursorLocked) ReadLook();
-                ReadMovementInput();
+                if (_cursorLocked && !_inputSuppressed) ReadLook();
+                if (_inputSuppressed) _moveInput = Vector2.zero;
+                else ReadMovementInput();
                 UpdateStance();
             }
 
@@ -211,7 +223,7 @@ namespace UnderGrind.Locomotion
 
         private void UpdateStance()
         {
-            var crouch = _crouchAction != null && _crouchAction.IsPressed();
+            var crouch = !_inputSuppressed && _crouchAction != null && _crouchAction.IsPressed();
             var target = crouch ? settings.CrouchHeight : settings.CharacterHeight;
             if (!crouch && !CanStand()) target = settings.CrouchHeight;
             _currentHeight = Mathf.MoveTowards(_currentHeight, target, settings.StanceChangeSpeed * Time.deltaTime);
@@ -253,7 +265,7 @@ namespace UnderGrind.Locomotion
             if (dt <= 0f || _characterController == null) return;
             var grounded = _characterController.isGrounded;
             if (grounded) _lastGroundedTime = Time.time;
-            var jumpPressed = _jumpAction != null && _jumpAction.WasPressedThisFrame();
+            var jumpPressed = !_inputSuppressed && _jumpAction != null && _jumpAction.WasPressedThisFrame();
             if (!CanJump)
                 _jumpBufferedUntil = float.NegativeInfinity;
             else if (jumpPressed)
@@ -271,7 +283,7 @@ namespace UnderGrind.Locomotion
 
             _verticalVelocity -= settings.Gravity * dt;
             var moving = _moveInput.sqrMagnitude > settings.MovementInputThreshold;
-            var runHeld = _runAction != null && _runAction.IsPressed();
+            var runHeld = !_inputSuppressed && _runAction != null && _runAction.IsPressed();
             IsRunning = moving && runHeld && !IsCrouching && CanRun;
             var speed = IsCrouching
                 ? EffectiveWalkSpeed * settings.CrouchSpeedMultiplier
