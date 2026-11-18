@@ -5,8 +5,8 @@ using UnityEngine;
 namespace UnderGrind.Locomotion
 {
     /// <summary>
-    /// Controls explicit head and first-person renderer groups. Production naming
-    /// rules are supplied by PlayerRigSettings; no geometry-based guessing is used.
+    /// Controls head, body and first-/third-person limb renderer groups. The body is
+    /// revealed in first person when the view pitch crosses the configured look-down threshold.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PlayerVisualRig : MonoBehaviour
