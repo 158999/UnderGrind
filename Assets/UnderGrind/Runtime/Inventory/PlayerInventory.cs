@@ -163,7 +163,8 @@ namespace UnderGrind.Inventory
 
         private void ValidateIndex(int index)
         {
-            if (index < 0 || index >= slots.Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0 || index >= Mathf.Min(slots.Count, SlotCapacity))
+                throw new ArgumentOutOfRangeException(nameof(index));
         }
     }
 }
