@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnderGrind.Locomotion;
 
@@ -6,47 +7,69 @@ namespace UnderGrind.Tests
 {
     public sealed class HumanLocomotionTuningTests
     {
+        private const string SettingsPath = "Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset";
+        private PlayerLocomotionSettings _settings;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _settings = AssetDatabase.LoadAssetAtPath<PlayerLocomotionSettings>(SettingsPath);
+            Assert.That(_settings, Is.Not.Null, "L'asset di configurazione locomozione deve esistere.");
+        }
+
         [Test]
         public void RunIsExactlyOneThirdFasterThanWalk()
         {
-            var run = HumanLocomotionController.DefaultWalkSpeed * HumanLocomotionController.DefaultRunMultiplier;
-            Assert.That(run, Is.EqualTo(HumanLocomotionController.DefaultWalkSpeed * 4f / 3f).Within(0.0001f));
-            Assert.That(run / HumanLocomotionController.DefaultWalkSpeed, Is.EqualTo(4f / 3f).Within(0.0001f));
+            Assert.That(_settings.RunSpeed, Is.EqualTo(_settings.WalkSpeed * 4f / 3f).Within(0.0001f));
+            Assert.That(_settings.RunSpeed / _settings.WalkSpeed, Is.EqualTo(4f / 3f).Within(0.0001f));
         }
 
         [Test]
         public void JumpVelocityProducesConfiguredApexHeight()
         {
-            const float gravity = 9.81f;
-            var velocity = Mathf.Sqrt(2f * gravity * HumanLocomotionController.DefaultJumpHeight);
-            var height = velocity * velocity / (2f * gravity);
-            Assert.That(height, Is.EqualTo(HumanLocomotionController.DefaultJumpHeight).Within(0.0001f));
+            var height = _settings.JumpVelocity * _settings.JumpVelocity / (2f * _settings.Gravity);
+            Assert.That(height, Is.EqualTo(_settings.JumpHeight).Within(0.0001f));
         }
 
         [Test]
         public void CharacterHeightMatchesHumanBaseSpecification()
         {
-            Assert.That(HumanLocomotionController.DefaultCharacterHeight, Is.EqualTo(1.78f).Within(0.0001f));
+            Assert.That(_settings.CharacterHeight, Is.EqualTo(1.78f).Within(0.0001f));
         }
 
         [Test]
-        public void PlayerMovementParametersAreExposedAsSerializedInspectorFields()
+        public void ControllerReferencesSettingsInsteadOfDuplicatingGameplayValues()
         {
             var player = new GameObject("Inspector test player");
             try
             {
                 var movement = player.AddComponent<HumanLocomotionController>();
-                var serialized = new UnityEditor.SerializedObject(movement);
-                Assert.That(serialized.FindProperty("characterHeight"), Is.Not.Null);
-                Assert.That(serialized.FindProperty("walkSpeed"), Is.Not.Null);
-                Assert.That(serialized.FindProperty("runMultiplier"), Is.Not.Null);
-                Assert.That(serialized.FindProperty("jumpHeight"), Is.Not.Null);
-                Assert.That(serialized.FindProperty("gravity"), Is.Not.Null);
+                var serialized = new SerializedObject(movement);
+                Assert.That(serialized.FindProperty("settings"), Is.Not.Null);
+                Assert.That(serialized.FindProperty("walkSpeed"), Is.Null);
+                Assert.That(serialized.FindProperty("jumpHeight"), Is.Null);
+                Assert.That(serialized.FindProperty("gravity"), Is.Null);
             }
             finally
             {
                 Object.DestroyImmediate(player);
             }
+        }
+
+        [Test]
+        public void AllEightConfigurationGroupsAreSerializedOnSettingsAsset()
+        {
+            var serialized = new SerializedObject(_settings);
+            var fields = new[]
+            {
+                "walkSpeed", "runMultiplier", "jumpHeight", "gravity",
+                "acceleration", "deceleration", "airControl", "coyoteTime", "jumpBufferTime",
+                "crouchHeight", "capsuleRadius", "characterStepOffset", "characterSlopeLimit",
+                "mouseSensitivity", "gamepadLookSensitivity", "maxLookAngle",
+                "thirdPersonDistance", "cameraCollisionRadius", "cameraFollowSharpness"
+            };
+            foreach (var field in fields)
+                Assert.That(serialized.FindProperty(field), Is.Not.Null, "Missing serialized setting: " + field);
         }
     }
 }
