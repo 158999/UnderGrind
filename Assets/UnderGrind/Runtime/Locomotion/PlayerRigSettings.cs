@@ -26,6 +26,9 @@ namespace UnderGrind.Locomotion
         [SerializeField] private string firstPersonHandsToken;
         [SerializeField] private string thirdPersonArmsToken;
         [SerializeField] private string thirdPersonHandsToken;
+        [SerializeField] private string bodyRendererToken;
+        [SerializeField, Range(1f, 89f)] private float firstPersonBodyRevealPitch = 35f;
+        [SerializeField, Range(0f, 89f)] private float firstPersonBodyHidePitch = 25f;
         [SerializeField] private bool requireSeparateHead;
         [SerializeField] private bool requireFirstPersonArms;
 
@@ -46,6 +49,9 @@ namespace UnderGrind.Locomotion
         public string FirstPersonHandsToken => firstPersonHandsToken;
         public string ThirdPersonArmsToken => thirdPersonArmsToken;
         public string ThirdPersonHandsToken => thirdPersonHandsToken;
+        public string BodyRendererToken => bodyRendererToken;
+        public float FirstPersonBodyRevealPitch => firstPersonBodyRevealPitch;
+        public float FirstPersonBodyHidePitch => firstPersonBodyHidePitch;
         public bool RequireSeparateHead => requireSeparateHead;
         public bool RequireFirstPersonArms => requireFirstPersonArms;
         public bool ImportAnimation => importAnimation;
@@ -65,6 +71,9 @@ namespace UnderGrind.Locomotion
             firstPersonHandsToken = Normalize(firstPersonHandsToken);
             thirdPersonArmsToken = Normalize(thirdPersonArmsToken);
             thirdPersonHandsToken = Normalize(thirdPersonHandsToken);
+            bodyRendererToken = Normalize(bodyRendererToken);
+            firstPersonBodyRevealPitch = Mathf.Clamp(firstPersonBodyRevealPitch, 1f, 89f);
+            firstPersonBodyHidePitch = Mathf.Clamp(firstPersonBodyHidePitch, 0f, firstPersonBodyRevealPitch);
         }
 
         private static string Normalize(string value) => value != null ? value.Trim() : string.Empty;
