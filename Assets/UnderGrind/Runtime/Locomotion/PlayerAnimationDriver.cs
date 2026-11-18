@@ -4,39 +4,45 @@ using UnityEngine;
 namespace UnderGrind.Locomotion
 {
     /// <summary>
-    /// Optional, parameter-safe bridge between player locomotion and an Animator Controller.
-    /// The CharacterController remains the sole authority for world movement.
+    /// Sends measured locomotion state to the Animator. CharacterController remains
+    /// the sole authority for world movement; root motion is always disabled.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PlayerAnimationDriver : MonoBehaviour
     {
-        private static readonly int SpeedHash = Animator.StringToHash("Speed");
-        private static readonly int MoveXHash = Animator.StringToHash("MoveX");
-        private static readonly int MoveYHash = Animator.StringToHash("MoveY");
-        private static readonly int GroundedHash = Animator.StringToHash("Grounded");
-        private static readonly int VerticalSpeedHash = Animator.StringToHash("VerticalSpeed");
-        private static readonly int RunningHash = Animator.StringToHash("Running");
-        private static readonly int CrouchingHash = Animator.StringToHash("Crouching");
-        private static readonly int JumpingHash = Animator.StringToHash("Jumping");
-        private static readonly int FallingHash = Animator.StringToHash("Falling");
-
+        [SerializeField] private PlayerAnimationSettings settings;
         [SerializeField] private Animator animator;
+
         private readonly Dictionary<int, AnimatorControllerParameterType> _availableParameters =
             new Dictionary<int, AnimatorControllerParameterType>();
         private RuntimeAnimatorController _cachedController;
         private int _parameterCount = -1;
+        private bool _wasGrounded;
+        private bool _hasGroundedSample;
 
         public Animator Animator => animator;
+        public PlayerAnimationSettings Settings => settings;
 
         private void Awake()
         {
             ResolveAnimator();
+            ApplyConfiguredController();
             RefreshParameters();
         }
 
         public void Configure(Animator target)
         {
             animator = target;
+            ApplyConfiguredController();
+            RefreshParameters();
+        }
+
+        public void Configure(PlayerAnimationSettings animationSettings, Animator target = null)
+        {
+            settings = animationSettings;
+            if (target != null) animator = target;
+            ResolveAnimator();
+            ApplyConfiguredController();
             RefreshParameters();
         }
 
@@ -48,16 +54,22 @@ namespace UnderGrind.Locomotion
             if (animator.applyRootMotion) animator.applyRootMotion = false;
             if (animator.runtimeAnimatorController != _cachedController ||
                 animator.parameters.Length != _parameterCount) RefreshParameters();
+            if (settings == null) return;
 
-            SetFloat(SpeedHash, speed);
-            SetFloat(MoveXHash, moveInput.x);
-            SetFloat(MoveYHash, moveInput.y);
-            SetFloat(VerticalSpeedHash, verticalSpeed);
-            SetBool(GroundedHash, grounded);
-            SetBool(RunningHash, running);
-            SetBool(CrouchingHash, crouching);
-            SetBool(JumpingHash, jumping);
-            SetBool(FallingHash, falling);
+            var landed = _hasGroundedSample && grounded && !_wasGrounded;
+            _wasGrounded = grounded;
+            _hasGroundedSample = true;
+
+            SetFloat(settings.SpeedParameterName, speed);
+            SetFloat(settings.MoveXParameterName, moveInput.x);
+            SetFloat(settings.MoveYParameterName, moveInput.y);
+            SetFloat(settings.VerticalSpeedParameterName, verticalSpeed);
+            SetBool(settings.GroundedParameterName, grounded);
+            SetBool(settings.RunningParameterName, running);
+            SetBool(settings.CrouchingParameterName, crouching);
+            SetBool(settings.JumpingParameterName, jumping);
+            SetBool(settings.FallingParameterName, falling);
+            SetBool(settings.LandedParameterName, landed);
         }
 
         private void ResolveAnimator()
@@ -66,6 +78,15 @@ namespace UnderGrind.Locomotion
             if (animator != null && (animator.runtimeAnimatorController != _cachedController ||
                 animator.parameters.Length != _parameterCount))
                 RefreshParameters();
+        }
+
+        private void ApplyConfiguredController()
+        {
+            if (animator == null || settings == null) return;
+            if (settings.AnimatorController != null &&
+                animator.runtimeAnimatorController != settings.AnimatorController)
+                animator.runtimeAnimatorController = settings.AnimatorController;
+            animator.applyRootMotion = false;
         }
 
         private void RefreshParameters()
@@ -85,15 +106,23 @@ namespace UnderGrind.Locomotion
                 _availableParameters[parameter.nameHash] = parameter.type;
         }
 
-        private void SetFloat(int hash, float value)
+        private void SetFloat(string parameterName, float value)
         {
+            if (string.IsNullOrWhiteSpace(parameterName)) return;
+            var hash = Animator.StringToHash(parameterName);
             if (_availableParameters.TryGetValue(hash, out var type) &&
                 type == AnimatorControllerParameterType.Float)
-                animator.SetFloat(hash, value);
+            {
+                if (settings.SpeedDampTime > 0f)
+                    animator.SetFloat(hash, value, settings.SpeedDampTime, Time.deltaTime);
+                else animator.SetFloat(hash, value);
+            }
         }
 
-        private void SetBool(int hash, bool value)
+        private void SetBool(string parameterName, bool value)
         {
+            if (string.IsNullOrWhiteSpace(parameterName)) return;
+            var hash = Animator.StringToHash(parameterName);
             if (_availableParameters.TryGetValue(hash, out var type) &&
                 type == AnimatorControllerParameterType.Bool)
                 animator.SetBool(hash, value);
