@@ -112,22 +112,27 @@ namespace UnderGrind.Inventory
             return new Vector2(Mathf.Clamp01(value.x), Mathf.Clamp01(value.y));
         }
 
+        private static Vector2 ClampAnchorMax(Vector2 min, Vector2 max)
+        {
+            return new Vector2(Mathf.Clamp(max.x, min.x, 1f), Mathf.Clamp(max.y, min.y, 1f));
+        }
+
         private void OnValidate()
         {
             titleFontSize = Mathf.Max(1, titleFontSize);
             bodyFontSize = Mathf.Max(1, bodyFontSize);
             slotFontSize = Mathf.Max(1, slotFontSize);
             panelAnchorMin = ClampAnchor(panelAnchorMin);
-            panelAnchorMax = ClampAnchor(panelAnchorMax);
+            panelAnchorMax = ClampAnchorMax(panelAnchorMin, ClampAnchor(panelAnchorMax));
             panelPivot = ClampAnchor(panelPivot);
             titleAnchorMin = ClampAnchor(titleAnchorMin);
-            titleAnchorMax = ClampAnchor(titleAnchorMax);
+            titleAnchorMax = ClampAnchorMax(titleAnchorMin, ClampAnchor(titleAnchorMax));
             titlePivot = ClampAnchor(titlePivot);
             weightAnchorMin = ClampAnchor(weightAnchorMin);
-            weightAnchorMax = ClampAnchor(weightAnchorMax);
+            weightAnchorMax = ClampAnchorMax(weightAnchorMin, ClampAnchor(weightAnchorMax));
             weightPivot = ClampAnchor(weightPivot);
             gridAnchorMin = ClampAnchor(gridAnchorMin);
-            gridAnchorMax = ClampAnchor(gridAnchorMax);
+            gridAnchorMax = ClampAnchorMax(gridAnchorMin, ClampAnchor(gridAnchorMax));
             referenceResolution.x = Mathf.Max(1f, referenceResolution.x);
             referenceResolution.y = Mathf.Max(1f, referenceResolution.y);
             panelSize.x = Mathf.Max(1f, panelSize.x);
