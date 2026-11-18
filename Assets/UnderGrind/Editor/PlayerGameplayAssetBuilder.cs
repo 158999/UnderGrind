@@ -121,7 +121,27 @@ namespace UnderGrind.Editor
                 SetInt(serialized, "titleFontSize", 24);
                 SetInt(serialized, "bodyFontSize", 18);
                 SetInt(serialized, "slotFontSize", 14);
+                SetInt(serialized, "canvasRenderMode", (int)RenderMode.ScreenSpaceOverlay);
+                SetInt(serialized, "canvasScaleMode", (int)CanvasScaler.ScaleMode.ScaleWithScreenSize);
                 SetVector2(serialized, "referenceResolution", new Vector2(1920f, 1080f));
+                SetVector2(serialized, "panelAnchorMin", new Vector2(0.5f, 0.5f));
+                SetVector2(serialized, "panelAnchorMax", new Vector2(0.5f, 0.5f));
+                SetVector2(serialized, "panelPivot", new Vector2(0.5f, 0.5f));
+                SetVector2(serialized, "titleAnchorMin", new Vector2(0f, 1f));
+                SetVector2(serialized, "titleAnchorMax", new Vector2(1f, 1f));
+                SetVector2(serialized, "titlePivot", new Vector2(0.5f, 1f));
+                SetVector2(serialized, "weightAnchorMin", new Vector2(0f, 1f));
+                SetVector2(serialized, "weightAnchorMax", new Vector2(1f, 1f));
+                SetVector2(serialized, "weightPivot", new Vector2(0.5f, 1f));
+                SetVector2(serialized, "gridAnchorMin", Vector2.zero);
+                SetVector2(serialized, "gridAnchorMax", Vector2.one);
+                SetInt(serialized, "gridStartCorner", (int)GridLayoutGroup.Corner.UpperLeft);
+                SetInt(serialized, "gridStartAxis", (int)GridLayoutGroup.Axis.Horizontal);
+                SetInt(serialized, "gridConstraint", (int)GridLayoutGroup.Constraint.FixedColumnCount);
+                SetInt(serialized, "titleAlignment", (int)TextAnchor.MiddleLeft);
+                SetInt(serialized, "weightAlignment", (int)TextAnchor.MiddleRight);
+                SetInt(serialized, "slotAlignment", (int)TextAnchor.LowerCenter);
+                SetInt(serialized, "gridChildAlignment", (int)TextAnchor.UpperLeft);
                 SetVector2(serialized, "panelSize", new Vector2(720f, 520f));
                 SetVector2(serialized, "panelOffset", Vector2.zero);
                 SetInt(serialized, "columns", 6);
@@ -136,6 +156,32 @@ namespace UnderGrind.Editor
                 SetColor(serialized, "selectedSlotColor", new Color(0.78f, 0.62f, 0.30f, 1f));
                 SetColor(serialized, "textColor", Color.white);
                 SetColor(serialized, "overloadedWeightColor", new Color(0.95f, 0.28f, 0.24f, 1f));
+            }
+
+            // One-time migration for assets created before canvas and slot layout became configurable.
+            var panelAnchorMax = serialized.FindProperty("panelAnchorMax");
+            if (panelAnchorMax != null && panelAnchorMax.vector2Value == Vector2.zero)
+            {
+                SetInt(serialized, "canvasRenderMode", (int)RenderMode.ScreenSpaceOverlay);
+                SetInt(serialized, "canvasScaleMode", (int)CanvasScaler.ScaleMode.ScaleWithScreenSize);
+                SetVector2(serialized, "panelAnchorMin", new Vector2(0.5f, 0.5f));
+                SetVector2(serialized, "panelAnchorMax", new Vector2(0.5f, 0.5f));
+                SetVector2(serialized, "panelPivot", new Vector2(0.5f, 0.5f));
+                SetVector2(serialized, "titleAnchorMin", new Vector2(0f, 1f));
+                SetVector2(serialized, "titleAnchorMax", new Vector2(1f, 1f));
+                SetVector2(serialized, "titlePivot", new Vector2(0.5f, 1f));
+                SetVector2(serialized, "weightAnchorMin", new Vector2(0f, 1f));
+                SetVector2(serialized, "weightAnchorMax", new Vector2(1f, 1f));
+                SetVector2(serialized, "weightPivot", new Vector2(0.5f, 1f));
+                SetVector2(serialized, "gridAnchorMin", Vector2.zero);
+                SetVector2(serialized, "gridAnchorMax", Vector2.one);
+                SetInt(serialized, "gridStartCorner", (int)GridLayoutGroup.Corner.UpperLeft);
+                SetInt(serialized, "gridStartAxis", (int)GridLayoutGroup.Axis.Horizontal);
+                SetInt(serialized, "gridConstraint", (int)GridLayoutGroup.Constraint.FixedColumnCount);
+                SetInt(serialized, "titleAlignment", (int)TextAnchor.MiddleLeft);
+                SetInt(serialized, "weightAlignment", (int)TextAnchor.MiddleRight);
+                SetInt(serialized, "slotAlignment", (int)TextAnchor.LowerCenter);
+                SetInt(serialized, "gridChildAlignment", (int)TextAnchor.UpperLeft);
             }
 
             // One-time migration for assets created before configurable slot bounds existed.
