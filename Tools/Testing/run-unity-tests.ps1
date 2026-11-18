@@ -53,11 +53,19 @@ foreach ($target in $platforms) {
     $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
         if ($_ -match '\s') { '"' + $_ + '"' } else { $_ }
     }))
-    $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow
-    $code = $process.ExitCode
-    $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
     $validationErrors = [System.Collections.Generic.List[string]]::new()
     $hasValidResult = $false
+    $code = 1
+    try {
+        $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow
+        $code = $process.ExitCode
+    }
+    catch {
+        $validationErrors.Add("Unity process could not be started or awaited: $($_.Exception.Message)")
+    }
+    if ($code -ne 0) {
+        $validationErrors.Add("Unity exited with code $code.")
+    }
 
     if (Test-Path $xmlPath) {
         try {
@@ -68,9 +76,16 @@ foreach ($target in $platforms) {
                 $counts.passed = [int]$suite.passed
                 $counts.failed = [int]$suite.failed
                 $counts.skipped = [int]$suite.skipped
+                $counts.inconclusive = [int]$suite.inconclusive
                 $hasValidResult = $true
                 if ($counts.total -le 0) {
                     $validationErrors.Add("Unity produced a test result with zero executed or discovered tests.")
+                }
+                if ($suite.result -ne "Passed") {
+                    $validationErrors.Add("Unity test-run result is '$($suite.result)', not Passed.")
+                }
+                if ($counts.inconclusive -gt 0) {
+                    $validationErrors.Add("Unity reported $($counts.inconclusive) inconclusive tests.")
                 }
             }
             else {
@@ -113,6 +128,7 @@ $totals = @{
     passed = ($items | ForEach-Object { [int]$_.totals.passed } | Measure-Object -Sum).Sum
     failed = ($items | ForEach-Object { [int]$_.totals.failed } | Measure-Object -Sum).Sum
     skipped = ($items | ForEach-Object { [int]$_.totals.skipped } | Measure-Object -Sum).Sum
+    inconclusive = ($items | ForEach-Object { [int]$_.totals.inconclusive } | Measure-Object -Sum).Sum
 }
 $report = [ordered]@{
     runId = $runId
@@ -125,7 +141,7 @@ $report | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $results "unity-lates
 @(
     "UnderGrind Unity tests"
     "Status: $($report.status)"
-    "Total: $($totals.total) | Passed: $($totals.passed) | Failed: $($totals.failed) | Skipped: $($totals.skipped)"
+    "Total: $($totals.total) | Passed: $($totals.passed) | Failed: $($totals.failed) | Skipped: $($totals.skipped) | Inconclusive: $($totals.inconclusive)"
     "Run details: TestResults/Unity-$runId/"
 ) | Set-Content (Join-Path $results "unity-latest.txt") -Encoding utf8
 Write-Host "Unity status: $($report.status)"
