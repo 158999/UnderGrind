@@ -83,6 +83,7 @@ else {
             $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0; inconclusive = 0 }
             $validationErrors = [System.Collections.Generic.List[string]]::new()
             $compilerDiagnostics = @()
+            $failures = @()
             $hasValidResult = $false
             $code = 1
 
@@ -132,6 +133,16 @@ else {
                         $counts.skipped = [int]$suite.skipped
                         $counts.inconclusive = [int]$suite.inconclusive
                         $hasValidResult = $true
+                        $failures = @($testXml.SelectNodes("//*[local-name()='test-case'][@result='Failed']") | ForEach-Object {
+                            $failureNode = $_.SelectSingleNode(".//*[local-name()='failure']")
+                            $messageNode = if ($failureNode) { $failureNode.SelectSingleNode("./*[local-name()='message']") } else { $null }
+                            $stackNode = if ($failureNode) { $failureNode.SelectSingleNode("./*[local-name()='stack-trace']") } else { $null }
+                            [ordered]@{
+                                test = if ($_.fullname) { $_.fullname } else { $_.name }
+                                message = if ($messageNode) { $messageNode.InnerText.Trim() } else { "Test fallito; consultare il report XML." }
+                                stackTrace = if ($stackNode) { $stackNode.InnerText.Trim() } else { "" }
+                            }
+                        })
                         if ($counts.total -le 0) { $validationErrors.Add("Il report Unity non contiene test eseguiti o scoperti.") }
                         if ($suite.result -ne "Passed") { $validationErrors.Add("Il risultato Unity è '$($suite.result)', non Passed.") }
                         if ($counts.failed -gt 0) { $validationErrors.Add("Unity ha riportato $($counts.failed) test falliti.") }
@@ -174,12 +185,16 @@ else {
                 resultValid = $resultValid
                 validationErrors = @($validationErrors)
                 compilerDiagnostics = @($compilerDiagnostics)
+                failures = @($failures)
                 resultFile = $resultFile
                 logFile = "TestResults/test/Unity/$logName"
                 totals = $counts
             })
             if ($code -ne 0 -or -not $resultValid) { $exit = 1 }
             Write-Host "Unity $target : $($counts.passed) superati, $($counts.failed) falliti, $($counts.total) totali"
+            foreach ($failure in $failures) {
+                Write-Host "  FALLITO: $($failure.test) - $($failure.message)"
+            }
 
             if ($timedOut) {
                 $environmentErrors.Add("Test Unity interrotti dopo il timeout di $TimeoutSeconds secondi; le altre piattaforme non verranno avviate.")
