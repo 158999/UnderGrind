@@ -81,7 +81,6 @@ namespace UnderGrind.Editor
             {
                 settings = ScriptableObject.CreateInstance<PlayerInputSettings>();
                 JsonUtility.FromJsonOverwrite(File.ReadAllText(DefaultsPath), settings);
-                AssetDatabase.CreateAsset(settings, SettingsAssetPath);
             }
 
             var serialized = new SerializedObject(settings);
@@ -119,6 +118,7 @@ namespace UnderGrind.Editor
             }
 
             serialized.ApplyModifiedPropertiesWithoutUndo();
+            if (created) AssetDatabase.CreateAsset(settings, SettingsAssetPath);
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssets();
         }
