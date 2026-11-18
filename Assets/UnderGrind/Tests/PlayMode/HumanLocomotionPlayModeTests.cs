@@ -66,6 +66,9 @@ namespace UnderGrind.Tests
             Set(settings, "characterStepOffsetHeightRatio", 0.18f);
             Set(settings, "characterSlopeLimit", 48f);
             Set(settings, "characterMinMoveDistance", 0f);
+            Set(settings, "characterSkinWidth", 0.08f);
+            Set(settings, "characterDetectCollisions", true);
+            Set(settings, "characterEnableOverlapRecovery", true);
             Set(settings, "mouseSensitivity", 0.12f);
             Set(settings, "gamepadLookSensitivity", 150f);
             Set(settings, "maxLookAngle", 82f);
