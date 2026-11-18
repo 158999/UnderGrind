@@ -18,7 +18,7 @@ namespace UnderGrind.Editor
             EditorApplication.delayCall += EnsureAssets;
         }
 
-        [MenuItem("UnderGrind/Player/Create or Repair Inventory Assets")]
+        [MenuItem("UnderGrind/Player/Create or Repair Player Assets")]
         public static void EnsureAssets()
         {
             EnsureFolder("Assets/UnderGrind");
@@ -33,11 +33,9 @@ namespace UnderGrind.Editor
         private static void EnsureRigSettings()
         {
             var asset = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(RigSettingsPath);
-            if (asset == null)
-            {
-                asset = ScriptableObject.CreateInstance<PlayerRigSettings>();
-                AssetDatabase.CreateAsset(asset, RigSettingsPath);
-            }
+            if (asset != null) return;
+            asset = ScriptableObject.CreateInstance<PlayerRigSettings>();
+            AssetDatabase.CreateAsset(asset, RigSettingsPath);
 
             var serialized = new SerializedObject(asset);
             SetString(serialized, "maleArmatureRootName", "UG_Male_Armature");
@@ -59,11 +57,9 @@ namespace UnderGrind.Editor
         private static void EnsureAnimationSettings()
         {
             var asset = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(AnimationSettingsPath);
-            if (asset == null)
-            {
-                asset = ScriptableObject.CreateInstance<PlayerAnimationSettings>();
-                AssetDatabase.CreateAsset(asset, AnimationSettingsPath);
-            }
+            if (asset != null) return;
+            asset = ScriptableObject.CreateInstance<PlayerAnimationSettings>();
+            AssetDatabase.CreateAsset(asset, AnimationSettingsPath);
 
             var serialized = new SerializedObject(asset);
             SetString(serialized, "speedParameterName", "Speed");
@@ -90,11 +86,9 @@ namespace UnderGrind.Editor
         private static void EnsureInteractionSettings()
         {
             var asset = AssetDatabase.LoadAssetAtPath<PlayerInteractionSettings>(InteractionSettingsPath);
-            if (asset == null)
-            {
-                asset = ScriptableObject.CreateInstance<PlayerInteractionSettings>();
-                AssetDatabase.CreateAsset(asset, InteractionSettingsPath);
-            }
+            if (asset != null) return;
+            asset = ScriptableObject.CreateInstance<PlayerInteractionSettings>();
+            AssetDatabase.CreateAsset(asset, InteractionSettingsPath);
 
             var serialized = new SerializedObject(asset);
             SetFloat(serialized, "interactionDistance", 2.5f);
@@ -111,11 +105,9 @@ namespace UnderGrind.Editor
         private static void EnsureInventoryUISettings()
         {
             var asset = AssetDatabase.LoadAssetAtPath<InventoryUISettings>(InventoryUISettingsPath);
-            if (asset == null)
-            {
-                asset = ScriptableObject.CreateInstance<InventoryUISettings>();
-                AssetDatabase.CreateAsset(asset, InventoryUISettingsPath);
-            }
+            if (asset != null) return;
+            asset = ScriptableObject.CreateInstance<InventoryUISettings>();
+            AssetDatabase.CreateAsset(asset, InventoryUISettingsPath);
 
             var serialized = new SerializedObject(asset);
             SetString(serialized, "panelTitle", "INVENTARIO");
