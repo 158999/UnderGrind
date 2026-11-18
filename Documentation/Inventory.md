@@ -2,118 +2,71 @@
 
 ## Modello dei dati
 
-Il sistema dell'inventario è composto da quattro elementi:
+`ItemDefinition` è un asset ScriptableObject che definisce un tipo di oggetto:
 
-- `ItemDefinition`: asset `ScriptableObject` che descrive un tipo di oggetto.
-- `InventorySlot`: coppia oggetto/quantità conservata in uno slot.
-- `PlayerInventory`: componente che gestisce slot, operazioni, peso ed eventi.
-- `InventoryOperationResult`: risultato di un'operazione con quantità richiesta, elaborata e residua.
+- ID stabile dell'oggetto.
+- Nome visualizzato e icona.
+- Prefab da istanziare nel mondo quando l'oggetto viene rilasciato.
+- Numero massimo di unità per stack.
+- Peso unitario in chilogrammi.
 
-`ItemDefinition` contiene:
+Il peso deve essere finito e non negativo. Gli oggetti a peso zero sono ammessi. La quantità è memorizzata nello slot, non nella definizione dell'oggetto.
 
-- `ItemId`: identificativo stabile.
-- `DisplayName`: nome mostrato nell'interfaccia.
-- `Icon`: icona dello slot.
-- `WorldPrefab`: prefab istanziato quando l'oggetto viene lasciato nel mondo.
-- `MaxStackSize`: quantità massima per stack.
-- `UnitWeightKg`: peso unitario in chilogrammi.
-
-La validazione dell'asset impone uno stack massimo di almeno un'unità e un peso unitario finito e non negativo. Gli oggetti a peso zero sono ammessi. La quantità appartiene allo slot, non alla definizione dell'oggetto.
-
-Uno slot è vuoto quando non contiene una definizione valida oppure quando la quantità è zero. Il peso dello slot è il prodotto tra peso unitario e quantità.
-
-## Configurazione
-
-`InventorySettings` è l'asset `ScriptableObject` che regola capacità e sovraccarico. L'asset presente nel progetto è `Assets/UnderGrind/Settings/PlayerInventorySettings.asset`.
-
-| Proprietà | Significato |
-|---|---|
-| `MaxSlots` | Numero massimo configurato di slot |
-| `MaxCarryWeightKg` | Soglia di peso oltre la quale si applicano le penalità |
-| `OverloadedWalkSpeedReductionPercent` | Percentuale sottratta alla velocità di camminata |
-
-I valori dell'asset attuale sono 24 slot, 50 kg e riduzione del 25%. Sono valori iniziali modificabili dall'Inspector.
-
-`PlayerInteractionSettings` configura distanza e raggio della ricerca degli oggetti, layer ammessi, posizione di rilascio, impulso applicato al corpo fisico e quantità rilasciata per azione.
-
-`InventoryUISettings` configura testi, font, dimensioni del pannello, risoluzione di riferimento, numero di colonne, dimensioni e spaziatura degli slot, ancoraggi di icone e testo, colori, padding, altezza dell'intestazione e numero massimo di slot visibili. Il generatore dell'Editor crea questo asset quando manca; non è presente come file versionato nella cartella Settings del repository.
+`InventorySettings` configura capacità e sovraccarico. L'asset iniziale è `Assets/UnderGrind/Settings/PlayerInventorySettings.asset`.
 
 ## Capacità e sovraccarico
 
-La capacità in slot e il peso trasportato sono regole distinte:
+La capacità in slot e il peso massimo sono due regole distinte:
 
-- La capacità limita il numero di posizioni disponibili e la quantità contenibile in base alla dimensione massima degli stack.
-- Il peso massimo è una soglia di penalità, non un limite alla raccolta. Un oggetto può essere aggiunto anche se porta il peso totale oltre la soglia, purché ci sia spazio negli slot.
-- Il peso corrente è derivato dagli oggetti e dalle quantità presenti negli slot; non è modificabile direttamente.
-- Il sovraccarico si verifica soltanto quando `CurrentWeightKg` è strettamente maggiore di `MaxCarryWeightKg`. Raggiungere esattamente la soglia non attiva penalità.
+- La capacità in slot limita le posizioni utilizzabili per nuove unità.
+- Il peso massimo è una soglia di penalità, non un blocco alla raccolta. L'inventario può superarla.
+- Il peso corrente è derivato dal contenuto degli slot e non può essere modificato direttamente.
 
-Quando l'inventario è sovraccarico, `HumanLocomotionController` disabilita corsa e salto e riduce la velocità di camminata della percentuale configurata. La stessa riduzione si applica alla camminata accovacciata. La penalità è fissa: non aumenta in funzione dei chilogrammi eccedenti. Un salto già iniziato non viene interrotto a mezz'aria.
+Quando `CurrentWeightKg` è maggiore di `MaxCarryWeightKg`, `PlayerInventory.IsOverloaded` diventa vero. Il controller disabilita corsa e salto e riduce la velocità di camminata della percentuale definita in `OverloadedWalkSpeedReductionPercent`. La riduzione è fissa e non cresce con il peso eccedente. Raggiungere esattamente la soglia non costituisce sovraccarico.
 
-Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità di camminata vengono ripristinati automaticamente.
+I valori iniziali sono 24 slot, 50 kg e una riduzione del 25%. Sono modificabili nell'Inspector.
 
-## Operazioni di PlayerInventory
+## Operazioni disponibili
 
-`PlayerInventory` espone le seguenti operazioni:
+`PlayerInventory` espone:
 
-- `Configure(settings)`: assegna la configurazione e adegua il numero di slot, preservando gli slot occupati che non possono essere rimossi.
-- `GetSlot(index)`: restituisce lo slot richiesto; genera `ArgumentOutOfRangeException` per un indice non valido.
-- `AddItem(item, quantity)`: riempie prima gli stack esistenti dello stesso tipo e poi gli slot vuoti. Rispetta `MaxStackSize` e restituisce la quantità effettivamente aggiunta.
+- `AddItem(item, quantity)`: riempie prima gli stack dello stesso tipo e poi gli slot vuoti. Non rifiuta oggetti per superamento del peso massimo. Restituisce quantità richiesta, aggiunta e residua.
 - `RemoveItem(item, quantity)`: rimuove l'oggetto dagli stack disponibili.
 - `RemoveFromSlot(index, quantity)`: rimuove una quantità da uno slot specifico.
-- `MoveStack(source, destination, quantity)`: sposta una quantità verso uno slot vuoto o verso uno stack dello stesso tipo, se la capacità residua è sufficiente.
-- `SplitStack(source, destination, quantity)`: trasferisce una parte dello stack in uno slot vuoto senza svuotare quello sorgente.
-- `SelectSlot(index)`: seleziona uno slot valido e segnala se la selezione è cambiata.
+- `SelectSlot(index)`: cambia lo slot attivo.
+- `MoveStack(source, destination, quantity)`: sposta una quantità verso uno slot vuoto o uno stack dello stesso tipo.
+- `SplitStack(source, destination, quantity)`: separa una parte di uno stack in uno slot vuoto.
+- `Changed`: evento emesso quando un'operazione modifica contenuto o selezione.
 
-Le operazioni che modificano il contenuto o la selezione emettono l'evento `Changed`. `InventoryOperationResult` espone `Requested`, `Processed`, `Remaining` e `Completed`; le operazioni di aggiunta e rimozione possono quindi segnalare un risultato parziale senza perdere la quantità residua.
+Le operazioni che modificano il contenuto restituiscono un `InventoryOperationResult` con quantità richiesta, elaborata e residua. Il peso totale viene derivato dagli slot; spostare o dividere oggetti non cambia il peso complessivo.
+
+## Interfaccia dell'inventario
+
+`PlayerInventoryUI` crea una Canvas Screen Space Overlay durante l'inizializzazione del Player. Visualizza:
+
+- Gli slot configurati, fino al limite visibile.
+- L'icona, il nome e la quantità di ogni stack.
+- Lo slot selezionato.
+- Il peso trasportato e la soglia di sovraccarico.
+
+`InventoryUISettings` si trova in `Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset`. Dimensioni, spaziatura, numero di colonne, colori, font, testi, risoluzione di riferimento e aree di icona/etichetta sono modificabili nell'Inspector. Il componente aggiorna la vista tramite l'evento `PlayerInventory.Changed`.
+
+La UI si apre e si chiude con Tab. Quando è aperta, il cursore viene liberato; alla chiusura viene ripristinato lo stato precedente. Le parentesi quadre destra e sinistra cambiano lo slot selezionato. Il gamepad usa Select per aprire l'inventario e il D-pad orizzontale per cambiare slot.
 
 ## Raccolta e rilascio nel mondo
 
-`WorldItemPickup` rappresenta un oggetto raccoglibile nella scena. Contiene una definizione e una quantità. Quando `TryPickup` riceve un inventario valido, trasferisce la quantità che trova posto negli slot:
+`WorldItemPickup` rappresenta un oggetto raccoglibile nella scena. Contiene un riferimento a `ItemDefinition` e la quantità disponibile. La raccolta trasferisce nell'inventario la quantità che trova posto; se lo spazio non basta, il pickup conserva la quantità residua.
 
-- se viene raccolta tutta la quantità, il GameObject viene distrutto;
-- se l'inventario accetta soltanto una parte, il pickup rimane nella scena con la quantità residua;
-- se non viene trasferita alcuna unità, il pickup non viene modificato.
+`PlayerInteractionController` esegue una SphereCast dalla camera del giocatore. Distanza, raggio e layer interrogati sono configurati da `PlayerInteractionSettings` in `Assets/UnderGrind/Settings/PlayerInteractionSettings.asset`.
 
-`PlayerInteractionController` collega input, camera, inventario e pickup. L'azione di interazione esegue uno `SphereCastAll` dalla camera, filtra i layer configurati, ignora i collider appartenenti al Player e ordina i risultati per distanza. Il primo pickup valido trovato viene utilizzato.
+- **E** (gamepad: pulsante ovest) raccoglie il pickup più vicino intercettato dal raggio.
+- **G** (gamepad: D-pad giù) rilascia dallo slot selezionato la quantità configurata.
+- Il prefab mondo è assegnato nella relativa `ItemDefinition`. Se manca, il rilascio viene rifiutato e l'inventario non viene modificato.
+- Il rilascio istanzia il prefab, configura il componente `WorldItemPickup` e solo dopo rimuove la quantità dall'inventario. Se il trasferimento non si completa, l'operazione viene annullata e la quantità elaborata viene restituita all'inventario.
+- Distanza, altezza, impulso fisico e quantità per azione sono configurabili nell'Inspector.
 
-Il rilascio riguarda lo stack selezionato. Richiede che `ItemDefinition.WorldPrefab` sia assegnato. Il componente crea il prefab davanti al giocatore, configura il relativo `WorldItemPickup` e rimuove dall'inventario la quantità definita in `DropQuantityPerAction`. Se la configurazione del pickup o la rimozione non riescono, l'oggetto creato viene eliminato e l'eventuale quantità già rimossa viene restituita all'inventario. Se il prefab contiene un `Rigidbody`, può ricevere l'impulso configurato.
+La raccolta viene ignorata mentre l'interfaccia è aperta. Il rilascio resta disponibile anche con l'interfaccia aperta, per consentire di rilasciare lo slot selezionato.
 
-Le azioni di interazione e rilascio sono risolte tramite `PlayerInputSettings`. La raccolta non dipende dal peso massimo: il peso produce una penalità di locomozione, non il rifiuto dell'oggetto.
+## Limiti attuali
 
-## Interfaccia
-
-`PlayerInventoryUI` crea a runtime un Canvas `ScreenSpaceOverlay` e un pannello con intestazione, peso trasportato e griglia degli slot. Ogni slot mostra l'icona, quando presente, il nome e la quantità dell'oggetto. Lo slot selezionato usa il colore dedicato; il peso viene evidenziato quando l'inventario supera la soglia.
-
-La griglia è generata in base alla capacità effettiva e al limite di slot visibili. Layout, font, dimensioni, ancoraggi, testi e colori provengono da `InventoryUISettings`. L'interfaccia usa i componenti `Text`, `Image`, `GridLayoutGroup` e `GraphicRaycaster` di Unity UI.
-
-I controlli disponibili sono:
-
-- `ToggleInventory`: apre o chiude il pannello.
-- `NextSlot`: seleziona lo slot successivo.
-- `PreviousSlot`: seleziona lo slot precedente.
-
-All'apertura, l'interfaccia salva lo stato di cattura del cursore, sopprime l'input di locomozione e rende libero il cursore. Alla chiusura ripristina la cattura se era attiva prima dell'apertura. La UI si iscrive all'evento `PlayerInventory.Changed` e aggiorna peso, icone, testi e selezione dopo le modifiche. Il metodo `Configure` rimuove la sottoscrizione precedente e si collega al nuovo inventario assegnato.
-
-La versione attuale non implementa selezione tramite click, trascinamento degli stack o menu contestuali degli oggetti.
-
-## Copertura dei test
-
-I test EditMode dell'inventario verificano le operazioni sui dati e gli invarianti degli slot. I test PlayMode comprendono:
-
-- penalità di sovraccarico e ripristino delle capacità di corsa e salto;
-- raccolta di un pickup nella scena;
-- rilascio di una quantità configurata dello stack selezionato;
-- aggiornamento dell'interfaccia quando l'inventario viene assegnato dopo la creazione del componente.
-
-La presenza dei test nel repository non certifica da sola l'esecuzione sulla revisione corrente. I risultati validi devono essere riferiti al commit e alla specifica esecuzione Unity.
-
-## Funzionalità non implementate
-
-Il sistema descritto non comprende ancora:
-
-- salvataggio e caricamento persistente dell'inventario;
-- equipaggiamento e slot dedicati;
-- utilizzo degli oggetti;
-- crafting e consumo di risorse;
-- categorie, filtri e ricerca;
-- interazione con gli slot tramite mouse, drag-and-drop o menu contestuali.
+Non sono ancora implementati equipaggiamento, utilizzo degli oggetti, trascinamento con mouse, ordinamento automatico, contenitori esterni, commercio o salvataggio persistente. Gli oggetti rilasciati richiedono un prefab mondo assegnato alla definizione. L'interazione è basata sulla camera e non su un sistema di prossimità indipendente dalla visuale.
