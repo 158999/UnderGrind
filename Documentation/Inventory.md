@@ -24,7 +24,7 @@ La capacità in slot e il peso massimo sono due regole distinte:
 
 Quando `CurrentWeightKg` è maggiore di `MaxCarryWeightKg`, `PlayerInventory.IsOverloaded` diventa vero. Il controller disabilita corsa e salto e riduce la velocità di camminata della percentuale definita in `OverloadedWalkSpeedReductionPercent`. La riduzione è fissa e non cresce con il peso eccedente. Raggiungere esattamente la soglia non costituisce sovraccarico.
 
-I valori iniziali sono 24 slot, 50 kg e una riduzione del 25%. Sono modificabili nell'Inspector.
+I valori iniziali sono 24 slot, 50 kg e una riduzione del 25%. Sono modificabili nell'Inspector. I template JSON iniziali sono conservati in `Assets/UnderGrind/Settings/Defaults`; una volta creati gli asset, il builder non sovrascrive le modifiche effettuate nell'Inspector.
 
 ## Operazioni disponibili
 
