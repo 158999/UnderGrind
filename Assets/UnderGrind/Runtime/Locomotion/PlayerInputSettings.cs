@@ -44,12 +44,24 @@ namespace UnderGrind.Locomotion
         [SerializeField] private string nextSlotActionName;
         [SerializeField] private string previousSlotActionName;
 
+        [Header("Dead zone")]
+        [SerializeField, Range(0f, 0.95f)] private float movementDeadzone = 0.15f;
+        [SerializeField, Range(0f, 0.95f)] private float gamepadLookDeadzone = 0.12f;
+
+        [Header("Rimappatura e salvataggio")]
+        [SerializeField, Min(0.1f)] private float rebindTimeoutSeconds = 8f;
+        [SerializeField] private string overrideStorageKey = "UnderGrind.Player.InputOverrides";
+
         [Header("Comportamento cursore")]
         [SerializeField] private bool lockCursorOnStart;
         [SerializeField] private bool recaptureCursorOnClick;
 
         public InputActionAsset ActionAsset => actionAsset;
         public string ActionMapName => actionMapName;
+        public float MovementDeadzone => movementDeadzone;
+        public float GamepadLookDeadzone => gamepadLookDeadzone;
+        public float RebindTimeoutSeconds => rebindTimeoutSeconds;
+        public string OverrideStorageKey => overrideStorageKey;
         public bool LockCursorOnStart => lockCursorOnStart;
         public bool RecaptureCursorOnClick => recaptureCursorOnClick;
 
@@ -100,6 +112,9 @@ namespace UnderGrind.Locomotion
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            movementDeadzone = Mathf.Clamp(movementDeadzone, 0f, 0.95f);
+            gamepadLookDeadzone = Mathf.Clamp(gamepadLookDeadzone, 0f, 0.95f);
+            rebindTimeoutSeconds = Mathf.Max(0.1f, rebindTimeoutSeconds);
             if (actionAsset != null && !string.IsNullOrWhiteSpace(actionMapName) &&
                 actionAsset.FindActionMap(actionMapName, false) == null)
                 Debug.LogError("UnderGrind: action map non trovato: " + actionMapName, this);
