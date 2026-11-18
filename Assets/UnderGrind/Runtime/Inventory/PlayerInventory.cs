@@ -148,6 +148,9 @@ namespace UnderGrind.Inventory
 
         private void EnsureSlotCount()
         {
+            if (slots == null) slots = new List<InventorySlot>();
+            for (var i = 0; i < slots.Count; i++)
+                if (slots[i] == null) slots[i] = new InventorySlot();
             if (settings == null) return;
             while (slots.Count < settings.MaxSlots) slots.Add(new InventorySlot());
             while (slots.Count > settings.MaxSlots)
