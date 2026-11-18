@@ -33,10 +33,12 @@ namespace UnderGrind.Editor
             var inventoryUISettings = EnsureAsset<InventoryUISettings>(
                 InventoryUISettingsPath, DefaultsFolder + "/InventoryUISettings.json");
             MigrateInventoryUISettings(inventoryUISettings, DefaultsFolder + "/InventoryUISettings.json");
-            EnsureAsset<PlayerAnimationSettings>(
+            var animationSettings = EnsureAsset<PlayerAnimationSettings>(
                 AnimationSettingsPath, DefaultsFolder + "/PlayerAnimationSettings.json");
-            EnsureAsset<PlayerRigSettings>(
+            MigrateAnimationSettings(animationSettings, DefaultsFolder + "/PlayerAnimationSettings.json");
+            var rigSettings = EnsureAsset<PlayerRigSettings>(
                 RigSettingsPath, DefaultsFolder + "/PlayerRigSettings.json");
+            MigrateRigSettings(rigSettings, DefaultsFolder + "/PlayerRigSettings.json");
 
             AssetDatabase.SaveAssets();
         }
@@ -92,6 +94,62 @@ namespace UnderGrind.Editor
             current.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
             Object.DestroyImmediate(defaults);
+        }
+
+        private static void MigrateAnimationSettings(PlayerAnimationSettings asset, string defaultsPath)
+        {
+            if (asset == null || !File.Exists(defaultsPath)) return;
+            var defaults = ScriptableObject.CreateInstance<PlayerAnimationSettings>();
+            JsonUtility.FromJsonOverwrite(File.ReadAllText(defaultsPath), defaults);
+            var current = new SerializedObject(asset);
+            var template = new SerializedObject(defaults);
+            var version = current.FindProperty("settingsVersion");
+            var defaultVersion = template.FindProperty("settingsVersion");
+            if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
+            {
+                CopyBool(current, template, "idleLoops");
+                CopyBool(current, template, "walkLoops");
+                CopyBool(current, template, "runLoops");
+                CopyBool(current, template, "jumpLoops");
+                CopyBool(current, template, "fallLoops");
+                CopyBool(current, template, "landLoops");
+                CopyBool(current, template, "crouchIdleLoops");
+                CopyBool(current, template, "crouchWalkLoops");
+                version.intValue = defaultVersion.intValue;
+                current.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(asset);
+            }
+            Object.DestroyImmediate(defaults);
+        }
+
+        private static void MigrateRigSettings(PlayerRigSettings asset, string defaultsPath)
+        {
+            if (asset == null || !File.Exists(defaultsPath)) return;
+            var defaults = ScriptableObject.CreateInstance<PlayerRigSettings>();
+            JsonUtility.FromJsonOverwrite(File.ReadAllText(defaultsPath), defaults);
+            var current = new SerializedObject(asset);
+            var template = new SerializedObject(defaults);
+            var version = current.FindProperty("settingsVersion");
+            var defaultVersion = template.FindProperty("settingsVersion");
+            if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
+            {
+                CopyStringIfEmpty(current, template, "maleSourceAssetPath");
+                CopyStringIfEmpty(current, template, "femaleSourceAssetPath");
+                CopyStringIfEmpty(current, template, "thirdPersonArmsToken");
+                CopyStringIfEmpty(current, template, "thirdPersonHandsToken");
+                version.intValue = defaultVersion.intValue;
+                current.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(asset);
+            }
+            Object.DestroyImmediate(defaults);
+        }
+
+        private static void CopyStringIfEmpty(SerializedObject target, SerializedObject source, string name)
+        {
+            var property = target.FindProperty(name);
+            var defaultProperty = source.FindProperty(name);
+            if (property != null && defaultProperty != null && string.IsNullOrWhiteSpace(property.stringValue))
+                property.stringValue = defaultProperty.stringValue;
         }
 
         private static void CopyVector2(SerializedObject target, SerializedObject source, string name)
