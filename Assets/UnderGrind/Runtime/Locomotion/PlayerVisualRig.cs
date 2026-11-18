@@ -13,6 +13,7 @@ namespace UnderGrind.Locomotion
     {
         [SerializeField] private PlayerRigSettings rigSettings;
         [SerializeField] private Renderer[] headRenderers = Array.Empty<Renderer>();
+        [SerializeField] private Renderer[] thirdPersonOnlyRenderers = Array.Empty<Renderer>();
         [SerializeField] private Renderer[] firstPersonOnlyRenderers = Array.Empty<Renderer>();
 
         private readonly Dictionary<Renderer, bool> _originalEnabled = new Dictionary<Renderer, bool>();
@@ -40,6 +41,7 @@ namespace UnderGrind.Locomotion
 
             var renderers = rigRoot.GetComponentsInChildren<Renderer>(true);
             var heads = new List<Renderer>();
+            var thirdPersonOnly = new List<Renderer>();
             var firstPersonOnly = new List<Renderer>();
             foreach (var renderer in renderers)
             {
@@ -47,6 +49,12 @@ namespace UnderGrind.Locomotion
                 if (!string.IsNullOrWhiteSpace(configuration.HeadRendererSuffix) &&
                     HasPartSuffix(renderer.name, configuration.HeadRendererSuffix))
                     heads.Add(renderer);
+
+                if ((!string.IsNullOrWhiteSpace(configuration.ThirdPersonArmsToken) &&
+                     ContainsToken(renderer.name, configuration.ThirdPersonArmsToken)) ||
+                    (!string.IsNullOrWhiteSpace(configuration.ThirdPersonHandsToken) &&
+                     ContainsToken(renderer.name, configuration.ThirdPersonHandsToken)))
+                    thirdPersonOnly.Add(renderer);
 
                 if ((!string.IsNullOrWhiteSpace(configuration.FirstPersonArmsToken) &&
                      ContainsToken(renderer.name, configuration.FirstPersonArmsToken)) ||
@@ -59,13 +67,19 @@ namespace UnderGrind.Locomotion
             if (configuration.RequireFirstPersonArms && firstPersonOnly.Count == 0) return false;
 
             rigSettings = configuration;
-            Configure(heads.ToArray(), firstPersonOnly.ToArray());
+            Configure(heads.ToArray(), thirdPersonOnly.ToArray(), firstPersonOnly.ToArray());
             return true;
         }
 
         public void Configure(Renderer[] head, Renderer[] firstPersonOnly)
         {
+            Configure(head, Array.Empty<Renderer>(), firstPersonOnly);
+        }
+
+        public void Configure(Renderer[] head, Renderer[] thirdPersonOnly, Renderer[] firstPersonOnly)
+        {
             headRenderers = head ?? Array.Empty<Renderer>();
+            thirdPersonOnlyRenderers = thirdPersonOnly ?? Array.Empty<Renderer>();
             firstPersonOnlyRenderers = firstPersonOnly ?? Array.Empty<Renderer>();
             CacheRenderers();
             ApplyVisibility();
@@ -88,6 +102,7 @@ namespace UnderGrind.Locomotion
         private void CacheRenderers()
         {
             Cache(headRenderers);
+            Cache(thirdPersonOnlyRenderers);
             Cache(firstPersonOnlyRenderers);
             _initialized = true;
         }
@@ -106,8 +121,10 @@ namespace UnderGrind.Locomotion
             {
                 if (pair.Key == null) continue;
                 var isHead = Array.IndexOf(headRenderers, pair.Key) >= 0;
+                var isThirdPersonOnly = Array.IndexOf(thirdPersonOnlyRenderers, pair.Key) >= 0;
                 var isFirstPersonOnly = Array.IndexOf(firstPersonOnlyRenderers, pair.Key) >= 0;
                 pair.Key.enabled = pair.Value && (!isHead || _thirdPerson) &&
+                                   (!isThirdPersonOnly || _thirdPerson) &&
                                    (!isFirstPersonOnly || !_thirdPerson);
             }
         }
@@ -122,6 +139,7 @@ namespace UnderGrind.Locomotion
         private void OnValidate()
         {
             headRenderers ??= Array.Empty<Renderer>();
+            thirdPersonOnlyRenderers ??= Array.Empty<Renderer>();
             firstPersonOnlyRenderers ??= Array.Empty<Renderer>();
         }
 #endif
