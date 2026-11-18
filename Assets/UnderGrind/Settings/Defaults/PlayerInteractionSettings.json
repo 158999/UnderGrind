@@ -1,0 +1,11 @@
+{
+  "interactionDistance": 2.5,
+  "pickupRayRadius": 0.08,
+  "interactionLayers": {
+    "m_Bits": -1
+  },
+  "dropForwardDistance": 0.9,
+  "dropHeightOffset": 0.25,
+  "dropImpulse": 1.5,
+  "dropQuantityPerAction": 1
+}
