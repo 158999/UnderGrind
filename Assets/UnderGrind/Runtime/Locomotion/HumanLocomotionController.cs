@@ -179,13 +179,13 @@ namespace UnderGrind.Locomotion
             }
             else
             {
-                if (_cancelAction != null && _cancelAction.WasPressedThisFrame())
+                if (!_inputSuppressed && _cancelAction != null && _cancelAction.WasPressedThisFrame())
                     SetCursorLocked(false);
                 else if (!_inputSuppressed && !_cursorLocked && inputSettings != null && inputSettings.RecaptureCursorOnClick &&
                          _captureCursorAction != null && _captureCursorAction.WasPressedThisFrame())
                     SetCursorLocked(true);
 
-                if (_toggleCameraAction != null && _toggleCameraAction.WasPressedThisFrame())
+                if (!_inputSuppressed && _toggleCameraAction != null && _toggleCameraAction.WasPressedThisFrame())
                     SetCameraMode(!_thirdPerson);
 
                 if (_cursorLocked && !_inputSuppressed) ReadLook();
