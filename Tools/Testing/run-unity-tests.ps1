@@ -37,6 +37,11 @@ $exit = 0
 $runStartedUtc = [DateTime]::UtcNow
 foreach ($target in $platforms) {
     $platformStartedUtc = [DateTime]::UtcNow
+    $callbackBaseline = @{}
+    if (Test-Path $callbackResults) {
+        Get-ChildItem $callbackResults -Filter ($target + "_*.xml") -File |
+            ForEach-Object { $callbackBaseline[$_.FullName] = $_.LastWriteTimeUtc }
+    }
     $xmlName = "$target.xml"
     $logName = "$target.log"
     $xmlPath = Join-Path $runDir $xmlName
@@ -76,7 +81,9 @@ foreach ($target in $platforms) {
         $callbackReport = Get-ChildItem $callbackResults -Filter ($target + "_*.xml") -File |
             Where-Object {
                 $_.Name -ne ($target + "_Latest.xml") -and
-                $_.LastWriteTimeUtc -ge $platformStartedUtc.AddSeconds(-2)
+                (-not $callbackBaseline.ContainsKey($_.FullName) -or
+                 $_.LastWriteTimeUtc -gt $callbackBaseline[$_.FullName]) -and
+                $_.LastWriteTimeUtc -ge $platformStartedUtc
             } |
             Sort-Object LastWriteTimeUtc -Descending |
             Select-Object -First 1
