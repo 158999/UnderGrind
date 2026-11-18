@@ -102,9 +102,9 @@ namespace UnderGrind.Editor
             var version = serialized.FindProperty("settingsVersion");
             if (version != null && version.intValue < defaults.settingsVersion)
             {
-                SetFloat(serialized, "movementDeadzone", defaults.movementDeadzone);
-                SetFloat(serialized, "gamepadLookDeadzone", defaults.gamepadLookDeadzone);
-                SetFloat(serialized, "rebindTimeoutSeconds", defaults.rebindTimeoutSeconds);
+                SetFloatIfNotPositive(serialized, "movementDeadzone", defaults.movementDeadzone);
+                SetFloatIfNotPositive(serialized, "gamepadLookDeadzone", defaults.gamepadLookDeadzone);
+                SetFloatIfNotPositive(serialized, "rebindTimeoutSeconds", defaults.rebindTimeoutSeconds);
                 version.intValue = defaults.settingsVersion;
             }
 
@@ -170,10 +170,10 @@ namespace UnderGrind.Editor
                 property.stringValue = value;
         }
 
-        private static void SetFloat(SerializedObject serialized, string propertyName, float value)
+        private static void SetFloatIfNotPositive(SerializedObject serialized, string propertyName, float value)
         {
             var property = serialized.FindProperty(propertyName);
-            if (property != null) property.floatValue = value;
+            if (property != null && property.floatValue <= 0f) property.floatValue = value;
         }
 
         private static void EnsureFolder(string path)
