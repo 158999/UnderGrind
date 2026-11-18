@@ -95,30 +95,65 @@ else {
 Write-Host "Raccolta dei report delle due fasi..."
 $standaloneReportPath = Join-Path $runDir "latest.json"
 $unityReportPath = Join-Path $runDir "unity-latest.json"
-$standaloneReport = if (Test-Path -LiteralPath $standaloneReportPath) {
-    Get-Content -LiteralPath $standaloneReportPath -Raw | ConvertFrom-Json
-} else { $null }
-$unityReport = if (Test-Path -LiteralPath $unityReportPath) {
-    Get-Content -LiteralPath $unityReportPath -Raw | ConvertFrom-Json
-} else { $null }
+$standaloneSummaryPath = Join-Path $runDir "latest.txt"
+$unitySummaryPath = Join-Path $runDir "unity-latest.txt"
+$runIdPath = Join-Path $runDir "run-id.txt"
 
-$status = if ($standaloneExit -eq 0 -and $unityExit -eq 0 -and $standaloneReport.status -eq "Passed" -and $unityReport.status -eq "Passed") { "Passed" } else { "Failed" }
-$combined = [ordered]@{
-    runId = Get-Content -LiteralPath (Join-Path $runDir "run-id.txt") -Raw
-    finishedUtc = [DateTime]::UtcNow.ToString("O")
-    timeoutSeconds = $OverallTimeoutSeconds
-    status = $status
-    standaloneExitCode = $standaloneExit
-    unityExitCode = $unityExit
-    standalone = $standaloneReport
-    unity = $unityReport
+Write-Host "Lettura stato standalone..."
+$standaloneSummary = if (Test-Path -LiteralPath $standaloneSummaryPath -PathType Leaf) {
+    [IO.File]::ReadAllText($standaloneSummaryPath)
+} else { "" }
+$standaloneStatus = if ($standaloneSummary -match "(?m)^Status:\s*(Passed|Failed|NotConfigured)\s*$") {
+    $Matches[1]
+} else { "Missing" }
+
+Write-Host "Lettura stato Unity..."
+$unitySummary = if (Test-Path -LiteralPath $unitySummaryPath -PathType Leaf) {
+    [IO.File]::ReadAllText($unitySummaryPath)
+} else { "" }
+$unityStatus = if ($unitySummary -match "(?m)^Status:\s*(Passed|Failed|NotConfigured)\s*$") {
+    $Matches[1]
+} else { "Missing" }
+
+Write-Host "Lettura report JSON originali..."
+$standaloneJson = if (Test-Path -LiteralPath $standaloneReportPath -PathType Leaf) {
+    [IO.File]::ReadAllText($standaloneReportPath).Trim()
+} else { "null" }
+$unityJson = if (Test-Path -LiteralPath $unityReportPath -PathType Leaf) {
+    [IO.File]::ReadAllText($unityReportPath).Trim()
+} else { "null" }
+$runId = if (Test-Path -LiteralPath $runIdPath -PathType Leaf) {
+    [IO.File]::ReadAllText($runIdPath).Trim()
+} else { [DateTime]::UtcNow.ToString("yyyyMMdd-HHmmss-fff") }
+
+$status = if ($standaloneExit -eq 0 -and $unityExit -eq 0 -and
+    $standaloneStatus -eq "Passed" -and $unityStatus -eq "Passed" -and
+    $standaloneJson -ne "null" -and $unityJson -ne "null") { "Passed" } else { "Failed" }
+
+Write-Host "Composizione report complessivo..."
+$finishedUtc = [DateTime]::UtcNow.ToString("O")
+$combinedJson = @"
+{
+  "runId": "$runId",
+  "finishedUtc": "$finishedUtc",
+  "timeoutSeconds": $OverallTimeoutSeconds,
+  "status": "$status",
+  "standaloneExitCode": $standaloneExit,
+  "unityExitCode": $unityExit,
+  "standalone": $standaloneJson,
+  "unity": $unityJson
 }
-$combined | ConvertTo-Json -Depth 15 | Set-Content (Join-Path $runDir "all-latest.json") -Encoding utf8
+"@
+[IO.File]::WriteAllText(
+    (Join-Path $runDir "all-latest.json"),
+    $combinedJson,
+    [Text.UTF8Encoding]::new($false))
+
 @(
     "UnderGrind complete test run"
     "Status: $status"
-    "Standalone: $($standaloneReport.status) | Exit: $standaloneExit"
-    "Unity: $($unityReport.status) | Exit: $unityExit"
+    "Standalone: $standaloneStatus | Exit: $standaloneExit"
+    "Unity: $unityStatus | Exit: $unityExit"
     "Standalone logs: TestResults/test/*.log"
     "Unity logs and XML: TestResults/test/Unity/"
     "Reports: TestResults/test/"
