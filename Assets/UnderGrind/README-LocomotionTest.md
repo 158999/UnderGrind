@@ -19,8 +19,9 @@ Gli otto movimenti selezionati da PINOC sono elencati in `Assets/UnderGrind/Anim
 
 1. Verificare che Unity abbia completato l'importazione dei due FBX configurati.
 2. Verificare **Edit → Project Settings → Player → Other Settings → Active Input Handling**: Input System Package (New) oppure Both.
-3. Dal menu scegliere **UnderGrind → Build First Locomotion Test Scene**.
-4. Aprire `Assets/UnderGrind/Scenes/LocomotionTest.unity` e premere Play.
+3. Per testare subito il movimento senza i modelli definitivi, scegliere **UnderGrind → Build Graybox Locomotion Test (Temporary Proxy)**. La scena `LocomotionGraybox.unity` usa una capsula temporanea, dichiarata come proxy e non come personaggio finale.
+4. Dopo l'importazione e la validazione dei due prefab Humanoid, scegliere **UnderGrind → Build First Locomotion Test Scene** per creare `LocomotionTest.unity` con la variante selezionata in `PlayerRigSettings.asset`.
+5. Aprire la scena desiderata e premere Play.
 
 Il graybox è generato da `PlayerGrayboxSettings.asset` e comprende marcatori di distanza, gradini, scala, pareti, rampe, tunnel, passaggio stretto, slalom, ostacoli e piattaforme.
 

@@ -112,6 +112,11 @@ namespace UnderGrind.Locomotion
         {
             viewReference = reference;
             _bodyVisibleWhileLookingDown = _thirdPerson || viewReference == null;
+            if (rigSettings == null)
+            {
+                ApplyVisibility();
+                return;
+            }
             UpdateBodyVisibility(true);
         }
 

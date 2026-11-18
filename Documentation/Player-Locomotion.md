@@ -61,7 +61,7 @@ Le dead zone radiali, la sensibilità, il comportamento del cursore, il timeout 
 
 ## Graybox
 
-`PlayerGrayboxSettings.asset` configura pavimento, marcatori di distanza, gradini, scala, pareti, rampe, tunnel, passaggio stretto, slalom, ostacoli e piattaforme. La scena di test deve essere rigenerata nell'Editor Unity con i due prefab Humanoid validi prima della verifica in Play Mode.
+`PlayerGrayboxSettings.asset` configura pavimento, marcatori di distanza, gradini, scala, pareti, rampe, tunnel, passaggio stretto, slalom, ostacoli e piattaforme. La scena completa `LocomotionTest.unity` richiede entrambi i prefab Humanoid validi. Per provare subito movimento, collisioni e camera prima dell'importazione dei modelli, il menu `UnderGrind → Build Graybox Locomotion Test (Temporary Proxy)` crea `LocomotionGraybox.unity` con una capsula esplicitamente temporanea: non è il personaggio definitivo e non sostituisce i prefab maschile/femminile.
 
 ## Risultati dei test e conservazione
 

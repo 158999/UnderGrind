@@ -13,6 +13,7 @@ namespace UnderGrind.Editor
     public static class LocomotionTestSceneBuilder
     {
         private const string ScenePath = "Assets/UnderGrind/Scenes/LocomotionTest.unity";
+        private const string GrayboxScenePath = "Assets/UnderGrind/Scenes/LocomotionGraybox.unity";
         private const string GeneratedPath = "Assets/UnderGrind/Generated";
         private const string LocomotionSettingsPath = "Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset";
 
@@ -118,6 +119,142 @@ namespace UnderGrind.Editor
             EditorUtility.DisplayDialog("UnderGrind",
                 "Scena creata: " + ScenePath + "\nPersonaggio: " + selectedVariant + "\n\nApri la scena e premi Play. Controlli: WASD, mouse, SHIFT, SPAZIO, C, F5, E, G, TAB, [ e ].",
                 "OK");
+        }
+
+        [MenuItem("UnderGrind/Build Graybox Locomotion Test (Temporary Proxy)")]
+        public static void BuildGrayboxScene()
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(GrayboxScenePath) != null &&
+                !EditorUtility.DisplayDialog(
+                    "Sostituire la scena Graybox?",
+                    "La scena LocomotionGraybox.unity verrà ricreata. Il Player proxy temporaneo non è il personaggio definitivo.",
+                    "Sostituisci scena", "Annulla"))
+                return;
+
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                return;
+
+            EnsureFolder("Assets/UnderGrind/Scenes");
+            EnsureFolder(GeneratedPath);
+            PlayerInputAssetBuilder.EnsureAssets();
+            PlayerGameplayAssetBuilder.EnsureAssets();
+
+            var inputSettings = AssetDatabase.LoadAssetAtPath<PlayerInputSettings>(
+                "Assets/UnderGrind/Settings/PlayerInputSettings.asset");
+            var locomotionSettings = AssetDatabase.LoadAssetAtPath<PlayerLocomotionSettings>(LocomotionSettingsPath);
+            var inventorySettings = AssetDatabase.LoadAssetAtPath<InventorySettings>(
+                "Assets/UnderGrind/Settings/PlayerInventorySettings.asset");
+            var interactionSettings = AssetDatabase.LoadAssetAtPath<PlayerInteractionSettings>(
+                "Assets/UnderGrind/Settings/PlayerInteractionSettings.asset");
+            var inventoryUISettings = AssetDatabase.LoadAssetAtPath<InventoryUISettings>(
+                "Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset");
+            var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(
+                "Assets/UnderGrind/Settings/PlayerRigSettings.asset");
+            var grayboxSettings = AssetDatabase.LoadAssetAtPath<PlayerGrayboxSettings>(
+                "Assets/UnderGrind/Settings/PlayerGrayboxSettings.asset");
+
+            if (inputSettings == null || locomotionSettings == null || inventorySettings == null ||
+                interactionSettings == null || inventoryUISettings == null || rigSettings == null ||
+                grayboxSettings == null)
+            {
+                EditorUtility.DisplayDialog("Configurazione Graybox mancante",
+                    "Uno o più asset di configurazione non sono disponibili. La scena non è stata modificata.",
+                    "OK");
+                return;
+            }
+
+            var useFemale = rigSettings.DefaultCharacter == PlayerCharacterVariant.Female;
+            var characterHeight = useFemale
+                ? locomotionSettings.FemaleCharacterHeight
+                : locomotionSettings.CharacterHeight;
+            var characterVariant = useFemale ? "Female" : "Male";
+
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            CreateLighting(grayboxSettings);
+            CreateCourse(grayboxSettings);
+            CreateGrayboxProxyPlayer(characterHeight, characterVariant, locomotionSettings,
+                inputSettings, inventorySettings, interactionSettings, inventoryUISettings, grayboxSettings);
+
+            EditorSceneManager.SaveScene(scene, GrayboxScenePath);
+            var buildScenes = EditorBuildSettings.scenes.ToList();
+            if (buildScenes.All(x => x.path != GrayboxScenePath))
+            {
+                buildScenes.Add(new EditorBuildSettingsScene(GrayboxScenePath, true));
+                EditorBuildSettings.scenes = buildScenes.ToArray();
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("UnderGrind Graybox",
+                "Scena creata: " + GrayboxScenePath + "\nPlayer: proxy temporaneo " + characterVariant +
+                "\n\nIl proxy serve solo a provare locomozione, camera, collisioni e percorso. Non sostituisce il prefab Humanoid definitivo.",
+                "OK");
+        }
+
+        private static void CreateGrayboxProxyPlayer(float characterHeight, string characterVariant,
+            PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings,
+            InventorySettings inventorySettings, PlayerInteractionSettings interactionSettings,
+            InventoryUISettings inventoryUISettings, PlayerGrayboxSettings grayboxSettings)
+        {
+            var player = new GameObject("Player - GRAYBOX PROXY - " + characterVariant);
+            player.transform.position = grayboxSettings.PlayerSpawnPosition;
+            var controller = player.AddComponent<CharacterController>();
+            controller.height = characterHeight;
+            controller.radius = locomotionSettings.CapsuleRadius;
+            controller.center = Vector3.up * (controller.height * 0.5f);
+            controller.stepOffset = Mathf.Min(locomotionSettings.CharacterStepOffset,
+                controller.height * locomotionSettings.CharacterStepOffsetHeightRatio);
+            controller.slopeLimit = locomotionSettings.CharacterSlopeLimit;
+            controller.minMoveDistance = locomotionSettings.CharacterMinMoveDistance;
+            controller.skinWidth = locomotionSettings.CharacterSkinWidth;
+            controller.detectCollisions = locomotionSettings.CharacterDetectCollisions;
+            controller.enableOverlapRecovery = locomotionSettings.CharacterEnableOverlapRecovery;
+
+            var proxy = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            proxy.name = "GRAYBOX BODY PROXY - NOT FINAL CHARACTER";
+            proxy.transform.SetParent(player.transform, false);
+            proxy.transform.localPosition = Vector3.up * (characterHeight * 0.5f);
+            proxy.transform.localScale = new Vector3(
+                locomotionSettings.CapsuleRadius * 2f,
+                characterHeight * 0.5f,
+                locomotionSettings.CapsuleRadius * 2f);
+            UnityEngine.Object.DestroyImmediate(proxy.GetComponent<Collider>());
+            var proxyRenderer = proxy.GetComponent<Renderer>();
+            proxyRenderer.sharedMaterial = MakeMaterial("Graybox Player Proxy", grayboxSettings.AccentColor);
+
+            var visualRig = player.AddComponent<PlayerVisualRig>();
+            visualRig.Configure(Array.Empty<Renderer>(), new[] { proxyRenderer },
+                Array.Empty<Renderer>(), Array.Empty<Renderer>());
+
+            var pivot = new GameObject("View Pivot").transform;
+            pivot.SetParent(player.transform, false);
+            pivot.localPosition = Vector3.up * locomotionSettings.StandingViewHeight;
+
+            var cameraObject = new GameObject("Player Camera");
+            cameraObject.tag = "MainCamera";
+            cameraObject.transform.SetParent(pivot, false);
+            var camera = cameraObject.AddComponent<Camera>();
+            camera.fieldOfView = locomotionSettings.CameraFieldOfView;
+            camera.nearClipPlane = locomotionSettings.CameraNearClipPlane;
+            cameraObject.AddComponent<AudioListener>();
+
+            var inventory = player.AddComponent<PlayerInventory>();
+            inventory.Configure(inventorySettings);
+            var rebindingController = player.AddComponent<PlayerInputRebindingController>();
+            rebindingController.Configure(inputSettings);
+
+            var movement = player.AddComponent<HumanLocomotionController>();
+            movement.ConfigureSettings(locomotionSettings);
+            movement.ConfigureInputSettings(inputSettings);
+            movement.ConfigureViewRig(pivot, camera);
+
+            var inventoryUI = player.AddComponent<PlayerInventoryUI>();
+            inventoryUI.Configure(inventoryUISettings, inputSettings, inventory, movement);
+            var interaction = player.AddComponent<PlayerInteractionController>();
+            interaction.Configure(inputSettings, interactionSettings, inventory, movement, inventoryUI, camera);
+            player.AddComponent<LocomotionDebugOverlay>();
+
+            Debug.LogWarning("UnderGrind: creato Player proxy temporaneo per la scena Graybox. Non è un prefab/personaggio definitivo.");
         }
 
         private static void CreatePlayer(GameObject human, float characterHeight, string characterVariant,

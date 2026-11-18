@@ -36,6 +36,29 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void PlayerVisualRigHidesBodyInFirstPersonAndShowsItInThirdPerson()
+        {
+            var root = new GameObject("Visual Rig Test");
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            body.transform.SetParent(root.transform, false);
+            var view = new GameObject("View").transform;
+            view.SetParent(root.transform, false);
+            var renderer = body.GetComponent<Renderer>();
+            var rig = root.AddComponent<PlayerVisualRig>();
+            rig.Configure(Array.Empty<Renderer>(), new[] { renderer },
+                Array.Empty<Renderer>(), Array.Empty<Renderer>());
+
+            rig.SetViewReference(view);
+            Assert.IsFalse(renderer.enabled, "Il corpo proxy deve essere nascosto in prima persona.");
+            rig.SetThirdPerson(true);
+            Assert.IsTrue(renderer.enabled, "Il corpo deve essere visibile in terza persona.");
+            rig.SetThirdPerson(false);
+            Assert.IsFalse(renderer.enabled, "Il corpo deve tornare nascosto in prima persona.");
+
+            Object.DestroyImmediate(root);
+        }
+
+        [Test]
         public void JumpVelocityProducesConfiguredApexHeight()
         {
             var height = _settings.JumpVelocity * _settings.JumpVelocity / (2f * _settings.Gravity);
