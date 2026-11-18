@@ -81,10 +81,11 @@ namespace UnderGrind.Editor
                 femalePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(femaleRiggedPath);
             }
 
-            if (!ValidateRiggedPrefab(malePrefab, "maschile", rigSettings, out var maleError) ||
-                !ValidateRiggedPrefab(femalePrefab, "femminile", rigSettings, out var femaleError))
+            var maleValid = ValidateRiggedPrefab(malePrefab, "maschile", rigSettings, out var maleError);
+            var femaleValid = ValidateRiggedPrefab(femalePrefab, "femminile", rigSettings, out var femaleError);
+            if (!maleValid || !femaleValid)
             {
-                var message = !string.IsNullOrEmpty(maleError) ? maleError : femaleError;
+                var message = !maleValid ? maleError : femaleError;
                 Debug.LogError("UnderGrind: " + message);
                 EditorUtility.DisplayDialog("Prefab Humanoid non valido",
                     message + "\n\nLa scena non è stata creata. Genera e verifica entrambi i prefab Humanoid prima di procedere.",
