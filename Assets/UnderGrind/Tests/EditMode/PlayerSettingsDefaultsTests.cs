@@ -60,6 +60,10 @@ namespace UnderGrind.Tests
             var settings = Load<PlayerRigSettings>("PlayerRigSettings.json");
             Assert.AreEqual("UG_Male_Armature", settings.MaleArmatureRootName);
             Assert.AreEqual("UG_Female_Armature", settings.FemaleArmatureRootName);
+            Assert.AreEqual("Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx", settings.MaleSourceAssetPath);
+            Assert.AreEqual("Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx", settings.FemaleSourceAssetPath);
+            Assert.AreEqual("_TP_Arms", settings.ThirdPersonArmsToken);
+            Assert.AreEqual("_TP_Hands", settings.ThirdPersonHandsToken);
             Assert.IsTrue(settings.RequireSeparateHead);
             Assert.IsFalse(settings.RequireFirstPersonArms);
         }
