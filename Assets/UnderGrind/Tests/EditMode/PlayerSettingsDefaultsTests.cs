@@ -53,6 +53,10 @@ namespace UnderGrind.Tests
             Assert.IsFalse(settings.JumpLoops);
             Assert.AreEqual("Speed", settings.SpeedParameterName);
             Assert.AreEqual(2f, settings.RunThreshold);
+            Assert.IsTrue(settings.ConfigureFbxImports);
+            Assert.AreEqual(PlayerAnimationRigType.Humanoid, settings.FbxRigType);
+            Assert.IsTrue(settings.CreateAvatarFromFbx);
+            Assert.IsTrue(settings.ImportAnimationClips);
         }
 
         [Test]
