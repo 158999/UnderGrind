@@ -1,6 +1,6 @@
 ﻿{
-    "runId":  "20261118-101936-324",
-    "finishedUtc":  "2026-11-18T09:19:36.4970629Z",
+    "runId":  "20261118-103717-325",
+    "finishedUtc":  "2026-11-18T09:37:17.3564184Z",
     "status":  "Failed",
     "totals":  {
                    "failed":  0,
@@ -11,7 +11,7 @@
     "platforms":  [
                       {
                           "platform":  "EditMode",
-                          "exitCode":  null,
+                          "exitCode":  0,
                           "resultValid":  false,
                           "validationErrors":  [
                                                    "Unity did not produce the expected XML result file.",
@@ -28,7 +28,7 @@
                       },
                       {
                           "platform":  "PlayMode",
-                          "exitCode":  null,
+                          "exitCode":  0,
                           "resultValid":  false,
                           "validationErrors":  [
                                                    "Unity did not produce the expected XML result file.",
