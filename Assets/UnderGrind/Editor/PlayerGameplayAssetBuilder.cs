@@ -133,7 +133,7 @@ namespace UnderGrind.Editor
             }
             SetInt(serialized, "panelPadding", 20);
             SetFloat(serialized, "headerHeight", 48f);
-            SetInt(serialized, "maxVisibleSlots", 24);
+            SetInt(serialized, "maxVisibleSlots", 0);
             SetInt(serialized, "sortingOrder", 10);
             SetColor(serialized, "panelColor", new Color(0.06f, 0.07f, 0.08f, 0.94f));
             SetColor(serialized, "slotColor", new Color(0.16f, 0.18f, 0.20f, 1f));
