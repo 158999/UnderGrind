@@ -25,6 +25,7 @@ namespace UnderGrind.Locomotion
     public sealed class PlayerInputSettings : ScriptableObject
     {
         [Header("Asset e action map")]
+        [SerializeField] private int settingsVersion;
         [SerializeField] private InputActionAsset actionAsset;
         [SerializeField] private string actionMapName;
 
@@ -45,12 +46,12 @@ namespace UnderGrind.Locomotion
         [SerializeField] private string previousSlotActionName;
 
         [Header("Dead zone")]
-        [SerializeField, Range(0f, 0.95f)] private float movementDeadzone = 0.15f;
-        [SerializeField, Range(0f, 0.95f)] private float gamepadLookDeadzone = 0.12f;
+        [SerializeField, Range(0f, 0.95f)] private float movementDeadzone;
+        [SerializeField, Range(0f, 0.95f)] private float gamepadLookDeadzone;
 
         [Header("Rimappatura e salvataggio")]
-        [SerializeField, Min(0.1f)] private float rebindTimeoutSeconds = 8f;
-        [SerializeField] private string overrideStorageKey = "UnderGrind.Player.InputOverrides";
+        [SerializeField, Min(0.1f)] private float rebindTimeoutSeconds;
+        [SerializeField] private string overrideStorageKey;
 
         [Header("Comportamento cursore")]
         [SerializeField] private bool lockCursorOnStart;
