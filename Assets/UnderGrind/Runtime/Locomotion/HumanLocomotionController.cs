@@ -191,7 +191,7 @@ namespace UnderGrind.Locomotion
                 if (_cursorLocked && !_inputSuppressed) ReadLook();
                 if (_inputSuppressed) _moveInput = Vector2.zero;
                 else ReadMovementInput();
-                UpdateStance();
+                if (!_inputSuppressed) UpdateStance();
             }
 
             MoveCharacter();
@@ -235,7 +235,7 @@ namespace UnderGrind.Locomotion
 
         private void UpdateStance()
         {
-            var crouch = !_inputSuppressed && _crouchAction != null && _crouchAction.IsPressed();
+            var crouch = _crouchAction != null && _crouchAction.IsPressed();
             var target = crouch ? settings.CrouchHeight : settings.CharacterHeight;
             if (!crouch && !CanStand()) target = settings.CrouchHeight;
             _currentHeight = Mathf.MoveTowards(_currentHeight, target, settings.StanceChangeSpeed * Time.deltaTime);
