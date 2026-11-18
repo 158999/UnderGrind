@@ -21,7 +21,7 @@ namespace UnderGrind.Editor
             EditorApplication.delayCall += EnsureAssets;
         }
 
-        [MenuItem("UnderGrind/Player/Create or Repair Inventory Assets")]
+        [MenuItem("UnderGrind/Player/Create or Repair Player Settings Assets")]
         public static void EnsureAssets()
         {
             EnsureFolder("Assets/UnderGrind");
