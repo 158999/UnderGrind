@@ -298,6 +298,10 @@ namespace UnderGrind.Locomotion
 
         private void ApplyCharacterDimensions()
         {
+            // Configure methods are also used by Editor tests and setup tools,
+            // where Awake may not have run yet.
+            if (_characterController == null)
+                _characterController = GetComponent<CharacterController>();
             if (_characterController == null || settings == null) return;
             _characterController.height = Mathf.Max(settings.CapsuleRadius * 2f, _currentHeight);
             _characterController.radius = settings.CapsuleRadius;
