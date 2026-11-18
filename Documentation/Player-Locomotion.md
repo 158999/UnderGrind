@@ -42,7 +42,7 @@ I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. Se ma
 | Apri/chiudi inventario | Tab | Select |
 | Slot successivo/precedente | ] / [ | D-pad destra/sinistra |
 
-Le azioni vengono lette dalla stessa action map. Il cursore viene bloccato all'avvio se l'opzione è attiva e può essere liberato o catturato nuovamente tramite le azioni configurate.
+Le azioni vengono lette dalla stessa action map. Il cursore viene bloccato all'avvio se l'opzione è attiva e può essere liberato o catturato nuovamente tramite le azioni configurate. Le dead zone radiali per movimento e visuale gamepad, il timeout di rimappatura e la chiave di persistenza sono configurati in `PlayerInputSettings.asset`. `PlayerInputRebindingController` espone l'API per avviare, annullare, salvare e ripristinare una rimappatura e salva gli override in PlayerPrefs. Non è ancora presente una schermata di configurazione dei tasti nel menu di gioco.
 
 \`PlayerInputSettings\` espone due dead zone radiali configurabili: \`MovementDeadzone\` per lo stick di movimento e \`GamepadLookDeadzone\` per lo stick visuale. La sensibilità del mouse e del gamepad resta nell'asset \`PlayerLocomotionSettings\`. Le dead zone vengono applicate prima di trasferire l'input alla locomozione.
 
