@@ -39,7 +39,7 @@ foreach ($target in $platforms) {
     $xmlPath = Join-Path $runDir $xmlName
     $logPath = Join-Path $runDir $logName
     $arguments = @(
-        "-batchmode", "-nographics",
+        "-batchmode", "-nographics", "-accept-apiupdate",
         "-projectPath", $root,
         "-runTests",
         "-testPlatform", $target,
@@ -47,8 +47,14 @@ foreach ($target in $platforms) {
         "-logFile", $logPath
     )
     Write-Host "Running Unity $target tests..."
-    & $UnityEditorPath @arguments
-    $code = $LASTEXITCODE
+    # Unity.exe can return before its editor child process has finished. Waiting
+    # on the call operator may launch the next platform against a locked project
+    # and inspect result files before they exist. Wait for the process tree.
+    $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
+        if ($_ -match '[\s"]') { '"' + $_.Replace('"', '\\"') + '"' } else { $_ }
+    }))
+    $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow
+    $code = $process.ExitCode
     $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
     $validationErrors = [System.Collections.Generic.List[string]]::new()
     $hasValidResult = $false
