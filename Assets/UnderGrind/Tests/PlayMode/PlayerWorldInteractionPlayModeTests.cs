@@ -127,6 +127,53 @@ namespace UnderGrind.Tests
                 "The UI must refresh its slot text after Configure subscribes to inventory changes.");
         }
 
+        [UnityTest]
+        public IEnumerator DisablingInventoryUI_RestoresPreviousCursorCapture()
+        {
+            CreateSettings();
+            _uiSettings = ScriptableObject.CreateInstance<InventoryUISettings>();
+            SetField(_uiSettings, "panelTitle", "INVENTORY");
+            SetField(_uiSettings, "weightTextFormat", "Weight {0:0.0}/{1:0.0}");
+            SetField(_uiSettings, "emptySlotText", "Empty");
+            SetField(_uiSettings, "titleFontSize", 24);
+            SetField(_uiSettings, "bodyFontSize", 18);
+            SetField(_uiSettings, "slotFontSize", 14);
+            SetField(_uiSettings, "referenceResolution", new Vector2(1920f, 1080f));
+            SetField(_uiSettings, "panelSize", new Vector2(720f, 520f));
+            SetField(_uiSettings, "panelOffset", Vector2.zero);
+            SetField(_uiSettings, "columns", 6);
+            SetField(_uiSettings, "slotSize", new Vector2(96f, 96f));
+            SetField(_uiSettings, "slotSpacing", new Vector2(8f, 8f));
+            SetField(_uiSettings, "panelPadding", 20);
+            SetField(_uiSettings, "headerHeight", 48f);
+            SetField(_uiSettings, "maxVisibleSlots", 4);
+            SetField(_uiSettings, "sortingOrder", 10);
+            SetField(_uiSettings, "panelColor", Color.black);
+            SetField(_uiSettings, "slotColor", Color.gray);
+            SetField(_uiSettings, "selectedSlotColor", Color.yellow);
+            SetField(_uiSettings, "textColor", Color.white);
+            SetField(_uiSettings, "overloadedWeightColor", Color.red);
+
+            _player = new GameObject("Inventory UI cursor player");
+            var inventory = _player.AddComponent<PlayerInventory>();
+            inventory.Configure(_inventorySettings);
+            var locomotion = _player.AddComponent<HumanLocomotionController>();
+            locomotion.SetCursorCaptured(true);
+            var ui = _player.AddComponent<PlayerInventoryUI>();
+            ui.Configure(_uiSettings, _inputSettings, inventory, locomotion);
+
+            ui.SetOpen(true);
+            Assert.IsFalse(locomotion.IsCursorCaptured,
+                "Opening the inventory must release a previously captured cursor.");
+
+            ui.enabled = false;
+            yield return null;
+
+            Assert.IsFalse(ui.IsOpen);
+            Assert.IsTrue(locomotion.IsCursorCaptured,
+                "Disabling the inventory UI must restore the cursor state that existed before opening it.");
+        }
+
         [UnityTearDown]
         public IEnumerator TearDown()
         {
