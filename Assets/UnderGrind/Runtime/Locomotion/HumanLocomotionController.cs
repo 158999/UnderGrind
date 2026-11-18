@@ -7,41 +7,13 @@ namespace UnderGrind.Locomotion
     [RequireComponent(typeof(CharacterController))]
     public sealed class HumanLocomotionController : MonoBehaviour
     {
-        public const float DefaultWalkSpeed = 1.4f;
-        public const float DefaultRunMultiplier = 4f / 3f;
-        public const float DefaultJumpHeight = 0.4f;
-        public const float DefaultCharacterHeight = 1.78f;
-
-        [Header("Human movement")]
-        [SerializeField, Min(1f)] private float characterHeight = DefaultCharacterHeight;
-        [SerializeField, Min(0.1f)] private float walkSpeed = DefaultWalkSpeed;
-        [SerializeField, Min(1f)] private float runMultiplier = DefaultRunMultiplier;
-        [SerializeField, Min(0.05f)] private float jumpHeight = DefaultJumpHeight;
-        [SerializeField, Min(0.1f)] private float gravity = 9.81f;
-        [SerializeField, Min(0.1f)] private float acceleration = 12f;
-        [SerializeField, Min(0.1f)] private float deceleration = 16f;
-        [SerializeField, Range(0f, 1f)] private float airControl = 0.35f;
-        [SerializeField, Min(0f)] private float coyoteTime = 0.1f;
-        [SerializeField, Min(0f)] private float jumpBufferTime = 0.12f;
-
-        [Header("Inventory overload")]
+        [Header("Configuration")]
+        [SerializeField] private PlayerLocomotionSettings settings;
         [SerializeField] private PlayerInventory inventory;
 
-        [Header("Stance")]
-        [SerializeField, Min(0.1f)] private float crouchHeight = 1.12f;
-        [SerializeField, Min(0.1f)] private float crouchSpeedMultiplier = 0.5f;
-        [SerializeField, Min(0.1f)] private float stanceChangeSpeed = 8f;
-        [SerializeField, Min(0.1f)] private float capsuleRadius = 0.28f;
-
-        [Header("View")]
+        [Header("View rig references")]
         [SerializeField] private Transform viewPivot;
         [SerializeField] private Camera playerCamera;
-        [SerializeField, Min(0.01f)] private float mouseSensitivity = 0.12f;
-        [SerializeField, Min(1f)] private float gamepadLookSensitivity = 150f;
-        [SerializeField, Range(45f, 89f)] private float maxLookAngle = 82f;
-        [SerializeField, Min(0.5f)] private float thirdPersonDistance = 3.25f;
-        [SerializeField, Min(0.1f)] private float cameraCollisionRadius = 0.16f;
-        [SerializeField] private LayerMask cameraCollisionLayers = ~0;
 
         private CharacterController _characterController;
         private PlayerAnimationDriver _animationDriver;
@@ -53,23 +25,26 @@ namespace UnderGrind.Locomotion
         private float _jumpBufferedUntil = float.NegativeInfinity;
         private bool _thirdPerson;
         private bool _cursorLocked;
+        private bool _missingSettingsReported;
         private Vector3 _horizontalVelocity;
         private float _measuredSpeed;
         private Vector2 _moveInput;
 
-        public float CharacterHeight => characterHeight;
-        public float WalkSpeed => walkSpeed;
-        public float EffectiveWalkSpeed => walkSpeed * (IsOverloaded ? inventory.OverloadedWalkSpeedMultiplier : 1f);
-        public float RunSpeed => walkSpeed * runMultiplier;
+        public PlayerLocomotionSettings Settings => settings;
+        public float CharacterHeight => settings != null ? settings.CharacterHeight : 0f;
+        public float WalkSpeed => settings != null ? settings.WalkSpeed : 0f;
+        public float EffectiveWalkSpeed => settings != null
+            ? settings.WalkSpeed * (IsOverloaded ? inventory.OverloadedWalkSpeedMultiplier : 1f) : 0f;
+        public float RunSpeed => settings != null ? settings.RunSpeed : 0f;
         public bool IsOverloaded => inventory != null && inventory.IsOverloaded;
         public float InventoryWeightKg => inventory != null ? inventory.CurrentWeightKg : 0f;
         public float InventoryWeightCapacityKg => inventory != null ? inventory.MaxWeightKg : 0f;
         public bool CanRun => !IsOverloaded;
         public bool CanJump => !IsOverloaded;
-        public float RunMultiplier => runMultiplier;
-        public float JumpHeight => jumpHeight;
-        public float Gravity => gravity;
-        public float JumpVelocity => Mathf.Sqrt(2f * gravity * jumpHeight);
+        public float RunMultiplier => settings != null ? settings.RunMultiplier : 0f;
+        public float JumpHeight => settings != null ? settings.JumpHeight : 0f;
+        public float Gravity => settings != null ? settings.Gravity : 0f;
+        public float JumpVelocity => settings != null ? settings.JumpVelocity : 0f;
         public float MeasuredSpeed => _measuredSpeed;
         public bool IsGrounded => _characterController != null && _characterController.isGrounded;
         public bool IsRunning { get; private set; }
@@ -77,6 +52,15 @@ namespace UnderGrind.Locomotion
         public bool IsThirdPerson => _thirdPerson;
         public float VerticalVelocity => _verticalVelocity;
         public Vector2 MoveInput => _moveInput;
+
+        public void ConfigureSettings(PlayerLocomotionSettings value)
+        {
+            settings = value;
+            if (settings == null) return;
+            _currentHeight = settings.CharacterHeight;
+            ApplyCharacterDimensions();
+            ApplyCameraMode();
+        }
 
         public void ConfigureViewRig(Transform pivot, Camera camera)
         {
@@ -106,26 +90,25 @@ namespace UnderGrind.Locomotion
             if (_visualRig == null) _visualRig = gameObject.AddComponent<PlayerVisualRig>();
             if (playerCamera == null) playerCamera = GetComponentInChildren<Camera>(true);
             if (viewPivot == null && playerCamera != null) viewPivot = playerCamera.transform.parent;
-            _currentHeight = characterHeight;
+            if (settings != null) _currentHeight = settings.CharacterHeight;
             ApplyCharacterDimensions();
             SetCursorLocked(playerCamera != null);
             _visualRig.SetThirdPerson(_thirdPerson);
             ApplyCameraMode();
         }
 
-        private void OnValidate()
-        {
-            characterHeight = Mathf.Max(capsuleRadius * 2f, characterHeight);
-            walkSpeed = Mathf.Max(0.1f, walkSpeed);
-            runMultiplier = Mathf.Max(1f, runMultiplier);
-            jumpHeight = Mathf.Max(0.05f, jumpHeight);
-            gravity = Mathf.Max(0.1f, gravity);
-            crouchHeight = Mathf.Clamp(crouchHeight, capsuleRadius * 2f, characterHeight);
-            capsuleRadius = Mathf.Max(0.1f, capsuleRadius);
-        }
-
         private void Update()
         {
+            if (settings == null)
+            {
+                if (!_missingSettingsReported)
+                {
+                    Debug.LogError("UnderGrind: assegna un asset PlayerLocomotionSettings al componente HumanLocomotionController.", this);
+                    _missingSettingsReported = true;
+                }
+                return;
+            }
+
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
             var gamepad = Gamepad.current;
@@ -151,10 +134,11 @@ namespace UnderGrind.Locomotion
         private void ReadLook(Mouse mouse, Gamepad gamepad)
         {
             var look = Vector2.zero;
-            if (mouse != null) look += mouse.delta.ReadValue() * mouseSensitivity;
-            if (gamepad != null) look += gamepad.rightStick.ReadValue() * gamepadLookSensitivity * Time.deltaTime;
+            if (mouse != null) look += mouse.delta.ReadValue() * settings.MouseSensitivity;
+            if (gamepad != null)
+                look += gamepad.rightStick.ReadValue() * settings.GamepadLookSensitivity * Time.deltaTime;
             transform.Rotate(Vector3.up, look.x, Space.World);
-            _pitch = Mathf.Clamp(_pitch - look.y, -maxLookAngle, maxLookAngle);
+            _pitch = Mathf.Clamp(_pitch - look.y, -settings.MaxLookAngle, settings.MaxLookAngle);
             if (viewPivot != null) viewPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
         }
 
@@ -177,20 +161,21 @@ namespace UnderGrind.Locomotion
         {
             var crouch = keyboard != null && keyboard.cKey.isPressed ||
                          gamepad != null && gamepad.buttonEast.isPressed;
-            var target = crouch ? crouchHeight : characterHeight;
-            if (!crouch && !CanStand()) target = crouchHeight;
-            _currentHeight = Mathf.MoveTowards(_currentHeight, target, stanceChangeSpeed * Time.deltaTime);
-            IsCrouching = _currentHeight < characterHeight - 0.04f;
+            var target = crouch ? settings.CrouchHeight : settings.CharacterHeight;
+            if (!crouch && !CanStand()) target = settings.CrouchHeight;
+            _currentHeight = Mathf.MoveTowards(_currentHeight, target, settings.StanceChangeSpeed * Time.deltaTime);
+            IsCrouching = _currentHeight < settings.CharacterHeight - settings.StandingClearance;
             ApplyCharacterDimensions();
         }
 
         private bool CanStand()
         {
-            if (_currentHeight >= characterHeight - 0.01f) return true;
-            var bottom = transform.position + Vector3.up * capsuleRadius;
-            var top = transform.position + Vector3.up * (characterHeight - capsuleRadius);
-            foreach (var hit in Physics.OverlapCapsule(bottom, top, capsuleRadius * 0.95f,
-                         ~0, QueryTriggerInteraction.Ignore))
+            if (_currentHeight >= settings.CharacterHeight - settings.StandingClearance) return true;
+            var bottom = transform.position + Vector3.up * settings.CapsuleRadius;
+            var top = transform.position + Vector3.up * (settings.CharacterHeight - settings.CapsuleRadius);
+            foreach (var hit in Physics.OverlapCapsule(bottom, top,
+                         settings.CapsuleRadius * settings.StanceOverlapRadiusMultiplier,
+                         settings.CharacterCollisionLayers, QueryTriggerInteraction.Ignore))
                 if (hit != null && hit != _characterController && !hit.transform.IsChildOf(transform))
                     return false;
             return true;
@@ -198,13 +183,14 @@ namespace UnderGrind.Locomotion
 
         private void ApplyCharacterDimensions()
         {
-            if (_characterController == null) return;
-            _characterController.height = Mathf.Max(capsuleRadius * 2f, _currentHeight);
-            _characterController.radius = capsuleRadius;
+            if (_characterController == null || settings == null) return;
+            _characterController.height = Mathf.Max(settings.CapsuleRadius * 2f, _currentHeight);
+            _characterController.radius = settings.CapsuleRadius;
             _characterController.center = Vector3.up * (_characterController.height * 0.5f);
-            _characterController.stepOffset = Mathf.Min(0.32f, _characterController.height * 0.18f);
-            _characterController.slopeLimit = 48f;
-            _characterController.minMoveDistance = 0f;
+            _characterController.stepOffset = Mathf.Min(settings.CharacterStepOffset,
+                _characterController.height * settings.CharacterStepOffsetHeightRatio);
+            _characterController.slopeLimit = settings.CharacterSlopeLimit;
+            _characterController.minMoveDistance = settings.CharacterMinMoveDistance;
         }
 
         private void MoveCharacter(Keyboard keyboard, Gamepad gamepad)
@@ -218,23 +204,24 @@ namespace UnderGrind.Locomotion
             if (!CanJump)
                 _jumpBufferedUntil = float.NegativeInfinity;
             else if (jumpPressed)
-                _jumpBufferedUntil = Time.time + jumpBufferTime;
+                _jumpBufferedUntil = Time.time + settings.JumpBufferTime;
 
             if (CanJump && Time.time <= _jumpBufferedUntil &&
-                Time.time - _lastGroundedTime <= coyoteTime)
+                Time.time - _lastGroundedTime <= settings.CoyoteTime)
             {
-                _verticalVelocity = JumpVelocity;
+                _verticalVelocity = settings.JumpVelocity;
                 _jumpBufferedUntil = float.NegativeInfinity;
                 _lastGroundedTime = float.NegativeInfinity;
             }
-            else if (grounded && _verticalVelocity < 0f) _verticalVelocity = -2f;
+            else if (grounded && _verticalVelocity < 0f)
+                _verticalVelocity = -settings.GroundedStickVelocity;
 
-            _verticalVelocity -= gravity * dt;
-            var moving = _moveInput.sqrMagnitude > 0.001f;
+            _verticalVelocity -= settings.Gravity * dt;
+            var moving = _moveInput.sqrMagnitude > settings.MovementInputThreshold;
             var runHeld = keyboard != null && (keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed);
             IsRunning = moving && runHeld && !IsCrouching && CanRun;
             var speed = IsCrouching
-                ? EffectiveWalkSpeed * crouchSpeedMultiplier
+                ? EffectiveWalkSpeed * settings.CrouchSpeedMultiplier
                 : IsRunning ? RunSpeed : EffectiveWalkSpeed;
             var forward = _thirdPerson && playerCamera != null
                 ? Vector3.ProjectOnPlane(playerCamera.transform.forward, Vector3.up).normalized : transform.forward;
@@ -242,41 +229,46 @@ namespace UnderGrind.Locomotion
                 ? Vector3.ProjectOnPlane(playerCamera.transform.right, Vector3.up).normalized : transform.right;
             var direction = Vector3.ClampMagnitude(right * _moveInput.x + forward * _moveInput.y, 1f);
             var targetVelocity = direction * speed;
-            var rate = moving ? acceleration : deceleration;
-            var control = grounded ? 1f : airControl;
+            var rate = moving ? settings.Acceleration : settings.Deceleration;
+            var control = grounded ? 1f : settings.AirControl;
             _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, rate * control * dt);
             if (IsOverloaded && _horizontalVelocity.sqrMagnitude > EffectiveWalkSpeed * EffectiveWalkSpeed)
                 _horizontalVelocity = _horizontalVelocity.normalized * EffectiveWalkSpeed;
 
-            if (_thirdPerson && moving && direction.sqrMagnitude > 0.001f)
+            if (_thirdPerson && moving && direction.sqrMagnitude > settings.DirectionThreshold)
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction),
-                    1f - Mathf.Exp(-12f * dt));
+                    1f - Mathf.Exp(-settings.ThirdPersonRotationSharpness * dt));
 
             _characterController.Move((_horizontalVelocity + Vector3.up * _verticalVelocity) * dt);
             _measuredSpeed = new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z).magnitude;
-            if (_characterController.isGrounded && _verticalVelocity < 0f) _verticalVelocity = -2f;
+            if (_characterController.isGrounded && _verticalVelocity < 0f)
+                _verticalVelocity = -settings.GroundedStickVelocity;
         }
 
         private void UpdateCamera()
         {
             if (viewPivot == null || playerCamera == null) return;
-            viewPivot.localPosition = Vector3.up * (IsCrouching ? 0.98f : 1.62f);
-            var target = _thirdPerson ? new Vector3(0f, 0.12f, -thirdPersonDistance) : Vector3.zero;
+            viewPivot.localPosition = Vector3.up * (IsCrouching
+                ? settings.CrouchingViewHeight : settings.StandingViewHeight);
+            var target = _thirdPerson
+                ? new Vector3(settings.ThirdPersonCameraOffset.x,
+                    settings.ThirdPersonCameraOffset.y, -settings.ThirdPersonDistance + settings.ThirdPersonCameraOffset.z)
+                : Vector3.zero;
             if (_thirdPerson)
             {
                 var origin = viewPivot.position;
                 var desired = viewPivot.TransformPoint(target);
                 var ray = desired - origin;
-                if (ray.sqrMagnitude > 0.001f && Physics.SphereCast(origin, cameraCollisionRadius, ray.normalized,
-                        out var hit, ray.magnitude, cameraCollisionLayers, QueryTriggerInteraction.Ignore) &&
+                if (ray.sqrMagnitude > settings.DirectionThreshold &&
+                    Physics.SphereCast(origin, settings.CameraCollisionRadius, ray.normalized,
+                        out var hit, ray.magnitude, settings.CameraCollisionLayers, QueryTriggerInteraction.Ignore) &&
                     hit.collider != _characterController && !hit.transform.IsChildOf(transform))
-                    target = viewPivot.InverseTransformPoint(hit.point + hit.normal * 0.18f);
+                    target = viewPivot.InverseTransformPoint(hit.point +
+                        hit.normal * settings.CameraCollisionSurfaceOffset);
             }
             playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, target,
-                1f - Mathf.Exp(-14f * Time.deltaTime));
+                1f - Mathf.Exp(-settings.CameraFollowSharpness * Time.deltaTime));
             playerCamera.transform.localRotation = Quaternion.identity;
-            playerCamera.nearClipPlane = 0.04f;
-
         }
 
         private void UpdateAnimator()
@@ -285,16 +277,20 @@ namespace UnderGrind.Locomotion
             if (_animationDriver == null) return;
             var grounded = _characterController.isGrounded;
             _animationDriver.Apply(_measuredSpeed, _moveInput, grounded, _verticalVelocity,
-                IsRunning, IsCrouching, !grounded && _verticalVelocity > 0.05f,
-                !grounded && _verticalVelocity <= 0.05f);
+                IsRunning, IsCrouching,
+                !grounded && _verticalVelocity > settings.JumpApexStateThreshold,
+                !grounded && _verticalVelocity <= settings.JumpApexStateThreshold);
         }
 
         private void ApplyCameraMode()
         {
-            if (playerCamera == null || viewPivot == null) return;
-            playerCamera.nearClipPlane = 0.04f;
+            if (playerCamera == null || viewPivot == null || settings == null) return;
+            playerCamera.nearClipPlane = settings.CameraNearClipPlane;
+            playerCamera.fieldOfView = settings.CameraFieldOfView;
             playerCamera.transform.localPosition = _thirdPerson
-                ? new Vector3(0f, 0.12f, -thirdPersonDistance) : Vector3.zero;
+                ? new Vector3(settings.ThirdPersonCameraOffset.x, settings.ThirdPersonCameraOffset.y,
+                    -settings.ThirdPersonDistance + settings.ThirdPersonCameraOffset.z)
+                : Vector3.zero;
             playerCamera.transform.localRotation = Quaternion.identity;
         }
 
