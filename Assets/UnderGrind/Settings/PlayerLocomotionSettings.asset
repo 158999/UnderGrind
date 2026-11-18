@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c6f2a84e5b4d2f9a7c1e8b3d6f0a52, type: 3}
+  m_Name: PlayerLocomotionSettings
+  m_EditorClassIdentifier:
+  characterHeight: 1.78
+  walkSpeed: 1.4
+  runMultiplier: 1.3333334
+  jumpHeight: 0.4
+  gravity: 9.81
+  acceleration: 12
+  deceleration: 16
+  airControl: 0.35
+  coyoteTime: 0.1
+  jumpBufferTime: 0.12
+  groundedStickVelocity: 2
+  movementInputThreshold: 0.001
+  directionThreshold: 0.001
+  jumpApexStateThreshold: 0.05
+  crouchHeight: 1.12
+  crouchSpeedMultiplier: 0.5
+  stanceChangeSpeed: 8
+  capsuleRadius: 0.28
+  standingClearance: 0.01
+  stanceOverlapRadiusMultiplier: 0.95
+  characterCollisionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  characterStepOffset: 0.32
+  characterSlopeLimit: 48
+  characterMinMoveDistance: 0
+  mouseSensitivity: 0.12
+  gamepadLookSensitivity: 150
+  maxLookAngle: 82
+  standingViewHeight: 1.62
+  crouchingViewHeight: 0.98
+  thirdPersonCameraOffset: {x: 0, y: 0.12, z: 0}
+  thirdPersonDistance: 3.25
+  cameraCollisionRadius: 0.16
+  cameraCollisionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  cameraFollowSharpness: 14
+  thirdPersonRotationSharpness: 12
+  cameraNearClipPlane: 0.04
+  cameraFieldOfView: 75
