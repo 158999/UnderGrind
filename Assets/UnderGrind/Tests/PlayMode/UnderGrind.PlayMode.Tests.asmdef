@@ -2,7 +2,8 @@
   "name": "UnderGrind.PlayMode.Tests",
   "rootNamespace": "UnderGrind.Tests",
   "references": [
-    "UnderGrind.Runtime"
+    "UnderGrind.Runtime",
+    "UnityEngine.UI"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
