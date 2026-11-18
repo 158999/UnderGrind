@@ -23,6 +23,17 @@ namespace UnderGrind.Editor
             EnsureFolder("Assets/UnderGrind/Scenes");
             EnsureFolder("Assets/UnderGrind/Art/Source");
             EnsureFolder(GeneratedPath);
+            PlayerInputAssetBuilder.EnsureAssets();
+
+            var inputSettings = AssetDatabase.LoadAssetAtPath<PlayerInputSettings>(
+                "Assets/UnderGrind/Settings/PlayerInputSettings.asset");
+            if (inputSettings == null)
+            {
+                EditorUtility.DisplayDialog("Configurazione input mancante",
+                    "Non è stato possibile creare o caricare PlayerInputSettings. La scena non è stata modificata.",
+                    "OK");
+                return;
+            }
 
             var locomotionSettings = AssetDatabase.LoadAssetAtPath<PlayerLocomotionSettings>(LocomotionSettingsPath);
             if (locomotionSettings == null)
@@ -58,7 +69,7 @@ namespace UnderGrind.Editor
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
             CreateCourse();
-            CreatePlayer(malePrefab, locomotionSettings);
+            CreatePlayer(malePrefab, locomotionSettings, inputSettings);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -75,7 +86,7 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings)
+        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings)
         {
             var player = new GameObject("Player - Human " + locomotionSettings.CharacterHeight.ToString("0.00") + "m");
             player.transform.position = new Vector3(0f, 0.05f, 0f);
@@ -119,6 +130,7 @@ namespace UnderGrind.Editor
 
             var movement = player.AddComponent<HumanLocomotionController>();
             movement.ConfigureSettings(locomotionSettings);
+            movement.ConfigureInputSettings(inputSettings);
             movement.ConfigureViewRig(pivot, camera);
             player.AddComponent<LocomotionDebugOverlay>();
         }
