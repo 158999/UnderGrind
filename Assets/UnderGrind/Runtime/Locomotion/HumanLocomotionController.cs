@@ -130,7 +130,11 @@ namespace UnderGrind.Locomotion
             if (_thirdPerson == thirdPerson) return;
             _thirdPerson = thirdPerson;
             if (_visualRig == null) _visualRig = GetComponentInChildren<PlayerVisualRig>(true);
-            if (_visualRig != null) _visualRig.SetThirdPerson(_thirdPerson);
+            if (_visualRig != null)
+            {
+                _visualRig.SetViewReference(viewPivot);
+                _visualRig.SetThirdPerson(_thirdPerson);
+            }
             ApplyCameraMode();
         }
 
@@ -145,6 +149,7 @@ namespace UnderGrind.Locomotion
             if (_visualRig == null) _visualRig = gameObject.AddComponent<PlayerVisualRig>();
             if (playerCamera == null) playerCamera = GetComponentInChildren<Camera>(true);
             if (viewPivot == null && playerCamera != null) viewPivot = playerCamera.transform.parent;
+            if (_visualRig != null) _visualRig.SetViewReference(viewPivot);
             if (settings != null) _currentHeight = settings.CharacterHeight;
             ApplyCharacterDimensions();
             BindInputActions();
