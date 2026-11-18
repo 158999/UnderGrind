@@ -117,7 +117,7 @@ namespace UnderGrind.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("UnderGrind",
-                "Scena creata: " + ScenePath + "\n\nApri la scena e premi Play. Controlli: WASD, SHIFT, SPAZIO, F5.",
+                "Scena creata: " + ScenePath + "\n\nApri la scena e premi Play. Controlli: WASD, mouse, SHIFT, SPAZIO, C, F5, E, G, TAB, [ e ].",
                 "OK");
         }
 
@@ -141,7 +141,7 @@ namespace UnderGrind.Editor
             visualRoot.transform.SetParent(player.transform, false);
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(human);
             if (instance == null) instance = UnityEngine.Object.Instantiate(human);
-            instance.name = "Human Base - imported from humans.blend";
+            instance.name = "Human Base - " + human.name;
             instance.transform.SetParent(visualRoot.transform, false);
             ConfigureAnimations(instance, animationSettings);
             if (instance.GetComponentInChildren<PlayerVisualRig>(true) == null)
