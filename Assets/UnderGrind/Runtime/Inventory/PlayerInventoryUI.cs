@@ -257,9 +257,8 @@ namespace UnderGrind.Inventory
                 var label = CreateText("Label", slot.transform, string.Empty, settings.SlotFontSize,
                     TextAnchor.LowerCenter, font);
                 var labelRect = label.rectTransform;
-                labelRect.anchorMin = Vector2.zero;
-                labelRect.anchorMax = settings.LabelAnchorMax;
                 labelRect.anchorMin = settings.LabelAnchorMin;
+                labelRect.anchorMax = settings.LabelAnchorMax;
                 labelRect.offsetMin = Vector2.zero;
                 labelRect.offsetMax = Vector2.zero;
 
