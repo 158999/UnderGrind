@@ -72,14 +72,24 @@ namespace UnderGrind.Tests
                     Assert.That(serialized.FindProperty(field), Is.Not.Null,
                         "Missing serialized animation loop setting: " + field);
 
+                serialized.FindProperty("idleLoops").boolValue = true;
+                serialized.FindProperty("walkLoops").boolValue = false;
+                serialized.FindProperty("runLoops").boolValue = true;
+                serialized.FindProperty("jumpLoops").boolValue = false;
+                serialized.FindProperty("fallLoops").boolValue = true;
+                serialized.FindProperty("landLoops").boolValue = false;
+                serialized.FindProperty("crouchIdleLoops").boolValue = true;
+                serialized.FindProperty("crouchWalkLoops").boolValue = false;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+
                 Assert.IsTrue(animationSettings.IdleLoops);
-                Assert.IsTrue(animationSettings.WalkLoops);
+                Assert.IsFalse(animationSettings.WalkLoops);
                 Assert.IsTrue(animationSettings.RunLoops);
                 Assert.IsFalse(animationSettings.JumpLoops);
-                Assert.IsFalse(animationSettings.FallLoops);
+                Assert.IsTrue(animationSettings.FallLoops);
                 Assert.IsFalse(animationSettings.LandLoops);
                 Assert.IsTrue(animationSettings.CrouchIdleLoops);
-                Assert.IsTrue(animationSettings.CrouchWalkLoops);
+                Assert.IsFalse(animationSettings.CrouchWalkLoops);
             }
             finally
             {
