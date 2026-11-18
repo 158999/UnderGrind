@@ -30,15 +30,18 @@ namespace UnderGrind.Editor
             }
 
             var settings = AssetDatabase.LoadAssetAtPath<PlayerInputSettings>(SettingsAssetPath);
-            if (settings == null)
+            var createdSettings = settings == null;
+            if (createdSettings)
             {
                 settings = ScriptableObject.CreateInstance<PlayerInputSettings>();
                 AssetDatabase.CreateAsset(settings, SettingsAssetPath);
             }
 
             var serialized = new SerializedObject(settings);
-            SetObject(serialized, "actionAsset", actions);
-            SetString(serialized, "actionMapName", "Player");
+            if (createdSettings)
+            {
+                SetObject(serialized, "actionAsset", actions);
+                SetString(serialized, "actionMapName", "Player");
             SetString(serialized, "moveActionName", "Move");
             SetString(serialized, "lookMouseActionName", "LookMouse");
             SetString(serialized, "lookGamepadActionName", "LookGamepad");
@@ -53,8 +56,11 @@ namespace UnderGrind.Editor
             SetString(serialized, "toggleInventoryActionName", "ToggleInventory");
             SetString(serialized, "nextSlotActionName", "NextSlot");
             SetString(serialized, "previousSlotActionName", "PreviousSlot");
-            SetBool(serialized, "lockCursorOnStart", true);
-            SetBool(serialized, "recaptureCursorOnClick", true);
+                SetBool(serialized, "lockCursorOnStart", true);
+                SetBool(serialized, "recaptureCursorOnClick", true);
+            }
+            else if (serialized.FindProperty("actionAsset").objectReferenceValue == null)
+                SetObject(serialized, "actionAsset", actions);
             serialized.ApplyModifiedPropertiesWithoutUndo();
 
             EditorUtility.SetDirty(settings);
