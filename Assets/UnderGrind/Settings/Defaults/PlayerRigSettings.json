@@ -15,7 +15,7 @@
   "importVisibility": true,
   "maleSourceAssetPath": "Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx",
   "femaleSourceAssetPath": "Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx",
-  "settingsVersion": 3,
+  "settingsVersion": 4,
   "bodyRendererToken": "_Body",
   "firstPersonBodyRevealPitch": 35,
   "firstPersonBodyHidePitch": 25,
