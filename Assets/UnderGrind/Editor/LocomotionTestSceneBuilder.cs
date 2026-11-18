@@ -19,6 +19,16 @@ namespace UnderGrind.Editor
         [MenuItem("UnderGrind/Build First Locomotion Test Scene")]
         public static void BuildScene()
         {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath) != null &&
+                !EditorUtility.DisplayDialog(
+                    "Sostituire la scena di locomozione?",
+                    "La scena LocomotionTest.unity verrà ricreata. La gerarchia e le modifiche manuali presenti nella scena verranno sostituite. I materiali generati del percorso di test possono essere aggiornati.",
+                    "Sostituisci scena", "Annulla"))
+                return;
+
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                return;
+
             EnsureFolder("Assets/UnderGrind/Scenes");
             EnsureFolder("Assets/UnderGrind/Art/Source");
             EnsureFolder(GeneratedPath);
