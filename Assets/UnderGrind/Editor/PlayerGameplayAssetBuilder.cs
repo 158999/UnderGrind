@@ -115,7 +115,8 @@ namespace UnderGrind.Editor
             var template = new SerializedObject(defaults);
             var version = current.FindProperty("settingsVersion");
             var defaultVersion = template.FindProperty("settingsVersion");
-            if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
+            var previousVersion = version != null ? version.intValue : 0;
+            if (version != null && defaultVersion != null && previousVersion < defaultVersion.intValue)
             {
                 CopyBool(current, template, "configureFbxImports");
                 CopyInt(current, template, "fbxRigType");
@@ -125,6 +126,15 @@ namespace UnderGrind.Editor
                 CopyBool(current, template, "importCameras");
                 CopyBool(current, template, "importLights");
                 CopyBool(current, template, "optimizeFbxGameObjects");
+
+                // The former default (2 m/s) exceeded this Player's 1.8667 m/s run speed,
+                // making the Run blend-tree child unreachable. Preserve custom lower values.
+                var runThreshold = current.FindProperty("runThreshold");
+                var defaultRunThreshold = template.FindProperty("runThreshold");
+                if (previousVersion < 5 && runThreshold != null && defaultRunThreshold != null &&
+                    runThreshold.floatValue >= 2f)
+                    runThreshold.floatValue = defaultRunThreshold.floatValue;
+
                 version.intValue = defaultVersion.intValue;
                 current.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(asset);

@@ -4,10 +4,16 @@
 
 - Unity **6000.6.7f1**.
 - Pacchetti del progetto: Input System e Unity Test Framework.
-- Il modello sorgente è `Assets/UnderGrind/Art/Source/humans.blend`.
-- Unity importa i file Blender tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, verificare **Edit → Preferences → External Tools** e ripetere Reimport.
+- Il file Blender attualmente committato è `Assets/UnderGrind/Art/Source/humans.blend`.
+- La versione di lavoro più recente con armature e mesh separate è nel progetto [Blendstra Rigged Human Source](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3), versione `version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`. Non è ancora stata trasferita nel file locale del repository.
+- Prima di esportare, trasferire la versione Blendstra nel file `humans.blend`, aprirlo in Blender ed eseguire `Tools/Blender/export-undergrind-humans.py`. Lo script interrompe l'export se non trova tutte le mesh, i gruppi di pesi o i modificatori Armature richiesti.
+- Unity importa i file FBX tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, verificare **Edit → Preferences → External Tools** e ripetere Reimport.
 
 Il builder richiede i due prefab Humanoid maschile e femminile configurati in `PlayerRigSettings.asset`. Verifica Animator, Avatar Humanoid valido, SkinnedMeshRenderer, testa, corpo e gruppi renderer FP/TP. Se i prefab non superano la validazione, la scena non viene creata: non viene usato un manichino statico come sostituto.
+
+## Animazioni
+
+Gli otto movimenti selezionati da PINOC sono elencati in `Assets/UnderGrind/Animations/PlayerAnimationManifest.json`. I relativi FBX `mixamo-fbx` sono nella libreria PINOC dell'utente, non nel repository. Scaricare i file con i nomi indicati nel manifest in `Assets/UnderGrind/Animations`; il builder li importa come Humanoid, assegna le clip per nome e genera l'Animator Controller con **UnderGrind → Player → Refresh Clips and Build Animator Controller**. La mesh X Bot inclusa negli FBX è solo un riferimento per l'animazione e non sostituisce il personaggio UnderGrind.
 
 ## Creazione della scena
 

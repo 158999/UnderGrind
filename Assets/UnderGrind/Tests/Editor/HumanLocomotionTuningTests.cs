@@ -25,6 +25,17 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void AnimationRunThresholdFallsBetweenWalkAndRunSpeeds()
+        {
+            var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(
+                "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset");
+            Assert.That(animationSettings, Is.Not.Null,
+                "L'asset di configurazione animazioni deve esistere.");
+            Assert.That(animationSettings.RunThreshold, Is.GreaterThan(_settings.WalkSpeed));
+            Assert.That(animationSettings.RunThreshold, Is.LessThan(_settings.RunSpeed));
+        }
+
+        [Test]
         public void JumpVelocityProducesConfiguredApexHeight()
         {
             var height = _settings.JumpVelocity * _settings.JumpVelocity / (2f * _settings.Gravity);

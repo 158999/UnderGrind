@@ -4,7 +4,9 @@
 
 Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile misura 1,70 m. Entrambe le altezze sono configurabili nell'asset di rig.
 
-La sorgente Blendstra disponibile contiene due armature e copie delle mesh originali. La separazione della testa non è ancora verificata: l'ispezione delle isole geometriche ha rilevato una singola isola connessa per corpo. Il file sorgente Blender del repository non è stato sostituito automaticamente; l'exporter `Tools/Blender/export-undergrind-humans.py` valida pesi e gerarchia prima di produrre i due FBX configurati in `PlayerRigSettings.asset`.
+La versione corrente del progetto Blendstra [Rigged Human Source](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3), salvata come `version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`, conserva le due mesh originali complete e contiene due armature distinte più sei gruppi mesh per ciascun personaggio: Body, Head, TP Arms, TP Hands, FP Arms e FP Hands. La separazione della testa e degli arti è quindi presente nella struttura del modello corrente.
+
+L'ispezione strutturale conferma nomi, geometrie e gerarchia degli oggetti, ma non espone i modificatori Armature né i pesi dei vertici. Il file `Assets/UnderGrind/Art/Source/humans.blend` già presente nel repository non è stato sostituito automaticamente con questa versione Blendstra. Prima dell'export occorre trasferire la versione corrente nel file sorgente locale e lanciare `Tools/Blender/export-undergrind-humans.py`: lo script verifica armature, ossa Humanoid richieste, parent diretto, modificatore Armature, gruppi deformanti e peso valido per ogni vertice. Questi controlli non sono ancora stati eseguiti sulla versione Blendstra corrente; non esistono ancora FBX e prefab Unity verificati.
 
 ## Configurazione della locomozione
 
@@ -21,7 +23,7 @@ Le proprietà sono organizzate in otto gruppi:
 7. **Camera e sensibilità**: sensibilità mouse/gamepad, angolo massimo, altezza del punto di vista, offset e distanza in terza persona, collisioni, interpolazione, FOV e near clip.
 8. **Coyote time e jump buffer**: finestre temporali indipendenti per il salto.
 
-I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I modelli iniziali dei parametri di input, interazione, UI, animazione, rig e graybox sono file JSON in `Assets/UnderGrind/Settings/Defaults`; i builder li applicano quando creano il relativo ScriptableObject. Le migrazioni versionate compilano i nuovi campi senza sovrascrivere le modifiche successive effettuate nell'Inspector.
+I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector: altezza maschile 1,78 m, altezza femminile 1,70 m, camminata 1,40 m/s, corsa 1,8667 m/s, salto 0,40 m e gravità 9,81 m/s². Il parametro Animator `runThreshold` iniziale è 1,65 m/s, compreso tra velocità di camminata e corsa; il precedente valore di 2 m/s rendeva irraggiungibile il blend di corsa. I modelli iniziali dei parametri di input, interazione, UI, animazione, rig e graybox sono file JSON in `Assets/UnderGrind/Settings/Defaults`; i builder li applicano quando creano il relativo ScriptableObject. Le migrazioni versionate compilano i nuovi campi senza sovrascrivere le modifiche successive effettuate nell'Inspector.
 
 ## Input e controlli
 
@@ -55,7 +57,7 @@ Le dead zone radiali, la sensibilità, il comportamento del cursore, il timeout 
 
 `PlayerVisualRig` gestisce gruppi separati per testa, corpo, arti FP e arti TP. In prima persona la testa viene nascosta e il corpo viene mostrato quando la visuale guarda verso il basso, secondo soglie e isteresi configurabili. La logica è implementata; la verifica sui prefab definitivi è ancora da eseguire.
 
-`PlayerAnimationSettings.asset` configura clip, loop, parametri Animator, soglie, transizioni e opzioni di importazione FBX. Il builder genera un controller con gli stati Idle, Walk, Run, Jump, Fall, Land, Crouch Idle e Crouch Walk. Le otto animazioni PINOC in formato `mixamo-fbx` non sono ancora importate nel repository né retargettate sul rig definitivo.
+`PlayerAnimationSettings.asset` configura clip, loop, parametri Animator, soglie, transizioni e opzioni di importazione FBX. Il builder genera un controller con gli stati Idle, Walk, Run, Jump, Fall, Land, Crouch Idle e Crouch Walk. Otto clip PINOC sono state aggiunte alla libreria dell'utente in formato `mixamo-fbx` e registrate in `Assets/UnderGrind/Animations/PlayerAnimationManifest.json`: Standing Idle, Walking, Running, Jump, Fall down, Hard Landing, Crouching Idle e Crouch Walk Forward. Il formato contiene uno scheletro Mixamo e una mesh X Bot di riferimento; non è il corpo UnderGrind. Le clip non sono ancora importate nel repository né retargettate sui due Avatar definitivi.
 
 ## Graybox
 
@@ -74,4 +76,4 @@ Ogni suite produce un JSON riepilogativo, un TXT, i log e i report XML/TRX dispo
 - Unity PlayMode: **non eseguito** per gli stessi errori di compilazione.
 - Nessun conteggio pari a zero è interpretabile come test superati: Unity non ha prodotto XML valido per le due piattaforme.
 
-La correzione delle firme evento e dei campi serializzati FBX è stata applicata nel sorgente; deve ancora essere verificata eseguendo nuovamente Unity 6000.6.7f1 e le suite aggiornate. La verifica visiva di scena, modelli, deformazione e animazioni non è documentata.
+La correzione delle firme evento e dei campi serializzati FBX è stata applicata nel sorgente. È stato inoltre corretto il threshold dell'animazione Run e il rebinding controller ora riceve il relativo asset di input dal builder della scena. Queste modifiche devono ancora essere verificate eseguendo nuovamente Unity 6000.6.7f1 e le suite aggiornate. La verifica visiva di scena, modelli, deformazione e animazioni non è documentata.
