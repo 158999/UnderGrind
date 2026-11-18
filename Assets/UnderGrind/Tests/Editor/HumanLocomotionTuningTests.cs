@@ -45,8 +45,8 @@ namespace UnderGrind.Tests
             view.SetParent(root.transform, false);
             var renderer = body.GetComponent<Renderer>();
             var rig = root.AddComponent<PlayerVisualRig>();
-            rig.Configure(Array.Empty<Renderer>(), new[] { renderer },
-                Array.Empty<Renderer>(), Array.Empty<Renderer>());
+            rig.Configure(new Renderer[0], new[] { renderer },
+                new Renderer[0], new Renderer[0]);
 
             rig.SetViewReference(view);
             Assert.IsFalse(renderer.enabled, "Il corpo proxy deve essere nascosto in prima persona.");
