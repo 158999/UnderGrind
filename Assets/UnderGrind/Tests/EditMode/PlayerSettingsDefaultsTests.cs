@@ -78,7 +78,8 @@ namespace UnderGrind.Tests
             Assert.IsFalse(settings.ImportCameras);
             Assert.IsFalse(settings.ImportLights);
             Assert.IsTrue(settings.RequireSeparateHead);
-            Assert.IsFalse(settings.RequireFirstPersonArms);
+            Assert.IsTrue(settings.RequireFirstPersonArms);
+            Assert.IsTrue(settings.RequireThirdPersonArms);
         }
 
         [Test]
