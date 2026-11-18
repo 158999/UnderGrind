@@ -3,6 +3,7 @@ using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 using UnderGrind.Inventory;
 
 namespace UnderGrind.Tests
@@ -15,6 +16,7 @@ namespace UnderGrind.Tests
         private InventorySettings _inventorySettings;
         private PlayerInteractionSettings _interactionSettings;
         private ItemDefinition _item;
+        private InventoryUISettings _uiSettings;
 
         [UnityTest]
         public IEnumerator Interact_PicksUpWorldItemIntoInventory()
@@ -75,6 +77,47 @@ namespace UnderGrind.Tests
             Assert.IsTrue(foundDrop);
         }
 
+        [UnityTest]
+        public IEnumerator InventoryUI_RefreshesWhenConfiguredAfterAwake()
+        {
+            CreateSettings();
+            _uiSettings = ScriptableObject.CreateInstance<InventoryUISettings>();
+            SetField(_uiSettings, "panelTitle", "INVENTORY");
+            SetField(_uiSettings, "weightTextFormat", "Weight {0:0.0}/{1:0.0}");
+            SetField(_uiSettings, "emptySlotText", "Empty");
+            SetField(_uiSettings, "titleFontSize", 24);
+            SetField(_uiSettings, "bodyFontSize", 18);
+            SetField(_uiSettings, "slotFontSize", 14);
+            SetField(_uiSettings, "referenceResolution", new Vector2(1920f, 1080f));
+            SetField(_uiSettings, "panelSize", new Vector2(720f, 520f));
+            SetField(_uiSettings, "panelOffset", Vector2.zero);
+            SetField(_uiSettings, "columns", 6);
+            SetField(_uiSettings, "slotSize", new Vector2(96f, 96f));
+            SetField(_uiSettings, "slotSpacing", new Vector2(8f, 8f));
+            SetField(_uiSettings, "panelPadding", 20);
+            SetField(_uiSettings, "headerHeight", 48f);
+            SetField(_uiSettings, "maxVisibleSlots", 4);
+            SetField(_uiSettings, "sortingOrder", 10);
+            SetField(_uiSettings, "panelColor", Color.black);
+            SetField(_uiSettings, "slotColor", Color.gray);
+            SetField(_uiSettings, "selectedSlotColor", Color.yellow);
+            SetField(_uiSettings, "textColor", Color.white);
+            SetField(_uiSettings, "overloadedWeightColor", Color.red);
+
+            _player = new GameObject("Inventory UI player");
+            var inventory = _player.AddComponent<PlayerInventory>();
+            inventory.Configure(_inventorySettings);
+            var ui = _player.AddComponent<PlayerInventoryUI>();
+            ui.Configure(_uiSettings, null, inventory, null);
+            inventory.AddItem(_item, 1);
+            yield return null;
+
+            var labels = ui.GetComponentsInChildren<Text>(true);
+            Assert.IsTrue(System.Array.Exists(labels,
+                label => label.text.Contains("World test item")),
+                "The UI must refresh its slot text after Configure subscribes to inventory changes.");
+        }
+
         [UnityTearDown]
         public IEnumerator TearDown()
         {
@@ -84,6 +127,7 @@ namespace UnderGrind.Tests
             if (_inventorySettings != null) Object.Destroy(_inventorySettings);
             if (_interactionSettings != null) Object.Destroy(_interactionSettings);
             if (_item != null) Object.Destroy(_item);
+            if (_uiSettings != null) Object.Destroy(_uiSettings);
             yield return null;
         }
 
