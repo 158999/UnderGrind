@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
     [ValidateSet("Debug", "Release")][string]$Configuration = "Release",
+    [ValidateRange(30, 1800)][int]$BuildTimeoutSeconds = 180,
+    [ValidateRange(30, 1800)][int]$TestTimeoutSeconds = 180,
     [switch]$ReuseCurrentRun
 )
 
@@ -19,7 +21,8 @@ $diagnosticsBuild = "NotRun"
 function Invoke-DotNetCaptured {
     param(
         [Parameter(Mandatory = $true)][string[]]$DotNetArguments,
-        [Parameter(Mandatory = $true)][string]$OutputPath
+        [Parameter(Mandatory = $true)][string]$OutputPath,
+        [Parameter(Mandatory = $true)][int]$TimeoutSeconds
     )
 
     $dotnetCommand = Get-Command dotnet -ErrorAction Stop
@@ -29,12 +32,41 @@ function Invoke-DotNetCaptured {
         '"' + [string]$_ + '"'
     })
     $argumentLine = [string]::Join(" ", $quotedArguments)
-    $process = Start-Process -FilePath $dotnetCommand.Source -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+    $timedOut = $false
+    $exitCode = 1
+    $process = $null
+    try {
+        $process = Start-Process -FilePath $dotnetCommand.Source -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
+            $timedOut = $true
+            try { & taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null } catch { }
+            try {
+                if (-not $process.HasExited) { $process.Kill() }
+                $process.WaitForExit()
+            } catch { }
+            $exitCode = 124
+        }
+        else {
+            $exitCode = [int]$process.ExitCode
+        }
+    }
+    catch {
+        $stderrFailure = $_.Exception.Message
+        $timedOut = $false
+        $exitCode = 1
+    }
+
     $stdout = if (Test-Path -LiteralPath $stdoutPath) { Get-Content -LiteralPath $stdoutPath -Raw } else { "" }
     $stderr = if (Test-Path -LiteralPath $stderrPath) { Get-Content -LiteralPath $stderrPath -Raw } else { "" }
+    if ($stderrFailure) { $stderr += [Environment]::NewLine + $stderrFailure }
+    if ($timedOut) { $stderr += [Environment]::NewLine + "TIMEOUT after $TimeoutSeconds seconds." }
     @("=== STDOUT ===", $stdout, "=== STDERR ===", $stderr) | Set-Content -LiteralPath $OutputPath -Encoding utf8
     Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
-    return [pscustomobject]@{ ExitCode = [int]$process.ExitCode; Output = $stdout + [Environment]::NewLine + $stderr }
+    return [pscustomobject]@{
+        ExitCode = $exitCode
+        TimedOut = $timedOut
+        Output = $stdout + [Environment]::NewLine + $stderr
+    }
 }
 
 if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
@@ -42,12 +74,13 @@ if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
     $exit = 2
 }
 else {
-    $buildResult = Invoke-DotNetCaptured -DotNetArguments @("build", $diagnosticsProject, "--configuration", $Configuration) -OutputPath (Join-Path $runDir "diagnostics-build.log")
+    $buildResult = Invoke-DotNetCaptured -DotNetArguments @("build", $diagnosticsProject, "--configuration", $Configuration) -OutputPath (Join-Path $runDir "diagnostics-build.log") -TimeoutSeconds $BuildTimeoutSeconds
     $buildOutput = $buildResult.Output
     $buildCode = $buildResult.ExitCode
     $diagnosticsBuild = if ($buildCode -eq 0) { "Passed" } else { "Failed" }
 
     if ($buildCode -ne 0) {
+        if ($buildResult.TimedOut) { $errors.Add("La compilazione diagnostica ha superato il timeout di $BuildTimeoutSeconds secondi.") }
         $errors.Add("La compilazione del progetto diagnostico condiviso è fallita.")
         $exit = 1
     }
@@ -65,7 +98,7 @@ else {
                 $name = $project.BaseName -replace '[^A-Za-z0-9_.-]', '_'
                 $trxName = "$name.trx"
                 $logName = "$name.log"
-                $testResult = Invoke-DotNetCaptured -DotNetArguments @("test", $project.FullName, "--configuration", $Configuration, "--logger", "trx;LogFileName=$trxName", "--results-directory", $runDir) -OutputPath (Join-Path $runDir $logName)
+                $testResult = Invoke-DotNetCaptured -DotNetArguments @("test", $project.FullName, "--configuration", $Configuration, "--logger", "trx;LogFileName=$trxName", "--results-directory", $runDir) -OutputPath (Join-Path $runDir $logName) -TimeoutSeconds $TestTimeoutSeconds
                 $output = $testResult.Output
                 $code = $testResult.ExitCode
 
@@ -110,6 +143,7 @@ else {
                     $validationErrors.Add("dotnet test non ha prodotto il file TRX atteso.")
                 }
 
+                if ($testResult.TimedOut) { $validationErrors.Add("dotnet test ha superato il timeout di $TestTimeoutSeconds secondi.") }
                 if ($code -ne 0) { $validationErrors.Add("dotnet test è terminato con codice $code.") }
                 if ($counts.failed -gt 0) { $validationErrors.Add("$($counts.failed) test falliti.") }
                 if ($validationErrors.Count -gt 0) { $exit = 1 }
@@ -144,6 +178,8 @@ $report = [ordered]@{
     finishedUtc = $finished.ToString("O")
     durationSeconds = [Math]::Round(($finished - $started).TotalSeconds, 3)
     diagnosticsBuild = $diagnosticsBuild
+    buildTimeoutSeconds = $BuildTimeoutSeconds
+    testTimeoutSeconds = $TestTimeoutSeconds
     status = $status
     errors = @($errors)
     totals = $totals
