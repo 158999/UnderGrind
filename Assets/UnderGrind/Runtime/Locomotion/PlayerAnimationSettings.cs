@@ -55,6 +55,7 @@ namespace UnderGrind.Locomotion
         public bool LandLoops => landLoops;
         public bool CrouchIdleLoops => crouchIdleLoops;
         public bool CrouchWalkLoops => crouchWalkLoops;
+        public int SettingsVersion => settingsVersion;
         public RuntimeAnimatorController AnimatorController => animatorController;
         public AnimationClip IdleClip => idleClip;
         public AnimationClip WalkClip => walkClip;
