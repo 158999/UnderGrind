@@ -28,6 +28,7 @@ namespace UnderGrind.Locomotion
 
         [Header("6. Accovacciamento e collisioni")]
         [SerializeField, Min(0.1f)] private float characterHeight;
+        [SerializeField, Min(0.1f)] private float femaleCharacterHeight;
         [SerializeField, Min(0.1f)] private float crouchHeight;
         [SerializeField, Range(0.01f, 1f)] private float crouchSpeedMultiplier;
         [SerializeField, Min(0.01f)] private float stanceChangeSpeed;
@@ -64,6 +65,7 @@ namespace UnderGrind.Locomotion
         [SerializeField, Min(0f)] private float jumpBufferTime;
 
         public float CharacterHeight => characterHeight;
+        public float FemaleCharacterHeight => femaleCharacterHeight;
         public float WalkSpeed => walkSpeed;
         public float RunMultiplier => runMultiplier;
         public float JumpHeight => jumpHeight;
@@ -112,6 +114,7 @@ namespace UnderGrind.Locomotion
         {
             capsuleRadius = Mathf.Max(0.05f, capsuleRadius);
             characterHeight = Mathf.Max(capsuleRadius * 2f, characterHeight);
+            femaleCharacterHeight = Mathf.Max(0.1f, femaleCharacterHeight);
             walkSpeed = Mathf.Max(0.1f, walkSpeed);
             runMultiplier = Mathf.Max(1f, runMultiplier);
             jumpHeight = Mathf.Max(0.01f, jumpHeight);
