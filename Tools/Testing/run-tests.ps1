@@ -86,8 +86,14 @@ else {
         $exit = 1
     }
     else {
-        $projects = @(Get-ChildItem $root -Filter "*.Standalone.Tests.csproj" -File -Recurse |
-            Where-Object { $_.FullName -notmatch "(bin|obj|Library|Temp)" } |
+        $projectSearchRoots = @("Tests", "Tools") |
+            ForEach-Object { Join-Path $root $_ } |
+            Where-Object { Test-Path -LiteralPath $_ -PathType Container }
+        $projects = @($projectSearchRoots |
+            ForEach-Object {
+                Get-ChildItem -LiteralPath $_ -Filter "*.Standalone.Tests.csproj" -File -Recurse |
+                    Where-Object { $_.FullName -notmatch "[\\/](bin|obj|Library|Temp)[\\/]" }
+            } |
             Sort-Object FullName)
 
         if ($projects.Count -eq 0) {
