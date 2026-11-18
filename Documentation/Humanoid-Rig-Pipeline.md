@@ -59,7 +59,22 @@ Le due famiglie di esportazione FBX hanno finalità diverse:
 - `splat-skeleton-fbx`: scheletro MetaHuman di 441 ossa, comprese le ossa facciali, senza mesh. È destinato ai personaggi PINOC con Splat Engine e rig Generic.
 - `mixamo-fbx`: mesh X Bot e scheletro con nomenclatura Mixamo. È il formato candidato per il retargeting tramite Blender o altri strumenti DCC verso il rig UnderGrind.
 
-X Bot è un modello di supporto per il retargeting e non deve sostituire il corpo del personaggio UnderGrind. I sei movimenti non sono ancora importati nel repository né trasferiti sul rig definitivo. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
+X Bot è un modello di supporto per il retargeting e non deve sostituire il corpo del personaggio UnderGrind. Gli otto movimenti sono stati aggiunti alla libreria PINOC dell'utente. Gli asset selezionati sono:
+
+| Movimento | Asset ID |
+|---|---|
+| Standing Idle | `1cbf45b5-5abe-4a88-97cd-a1a21da60d7b` |
+| Walking | `32d71c7f-e88a-4d1f-9c0c-1fde2da5f060` |
+| Running | `32c1d7ba-29d6-466c-a2bc-56ff17ca4d1a` |
+| Jump | `08872e23-d695-493d-8c03-cb595cd55e9c` |
+| Crouching Idle | `7cd56394-0b47-4fa7-b951-6658d5ea3da6` |
+| Crouch Walk Forward | `e4f5b9e6-381c-4227-88d4-94d6a0615df8` |
+| Fall down | `2e513074-b11f-4108-9ba7-80f2995ecba8` |
+| Hard Landing | `241c8c51-4bfb-4f0c-ad0b-f9a7c50f8ee7` |
+
+Per il rig Humanoid UnderGrind va usato l'export `mixamo-fbx` di ciascun asset: contiene X Bot e lo scheletro Mixamo ed è il formato previsto per il retargeting. Il formato predefinito restituito da `take_library_motions` è invece un GLB con solo lo scheletro MetaHuman a 441 ossa, senza mesh; è destinato al workflow Splat e non va assegnato direttamente al controller Humanoid.
+
+I file FBX non sono ancora importati nel repository né trasferiti sul rig definitivo. Il builder Unity li riconosce se importati in `Assets/UnderGrind/Animations`. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
 
 Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti e genera il controller usando `PlayerAnimationSettings.asset`. Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono richieste; Fall e Land sono opzionali.
 
