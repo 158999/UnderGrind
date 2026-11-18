@@ -25,11 +25,14 @@ namespace UnderGrind.Locomotion
             var labels = new[]
             {
                 $"Velocità attuale: {_movement.MeasuredSpeed:0.00} m/s",
-                $"Camminata: {_movement.WalkSpeed:0.00} m/s",
+                $"Camminata: {_movement.EffectiveWalkSpeed:0.00} m/s" +
+                    (_movement.IsOverloaded ? " (sovraccarico)" : string.Empty),
                 $"Corsa: {_movement.RunSpeed:0.00} m/s  (× {_movement.RunMultiplier:0.00})",
                 $"Salto: {_movement.JumpHeight:0.00} m  |  v₀ {_movement.JumpVelocity:0.00} m/s",
                 $"Altezza: {_movement.CharacterHeight:0.00} m  |  Gravità: {_movement.Gravity:0.00} m/s²",
                 $"Stato: {(_movement.IsGrounded ? "a terra" : "in aria")}  |  {(_movement.IsRunning ? "corsa" : "cammino")}",
+                $"Inventario: {(_movement.IsOverloaded ? "sovraccarico" : "peso regolare")}  |  " +
+                    $"corsa: {(_movement.CanRun ? "sì" : "no")}  |  salto: {(_movement.CanJump ? "sì" : "no")}",
                 $"Visuale: {(_movement.IsThirdPerson ? "terza persona" : "prima persona")}"
             };
 
