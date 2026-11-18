@@ -117,9 +117,34 @@ namespace UnderGrind.Locomotion
             movementDeadzone = Mathf.Clamp(movementDeadzone, 0f, 0.95f);
             gamepadLookDeadzone = Mathf.Clamp(gamepadLookDeadzone, 0f, 0.95f);
             rebindTimeoutSeconds = Mathf.Max(0.1f, rebindTimeoutSeconds);
-            if (actionAsset != null && !string.IsNullOrWhiteSpace(actionMapName) &&
-                actionAsset.FindActionMap(actionMapName, false) == null)
+            if (actionAsset == null || string.IsNullOrWhiteSpace(actionMapName)) return;
+            var map = actionAsset.FindActionMap(actionMapName, false);
+            if (map == null)
+            {
                 Debug.LogError("UnderGrind: action map non trovato: " + actionMapName, this);
+                return;
+            }
+
+            ValidateAction(map, moveActionName);
+            ValidateAction(map, lookMouseActionName);
+            ValidateAction(map, lookGamepadActionName);
+            ValidateAction(map, jumpActionName);
+            ValidateAction(map, runActionName);
+            ValidateAction(map, crouchActionName);
+            ValidateAction(map, toggleCameraActionName);
+            ValidateAction(map, cancelActionName);
+            ValidateAction(map, captureCursorActionName);
+            ValidateAction(map, interactActionName);
+            ValidateAction(map, dropActionName);
+            ValidateAction(map, toggleInventoryActionName);
+            ValidateAction(map, nextSlotActionName);
+            ValidateAction(map, previousSlotActionName);
+        }
+
+        private void ValidateAction(InputActionMap map, string actionName)
+        {
+            if (!string.IsNullOrWhiteSpace(actionName) && map.FindAction(actionName, false) == null)
+                Debug.LogError("UnderGrind: action non trovata nell'action map " + map.name + ": " + actionName, this);
         }
 #endif
     }

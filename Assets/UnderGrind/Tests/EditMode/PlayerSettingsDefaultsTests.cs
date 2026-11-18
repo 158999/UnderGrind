@@ -91,8 +91,9 @@ namespace UnderGrind.Tests
         [Test]
         public void InputDefaults_LoadDeadZonesAndRebindingSettings()
         {
-            _inputAsset = ScriptableObject.CreateInstance<InputActionAsset>();
-            _inputAsset.AddActionMap(new InputActionMap("Player"));
+            var inputPath = Path.Combine(Application.dataPath, "UnderGrind", "Settings", "PlayerInputActions.inputactions");
+            Assert.IsTrue(File.Exists(inputPath), "Missing Player Input Actions asset: " + inputPath);
+            _inputAsset = InputActionAsset.FromJson(File.ReadAllText(inputPath));
             var settings = ScriptableObject.CreateInstance<PlayerInputSettings>();
             SetField(settings, "actionAsset", _inputAsset);
             _settings = settings;
