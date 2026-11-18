@@ -8,7 +8,7 @@ namespace UnderGrind.Inventory
         [SerializeField] private string itemId;
         [SerializeField] private string displayName;
         [SerializeField] private Sprite icon;
-        [SerializeField, Min(1)] private int maxStackSize = 1;
+        [SerializeField, Min(1)] private int maxStackSize;
         [SerializeField, Min(0f)] private float unitWeightKg;
 
         public string ItemId => itemId;
