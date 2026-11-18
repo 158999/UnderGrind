@@ -10,6 +10,7 @@ namespace UnderGrind.Locomotion
         [Header("Configurazione")]
         [SerializeField] private PlayerLocomotionSettings settings;
         [SerializeField] private PlayerInputSettings inputSettings;
+        [SerializeField] private PlayerAnimationSettings animationSettings;
         [SerializeField] private PlayerInventory inventory;
 
         [Header("Riferimenti visuale")]
@@ -45,6 +46,7 @@ namespace UnderGrind.Locomotion
 
         public PlayerLocomotionSettings Settings => settings;
         public PlayerInputSettings InputSettings => inputSettings;
+        public PlayerAnimationSettings AnimationSettings => animationSettings;
         public PlayerInventory Inventory => inventory;
         public float CharacterHeight => settings != null ? settings.CharacterHeight : 0f;
         public float WalkSpeed => settings != null ? settings.WalkSpeed : 0f;
@@ -76,6 +78,14 @@ namespace UnderGrind.Locomotion
             _currentHeight = settings.CharacterHeight;
             ApplyCharacterDimensions();
             ApplyCameraMode();
+        }
+
+        public void ConfigureAnimationSettings(PlayerAnimationSettings value)
+        {
+            animationSettings = value;
+            if (_animationDriver == null) _animationDriver = GetComponent<PlayerAnimationDriver>();
+            if (_animationDriver == null) _animationDriver = gameObject.AddComponent<PlayerAnimationDriver>();
+            _animationDriver.Configure(animationSettings);
         }
 
         public void ConfigureInputSettings(PlayerInputSettings value)
@@ -126,6 +136,7 @@ namespace UnderGrind.Locomotion
             if (inventory == null) inventory = GetComponent<PlayerInventory>();
             _animationDriver = GetComponent<PlayerAnimationDriver>();
             if (_animationDriver == null) _animationDriver = gameObject.AddComponent<PlayerAnimationDriver>();
+            if (animationSettings != null) _animationDriver.Configure(animationSettings);
             _visualRig = GetComponentInChildren<PlayerVisualRig>(true);
             if (_visualRig == null) _visualRig = gameObject.AddComponent<PlayerVisualRig>();
             if (playerCamera == null) playerCamera = GetComponentInChildren<Camera>(true);
