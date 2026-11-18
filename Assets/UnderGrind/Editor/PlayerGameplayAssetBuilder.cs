@@ -30,8 +30,9 @@ namespace UnderGrind.Editor
 
             EnsureAsset<PlayerInteractionSettings>(
                 InteractionSettingsPath, DefaultsFolder + "/PlayerInteractionSettings.json");
-            EnsureAsset<InventoryUISettings>(
+            var inventoryUISettings = EnsureAsset<InventoryUISettings>(
                 InventoryUISettingsPath, DefaultsFolder + "/InventoryUISettings.json");
+            MigrateInventoryUISettings(inventoryUISettings, DefaultsFolder + "/InventoryUISettings.json");
             EnsureAsset<PlayerAnimationSettings>(
                 AnimationSettingsPath, DefaultsFolder + "/PlayerAnimationSettings.json");
             EnsureAsset<PlayerRigSettings>(
@@ -40,6 +41,66 @@ namespace UnderGrind.Editor
             AssetDatabase.SaveAssets();
         }
 
+        private static void MigrateInventoryUISettings(InventoryUISettings asset, string defaultsPath)
+        {
+            if (asset == null || !File.Exists(defaultsPath)) return;
+            var defaults = ScriptableObject.CreateInstance<InventoryUISettings>();
+            JsonUtility.FromJsonOverwrite(File.ReadAllText(defaultsPath), defaults);
+            var current = new SerializedObject(asset);
+            var template = new SerializedObject(defaults);
+
+            if (current.FindProperty("panelAnchorMax").vector2Value == Vector2.zero)
+            {
+                CopyInt(current, template, "canvasRenderMode");
+                CopyInt(current, template, "canvasScaleMode");
+                CopyVector2(current, template, "panelAnchorMin");
+                CopyVector2(current, template, "panelAnchorMax");
+                CopyVector2(current, template, "panelPivot");
+                CopyVector2(current, template, "titleAnchorMin");
+                CopyVector2(current, template, "titleAnchorMax");
+                CopyVector2(current, template, "titlePivot");
+                CopyVector2(current, template, "weightAnchorMin");
+                CopyVector2(current, template, "weightAnchorMax");
+                CopyVector2(current, template, "weightPivot");
+                CopyVector2(current, template, "gridAnchorMin");
+                CopyVector2(current, template, "gridAnchorMax");
+                CopyInt(current, template, "gridStartCorner");
+                CopyInt(current, template, "gridStartAxis");
+                CopyInt(current, template, "gridConstraint");
+                CopyInt(current, template, "titleAlignment");
+                CopyInt(current, template, "weightAlignment");
+                CopyInt(current, template, "slotAlignment");
+                CopyInt(current, template, "gridChildAlignment");
+            }
+
+            if (current.FindProperty("iconAnchorMax").vector2Value == Vector2.zero)
+            {
+                CopyVector2(current, template, "iconAnchorMin");
+                CopyVector2(current, template, "iconAnchorMax");
+                CopyVector2(current, template, "labelAnchorMin");
+                CopyVector2(current, template, "labelAnchorMax");
+                CopyBool(current, template, "preserveIconAspect");
+            }
+
+            current.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(asset);
+            Object.DestroyImmediate(defaults);
+        }
+
+        private static void CopyVector2(SerializedObject target, SerializedObject source, string name)
+        {
+            target.FindProperty(name).vector2Value = source.FindProperty(name).vector2Value;
+        }
+
+        private static void CopyInt(SerializedObject target, SerializedObject source, string name)
+        {
+            target.FindProperty(name).intValue = source.FindProperty(name).intValue;
+        }
+
+        private static void CopyBool(SerializedObject target, SerializedObject source, string name)
+        {
+            target.FindProperty(name).boolValue = source.FindProperty(name).boolValue;
+        }
         private static T EnsureAsset<T>(string assetPath, string defaultsPath) where T : ScriptableObject
         {
             var asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
