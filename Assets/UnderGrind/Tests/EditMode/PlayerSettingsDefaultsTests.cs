@@ -69,6 +69,12 @@ namespace UnderGrind.Tests
             Assert.AreEqual("Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx", settings.FemaleSourceAssetPath);
             Assert.AreEqual("_TP_Arms", settings.ThirdPersonArmsToken);
             Assert.AreEqual("_TP_Hands", settings.ThirdPersonHandsToken);
+            Assert.AreEqual("_Body", settings.BodyRendererToken);
+            Assert.AreEqual(35f, settings.FirstPersonBodyRevealPitch);
+            Assert.AreEqual(25f, settings.FirstPersonBodyHidePitch);
+            Assert.IsTrue(settings.ImportMaterials);
+            Assert.IsFalse(settings.ImportCameras);
+            Assert.IsFalse(settings.ImportLights);
             Assert.IsTrue(settings.RequireSeparateHead);
             Assert.IsFalse(settings.RequireFirstPersonArms);
         }
