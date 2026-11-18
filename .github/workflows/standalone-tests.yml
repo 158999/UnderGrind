@@ -14,12 +14,13 @@ permissions:
 
 concurrency:
   group: standalone-tests-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   standalone-tests:
     name: Build and test diagnostics
     runs-on: windows-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
