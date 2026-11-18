@@ -51,8 +51,8 @@ namespace UnderGrind.Editor
                 .Where(prefabPath => AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
                 .ToArray();
             var overwriteDetails = existingPrefabPaths.Length > 0
-                ? "\\n\\nPrefab esistenti da sostituire:\\n- " + string.Join("\\n- ", existingPrefabPaths)
-                : "\\n\\nNon esistono ancora prefab di destinazione.";
+                ? "\n\nPrefab esistenti da sostituire:\n- " + string.Join("\n- ", existingPrefabPaths)
+                : "\n\nNon esistono ancora prefab di destinazione.";
 
             if (!EditorUtility.DisplayDialog(
                 "Configurare il FBX e generare i prefab?",
