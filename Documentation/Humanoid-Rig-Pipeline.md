@@ -23,7 +23,7 @@ Il codice che ha generato il prototipo colloca le ossa usando proporzioni ricava
 
 Il prototipo non è quindi un rig Humanoid approvato per la produzione. In particolare, ogni personaggio ha ancora una sola mesh del corpo: non è presente un renderer separato per testa/viso. Non è possibile nascondere soltanto la testa in prima persona.
 
-Il progetto separato [UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999) contiene ora la versione salvata `version_3f8ecc6facc3cfa2f4f9a2234af25ae75c6cedf4dd39d94edbf0c485066935c0`, generata usando la regione del vertex group `Head` con soglia di peso 0,35.
+Il progetto separato [UnderGrind — Rigged Human Derivatives](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2493fca7-8542-4d61-8a81-12487e6a3999) contiene la versione iniziale `version_3f8ecc6facc3cfa2f4f9a2234af25ae75c6cedf4dd39d94edbf0c485066935c0` e la revisione aggiornata `version_761640485ef91a3c2d77dde4cba3ea1412e032e2aa753f08c99379afff77828b`, generata usando la regione del vertex group `Head` con soglia di peso 0,35.
 
 L'ispezione della sorgente registra quattro mesh derivate distinte:
 - `UG_Male_Head`: 67 vertici e 130 triangoli.
@@ -66,11 +66,11 @@ I gruppi dedicati alla prima e alla terza persona sono opzionali e configurabili
 
 La scena di test usa i prefab riggati configurati quando esistono. Se il prefab maschile non è disponibile, può usare la mesh statica maschile come fallback visivo; in quel caso il personaggio si muove ma non dispone di un rig animabile.
 
-La versione Blendstra attuale non soddisfa ancora i requisiti di importazione: ogni corpo è una singola isola connessa e la testa non è separata. Il builder deve quindi rifiutare quei derivati finché la geometria non viene preparata e verificata.
+La versione Blendstra più recente contiene quattro mesh separate per testa e corpo e le due armature hanno i nomi esatti richiesti. Questo supera il limite geometrico della prima revisione, ma non certifica ancora pesi, deformazioni, configurazione dei modificatori, UV o Avatar Humanoid. Il builder può quindi verificare gerarchia e renderer solo dopo l'esportazione e l'importazione dei due FBX; l'accettazione del rig resta subordinata ai test di deformazione in Unity.
 
 ## Sorgenti delle animazioni
 
-Sono stati individuati nella libreria PINOC sei movimenti:
+Sono stati individuati nella libreria PINOC otto movimenti:
 
 - Standing Idle
 - Walking
