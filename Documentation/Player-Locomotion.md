@@ -97,7 +97,15 @@ I sei movimenti individuati nella libreria PINOC sono Standing Idle, Walking, Ru
 
 ## Scena di test
 
-**UnderGrind → Build First Locomotion Test Scene** crea o aggiorna `Assets/UnderGrind/Scenes/LocomotionTest.unity`. Il generatore assegna gli asset di configurazione, aggiunge inventario, UI, interazione, controller di locomozione e diagnostica. Se sono presenti i prefab Humanoid configurati, utilizza quelli; altrimenti usa la mesh statica sorgente come riferimento visivo.
+**UnderGrind → Build First Locomotion Test Scene** crea o aggiorna `Assets/UnderGrind/Scenes/LocomotionTest.unity`. Il generatore assegna gli asset di configurazione e aggiunge inventario, UI, interazione, locomozione e diagnostica. Se sono presenti i prefab Humanoid configurati, utilizza quelli; altrimenti importa le mesh sorgente da `humans.blend` e crea prefab statici di riferimento. Il comando chiede conferma prima di sostituire una scena già esistente e verifica il salvataggio delle scene aperte con modifiche non salvate.
+
+### Stato della scena versionata
+
+Il file `LocomotionTest.unity` attualmente versionato non corrisponde ancora alla configurazione prodotta dal generatore aggiornato. Il GameObject Player contiene un `CharacterController`, `HumanLocomotionController` e `LocomotionDebugOverlay`. Il controller ha assegnato `PlayerLocomotionSettings.asset`, ma il riferimento a `PlayerInputSettings` non è assegnato e il riferimento all'inventario è nullo. La scena non serializza `PlayerInventory`, `PlayerInventoryUI`, `PlayerInteractionController` o `PlayerAnimationDriver`.
+
+La visuale è composta da parti mesh primitive separate (testa, torso e arti), non da un modello Humanoid animabile. La scena non contiene uno `SkinnedMeshRenderer` né un `Animator`. Il controller può aggiungere alcuni componenti di fallback durante `Awake`, ma senza gli asset di input, animazione e rig non ripristina la configurazione completa.
+
+Di conseguenza, la scena versionata è un prototipo visivo precedente e non costituisce una verifica del Player integrato attuale. Il generatore contiene già la configurazione aggiornata, ma la scena deve essere ricreata nell'Editor Unity e verificata in Play Mode prima di poter essere considerata operativa.
 
 ## Stato delle verifiche
 
