@@ -75,6 +75,10 @@ namespace UnderGrind.Locomotion
         private void ResolveAnimator()
         {
             if (animator == null) animator = GetComponentInChildren<Animator>(true);
+            if (animator != null && settings != null &&
+                settings.AnimatorController != null &&
+                animator.runtimeAnimatorController != settings.AnimatorController)
+                ApplyConfiguredController();
             if (animator != null && (animator.runtimeAnimatorController != _cachedController ||
                 animator.parameters.Length != _parameterCount))
                 RefreshParameters();
