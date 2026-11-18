@@ -23,9 +23,14 @@
 **/*.db-shm
 **/*.db-wal
 
-# Test and diagnostic output
-# /TestResults/*
-# !/TestResults/.gitkeep
+# Test and diagnostic output (generated locally; CI uploads the reports)
+/TestResults/*
+!/TestResults/test/
+/TestResults/test/*
+!/TestResults/test/.gitkeep
+!/TestResults/test old/
+/TestResults/test old/*
+!/TestResults/test old/.gitkeep
 
 # OS
 .DS_Store
