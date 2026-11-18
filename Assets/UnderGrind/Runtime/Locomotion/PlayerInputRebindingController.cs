@@ -87,9 +87,19 @@ namespace UnderGrind.Locomotion
                 !PlayerPrefs.HasKey(settings.OverrideStorageKey))
                 return false;
 
-            settings.ActionAsset.LoadBindingOverridesFromJson(
-                PlayerPrefs.GetString(settings.OverrideStorageKey));
-            return true;
+            try
+            {
+                settings.ActionAsset.LoadBindingOverridesFromJson(
+                    PlayerPrefs.GetString(settings.OverrideStorageKey));
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning("UnderGrind: override input non validi; vengono ignorati. " + exception.Message, this);
+                PlayerPrefs.DeleteKey(settings.OverrideStorageKey);
+                PlayerPrefs.Save();
+                return false;
+            }
         }
 
         public void ResetOverrides()
