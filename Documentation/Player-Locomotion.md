@@ -25,7 +25,7 @@ I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. I mod
 
 ## Input e controlli
 
-`PlayerInputSettings` collega il Player a un `InputActionAsset`. L'asset iniziale viene creato da **UnderGrind → Player → Create or Repair Input Actions** e salvato in `Assets/UnderGrind/Settings/PlayerInputActions.asset`; le associazioni tra identificatori logici e nomi delle azioni sono in `PlayerInputSettings.asset`. Le singole binding di tastiera, mouse e gamepad sono modificabili direttamente nell'Input Actions asset.
+`PlayerInputSettings` collega il Player a un `InputActionAsset`. L'asset iniziale è il file `Assets/UnderGrind/Settings/PlayerInputActions.inputactions`, importato da Unity e modificabile nell'Input Actions editor. **UnderGrind → Player → Create or Repair Input Actions** collega questo asset a `PlayerInputSettings.asset` e ripara i riferimenti mancanti; le associazioni tra identificatori logici e nomi delle azioni sono in `PlayerInputSettings.asset`. Le singole binding di tastiera, mouse e gamepad sono modificabili direttamente nell'Input Actions asset.
 
 | Azione | Tastiera e mouse | Gamepad |
 |---|---|---|
