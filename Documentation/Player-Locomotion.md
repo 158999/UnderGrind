@@ -119,11 +119,12 @@ Il modello sorgente maschile e quello femminile sono stati ispezionati e risulta
 
 Il codice del controller, la gestione della visibilità dei renderer, il collegamento con l'Animator e i relativi test sono presenti nel repository.
 
-Ultima esecuzione disponibile, 18 novembre 2026:
+Ultimi risultati disponibili prima della centralizzazione dei parametri, 18 novembre 2026:
 
 - Test autonomi C#: 6 superati su 6.
-- Test Unity PlayMode: 7 superati su 7.
-- Test Unity EditMode: risultato non verificabile. Il riepilogo JSON riporta zero test e codice di uscita 0, ma il log di Unity termina con codice di uscita 1 e non è stato prodotto il file XML dei risultati.
-- Verifica visiva nell'Editor: non effettuata.
+- Test Unity EditMode: 11 superati su 11 nel report XML `TestResults/UnderGrind/EditMode_20261118_101951.xml`.
+- Test Unity PlayMode: 7 superati su 7 nel report XML `TestResults/UnderGrind/PlayMode_20261118_092745.xml`.
+- Il successivo avvio batch del 09:19:36 non ha prodotto i file attesi e il relativo riepilogo è correttamente marcato come non valido. Non annulla i risultati dei report XML separati sopra indicati.
+- Verifica visiva nell'Editor: non documentata.
 
-I risultati dei test automatici non sostituiscono l'ispezione del modello reale, la verifica delle animazioni nell'Editor e il controllo della scena durante il gioco.
+La centralizzazione in `PlayerLocomotionSettings` modifica il codice e i test dopo quei report: i risultati precedenti non costituiscono una verifica di questa revisione. I test EditMode, PlayMode e autonomi devono essere rieseguiti sul commit aggiornato.
