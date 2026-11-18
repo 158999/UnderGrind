@@ -23,14 +23,8 @@
 **/*.db-shm
 **/*.db-wal
 
-# Test and diagnostic output (generated locally; CI uploads the reports)
-/TestResults/*
-!/TestResults/test/
-/TestResults/test/*
-!/TestResults/test/.gitkeep
-!/TestResults/test old/
-/TestResults/test old/*
-!/TestResults/test old/.gitkeep
+# Test and diagnostic reports are intentionally versioned so they can be reviewed remotely.
+# Keep TestResults out of the ignore list; do not hide local test outputs from Git.
 
 # OS
 .DS_Store
