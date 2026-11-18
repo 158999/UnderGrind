@@ -132,7 +132,7 @@ namespace UnderGrind.Editor
             instance.name = "Human Base - imported from humans.blend";
             instance.transform.SetParent(visualRoot.transform, false);
             ConfigureAnimations(instance, animationSettings);
-            if (instance.GetComponent<PlayerVisualRig>() == null)
+            if (instance.GetComponentInChildren<PlayerVisualRig>(true) == null)
             {
                 var visualRig = player.AddComponent<PlayerVisualRig>();
                 if (!visualRig.ConfigureFromHierarchy(instance.transform, rigSettings))
