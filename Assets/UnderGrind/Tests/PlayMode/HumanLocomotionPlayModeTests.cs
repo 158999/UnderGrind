@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -14,18 +15,21 @@ namespace UnderGrind.Tests
             var player = new GameObject("PlayMode locomotion test");
             try
             {
+                var settings = CreateSettings();
                 var movement = player.AddComponent<HumanLocomotionController>();
+                movement.ConfigureSettings(settings);
                 yield return null;
 
                 var controller = player.GetComponent<CharacterController>();
                 Assert.That(controller, Is.Not.Null);
-                Assert.That(controller.height, Is.EqualTo(1.78f).Within(0.001f));
-                Assert.That(movement.WalkSpeed, Is.EqualTo(1.4f).Within(0.001f));
-                Assert.That(movement.RunSpeed / movement.WalkSpeed, Is.EqualTo(4f / 3f).Within(0.001f));
-                Assert.That(movement.JumpHeight, Is.EqualTo(0.4f).Within(0.001f));
+                Assert.That(controller.height, Is.EqualTo(settings.CharacterHeight).Within(0.001f));
+                Assert.That(movement.WalkSpeed, Is.EqualTo(settings.WalkSpeed).Within(0.001f));
+                Assert.That(movement.RunSpeed / movement.WalkSpeed, Is.EqualTo(settings.RunMultiplier).Within(0.001f));
+                Assert.That(movement.JumpHeight, Is.EqualTo(settings.JumpHeight).Within(0.001f));
                 Assert.That(movement.IsCrouching, Is.False);
                 Assert.That(movement.MoveInput, Is.EqualTo(Vector2.zero));
-                Assert.That(movement.RunSpeed, Is.EqualTo(1.4f * 4f / 3f).Within(0.001f));
+                Assert.That(movement.RunSpeed, Is.EqualTo(settings.RunSpeed).Within(0.001f));
+                Object.Destroy(settings);
             }
             finally
             {
@@ -33,6 +37,57 @@ namespace UnderGrind.Tests
             }
 
             yield return null;
+        }
+
+        private static PlayerLocomotionSettings CreateSettings()
+        {
+            var settings = ScriptableObject.CreateInstance<PlayerLocomotionSettings>();
+            Set(settings, "characterHeight", 1.78f);
+            Set(settings, "walkSpeed", 1.4f);
+            Set(settings, "runMultiplier", 4f / 3f);
+            Set(settings, "jumpHeight", 0.4f);
+            Set(settings, "gravity", 9.81f);
+            Set(settings, "acceleration", 12f);
+            Set(settings, "deceleration", 16f);
+            Set(settings, "airControl", 0.35f);
+            Set(settings, "coyoteTime", 0.1f);
+            Set(settings, "jumpBufferTime", 0.12f);
+            Set(settings, "groundedStickVelocity", 2f);
+            Set(settings, "movementInputThreshold", 0.001f);
+            Set(settings, "directionThreshold", 0.001f);
+            Set(settings, "jumpApexStateThreshold", 0.05f);
+            Set(settings, "crouchHeight", 1.12f);
+            Set(settings, "crouchSpeedMultiplier", 0.5f);
+            Set(settings, "stanceChangeSpeed", 8f);
+            Set(settings, "capsuleRadius", 0.28f);
+            Set(settings, "standingClearance", 0.01f);
+            Set(settings, "stanceOverlapRadiusMultiplier", 0.95f);
+            Set(settings, "characterStepOffset", 0.32f);
+            Set(settings, "characterStepOffsetHeightRatio", 0.18f);
+            Set(settings, "characterSlopeLimit", 48f);
+            Set(settings, "characterMinMoveDistance", 0f);
+            Set(settings, "mouseSensitivity", 0.12f);
+            Set(settings, "gamepadLookSensitivity", 150f);
+            Set(settings, "maxLookAngle", 82f);
+            Set(settings, "standingViewHeight", 1.62f);
+            Set(settings, "crouchingViewHeight", 0.98f);
+            Set(settings, "thirdPersonCameraOffset", new Vector3(0f, 0.12f, 0f));
+            Set(settings, "thirdPersonDistance", 3.25f);
+            Set(settings, "cameraCollisionRadius", 0.16f);
+            Set(settings, "cameraCollisionSurfaceOffset", 0.18f);
+            Set(settings, "cameraFollowSharpness", 14f);
+            Set(settings, "thirdPersonRotationSharpness", 12f);
+            Set(settings, "cameraNearClipPlane", 0.04f);
+            Set(settings, "cameraFieldOfView", 75f);
+            return settings;
+        }
+
+        private static void Set<T>(PlayerLocomotionSettings settings, string fieldName, T value)
+        {
+            var field = typeof(PlayerLocomotionSettings).GetField(fieldName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(field, Is.Not.Null, "Missing serialized setting: " + fieldName);
+            field.SetValue(settings, value);
         }
 
         [UnityTest]
