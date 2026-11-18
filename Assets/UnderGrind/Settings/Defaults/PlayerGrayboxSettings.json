@@ -393,12 +393,12 @@
       "objectName": "Platform A",
       "position": {
         "x": 10,
-        "y": 0.25,
+        "y": 0.125,
         "z": 16
       },
       "size": {
         "x": 2,
-        "y": 0.5,
+        "y": 0.25,
         "z": 2
       },
       "materialKind": 0,
@@ -408,12 +408,12 @@
       "objectName": "Platform B",
       "position": {
         "x": 10,
-        "y": 0.35,
-        "z": 19.5
+        "y": 0.175,
+        "z": 18.8
       },
       "size": {
         "x": 2,
-        "y": 0.7,
+        "y": 0.35,
         "z": 2
       },
       "materialKind": 0,
@@ -423,12 +423,12 @@
       "objectName": "Platform C",
       "position": {
         "x": 10,
-        "y": 0.5,
-        "z": 23
+        "y": 0.25,
+        "z": 21.6
       },
       "size": {
         "x": 2,
-        "y": 1,
+        "y": 0.5,
         "z": 2
       },
       "materialKind": 0,
@@ -438,12 +438,12 @@
       "objectName": "Platform D",
       "position": {
         "x": 10,
-        "y": 0.25,
-        "z": 27
+        "y": 0.325,
+        "z": 24.4
       },
       "size": {
         "x": 2,
-        "y": 0.5,
+        "y": 0.65,
         "z": 2
       },
       "materialKind": 0,
