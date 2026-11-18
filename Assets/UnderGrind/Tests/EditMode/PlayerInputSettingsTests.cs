@@ -91,11 +91,14 @@ namespace UnderGrind.Tests
 
                 action.ApplyBindingOverride(0, "<Keyboard>/enter");
                 Assert.IsTrue(rebinding.SaveOverrides());
-                rebinding.ResetOverrides();
+                action.RemoveAllBindingOverrides();
                 Assert.AreEqual("<Keyboard>/space", action.bindings[0].effectivePath);
 
                 Assert.IsTrue(rebinding.LoadOverrides());
                 Assert.AreEqual("<Keyboard>/enter", action.bindings[0].effectivePath);
+
+                rebinding.ResetOverrides();
+                Assert.AreEqual("<Keyboard>/space", action.bindings[0].effectivePath);
             }
             finally
             {
