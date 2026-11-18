@@ -25,6 +25,7 @@ namespace UnderGrind.Editor
                 return;
             }
 
+            PrepareAnimationImports();
             RefreshClipReferences(settings);
             var missing = GetMissingRequiredClips(settings);
             if (missing.Count > 0)
@@ -69,16 +70,64 @@ namespace UnderGrind.Editor
             Debug.Log("UnderGrind: Animator Controller creato in " + ControllerPath);
         }
 
+        private sealed class AnimationClipSource
+        {
+            public AnimationClip Clip;
+            public string AssetName;
+        }
+
+        private static void PrepareAnimationImports()
+        {
+            var guids = AssetDatabase.FindAssets("t:Model", new[] { AnimationFolder });
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var importer = AssetImporter.GetAtPath(path) as ModelImporter;
+                if (importer == null) continue;
+
+                var changed = false;
+                if (importer.animationType != ModelImporterAnimationType.Human)
+                {
+                    importer.animationType = ModelImporterAnimationType.Human;
+                    changed = true;
+                }
+                if (importer.avatarSetup == ModelImporterAvatarSetup.NoAvatar)
+                {
+                    importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                    changed = true;
+                }
+                if (!importer.importAnimation)
+                {
+                    importer.importAnimation = true;
+                    changed = true;
+                }
+                if (changed) importer.SaveAndReimport();
+
+                var assets = AssetDatabase.LoadAllAssetsAtPath(path);
+                var hasValidAvatar = false;
+                foreach (var asset in assets)
+                    if (asset is Avatar avatar && avatar.isHuman && avatar.isValid)
+                    {
+                        hasValidAvatar = true;
+                        break;
+                    }
+                if (!hasValidAvatar)
+                    Debug.LogWarning("UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
+            }
+        }
+
         private static void RefreshClipReferences(PlayerAnimationSettings settings)
         {
-            var clips = new List<AnimationClip>();
+            var clips = new List<AnimationClipSource>();
             var guids = AssetDatabase.FindAssets(string.Empty, new[] { AnimationFolder });
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
+                var assetName = Normalize(System.IO.Path.GetFileNameWithoutExtension(path));
                 foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(path))
-                    if (asset is AnimationClip clip && !clip.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase))
-                        clips.Add(clip);
+                    if (asset is AnimationClip clip &&
+                        !clip.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase))
+                        clips.Add(new AnimationClipSource { Clip = clip, AssetName = assetName });
             }
 
             var serialized = new SerializedObject(settings);
@@ -95,22 +144,21 @@ namespace UnderGrind.Editor
         }
 
         private static void AssignIfMissing(SerializedObject serialized, string propertyName,
-            List<AnimationClip> clips, params string[] names)
+            List<AnimationClipSource> clips, params string[] names)
         {
             var property = serialized.FindProperty(propertyName);
             if (property == null || property.objectReferenceValue != null) return;
-            foreach (var clip in clips)
+
+            foreach (var name in names)
             {
-                var normalized = Normalize(clip.name);
-                foreach (var name in names)
-                {
-                    var target = Normalize(name);
-                    if (normalized == target || normalized.Contains(target))
-                    {
-                        property.objectReferenceValue = clip;
-                        return;
-                    }
-                }
+                var target = Normalize(name);
+                var match = clips.Find(x => Normalize(x.Clip.name) == target);
+                match ??= clips.Find(x => x.AssetName == target);
+                match ??= clips.Find(x => Normalize(x.Clip.name).Contains(target));
+                match ??= clips.Find(x => x.AssetName.Contains(target));
+                if (match == null) continue;
+                property.objectReferenceValue = match.Clip;
+                return;
             }
         }
 
@@ -121,6 +169,8 @@ namespace UnderGrind.Editor
             if (settings.WalkClip == null) missing.Add("Walk / Walking");
             if (settings.RunClip == null) missing.Add("Run / Running");
             if (settings.JumpClip == null) missing.Add("Jump");
+            if (settings.FallClip == null) missing.Add("Fall");
+            if (settings.LandClip == null) missing.Add("Landing");
             if (settings.CrouchIdleClip == null) missing.Add("Crouch Idle");
             if (settings.CrouchWalkClip == null) missing.Add("Crouch Walk");
             return missing;
@@ -143,8 +193,10 @@ namespace UnderGrind.Editor
         private static void AddParameter(AnimatorController controller, string name,
             AnimatorControllerParameterType type)
         {
-            if (!string.IsNullOrWhiteSpace(name))
-                controller.AddParameter(name, type);
+            if (string.IsNullOrWhiteSpace(name)) return;
+            foreach (var parameter in controller.parameters)
+                if (parameter.name == name) return;
+            controller.AddParameter(name, type);
         }
 
         private static void BuildStateMachine(AnimatorStateMachine stateMachine, PlayerAnimationSettings settings)
