@@ -24,7 +24,7 @@ namespace UnderGrind.Locomotion
         private bool _initialized;
 
         public bool IsThirdPerson => _thirdPerson;
-        public bool IsConfigured => _initialized && _rigSettings != null;
+        public bool IsConfigured => rigSettings != null && headRenderers.Length > 0 && bodyRenderers.Length > 0;
         public int HeadRendererCount => _headRenderers.Length;
         public int BodyRendererCount => _bodyRenderers.Length;
         public int FirstPersonRendererCount => _firstPersonOnlyRenderers.Length;
