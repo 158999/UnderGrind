@@ -20,7 +20,8 @@ namespace UnderGrind.Tests
             _map = new InputActionMap("Player");
             _asset.AddActionMap(_map);
             _map.AddAction("Move", InputActionType.Value, expectedControlType: "Vector2");
-            _map.AddAction("Jump", InputActionType.Button, expectedControlType: "Button");
+            _map.AddAction("Jump", InputActionType.Button, expectedControlType: "Button")
+                .AddBinding("<Keyboard>/space");
 
             _settings = ScriptableObject.CreateInstance<PlayerInputSettings>();
             var serialized = new SerializedObject(_settings);
@@ -35,6 +36,7 @@ namespace UnderGrind.Tests
         public void TearDown()
         {
             _map.Disable();
+            PlayerPrefs.DeleteKey("UnderGrind.Tests.InputOverrides");
             Object.DestroyImmediate(_settings);
             Object.DestroyImmediate(_asset);
         }
@@ -55,6 +57,51 @@ namespace UnderGrind.Tests
             _settings.DisableActionMap();
 
             Assert.IsFalse(_map.enabled);
+        }
+
+        [Test]
+        public void DeadzonesAndRebindPersistenceAreInspectorConfigurable()
+        {
+            var serialized = new SerializedObject(_settings);
+            serialized.FindProperty("movementDeadzone").floatValue = 0.2f;
+            serialized.FindProperty("gamepadLookDeadzone").floatValue = 0.1f;
+            serialized.FindProperty("rebindTimeoutSeconds").floatValue = 6f;
+            serialized.FindProperty("overrideStorageKey").stringValue = "UnderGrind.Tests.InputOverrides";
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            Assert.AreEqual(0.2f, _settings.MovementDeadzone);
+            Assert.AreEqual(0.1f, _settings.GamepadLookDeadzone);
+            Assert.AreEqual(6f, _settings.RebindTimeoutSeconds);
+            Assert.AreEqual("UnderGrind.Tests.InputOverrides", _settings.OverrideStorageKey);
+        }
+
+        [Test]
+        public void BindingOverridesCanBeSavedResetAndRestored()
+        {
+            var key = "UnderGrind.Tests.InputOverrides";
+            PlayerPrefs.DeleteKey(key);
+            var host = new GameObject("Input rebinding test");
+            try
+            {
+                var rebinding = host.AddComponent<PlayerInputRebindingController>();
+                rebinding.Configure(_settings);
+                var action = _settings.GetAction(PlayerInputActionId.Jump);
+                Assert.IsNotNull(action);
+                Assert.AreEqual(1, action.bindings.Count);
+
+                action.ApplyBindingOverride(0, "<Keyboard>/enter");
+                Assert.IsTrue(rebinding.SaveOverrides());
+                rebinding.ResetOverrides();
+                Assert.AreEqual("<Keyboard>/space", action.bindings[0].effectivePath);
+
+                Assert.IsTrue(rebinding.LoadOverrides());
+                Assert.AreEqual("<Keyboard>/enter", action.bindings[0].effectivePath);
+            }
+            finally
+            {
+                Object.DestroyImmediate(host);
+                PlayerPrefs.DeleteKey(key);
+            }
         }
 
         [Test]
