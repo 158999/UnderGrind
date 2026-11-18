@@ -34,6 +34,9 @@ namespace UnderGrind.Locomotion
 
         [Header("Importazione FBX")]
         [SerializeField] private bool importAnimation;
+        [SerializeField] private bool importMaterials;
+        [SerializeField] private bool importCameras;
+        [SerializeField] private bool importLights;
         [SerializeField] private bool optimizeGameObjects;
         [SerializeField] private bool importVisibility;
 
@@ -55,6 +58,9 @@ namespace UnderGrind.Locomotion
         public bool RequireSeparateHead => requireSeparateHead;
         public bool RequireFirstPersonArms => requireFirstPersonArms;
         public bool ImportAnimation => importAnimation;
+        public bool ImportMaterials => importMaterials;
+        public bool ImportCameras => importCameras;
+        public bool ImportLights => importLights;
         public bool OptimizeGameObjects => optimizeGameObjects;
         public bool ImportVisibility => importVisibility;
 
