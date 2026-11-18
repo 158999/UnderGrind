@@ -42,20 +42,20 @@ namespace UnderGrind.Editor
             {
                 SetObject(serialized, "actionAsset", actions);
                 SetString(serialized, "actionMapName", "Player");
-            SetString(serialized, "moveActionName", "Move");
-            SetString(serialized, "lookMouseActionName", "LookMouse");
-            SetString(serialized, "lookGamepadActionName", "LookGamepad");
-            SetString(serialized, "jumpActionName", "Jump");
-            SetString(serialized, "runActionName", "Run");
-            SetString(serialized, "crouchActionName", "Crouch");
-            SetString(serialized, "toggleCameraActionName", "ToggleCamera");
-            SetString(serialized, "cancelActionName", "Cancel");
-            SetString(serialized, "captureCursorActionName", "CaptureCursor");
-            SetString(serialized, "interactActionName", "Interact");
-            SetString(serialized, "dropActionName", "Drop");
-            SetString(serialized, "toggleInventoryActionName", "ToggleInventory");
-            SetString(serialized, "nextSlotActionName", "NextSlot");
-            SetString(serialized, "previousSlotActionName", "PreviousSlot");
+                SetString(serialized, "moveActionName", "Move");
+                SetString(serialized, "lookMouseActionName", "LookMouse");
+                SetString(serialized, "lookGamepadActionName", "LookGamepad");
+                SetString(serialized, "jumpActionName", "Jump");
+                SetString(serialized, "runActionName", "Run");
+                SetString(serialized, "crouchActionName", "Crouch");
+                SetString(serialized, "toggleCameraActionName", "ToggleCamera");
+                SetString(serialized, "cancelActionName", "Cancel");
+                SetString(serialized, "captureCursorActionName", "CaptureCursor");
+                SetString(serialized, "interactActionName", "Interact");
+                SetString(serialized, "dropActionName", "Drop");
+                SetString(serialized, "toggleInventoryActionName", "ToggleInventory");
+                SetString(serialized, "nextSlotActionName", "NextSlot");
+                SetString(serialized, "previousSlotActionName", "PreviousSlot");
                 SetBool(serialized, "lockCursorOnStart", true);
                 SetBool(serialized, "recaptureCursorOnClick", true);
             }
