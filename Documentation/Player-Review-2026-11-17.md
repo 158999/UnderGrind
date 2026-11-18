@@ -81,7 +81,7 @@ Il generatore della scena di test esclude le clip di accovacciamento dalla selez
 - `PlayerAnimationControllerBuilder` genera il controller a partire dalle clip importate e da `PlayerAnimationSettings.asset`.
 - `HumanoidRigPrefabBuilder` configura l'importazione Humanoid e genera prefab da un FBX con entrambe le radici scheletriche.
 - La scena di test preferisce il prefab maschile riggato quando disponibile; la mesh statica resta soltanto un fallback visivo.
-- La versione Blendstra più recente contiene un prototipo con copie delle mesh e due armature, ma posizione delle ossa e pesi non sono verificati. La testa non è ancora un renderer separato; il prototipo non è accettato come rig di produzione.
+- La versione Blendstra `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` conserva le mesh originali, contiene copie con topologia invariata e due armature. La separazione per isole disconnesse ha confermato che ogni corpo è una singola isola connessa: non esiste una testa già separabile tramite loose parts. Il GLB dichiara zero animazioni. Posizione delle ossa e pesi restano non verificati; la testa non è un renderer separato. Il prototipo non è accettato come rig di produzione.
 
 ### Correzioni emerse dalla revisione
 
