@@ -61,7 +61,13 @@ namespace UnderGrind.Inventory
         private void OnDisable()
         {
             UnbindInventoryEvents();
-            if (IsOpen) SetOpen(false);
+            if (!IsOpen) return;
+
+            IsOpen = false;
+            if (_panel != null) _panel.SetActive(false);
+            if (locomotion != null) locomotion.SetInputSuppressed(false);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         private void BindInventoryEvents()
