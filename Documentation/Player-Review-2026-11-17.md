@@ -63,7 +63,7 @@ Il generatore della scena di test esclude le clip di accovacciamento dalla selez
 - `PlayerLocomotionSettings` centralizza gli otto gruppi di parametri della locomozione.
 - `HumanLocomotionController` usa l'asset per velocità, salto, gravità, postura, collisioni e camera.
 - L'inventario applica la soglia di sovraccarico definita dall'utente: oltre soglia disabilita corsa e salto e riduce la camminata del 25% nel profilo iniziale.
-- L'input è collegato tramite `PlayerInputSettings` e `PlayerInputActions.asset`. Le azioni e le binding sono modificabili nell'Inspector.
+- L'input è collegato tramite `PlayerInputSettings` e `PlayerInputActions.asset`. Le azioni e le binding sono modificabili nell'Inspector. Le dead zone radiali di movimento e visuale sono configurabili; `PlayerInputRebindingController` espone rimappatura interattiva, visualizzazione della binding, salvataggio persistente e reset degli override. La schermata di impostazioni che richiama questa API non è ancora presente.
 - L'interfaccia inventario sopprime il movimento e la visuale mentre è aperta; il cursore non viene ricatturato dal clic durante questa condizione.
 
 ### Inventario e interazione
