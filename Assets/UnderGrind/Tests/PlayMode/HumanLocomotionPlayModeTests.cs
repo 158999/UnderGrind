@@ -95,29 +95,49 @@ namespace UnderGrind.Tests
         }
 
         [UnityTest]
-        public IEnumerator FirstPersonHidesHeadButKeepsBodyAndArmsVisible()
+        public IEnumerator FirstPersonRevealsBodyOnlyWhenLookingDown()
         {
-            var player = new GameObject("Visual rig test");
+            var player = new GameObject("Visual rig body reveal test");
             var head = GameObject.CreatePrimitive(PrimitiveType.Cube);
             var body = GameObject.CreatePrimitive(PrimitiveType.Cube);
             var arms = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var view = new GameObject("View Pivot");
+            var settings = ScriptableObject.CreateInstance<PlayerRigSettings>();
             try
             {
-                head.name = "Head Mesh";
-                body.name = "Torso Mesh";
-                arms.name = "FirstPerson_Arms";
+                head.name = "Human_Male_Head";
+                body.name = "Human_Male_Body";
+                arms.name = "Human_Male_FP_Arms";
                 head.transform.SetParent(player.transform, false);
                 body.transform.SetParent(player.transform, false);
                 arms.transform.SetParent(player.transform, false);
+                view.transform.SetParent(player.transform, false);
+
+                SetRigField(settings, "headRendererSuffix", "_Head");
+                SetRigField(settings, "bodyRendererToken", "_Body");
+                SetRigField(settings, "firstPersonArmsToken", "_FP_Arms");
+                SetRigField(settings, "requireSeparateHead", true);
+                SetRigField(settings, "requireFirstPersonArms", true);
+                SetRigField(settings, "firstPersonBodyRevealPitch", 35f);
+                SetRigField(settings, "firstPersonBodyHidePitch", 25f);
+
                 var rig = player.AddComponent<PlayerVisualRig>();
                 yield return null;
-                rig.Configure(new[] { head.GetComponent<Renderer>() },
-                    new[] { arms.GetComponent<Renderer>() });
-
+                Assert.That(rig.ConfigureFromHierarchy(player.transform, settings), Is.True);
+                rig.SetViewReference(view.transform);
                 rig.SetThirdPerson(false);
+
                 Assert.That(head.GetComponent<Renderer>().enabled, Is.False);
-                Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.False);
                 Assert.That(arms.GetComponent<Renderer>().enabled, Is.True);
+
+                view.transform.localRotation = Quaternion.Euler(40f, 0f, 0f);
+                yield return null;
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.True);
+
+                view.transform.localRotation = Quaternion.identity;
+                yield return null;
+                Assert.That(body.GetComponent<Renderer>().enabled, Is.False);
 
                 rig.SetThirdPerson(true);
                 Assert.That(head.GetComponent<Renderer>().enabled, Is.True);
@@ -126,6 +146,7 @@ namespace UnderGrind.Tests
             }
             finally
             {
+                Object.Destroy(settings);
                 Object.Destroy(player);
             }
             yield return null;

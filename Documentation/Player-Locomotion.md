@@ -77,19 +77,23 @@ Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità no
 
 ## Rig e visibilità del modello
 
-`PlayerRigSettings.asset` contiene i nomi delle radici degli scheletri, i nomi dei prefab, i suffissi dei renderer e le opzioni di importazione FBX.
+`PlayerRigSettings.asset` contiene due percorsi FBX distinti, uno per il modello maschile e uno per quello femminile. Ogni file deve contenere il proprio scheletro e il proprio Avatar Humanoid: i due prefab non condividono lo stesso Avatar. I percorsi predefiniti sono:
 
-Dopo aver selezionato un FBX riggato, **UnderGrind → Player → Build Prefabs From Selected Rigged FBX** imposta l'importazione Humanoid e genera i prefab maschile e femminile. Il file selezionato deve contenere entrambe le radici configurate e un Avatar Humanoid valido. Il generatore richiede una testa con renderer separato se `RequireSeparateHead` è attivo.
+- `Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx`
+- `Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx`
+
+Dopo aver importato entrambi i file, **UnderGrind → Player → Build Male and Female Prefabs From Configured FBX** prepara separatamente i due Model Importer, valida i rispettivi Avatar e genera i prefab. L'operazione si interrompe se manca uno dei file, se i percorsi coincidono, se l'Avatar non è valido o se la gerarchia non soddisfa i requisiti di renderer.
 
 Convenzioni dei renderer:
 
 - `*_Head`: testa, nascosta in prima persona e ripristinata in terza persona.
-- `*_FP_Arms`: braccia dedicate alla prima persona.
-- `*_FP_Hands`: mani dedicate alla prima persona.
+- `*_Body`: corpo, nascosto quando la visuale in prima persona guarda avanti e mostrato quando il giocatore guarda verso il basso.
+- `*_TP_Arms` e `*_TP_Hands`: arti visibili soltanto in terza persona.
+- `*_FP_Arms` e `*_FP_Hands`: arti visibili soltanto in prima persona.
 
-Le associazioni esplicite hanno priorità sulla ricerca per nome. I renderer non classificati mantengono lo stato di abilitazione originale. Se il prefab riggato è disponibile, la scena di test lo preferisce al modello statico importato da `humans.blend`. In assenza del prefab riggato, il Player può muoversi ma la sorgente statica non fornisce uno scheletro animabile né una testa indipendente.
+`PlayerVisualRig` applica le convenzioni tramite `PlayerRigSettings`. Le soglie `FirstPersonBodyRevealPitch` e `FirstPersonBodyHidePitch` configurano la rivelazione del corpo con isteresi, evitando cambi continui vicino alla soglia. `RequireSeparateHead` e `RequireFirstPersonArms` rendono obbligatorie le rispettive parti durante la generazione del prefab.
 
-La sorgente attualmente ispezionata non dimostra ancora una separazione della testa, pesi di deformazione o parti dedicate alle braccia e alle mani in prima persona. I test su gerarchie artificiali verificano la logica di visibilità, non il modello finale.
+Il generatore della scena usa il prefab maschile riggato quando disponibile; la mesh statica originale resta un fallback visivo e non viene considerata un rig valido.
 
 ## Animazioni
 

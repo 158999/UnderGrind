@@ -21,7 +21,7 @@ namespace UnderGrind.Editor
             EditorApplication.delayCall += EnsureAssets;
         }
 
-        [MenuItem("UnderGrind/Player/Create or Repair Inventory Assets")]
+        [MenuItem("UnderGrind/Player/Create or Repair Player Settings Assets")]
         public static void EnsureAssets()
         {
             EnsureFolder("Assets/UnderGrind");
@@ -51,13 +51,14 @@ namespace UnderGrind.Editor
             var current = new SerializedObject(asset);
             var template = new SerializedObject(defaults);
             var version = current.FindProperty("settingsVersion");
-            if (version == null || version.intValue >= 1)
+            if (version == null)
             {
                 Object.DestroyImmediate(defaults);
                 return;
             }
 
-            if (current.FindProperty("panelAnchorMax").vector2Value == Vector2.zero)
+            if (version.intValue < 1 &&
+                current.FindProperty("panelAnchorMax").vector2Value == Vector2.zero)
             {
                 CopyInt(current, template, "canvasRenderMode");
                 CopyInt(current, template, "canvasScaleMode");
@@ -81,7 +82,8 @@ namespace UnderGrind.Editor
                 CopyInt(current, template, "gridChildAlignment");
             }
 
-            if (current.FindProperty("iconAnchorMax").vector2Value == Vector2.zero)
+            if (version.intValue < 1 &&
+                current.FindProperty("iconAnchorMax").vector2Value == Vector2.zero)
             {
                 CopyVector2(current, template, "iconAnchorMin");
                 CopyVector2(current, template, "iconAnchorMax");
@@ -90,7 +92,11 @@ namespace UnderGrind.Editor
                 CopyBool(current, template, "preserveIconAspect");
             }
 
-            version.intValue = 1;
+            if (version.intValue < 2)
+            {
+                CopyStringIfEmpty(current, template, "fallbackFontResourceName");
+                version.intValue = 2;
+            }
             current.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
             Object.DestroyImmediate(defaults);
@@ -107,6 +113,14 @@ namespace UnderGrind.Editor
             var defaultVersion = template.FindProperty("settingsVersion");
             if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
             {
+                CopyBool(current, template, "configureFbxImports");
+                CopyInt(current, template, "fbxRigType");
+                CopyBool(current, template, "createAvatarFromFbx");
+                CopyBool(current, template, "importAnimationClips");
+                CopyBool(current, template, "importMaterials");
+                CopyBool(current, template, "importCameras");
+                CopyBool(current, template, "importLights");
+                CopyBool(current, template, "optimizeFbxGameObjects");
                 version.intValue = defaultVersion.intValue;
                 current.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(asset);
@@ -134,6 +148,8 @@ namespace UnderGrind.Editor
                     template.FindProperty("firstPersonBodyRevealPitch").floatValue;
                 current.FindProperty("firstPersonBodyHidePitch").floatValue =
                     template.FindProperty("firstPersonBodyHidePitch").floatValue;
+                current.FindProperty("requireFirstPersonArms").boolValue =
+                    template.FindProperty("requireFirstPersonArms").boolValue;
                 version.intValue = defaultVersion.intValue;
             }
 

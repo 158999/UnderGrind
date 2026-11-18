@@ -2,6 +2,12 @@ using UnityEngine;
 
 namespace UnderGrind.Locomotion
 {
+    public enum PlayerAnimationRigType
+    {
+        Humanoid,
+        Generic
+    }
+
     [CreateAssetMenu(menuName = "UnderGrind/Player/Animation Settings", fileName = "PlayerAnimationSettings")]
     public sealed class PlayerAnimationSettings : ScriptableObject
     {
@@ -67,6 +73,14 @@ namespace UnderGrind.Locomotion
         public AnimationClip LandClip => landClip;
         public AnimationClip CrouchIdleClip => crouchIdleClip;
         public AnimationClip CrouchWalkClip => crouchWalkClip;
+        public bool ConfigureFbxImports => configureFbxImports;
+        public PlayerAnimationRigType FbxRigType => fbxRigType;
+        public bool CreateAvatarFromFbx => createAvatarFromFbx;
+        public bool ImportAnimationClips => importAnimationClips;
+        public bool ImportMaterials => importMaterials;
+        public bool ImportCameras => importCameras;
+        public bool ImportLights => importLights;
+        public bool OptimizeFbxGameObjects => optimizeFbxGameObjects;
         public string SpeedParameterName => speedParameterName;
         public string MoveXParameterName => moveXParameterName;
         public string MoveYParameterName => moveYParameterName;
