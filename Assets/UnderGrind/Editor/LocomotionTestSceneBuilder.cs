@@ -167,8 +167,7 @@ namespace UnderGrind.Editor
             var inventory = player.AddComponent<PlayerInventory>();
             inventory.Configure(inventorySettings);
 
-            var rebinding = player.AddComponent<PlayerInputRebindingController>();
-            rebinding.Configure(inputSettings);
+            player.AddComponent<PlayerInputRebindingController>();
 
             var movement = player.AddComponent<HumanLocomotionController>();
             movement.ConfigureSettings(locomotionSettings);
