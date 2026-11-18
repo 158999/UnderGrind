@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: standalone-tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   standalone-tests:
     name: Build and test diagnostics
