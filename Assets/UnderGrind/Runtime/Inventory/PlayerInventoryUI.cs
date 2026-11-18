@@ -261,7 +261,7 @@ namespace UnderGrind.Inventory
             _slotLabels.Clear();
 
             var font = settings.Font != null
-                ? settings.Font : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                ? settings.Font : Resources.GetBuiltinResource<Font>(settings.FallbackFontResourceName);
             for (var i = 0; i < count; i++)
             {
                 var slot = CreateUiObject("Slot " + (i + 1), _grid.transform);
