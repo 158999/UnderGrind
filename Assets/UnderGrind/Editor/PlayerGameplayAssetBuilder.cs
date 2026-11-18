@@ -97,9 +97,6 @@ namespace UnderGrind.Editor
                 CopyStringIfEmpty(current, template, "fallbackFontResourceName");
                 version.intValue = 2;
             }
-            else if (version.intValue < 1)
-                version.intValue = 1;
-
             current.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
             Object.DestroyImmediate(defaults);
