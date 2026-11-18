@@ -73,7 +73,7 @@ namespace UnderGrind.Tests
             Assert.AreEqual(1, inventory.GetSlot(0).Quantity);
 
             yield return null;
-            var spawned = Object.FindObjectsOfType<WorldItemPickup>();
+            var spawned = Object.FindObjectsByType<WorldItemPickup>(FindObjectsSortMode.None);
             var foundDrop = false;
             foreach (var candidate in spawned)
             {
