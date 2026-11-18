@@ -93,7 +93,7 @@ Le clip richieste sono Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk. Fall e 
 
 `PlayerAnimationDriver` aggiorna soltanto parametri presenti nel controller e con tipo corretto. Il root motion è disabilitato perché lo spostamento del personaggio è gestito da `HumanLocomotionController`.
 
-I sei movimenti individuati nella libreria PINOC sono Standing Idle, Walking, Running, Jump, Crouching Idle e Crouch Walk Forward. Gli export Mixamo sono candidati per il retargeting verso il rig UnderGrind; gli export Splat usano invece uno scheletro MetaHuman e sono destinati al relativo Splat Engine. Gli export non risultano ancora trasferiti sul rig definitivo nel repository.
+Otto movimenti sono ora presenti nella libreria PINOC dell'utente: Standing Idle, Walking, Running, Jump, Crouching Idle, Crouch Walk Forward, Fall down e Hard Landing. Per il rig Humanoid UnderGrind è disponibile l'export `mixamo-fbx`, con X Bot e scheletro Mixamo, da retargettare sul rig definitivo. Il formato predefinito preso dalla libreria è invece un GLB armature-only MetaHuman a 441 ossa, destinato al workflow Splat e non direttamente compatibile con questo controller. Gli FBX Mixamo non sono ancora importati in `Assets/UnderGrind/Animations` né trasferiti sul rig definitivo.
 
 ## Scena di test
 
