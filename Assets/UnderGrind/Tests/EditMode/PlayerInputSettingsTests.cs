@@ -2,6 +2,7 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TestTools;
 using UnderGrind.Locomotion;
 
 namespace UnderGrind.Tests
@@ -60,6 +61,7 @@ namespace UnderGrind.Tests
         public void MissingActionMapReturnsNoActionWithoutThrowing()
         {
             var serialized = new SerializedObject(_settings);
+            LogAssert.Expect(LogType.Error, "UnderGrind: action map non trovato: Missing");
             serialized.FindProperty("actionMapName").stringValue = "Missing";
             serialized.ApplyModifiedPropertiesWithoutUndo();
 
