@@ -48,7 +48,7 @@ Il timeout complessivo predefinito è di 1800 secondi. I timeout delle singole f
 
 ## Risultati
 
-I report correnti vengono scritti in `TestResults/test/`; l'esecuzione precedente viene conservata in `TestResults/test old/`. I report includono stato, durata, conteggi, errori, dettagli dei singoli test Unity falliti, log e file XML/TRX. I log .NET vengono salvati in `TestResults/test/`; Unity salva stdout, stderr, log Editor e XML per ciascuna piattaforma in `TestResults/test/Unity/`. Questi risultati sono artefatti generati e non devono essere versionati.
+I report correnti vengono scritti in `TestResults/test/`; l'esecuzione precedente viene conservata in `TestResults/test old/`. I report includono stato, durata, conteggi, errori, dettagli dei singoli test Unity falliti, log e file XML/TRX. I log .NET vengono salvati in `TestResults/test/`; Unity salva stdout, stderr, log Editor e XML per ciascuna piattaforma in `TestResults/test/Unity/`. I report in `TestResults/test/` e `TestResults/test old/` sono attualmente versionati intenzionalmente per consentire la revisione remota delle esecuzioni locali. Il primo contiene l'esecuzione corrente, il secondo quella precedente. I log possono includere percorsi assoluti e informazioni dell'ambiente della macchina che ha eseguito i test: sono metadati diagnostici, non percorsi richiesti dal progetto.
 
 ## Limiti della CI
 
