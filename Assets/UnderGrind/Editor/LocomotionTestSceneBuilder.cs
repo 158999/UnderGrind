@@ -48,7 +48,7 @@ namespace UnderGrind.Editor
             }
 
             var malePrefab = CreateHumanPrefab(maleSource, "Human_Male", locomotionSettings.CharacterHeight);
-            var femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", 1.70f);
+            var femalePrefab = CreateHumanPrefab(femaleSource, "Human_Female", locomotionSettings.FemaleCharacterHeight);
             if (malePrefab == null || femalePrefab == null)
             {
                 Debug.LogError("UnderGrind: impossibile generare entrambi i prefab dai modelli originali.");
@@ -77,7 +77,7 @@ namespace UnderGrind.Editor
 
         private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings)
         {
-            var player = new GameObject("Player - Human 1.78m");
+            var player = new GameObject("Player - Human " + locomotionSettings.CharacterHeight.ToString("0.00") + "m");
             player.transform.position = new Vector3(0f, 0.05f, 0f);
             var controller = player.AddComponent<CharacterController>();
             controller.height = locomotionSettings.CharacterHeight;
