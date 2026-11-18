@@ -33,5 +33,13 @@
   "speedDampTime": 0.1,
   "transitionDuration": 0.15,
   "landingExitTime": 0.9,
-  "settingsVersion": 2
+  "settingsVersion": 3,
+  "configureFbxImports": true,
+  "fbxRigType": 0,
+  "createAvatarFromFbx": true,
+  "importAnimationClips": true,
+  "importMaterials": false,
+  "importCameras": false,
+  "importLights": false,
+  "optimizeFbxGameObjects": false
 }
