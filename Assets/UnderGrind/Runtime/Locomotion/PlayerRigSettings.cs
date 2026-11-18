@@ -6,7 +6,7 @@ namespace UnderGrind.Locomotion
     public sealed class PlayerRigSettings : ScriptableObject
     {
         [Header("Configurazione asset")]
-        [SerializeField] private int settingsVersion = 2;
+        [SerializeField, HideInInspector] private int settingsVersion;
 
         [Header("Sorgenti FBX separate")]
         [SerializeField] private string maleSourceAssetPath;
