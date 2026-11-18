@@ -4,8 +4,10 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System.Linq;
 using UnderGrind.Inventory;
 using UnderGrind.Locomotion;
+using UnderGrind.Testing;
 
 namespace UnderGrind.Tests
 {
@@ -79,6 +81,20 @@ namespace UnderGrind.Tests
             Assert.IsFalse(settings.RequireFirstPersonArms);
         }
 
+        [Test]
+        public void GrayboxDefaults_IncludeDistancesObstaclesStairsRampsAndPlatforms()
+        {
+            var settings = Load<PlayerGrayboxSettings>("PlayerGrayboxSettings.json");
+            Assert.AreEqual(50f, settings.FloorSize.x);
+            Assert.AreEqual(50f, settings.FloorSize.y);
+            Assert.AreEqual(2f, settings.MarkerInterval);
+            Assert.AreEqual(40f, settings.MarkerMaxDistance);
+            Assert.IsTrue(settings.Blocks.Any(x => x.ObjectName.Contains("Stair")));
+            Assert.IsTrue(settings.Blocks.Any(x => x.ObjectName.Contains("Crouch tunnel")));
+            Assert.IsTrue(settings.Blocks.Any(x => x.ObjectName.Contains("Narrow passage")));
+            Assert.IsTrue(settings.Blocks.Any(x => x.ObjectName.Contains("Platform")));
+            Assert.AreEqual(2, settings.Ramps.Length);
+        }
         [Test]
         public void InputActionsTemplate_LoadsEveryPlayerAction()
         {
