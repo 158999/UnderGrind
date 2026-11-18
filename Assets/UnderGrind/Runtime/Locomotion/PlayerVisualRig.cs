@@ -24,6 +24,11 @@ namespace UnderGrind.Locomotion
         private bool _initialized;
 
         public bool IsThirdPerson => _thirdPerson;
+        public bool IsConfigured => _initialized && _rigSettings != null;
+        public int HeadRendererCount => _headRenderers.Length;
+        public int BodyRendererCount => _bodyRenderers.Length;
+        public int FirstPersonRendererCount => _firstPersonOnlyRenderers.Length;
+        public int ThirdPersonRendererCount => _thirdPersonOnlyRenderers.Length;
         public PlayerRigSettings RigSettings => rigSettings;
 
         private void Awake()
