@@ -162,11 +162,6 @@ namespace UnderGrind.Editor
             if (property != null) property.floatValue = value;
         }
 
-        private static void SetInt(SerializedObject serialized, string propertyName, int value)
-        {
-            var property = serialized.FindProperty(propertyName);
-            if (property != null) property.intValue = value;
-        }
         private static void SetBool(SerializedObject serialized, string propertyName, bool value)
         {
             var property = serialized.FindProperty(propertyName);
