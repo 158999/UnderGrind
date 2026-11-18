@@ -84,6 +84,40 @@ namespace UnderGrind.Tests
             Assert.AreEqual(weightBefore, _inventory.CurrentWeightKg);
         }
 
+        [Test]
+        public void SplitAndMerge_PreserveTotalWeight()
+        {
+            _inventory.AddItem(_item, 4);
+            var weightBefore = _inventory.CurrentWeightKg;
+
+            Assert.IsTrue(_inventory.SplitStack(0, 1, 2));
+            Assert.AreEqual(weightBefore, _inventory.CurrentWeightKg);
+            Assert.IsTrue(_inventory.MoveStack(1, 0, 2));
+            Assert.AreEqual(weightBefore, _inventory.CurrentWeightKg);
+            Assert.IsTrue(_inventory.GetSlot(1).IsEmpty);
+        }
+
+        [Test]
+        public void ExactWeightCapacity_IsNotOverloaded()
+        {
+            SetField(_item, "unitWeightKg", 5f);
+            _inventory.AddItem(_item, 2);
+
+            Assert.AreEqual(_inventory.MaxWeightKg, _inventory.CurrentWeightKg);
+            Assert.IsFalse(_inventory.IsOverloaded);
+        }
+
+        [Test]
+        public void ZeroWeightItems_AreAllowedAndDoNotIncreaseWeight()
+        {
+            SetField(_item, "unitWeightKg", 0f);
+            var result = _inventory.AddItem(_item, 3);
+
+            Assert.AreEqual(3, result.Processed);
+            Assert.AreEqual(0f, _inventory.CurrentWeightKg);
+            Assert.IsFalse(_inventory.IsOverloaded);
+        }
+
         private static void SetField<T>(T target, string name, object value)
         {
             typeof(T).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(target, value);
