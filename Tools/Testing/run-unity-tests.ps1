@@ -20,14 +20,30 @@ $exit = 0
 $environmentErrors = [System.Collections.Generic.List[string]]::new()
 
 if ([string]::IsNullOrWhiteSpace($UnityEditorPath)) {
-    $candidates = @(
-        "$env:ProgramFiles/Unity/Hub/Editor/6000.6.7f1/Editor/Unity.exe",
-        "$env:LOCALAPPDATA/Programs/Unity/Hub/Editor/6000.6.7f1/Editor/Unity.exe"
-    )
-    $UnityEditorPath = $candidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+    $projectVersionFile = Join-Path $root "ProjectSettings/ProjectVersion.txt"
+    $projectVersion = if (Test-Path -LiteralPath $projectVersionFile) {
+        (Select-String -LiteralPath $projectVersionFile -Pattern "^m_EditorVersion:\\s*(.+)$").Matches.Groups[1].Value.Trim()
+    } else { "" }
+
+    $editorRoots = @(
+        (Join-Path $env:ProgramFiles "Unity/Hub/Editor"),
+        (Join-Path $env:LOCALAPPDATA "Programs/Unity/Hub/Editor"),
+        (Join-Path $env:ProgramFiles "Unity")
+    ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Container) }
+
+    $candidates = [System.Collections.Generic.List[string]]::new()
+    foreach ($editorRoot in $editorRoots) {
+        if ($projectVersion) {
+            $versionCandidate = Join-Path $editorRoot "$projectVersion/Editor/Unity.exe"
+            if (Test-Path -LiteralPath $versionCandidate) { $candidates.Add($versionCandidate) }
+        }
+        Get-ChildItem -LiteralPath $editorRoot -Filter "Unity.exe" -File -Recurse -ErrorAction SilentlyContinue |
+            ForEach-Object { $candidates.Add($_.FullName) }
+    }
+    $UnityEditorPath = $candidates | Select-Object -Unique | Select-Object -First 1
 }
 if ([string]::IsNullOrWhiteSpace($UnityEditorPath) -or -not (Test-Path -LiteralPath $UnityEditorPath)) {
-    $environmentErrors.Add("Unity Editor non trovato. Impostare UNITY_EDITOR_PATH o passare -UnityEditorPath.")
+    $environmentErrors.Add("Unity Editor non trovato nelle installazioni Unity Hub standard. Impostare UNITY_EDITOR_PATH o passare -UnityEditorPath con il percorso completo a Unity.exe. Versione richiesta dal progetto: $projectVersion.")
     $exit = 2
 }
 else {
