@@ -5,7 +5,7 @@
 - Unity **6000.6.7f1**.
 - Pacchetti del progetto: Input System e Unity Test Framework.
 - Il file Blender attualmente committato è `Assets/UnderGrind/Art/Source/humans.blend`.
-- La versione di lavoro più recente con armature e mesh separate è nel progetto [Blendstra Rigged Human Source](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3), versione `version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`. Non è ancora stata trasferita nel file locale del repository.
+- La versione di lavoro più recente con armature e mesh separate è nel progetto progetto Blendstra `UnderGrind — Humans Source Separation` (projectId `2cdfaa98-3ea2-4a49-892a-b96488e12bc3`), versione `version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`. Non è ancora stata trasferita nel file locale del repository.
 - Prima di esportare, trasferire la versione Blendstra nel file `humans.blend`, aprirlo in Blender ed eseguire `Tools/Blender/export-undergrind-humans.py`. Lo script interrompe l'export se non trova tutte le mesh, i gruppi di pesi o i modificatori Armature richiesti.
 - Unity importa i file FBX tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, verificare **Edit → Preferences → External Tools** e ripetere Reimport.
 
