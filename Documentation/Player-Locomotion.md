@@ -2,7 +2,7 @@
 
 ## Personaggio di riferimento e parametri di movimento
 
-Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m. Il modello femminile presente nella sorgente misura 1,70 m. Entrambi i modelli originali sono input immutabili: scheletri, pesi e modifiche visive devono essere realizzati su derivati separati.
+Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile presente nella sorgente misura 1,70 m nel profilo iniziale. Entrambe le altezze sono configurabili nell’asset locomozione. Entrambi i modelli originali sono input immutabili: scheletri, pesi e modifiche visive devono essere realizzati su derivati separati.
 
 Valori iniziali della locomozione:
 
