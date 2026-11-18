@@ -131,16 +131,15 @@ namespace UnderGrind.Editor
             var template = new SerializedObject(defaults);
             var version = current.FindProperty("settingsVersion");
             var defaultVersion = template.FindProperty("settingsVersion");
+            CopyStringIfEmpty(current, template, "maleSourceAssetPath");
+            CopyStringIfEmpty(current, template, "femaleSourceAssetPath");
+            CopyStringIfEmpty(current, template, "thirdPersonArmsToken");
+            CopyStringIfEmpty(current, template, "thirdPersonHandsToken");
             if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
-            {
-                CopyStringIfEmpty(current, template, "maleSourceAssetPath");
-                CopyStringIfEmpty(current, template, "femaleSourceAssetPath");
-                CopyStringIfEmpty(current, template, "thirdPersonArmsToken");
-                CopyStringIfEmpty(current, template, "thirdPersonHandsToken");
                 version.intValue = defaultVersion.intValue;
-                current.ApplyModifiedPropertiesWithoutUndo();
-                EditorUtility.SetDirty(asset);
-            }
+
+            current.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(asset);
             Object.DestroyImmediate(defaults);
         }
 
