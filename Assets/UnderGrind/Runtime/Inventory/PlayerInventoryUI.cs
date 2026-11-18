@@ -79,12 +79,19 @@ namespace UnderGrind.Inventory
             if (open)
             {
                 _cursorWasCaptured = locomotion != null && locomotion.IsCursorCaptured;
-                if (locomotion != null) locomotion.SetCursorCaptured(false);
+                if (locomotion != null)
+                {
+                    locomotion.SetInputSuppressed(true);
+                    locomotion.SetCursorCaptured(false);
+                }
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
             }
-            else if (_cursorWasCaptured && locomotion != null)
-                locomotion.SetCursorCaptured(true);
+            else if (locomotion != null)
+            {
+                locomotion.SetInputSuppressed(false);
+                if (_cursorWasCaptured) locomotion.SetCursorCaptured(true);
+            }
 
             IsOpen = open;
             if (_panel != null) _panel.SetActive(open);
