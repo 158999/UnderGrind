@@ -35,6 +35,9 @@ namespace UnderGrind.Locomotion
         [SerializeField, Min(0f)] private float characterStepOffsetHeightRatio;
         [SerializeField, Range(0f, 90f)] private float characterSlopeLimit;
         [SerializeField, Min(0f)] private float characterMinMoveDistance;
+        [SerializeField, Min(0f)] private float characterSkinWidth;
+        [SerializeField] private bool characterDetectCollisions;
+        [SerializeField] private bool characterEnableOverlapRecovery;
 
         [Header("Camera e visuale")]
         [SerializeField, Min(0.001f)] private float mouseSensitivity;
@@ -77,6 +80,9 @@ namespace UnderGrind.Locomotion
         public float CharacterStepOffsetHeightRatio => characterStepOffsetHeightRatio;
         public float CharacterSlopeLimit => characterSlopeLimit;
         public float CharacterMinMoveDistance => characterMinMoveDistance;
+        public float CharacterSkinWidth => characterSkinWidth;
+        public bool CharacterDetectCollisions => characterDetectCollisions;
+        public bool CharacterEnableOverlapRecovery => characterEnableOverlapRecovery;
         public float MouseSensitivity => mouseSensitivity;
         public float GamepadLookSensitivity => gamepadLookSensitivity;
         public float MaxLookAngle => maxLookAngle;
@@ -120,6 +126,7 @@ namespace UnderGrind.Locomotion
             characterStepOffsetHeightRatio = Mathf.Max(0f, characterStepOffsetHeightRatio);
             characterSlopeLimit = Mathf.Clamp(characterSlopeLimit, 0f, 90f);
             characterMinMoveDistance = Mathf.Max(0f, characterMinMoveDistance);
+            characterSkinWidth = Mathf.Max(0f, characterSkinWidth);
             mouseSensitivity = Mathf.Max(0.001f, mouseSensitivity);
             gamepadLookSensitivity = Mathf.Max(0.001f, gamepadLookSensitivity);
             maxLookAngle = Mathf.Clamp(maxLookAngle, 1f, 89f);
