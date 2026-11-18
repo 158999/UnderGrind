@@ -65,6 +65,21 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void InputActionsTemplate_LoadsEveryPlayerAction()
+        {
+            var path = Path.Combine(Application.dataPath, "UnderGrind", "Settings", "PlayerInputActions.inputactions");
+            Assert.IsTrue(File.Exists(path), "Missing Player Input Actions template: " + path);
+            _inputAsset = InputActionAsset.FromJson(File.ReadAllText(path));
+            var map = _inputAsset.FindActionMap("Player", false);
+            Assert.IsNotNull(map);
+            foreach (var actionName in new[]
+                     { "Move", "LookMouse", "LookGamepad", "Jump", "Run", "Crouch",
+                       "ToggleCamera", "Cancel", "CaptureCursor", "Interact", "Drop",
+                       "ToggleInventory", "NextSlot", "PreviousSlot" })
+                Assert.IsNotNull(map.FindAction(actionName, false), "Missing input action: " + actionName);
+            Assert.Greater(map.FindAction("Move", false).bindings.Count, 0);
+        }
+        [Test]
         public void InputDefaults_LoadDeadZonesAndRebindingSettings()
         {
             _inputAsset = ScriptableObject.CreateInstance<InputActionAsset>();
