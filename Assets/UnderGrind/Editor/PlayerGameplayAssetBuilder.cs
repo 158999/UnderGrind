@@ -134,6 +134,8 @@ namespace UnderGrind.Editor
                     template.FindProperty("firstPersonBodyRevealPitch").floatValue;
                 current.FindProperty("firstPersonBodyHidePitch").floatValue =
                     template.FindProperty("firstPersonBodyHidePitch").floatValue;
+                current.FindProperty("requireFirstPersonArms").boolValue =
+                    template.FindProperty("requireFirstPersonArms").boolValue;
                 version.intValue = defaultVersion.intValue;
             }
 
