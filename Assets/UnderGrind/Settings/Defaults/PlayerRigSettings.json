@@ -18,5 +18,8 @@
   "settingsVersion": 3,
   "bodyRendererToken": "_Body",
   "firstPersonBodyRevealPitch": 35,
-  "firstPersonBodyHidePitch": 25
+  "firstPersonBodyHidePitch": 25,
+  "importMaterials": true,
+  "importCameras": false,
+  "importLights": false
 }
