@@ -32,8 +32,8 @@
                                                       "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
                                                       "Scripts have compiler errors."
                                                   ],
-                          "resultFile":  "TestResults/test/Unity/EditMode.xml",
-                          "logFile":  "TestResults/test/Unity/EditMode.log",
+                          "resultFile":  "TestResults/test old/Unity/EditMode.xml",
+                          "logFile":  "TestResults/test old/Unity/EditMode.log",
                           "totals":  {
                                          "inconclusive":  0,
                                          "failed":  0,
@@ -60,8 +60,8 @@
                                                       "Assets\\UnderGrind\\Runtime\\Locomotion\\PlayerRigSettings.cs(60,47): error CS0103: The name \u0027requireThirdPersonArms\u0027 does not exist in the current context",
                                                       "Scripts have compiler errors."
                                                   ],
-                          "resultFile":  "TestResults/test/Unity/PlayMode.xml",
-                          "logFile":  "TestResults/test/Unity/PlayMode.log",
+                          "resultFile":  "TestResults/test old/Unity/PlayMode.xml",
+                          "logFile":  "TestResults/test old/Unity/PlayMode.log",
                           "totals":  {
                                          "inconclusive":  0,
                                          "failed":  0,
