@@ -43,6 +43,7 @@ namespace UnderGrind.Tests
         {
             var settings = ScriptableObject.CreateInstance<PlayerLocomotionSettings>();
             Set(settings, "characterHeight", 1.78f);
+            Set(settings, "femaleCharacterHeight", 1.70f);
             Set(settings, "walkSpeed", 1.8f);
             Set(settings, "runMultiplier", 4f / 3f);
             Set(settings, "jumpHeight", 0.4f);
