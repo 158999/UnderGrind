@@ -70,8 +70,9 @@ namespace UnderGrind.Editor
                 "Continua", "Annulla"))
                 return;
 
-            if (!TryPrepareSource(malePath, rigSettings, out var maleSource, out var maleAvatar) ||
-                !TryPrepareSource(femalePath, rigSettings, out var femaleSource, out var femaleAvatar))
+            if (!TryPrepareSource(malePath, rigSettings, out var maleSource, out var maleAvatar))
+                return;
+            if (!TryPrepareSource(femalePath, rigSettings, out var femaleSource, out var femaleAvatar))
                 return;
 
             if (maleAvatar == femaleAvatar)
