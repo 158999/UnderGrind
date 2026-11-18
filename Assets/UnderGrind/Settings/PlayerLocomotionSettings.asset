@@ -36,6 +36,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   characterStepOffset: 0.32
+  characterStepOffsetHeightRatio: 0.18
   characterSlopeLimit: 48
   characterMinMoveDistance: 0
   mouseSensitivity: 0.12
@@ -46,6 +47,7 @@ MonoBehaviour:
   thirdPersonCameraOffset: {x: 0, y: 0.12, z: 0}
   thirdPersonDistance: 3.25
   cameraCollisionRadius: 0.16
+  cameraCollisionSurfaceOffset: 0.18
   cameraCollisionLayers:
     serializedVersion: 2
     m_Bits: 4294967295
