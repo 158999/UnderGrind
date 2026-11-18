@@ -27,8 +27,8 @@ namespace UnderGrind.Locomotion
         [SerializeField] private string thirdPersonArmsToken;
         [SerializeField] private string thirdPersonHandsToken;
         [SerializeField] private string bodyRendererToken;
-        [SerializeField, Range(1f, 89f)] private float firstPersonBodyRevealPitch = 35f;
-        [SerializeField, Range(0f, 89f)] private float firstPersonBodyHidePitch = 25f;
+        [SerializeField, Range(1f, 89f)] private float firstPersonBodyRevealPitch;
+        [SerializeField, Range(0f, 89f)] private float firstPersonBodyHidePitch;
         [SerializeField] private bool requireSeparateHead;
         [SerializeField] private bool requireFirstPersonArms;
 
