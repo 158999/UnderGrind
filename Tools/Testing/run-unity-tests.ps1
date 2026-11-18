@@ -70,7 +70,7 @@ else {
             $stderrPath = Join-Path $unityOutput "$target.stderr.log"
             $xmlPath = Join-Path $unityOutput $xmlName
             $logPath = Join-Path $unityOutput $logName
-            Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath $stdoutPath, $stderrPath, $xmlPath -Force -ErrorAction SilentlyContinue
             $arguments = @(
                 "-batchmode", "-nographics", "-accept-apiupdate",
                 "-projectPath", $root,
@@ -104,7 +104,18 @@ else {
                     $code = 124
                 }
                 else {
-                    $code = $process.ExitCode
+                    # Refresh the Process snapshot before reading ExitCode. Without
+                    # this, some PowerShell/.NET process snapshots can expose a null
+                    # exit code even after WaitForExit reports completion.
+                    $process.Refresh()
+                    if (-not $process.HasExited) {
+                        throw "Unity $target ha segnalato il completamento ma risulta ancora in esecuzione."
+                    }
+                    $processExitCode = $process.ExitCode
+                    if ($null -eq $processExitCode) {
+                        throw "Unity $target è terminato senza rendere disponibile il codice di uscita."
+                    }
+                    $code = [int]$processExitCode
                 }
             }
             catch {
