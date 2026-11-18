@@ -40,7 +40,15 @@ namespace UnderGrind.Editor
             EnsureFolder("Assets/UnderGrind/Generated");
             EnsureFolder(ControllerFolder);
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) != null)
+            {
+                if (!EditorUtility.DisplayDialog(
+                    "Sostituire l'Animator Controller?",
+                    "Il controller generato esistente verrà eliminato e ricreato. Eventuali modifiche manuali a stati, transizioni e layer andranno perse.",
+                    "Sostituisci controller", "Annulla"))
+                    return;
+
                 AssetDatabase.DeleteAsset(ControllerPath);
+            }
 
             var controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
             if (controller == null)
