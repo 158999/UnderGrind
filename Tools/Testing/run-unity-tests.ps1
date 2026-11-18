@@ -20,13 +20,12 @@ $items = [System.Collections.Generic.List[object]]::new()
 $exit = 0
 $environmentErrors = [System.Collections.Generic.List[string]]::new()
 
-$projectVersion = ""
-if ([string]::IsNullOrWhiteSpace($UnityEditorPath)) {
-    $projectVersionFile = Join-Path $root "ProjectSettings/ProjectVersion.txt"
-    $projectVersion = if (Test-Path -LiteralPath $projectVersionFile) {
-        (Select-String -LiteralPath $projectVersionFile -Pattern "^m_EditorVersion:\s*(.+)$").Matches.Groups[1].Value.Trim()
-    } else { "" }
+$projectVersionFile = Join-Path $root "ProjectSettings/ProjectVersion.txt"
+$projectVersion = if (Test-Path -LiteralPath $projectVersionFile) {
+    (Select-String -LiteralPath $projectVersionFile -Pattern "^m_EditorVersion:\s*(.+)$").Matches.Groups[1].Value.Trim()
+} else { "" }
 
+if ([string]::IsNullOrWhiteSpace($UnityEditorPath)) {
     $editorRoots = [System.Collections.Generic.List[string]]::new()
     if ($env:ProgramFiles) {
         $editorRoots.Add((Join-Path $env:ProgramFiles "Unity/Hub/Editor"))
@@ -207,6 +206,8 @@ $report = [ordered]@{
     runId = $runId
     startedUtc = $runStartedUtc.ToString("O")
     finishedUtc = [DateTime]::UtcNow.ToString("O")
+    unityEditorPath = $UnityEditorPath
+    unityTimeoutSeconds = $TimeoutSeconds
     status = $status
     environmentErrors = @($environmentErrors)
     totals = $totals
