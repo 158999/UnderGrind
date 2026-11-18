@@ -97,6 +97,7 @@ namespace UnderGrind.Editor
             SetStringIfEmpty(serialized, "toggleInventoryActionName", defaults.toggleInventoryActionName);
             SetStringIfEmpty(serialized, "nextSlotActionName", defaults.nextSlotActionName);
             SetStringIfEmpty(serialized, "previousSlotActionName", defaults.previousSlotActionName);
+            SetStringIfEmpty(serialized, "overrideStorageKey", defaults.overrideStorageKey);
 
             var version = serialized.FindProperty("settingsVersion");
             if (version != null && version.intValue < defaults.settingsVersion)
@@ -104,7 +105,6 @@ namespace UnderGrind.Editor
                 SetFloat(serialized, "movementDeadzone", defaults.movementDeadzone);
                 SetFloat(serialized, "gamepadLookDeadzone", defaults.gamepadLookDeadzone);
                 SetFloat(serialized, "rebindTimeoutSeconds", defaults.rebindTimeoutSeconds);
-                SetStringIfEmpty(serialized, "overrideStorageKey", defaults.overrideStorageKey);
                 version.intValue = defaults.settingsVersion;
             }
 
