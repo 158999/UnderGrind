@@ -66,6 +66,12 @@ namespace UnderGrind.Locomotion
 
         public float CharacterHeight => characterHeight;
         public float FemaleCharacterHeight => femaleCharacterHeight;
+        public float GetCharacterHeight(PlayerCharacterVariant variant) =>
+            variant == PlayerCharacterVariant.Female ? femaleCharacterHeight : characterHeight;
+        public float GetStandingViewHeight(PlayerCharacterVariant variant) =>
+            standingViewHeight * (GetCharacterHeight(variant) / Mathf.Max(characterHeight, 0.01f));
+        public float GetCrouchingViewHeight(PlayerCharacterVariant variant) =>
+            crouchingViewHeight * (GetCharacterHeight(variant) / Mathf.Max(characterHeight, 0.01f));
         public float WalkSpeed => walkSpeed;
         public float RunMultiplier => runMultiplier;
         public float JumpHeight => jumpHeight;

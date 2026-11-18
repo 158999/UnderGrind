@@ -103,7 +103,7 @@ namespace UnderGrind.Editor
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting(grayboxSettings);
             CreateCourse(grayboxSettings);
-            CreatePlayer(selectedPrefab, selectedHeight, selectedVariant, locomotionSettings, inputSettings,
+            CreatePlayer(selectedPrefab, selectedHeight, selectedVariant, rigSettings.DefaultCharacter, locomotionSettings, inputSettings,
                 inventorySettings, interactionSettings, inventoryUISettings, rigSettings, animationSettings, grayboxSettings);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
@@ -172,7 +172,7 @@ namespace UnderGrind.Editor
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting(grayboxSettings);
             CreateCourse(grayboxSettings);
-            CreateGrayboxProxyPlayer(characterHeight, characterVariant, locomotionSettings,
+            CreateGrayboxProxyPlayer(characterHeight, characterVariant, rigSettings.DefaultCharacter, locomotionSettings,
                 inputSettings, inventorySettings, interactionSettings, inventoryUISettings, grayboxSettings);
 
             EditorSceneManager.SaveScene(scene, GrayboxScenePath);
@@ -192,7 +192,7 @@ namespace UnderGrind.Editor
         }
 
         private static void CreateGrayboxProxyPlayer(float characterHeight, string characterVariant,
-            PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings,
+            PlayerCharacterVariant characterVariantId, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings,
             InventorySettings inventorySettings, PlayerInteractionSettings interactionSettings,
             InventoryUISettings inventoryUISettings, PlayerGrayboxSettings grayboxSettings)
         {
@@ -228,7 +228,7 @@ namespace UnderGrind.Editor
 
             var pivot = new GameObject("View Pivot").transform;
             pivot.SetParent(player.transform, false);
-            pivot.localPosition = Vector3.up * locomotionSettings.StandingViewHeight;
+            pivot.localPosition = Vector3.up * locomotionSettings.GetStandingViewHeight(characterVariantId);
 
             var cameraObject = new GameObject("Player Camera");
             cameraObject.tag = "MainCamera";
@@ -244,6 +244,7 @@ namespace UnderGrind.Editor
             rebindingController.Configure(inputSettings);
 
             var movement = player.AddComponent<HumanLocomotionController>();
+            movement.ConfigureCharacterVariant(characterVariantId);
             movement.ConfigureSettings(locomotionSettings);
             movement.ConfigureInputSettings(inputSettings);
             movement.ConfigureViewRig(pivot, camera);
@@ -258,7 +259,7 @@ namespace UnderGrind.Editor
         }
 
         private static void CreatePlayer(GameObject human, float characterHeight, string characterVariant,
-            PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings, InventorySettings inventorySettings,
+            PlayerCharacterVariant characterVariantId, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings, InventorySettings inventorySettings,
             PlayerInteractionSettings interactionSettings, InventoryUISettings inventoryUISettings,
             PlayerRigSettings rigSettings, PlayerAnimationSettings animationSettings,
             PlayerGrayboxSettings grayboxSettings)

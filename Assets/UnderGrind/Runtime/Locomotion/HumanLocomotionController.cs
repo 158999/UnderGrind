@@ -9,6 +9,7 @@ namespace UnderGrind.Locomotion
     {
         [Header("Configurazione")]
         [SerializeField] private PlayerLocomotionSettings settings;
+        [SerializeField] private PlayerCharacterVariant characterVariant;
         [SerializeField] private PlayerInputSettings inputSettings;
         [SerializeField] private PlayerAnimationSettings animationSettings;
         [SerializeField] private PlayerInventory inventory;
@@ -50,7 +51,8 @@ namespace UnderGrind.Locomotion
         public PlayerInputRebindingController InputRebinding => _inputRebinding;
         public PlayerAnimationSettings AnimationSettings => animationSettings;
         public PlayerInventory Inventory => inventory;
-        public float CharacterHeight => settings != null ? settings.CharacterHeight : 0f;
+        public float CharacterHeight => settings != null ? settings.GetCharacterHeight(characterVariant) : 0f;
+        public PlayerCharacterVariant CharacterVariant => characterVariant;
         public float WalkSpeed => settings != null ? settings.WalkSpeed : 0f;
         public float EffectiveWalkSpeed => settings != null
             ? settings.WalkSpeed * (IsOverloaded ? inventory.OverloadedWalkSpeedMultiplier : 1f) : 0f;
@@ -73,11 +75,19 @@ namespace UnderGrind.Locomotion
         public float VerticalVelocity => _verticalVelocity;
         public Vector2 MoveInput => _moveInput;
 
+        public void ConfigureCharacterVariant(PlayerCharacterVariant value)
+        {
+            characterVariant = value;
+            if (settings == null) return;
+            _currentHeight = settings.GetCharacterHeight(characterVariant);
+            ApplyCharacterDimensions();
+        }
+
         public void ConfigureSettings(PlayerLocomotionSettings value)
         {
             settings = value;
             if (settings == null) return;
-            _currentHeight = settings.CharacterHeight;
+            _currentHeight = settings.GetCharacterHeight(characterVariant);
             ApplyCharacterDimensions();
             ApplyCameraMode();
         }
@@ -150,7 +160,7 @@ namespace UnderGrind.Locomotion
             if (playerCamera == null) playerCamera = GetComponentInChildren<Camera>(true);
             if (viewPivot == null && playerCamera != null) viewPivot = playerCamera.transform.parent;
             if (_visualRig != null) _visualRig.SetViewReference(viewPivot);
-            if (settings != null) _currentHeight = settings.CharacterHeight;
+            if (settings != null) _currentHeight = settings.GetCharacterHeight(characterVariant);
             ApplyCharacterDimensions();
             ConfigureRebindingController();
             BindInputActions();
@@ -264,18 +274,20 @@ namespace UnderGrind.Locomotion
         private void UpdateStance()
         {
             var crouch = _crouchAction != null && _crouchAction.IsPressed();
-            var target = crouch ? settings.CrouchHeight : settings.CharacterHeight;
+            var standingHeight = settings.GetCharacterHeight(characterVariant);
+            var target = crouch ? settings.CrouchHeight : standingHeight;
             if (!crouch && !CanStand()) target = settings.CrouchHeight;
             _currentHeight = Mathf.MoveTowards(_currentHeight, target, settings.StanceChangeSpeed * Time.deltaTime);
-            IsCrouching = _currentHeight < settings.CharacterHeight - settings.StandingClearance;
+            IsCrouching = _currentHeight < standingHeight - settings.StandingClearance;
             ApplyCharacterDimensions();
         }
 
         private bool CanStand()
         {
-            if (_currentHeight >= settings.CharacterHeight - settings.StandingClearance) return true;
+            var standingHeight = settings.GetCharacterHeight(characterVariant);
+            if (_currentHeight >= standingHeight - settings.StandingClearance) return true;
             var bottom = transform.position + Vector3.up * settings.CapsuleRadius;
-            var top = transform.position + Vector3.up * (settings.CharacterHeight - settings.CapsuleRadius);
+            var top = transform.position + Vector3.up * (standingHeight - settings.CapsuleRadius);
             foreach (var hit in Physics.OverlapCapsule(bottom, top,
                          settings.CapsuleRadius * settings.StanceOverlapRadiusMultiplier,
                          settings.CharacterCollisionLayers, QueryTriggerInteraction.Ignore))
@@ -354,7 +366,8 @@ namespace UnderGrind.Locomotion
         {
             if (viewPivot == null || playerCamera == null || settings == null) return;
             viewPivot.localPosition = Vector3.up * (IsCrouching
-                ? settings.CrouchingViewHeight : settings.StandingViewHeight);
+                ? settings.GetCrouchingViewHeight(characterVariant)
+                : settings.GetStandingViewHeight(characterVariant));
             var target = _thirdPerson
                 ? new Vector3(settings.ThirdPersonCameraOffset.x,
                     settings.ThirdPersonCameraOffset.y, -settings.ThirdPersonDistance + settings.ThirdPersonCameraOffset.z)

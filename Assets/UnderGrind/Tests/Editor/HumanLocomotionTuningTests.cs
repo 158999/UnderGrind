@@ -66,9 +66,29 @@ namespace UnderGrind.Tests
         }
 
         [Test]
-        public void CharacterHeightMatchesHumanBaseSpecification()
+        public void CharacterHeightsMatchMaleAndFemaleReferenceModels()
         {
-            Assert.That(_settings.CharacterHeight, Is.EqualTo(1.78f).Within(0.0001f));
+            Assert.That(_settings.GetCharacterHeight(PlayerCharacterVariant.Male), Is.EqualTo(1.78f).Within(0.0001f));
+            Assert.That(_settings.GetCharacterHeight(PlayerCharacterVariant.Female), Is.EqualTo(1.70f).Within(0.0001f));
+        }
+
+        [Test]
+        public void FemaleVariantAppliesFemaleCharacterControllerHeight()
+        {
+            var player = new GameObject("Female height test");
+            try
+            {
+                var characterController = player.AddComponent<CharacterController>();
+                var movement = player.AddComponent<HumanLocomotionController>();
+                movement.ConfigureCharacterVariant(PlayerCharacterVariant.Female);
+                movement.ConfigureSettings(_settings);
+                Assert.That(characterController.height,
+                    Is.EqualTo(_settings.FemaleCharacterHeight).Within(0.0001f));
+            }
+            finally
+            {
+                Object.DestroyImmediate(player);
+            }
         }
 
         [Test]
