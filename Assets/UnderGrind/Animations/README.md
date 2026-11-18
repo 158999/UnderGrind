@@ -10,6 +10,8 @@ Il generatore della scena di test effettua una ricerca senza distinzione tra mai
 - Walk / Walking
 - Run / Running
 - Jump
+- Fall / Fall down
+- Land / Hard Landing
 - Crouch Idle / Crouching Idle
 - Crouch Walk
 
@@ -24,9 +26,11 @@ La mesh X Bot serve come sorgente per il retargeting: non è il modello del gioc
 
 ## Stato dell'importazione
 
-I sei movimenti selezionati sono disponibili nella libreria PINOC, ma nessuna delle due famiglie di export è ancora importata in questa cartella o trasferita sul rig UnderGrind.
+Gli otto movimenti selezionati sono disponibili nella libreria PINOC, ma nessuna delle due famiglie di export è ancora importata in questa cartella o trasferita sul rig UnderGrind.
 
-Il generatore della scena cerca attualmente le clip incorporate in `Assets/UnderGrind/Art/Source/humans.blend`. I file importati in questa cartella non vengono ancora individuati automaticamente dal generatore.
+`PlayerAnimationControllerBuilder` individua i file FBX importati in questa cartella, imposta l'importazione Humanoid e associa le clip mancanti usando il nome della clip o del file. Per generare il controller completo sono necessarie tutte e otto le clip elencate sopra.
+
+`LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`. Il modello sorgente attuale non dispone di un Avatar Humanoid valido né di renderer separati per testa e arti FP.
 
 ## Provenienza dei movimenti selezionati
 
@@ -40,5 +44,7 @@ I seguenti asset della libreria PINOC sono stati selezionati e acquisiti senza c
 | Jump | `08872e23-d695-493d-8c03-cb595cd55e9c` |
 | Crouching Idle | `7cd56394-0b47-4fa7-b951-6658d5ea3da6` |
 | Crouch Walk Forward | `e4f5b9e6-381c-4227-88d4-94d6a0615df8` |
+| Fall down | `2e513074-b11f-4108-9ba7-80f2995ecba8` |
+| Hard Landing | `241c8c51-4bfb-4f0c-ad0b-f9a7c50f8ee7` |
 
 Prima di distribuire o includere nel prodotto gli export scaricati, verificare le condizioni d'uso applicabili del fornitore.
