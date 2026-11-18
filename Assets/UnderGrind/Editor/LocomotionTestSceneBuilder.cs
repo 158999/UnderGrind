@@ -43,8 +43,10 @@ namespace UnderGrind.Editor
                 "Assets/UnderGrind/Settings/PlayerInteractionSettings.asset");
             var inventoryUISettings = AssetDatabase.LoadAssetAtPath<InventoryUISettings>(
                 "Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset");
+            var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(
+                "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset");
             if (locomotionSettings == null || inventorySettings == null ||
-                interactionSettings == null || inventoryUISettings == null)
+                interactionSettings == null || inventoryUISettings == null || animationSettings == null)
             {
                 EditorUtility.DisplayDialog("Configurazione Player mancante",
                     "Uno o più asset di configurazione Player non sono disponibili. La scena non è stata modificata.",
@@ -77,7 +79,7 @@ namespace UnderGrind.Editor
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             CreateLighting();
             CreateCourse();
-            CreatePlayer(malePrefab, locomotionSettings, inputSettings, inventorySettings, interactionSettings, inventoryUISettings);
+            CreatePlayer(malePrefab, locomotionSettings, inputSettings, inventorySettings, interactionSettings, inventoryUISettings, animationSettings);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -94,7 +96,7 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings, InventorySettings inventorySettings, PlayerInteractionSettings interactionSettings, InventoryUISettings inventoryUISettings)
+        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings, InventorySettings inventorySettings, PlayerInteractionSettings interactionSettings, InventoryUISettings inventoryUISettings, PlayerAnimationSettings animationSettings)
         {
             var player = new GameObject("Player - Human " + locomotionSettings.CharacterHeight.ToString("0.00") + "m");
             player.transform.position = new Vector3(0f, 0.05f, 0f);
@@ -137,6 +139,7 @@ namespace UnderGrind.Editor
             var movement = player.AddComponent<HumanLocomotionController>();
             movement.ConfigureSettings(locomotionSettings);
             movement.ConfigureInputSettings(inputSettings);
+            movement.ConfigureAnimationSettings(animationSettings);
             movement.ConfigureViewRig(pivot, camera);
 
             var inventoryUI = player.AddComponent<PlayerInventoryUI>();
