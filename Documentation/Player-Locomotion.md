@@ -44,6 +44,8 @@ I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. Se ma
 
 Le azioni vengono lette dalla stessa action map. Il cursore viene bloccato all'avvio se l'opzione è attiva e può essere liberato o catturato nuovamente tramite le azioni configurate.
 
+`HumanLocomotionController` crea o riutilizza `PlayerInputRebindingController` quando viene configurato l'input. Il controller espone `InputRebinding` per avviare la rimappatura di una singola binding, leggere la descrizione del controllo, annullare l'operazione e ripristinare le associazioni predefinite. Le rimappature vengono salvate in `PlayerPrefs` come JSON e ricaricate alla configurazione successiva. Timeout e chiave di archiviazione sono configurabili tramite `RebindTimeoutSeconds` e `OverrideStorageKey` in `PlayerInputSettings.asset`. Il runtime espone le API di rimappatura; non è ancora presente una schermata UI dedicata alla configurazione dei controlli.
+
 ## Sovraccarico da inventario
 
 Il componente `PlayerInventory` calcola il peso trasportato sommando il peso unitario di ogni oggetto per la relativa quantità. Il peso massimo è una soglia di penalità, non un limite alla raccolta.
