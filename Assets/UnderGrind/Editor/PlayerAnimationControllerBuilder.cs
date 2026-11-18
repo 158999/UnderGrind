@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -118,9 +119,9 @@ namespace UnderGrind.Editor
                     importer.importAnimation = settings.ImportAnimationClips;
                     changed = true;
                 }
-                if (importer.importMaterials != settings.ImportMaterials)
+                if (importer.materialImportMode != (settings.ImportMaterials ? ModelImporterMaterialImportMode.ImportStandard : ModelImporterMaterialImportMode.None))
                 {
-                    importer.importMaterials = settings.ImportMaterials;
+                    importer.materialImportMode = settings.ImportMaterials ? ModelImporterMaterialImportMode.ImportStandard : ModelImporterMaterialImportMode.None;
                     changed = true;
                 }
                 if (importer.importCameras != settings.ImportCameras)
