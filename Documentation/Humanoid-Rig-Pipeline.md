@@ -39,19 +39,34 @@ La revisione precedente `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb0
 
 ## Importazione in Unity e generazione dei prefab
 
-Dopo aver ottenuto e verificato un FBX derivato:
+Il rig Blender contiene entrambi i personaggi, ma Unity importa e genera un prefab separato per ciascuno. I due FBX devono quindi essere esportati separatamente e collocati nei percorsi configurati in `PlayerRigSettings.asset`:
 
-1. Importare il file FBX nel progetto Unity.
-2. Selezionare l'asset nella finestra Project.
-3. Eseguire **UnderGrind → Player → Build Prefabs From Selected Rigged FBX**.
-4. Verificare che Unity riconosca il modello come Humanoid e generi un Avatar valido.
-5. Controllare i prefab prodotti nella cartella `Assets/UnderGrind/Generated/Prefabs`.
+- `Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx`
+- `Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx`
 
-Il generatore legge `PlayerRigSettings.asset` e `PlayerLocomotionSettings.asset`. Il FBX selezionato deve contenere entrambe le radici configurate, `UG_Male_Armature` e `UG_Female_Armature`, e deve produrre un Avatar Humanoid valido.
+I percorsi sono modificabili nell'Inspector tramite `MaleSourceAssetPath` e `FemaleSourceAssetPath`. Ogni FBX deve contenere la mesh del personaggio, la relativa armatura configurata in `MaleArmatureRootName` o `FemaleArmatureRootName`, pesi di skinning verificati e un renderer della testa separato.
 
-La configurazione iniziale richiede un renderer separato per la testa tramite la convenzione `*_Head`. Se la testa non è separata, il generatore rifiuta il prefab invece di applicare una divisione geometrica automatica non verificata. I renderer `*_FP_Arms` e `*_FP_Hands` sono opzionali nella configurazione attuale; se non esistono, il corpo riggato resta visibile in prima persona.
+Quando entrambi gli FBX sono disponibili:
 
-La scena `Assets/UnderGrind/Scenes/LocomotionTest.unity` è presente e registrata nelle Build Settings. Il builder preferisce i prefab riggati configurati. Se il prefab maschile non esiste, può usare la mesh statica maschile originale come riferimento visivo; in quel caso il personaggio si muove ma non dispone di un rig animabile. Non è stata rigenerata dopo la revisione Blendstra, perché il modello non è ancora importato e non è stato validato in Unity.
+1. Verificare i percorsi nell'asset `Assets/UnderGrind/Settings/PlayerRigSettings.asset`.
+2. Eseguire **UnderGrind → Player → Build Male and Female Prefabs From Configured FBX**.
+3. Il builder importa ciascun FBX come Humanoid, crea il relativo Avatar, controlla che i due Avatar siano validi e distinti e genera i prefab nella cartella `Assets/UnderGrind/Generated/Prefabs`.
+4. Controllare che la testa sia separata e che i gruppi di renderer corrispondano ai token configurati.
+5. Aprire i prefab e verificare le deformazioni prima di usarli nella scena.
+
+Il builder rifiuta una sorgente se manca l'armatura configurata, l'Avatar Humanoid non è valido oppure la testa non è separata quando `RequireSeparateHead` è attivo. Non effettua tagli geometrici automatici.
+
+`PlayerVisualRig` usa gruppi distinti di renderer:
+
+- Testa: `HeadRendererSuffix`, disattivata in prima persona.
+- Braccia e mani dedicate alla prima persona: `FirstPersonArmsToken` e `FirstPersonHandsToken`.
+- Braccia e mani dedicate alla terza persona: `ThirdPersonArmsToken` e `ThirdPersonHandsToken`.
+
+I gruppi dedicati alla prima e alla terza persona sono opzionali e configurabili. Se un gruppo non esiste, il sistema non inventa una mesh sostitutiva; resta visibile il corpo disponibile.
+
+La scena di test usa i prefab riggati configurati quando esistono. Se il prefab maschile non è disponibile, può usare la mesh statica maschile come fallback visivo; in quel caso il personaggio si muove ma non dispone di un rig animabile.
+
+La versione Blendstra attuale non soddisfa ancora i requisiti di importazione: ogni corpo è una singola isola connessa e la testa non è separata. Il builder deve quindi rifiutare quei derivati finché la geometria non viene preparata e verificata.
 
 ## Sorgenti delle animazioni
 
