@@ -60,7 +60,8 @@ namespace UnderGrind.Inventory
             EnsureSlotCount();
 
             var remaining = quantity;
-            for (var i = 0; i < slots.Count && remaining > 0; i++)
+            var usableSlotCount = Mathf.Min(slots.Count, SlotCapacity);
+            for (var i = 0; i < usableSlotCount && remaining > 0; i++)
             {
                 var slot = slots[i];
                 if (slot.IsEmpty || slot.Item != item || slot.Quantity >= item.MaxStackSize) continue;
@@ -69,7 +70,7 @@ namespace UnderGrind.Inventory
                 remaining -= amount;
             }
 
-            for (var i = 0; i < slots.Count && remaining > 0; i++)
+            for (var i = 0; i < usableSlotCount && remaining > 0; i++)
             {
                 var slot = slots[i];
                 if (!slot.IsEmpty) continue;
