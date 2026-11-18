@@ -6,6 +6,7 @@ using UnityEngine.TestTools;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnderGrind.Inventory;
+using UnderGrind.Locomotion;
 
 namespace UnderGrind.Tests
 {
