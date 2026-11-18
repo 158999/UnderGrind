@@ -9,7 +9,7 @@
   "thirdPersonArmsToken": "_TP_Arms",
   "thirdPersonHandsToken": "_TP_Hands",
   "requireSeparateHead": true,
-  "requireFirstPersonArms": false,
+  "requireFirstPersonArms": true,
   "importAnimation": false,
   "optimizeGameObjects": false,
   "importVisibility": true,
