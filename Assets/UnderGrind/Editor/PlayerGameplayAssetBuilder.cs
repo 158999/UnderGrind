@@ -107,14 +107,6 @@ namespace UnderGrind.Editor
             var defaultVersion = template.FindProperty("settingsVersion");
             if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
             {
-                CopyBool(current, template, "idleLoops");
-                CopyBool(current, template, "walkLoops");
-                CopyBool(current, template, "runLoops");
-                CopyBool(current, template, "jumpLoops");
-                CopyBool(current, template, "fallLoops");
-                CopyBool(current, template, "landLoops");
-                CopyBool(current, template, "crouchIdleLoops");
-                CopyBool(current, template, "crouchWalkLoops");
                 version.intValue = defaultVersion.intValue;
                 current.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(asset);
