@@ -29,7 +29,7 @@ Quando il peso corrente supera `MaxCarryWeightKg`:
 
 Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità normale vengono ripristinati automaticamente. Un salto già iniziato prima del sovraccarico non viene interrotto a mezz'aria.
 
-La configurazione è contenuta nell'asset `Assets/UnderGrind/Settings/PlayerInventorySettings.asset`, modificabile dall'Inspector. L'asset iniziale contiene 24 slot, 50 kg di soglia e una riduzione del 25%: sono valori iniziali modificabili, non limiti definitivi di progetto. Ogni `ItemDefinition` espone ID, nome, icona, dimensione massima dello stack e peso unitario in chilogrammi.
+Il controller individua `PlayerInventory` sullo stesso GameObject. La scena generata assegna il componente e l'asset di configurazione. La configurazione è contenuta nell'asset `Assets/UnderGrind/Settings/PlayerInventorySettings.asset`, modificabile dall'Inspector. L'asset iniziale contiene 24 slot, 50 kg di soglia e una riduzione del 25%: sono valori iniziali modificabili, non limiti definitivi di progetto. Ogni `ItemDefinition` espone ID, nome, icona, dimensione massima dello stack e peso unitario in chilogrammi.
 
 ## Componenti di runtime
 
