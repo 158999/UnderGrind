@@ -94,8 +94,8 @@ namespace UnderGrind.Locomotion
         {
             if (_inputMap != null) _inputMap.Disable();
             inputSettings = value;
-            BindInputActions();
             ConfigureRebindingController();
+            BindInputActions();
             if (inputSettings != null && inputSettings.LockCursorOnStart && playerCamera != null)
                 SetCursorLocked(true);
         }
@@ -152,8 +152,8 @@ namespace UnderGrind.Locomotion
             if (_visualRig != null) _visualRig.SetViewReference(viewPivot);
             if (settings != null) _currentHeight = settings.CharacterHeight;
             ApplyCharacterDimensions();
-            BindInputActions();
             ConfigureRebindingController();
+            BindInputActions();
             SetCursorLocked(inputSettings != null && inputSettings.LockCursorOnStart && playerCamera != null);
             _visualRig.SetThirdPerson(_thirdPerson);
             ApplyCameraMode();
