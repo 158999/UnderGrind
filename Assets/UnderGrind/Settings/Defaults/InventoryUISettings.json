@@ -131,5 +131,6 @@
     "b": 0.24,
     "a": 1
   },
-  "settingsVersion": 1
+  "settingsVersion": 1,
+  "fallbackFontResourceName": "LegacyRuntime.ttf"
 }
