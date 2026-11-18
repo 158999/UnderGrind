@@ -73,8 +73,8 @@ namespace UnderGrind.Inventory
 
         private void UnbindInventoryEvents()
         {
-            if (!_inventoryEventsBound || inventory == null) return;
-            inventory.Changed -= Refresh;
+            if (!_inventoryEventsBound) return;
+            if (inventory != null) inventory.Changed -= Refresh;
             _inventoryEventsBound = false;
         }
 
