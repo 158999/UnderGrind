@@ -197,55 +197,55 @@ namespace UnderGrind.Inventory
                 typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvasObject.transform.SetParent(transform, false);
             _canvas = canvasObject.GetComponent<Canvas>();
-            _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            _canvas.renderMode = settings.CanvasRenderMode;
             _canvas.sortingOrder = settings.SortingOrder;
 
             var scaler = canvasObject.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.uiScaleMode = settings.CanvasScaleMode;
             scaler.referenceResolution = settings.ReferenceResolution;
 
             _panel = CreateUiObject("Inventory Panel", canvasObject.transform);
             var panelRect = _panel.GetComponent<RectTransform>();
-            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            panelRect.pivot = new Vector2(0.5f, 0.5f);
+            panelRect.anchorMin = settings.PanelAnchorMin;
+            panelRect.anchorMax = settings.PanelAnchorMax;
+            panelRect.pivot = settings.PanelPivot;
             panelRect.anchoredPosition = settings.PanelOffset;
             panelRect.sizeDelta = settings.PanelSize;
             _panel.AddComponent<Image>().color = settings.PanelColor;
 
             _title = CreateText("Title", panelRect, settings.PanelTitle, settings.TitleFontSize,
-                TextAnchor.MiddleLeft);
+                settings.TitleAlignment);
             var titleRect = _title.rectTransform;
-            titleRect.anchorMin = new Vector2(0f, 1f);
-            titleRect.anchorMax = new Vector2(1f, 1f);
-            titleRect.pivot = new Vector2(0.5f, 1f);
+            titleRect.anchorMin = settings.TitleAnchorMin;
+            titleRect.anchorMax = settings.TitleAnchorMax;
+            titleRect.pivot = settings.TitlePivot;
             titleRect.anchoredPosition = new Vector2(0f, -settings.PanelPadding);
             titleRect.sizeDelta = new Vector2(-settings.PanelPadding * 2f, settings.HeaderHeight);
 
             _weight = CreateText("Weight", panelRect, string.Empty, settings.BodyFontSize,
-                TextAnchor.MiddleRight);
+                settings.WeightAlignment);
             var weightRect = _weight.rectTransform;
-            weightRect.anchorMin = new Vector2(0f, 1f);
-            weightRect.anchorMax = new Vector2(1f, 1f);
-            weightRect.pivot = new Vector2(0.5f, 1f);
+            weightRect.anchorMin = settings.WeightAnchorMin;
+            weightRect.anchorMax = settings.WeightAnchorMax;
+            weightRect.pivot = settings.WeightPivot;
             weightRect.anchoredPosition = new Vector2(0f, -settings.PanelPadding);
             weightRect.sizeDelta = new Vector2(-settings.PanelPadding * 2f, settings.HeaderHeight);
 
             var gridObject = CreateUiObject("Slots", panelRect);
             var gridRect = gridObject.GetComponent<RectTransform>();
-            gridRect.anchorMin = Vector2.zero;
-            gridRect.anchorMax = Vector2.one;
+            gridRect.anchorMin = settings.GridAnchorMin;
+            gridRect.anchorMax = settings.GridAnchorMax;
             gridRect.offsetMin = new Vector2(settings.PanelPadding, settings.PanelPadding);
             gridRect.offsetMax = new Vector2(-settings.PanelPadding,
                 -settings.HeaderHeight - settings.PanelPadding);
             _grid = gridObject.AddComponent<GridLayoutGroup>();
             _grid.cellSize = settings.SlotSize;
             _grid.spacing = settings.SlotSpacing;
-            _grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            _grid.constraint = settings.GridConstraint;
             _grid.constraintCount = settings.Columns;
-            _grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
-            _grid.startAxis = GridLayoutGroup.Axis.Horizontal;
-            _grid.childAlignment = TextAnchor.UpperLeft;
+            _grid.startCorner = settings.GridStartCorner;
+            _grid.startAxis = settings.GridStartAxis;
+            _grid.childAlignment = settings.GridChildAlignment;
         }
 
         private void BuildSlots(int count)
@@ -274,7 +274,7 @@ namespace UnderGrind.Inventory
                 icon.preserveAspect = settings.PreserveIconAspect;
 
                 var label = CreateText("Label", slot.transform, string.Empty, settings.SlotFontSize,
-                    TextAnchor.LowerCenter, font);
+                    settings.SlotAlignment, font);
                 var labelRect = label.rectTransform;
                 labelRect.anchorMin = settings.LabelAnchorMin;
                 labelRect.anchorMax = settings.LabelAnchorMax;
