@@ -65,7 +65,7 @@ namespace UnderGrind.Inventory
             EnsureSlotCount();
 
             var remaining = quantity;
-            var usableSlotCount = slots.Count;
+            var usableSlotCount = settings != null ? Mathf.Min(settings.MaxSlots, slots.Count) : slots.Count;
             for (var i = 0; i < usableSlotCount && remaining > 0; i++)
             {
                 var slot = slots[i];
