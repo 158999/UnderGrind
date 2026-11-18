@@ -16,14 +16,35 @@ $exit = 0
 $errors = [System.Collections.Generic.List[string]]::new()
 $diagnosticsBuild = "NotRun"
 
+function Invoke-DotNetCaptured {
+    param(
+        [Parameter(Mandatory = $true)][string[]]$DotNetArguments,
+        [Parameter(Mandatory = $true)][string]$OutputPath
+    )
+
+    $dotnetCommand = Get-Command dotnet -ErrorAction Stop
+    $stdoutPath = "$OutputPath.stdout.tmp"
+    $stderrPath = "$OutputPath.stderr.tmp"
+    $quotedArguments = @($DotNetArguments | ForEach-Object {
+        '"' + ([string]$_).Replace('"', '\\"') + '"'
+    })
+    $argumentLine = [string]::Join(" ", $quotedArguments)
+    $process = Start-Process -FilePath $dotnetCommand.Source -ArgumentList $argumentLine -WorkingDirectory $root -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+    $stdout = if (Test-Path -LiteralPath $stdoutPath) { Get-Content -LiteralPath $stdoutPath -Raw } else { "" }
+    $stderr = if (Test-Path -LiteralPath $stderrPath) { Get-Content -LiteralPath $stderrPath -Raw } else { "" }
+    @("=== STDOUT ===", $stdout, "=== STDERR ===", $stderr) | Set-Content -LiteralPath $OutputPath -Encoding utf8
+    Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+    return [pscustomobject]@{ ExitCode = [int]$process.ExitCode; Output = $stdout + [Environment]::NewLine + $stderr }
+}
+
 if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
     $errors.Add(".NET SDK non trovato.")
     $exit = 2
 }
 else {
-    $buildOutput = & dotnet build $diagnosticsProject --configuration $Configuration 2>&1
-    $buildCode = $LASTEXITCODE
-    $buildOutput | Out-File (Join-Path $runDir "diagnostics-build.log") -Encoding utf8
+    $buildResult = Invoke-DotNetCaptured -DotNetArguments @("build", $diagnosticsProject, "--configuration", $Configuration) -OutputPath (Join-Path $runDir "diagnostics-build.log")
+    $buildOutput = $buildResult.Output
+    $buildCode = $buildResult.ExitCode
     $diagnosticsBuild = if ($buildCode -eq 0) { "Passed" } else { "Failed" }
 
     if ($buildCode -ne 0) {
@@ -44,9 +65,9 @@ else {
                 $name = $project.BaseName -replace '[^A-Za-z0-9_.-]', '_'
                 $trxName = "$name.trx"
                 $logName = "$name.log"
-                $output = & dotnet test $project.FullName --configuration $Configuration --logger "trx;LogFileName=$trxName" --results-directory $runDir 2>&1
-                $code = $LASTEXITCODE
-                $output | Out-File (Join-Path $runDir $logName) -Encoding utf8
+                $testResult = Invoke-DotNetCaptured -DotNetArguments @("test", $project.FullName, "--configuration", $Configuration, "--logger", "trx;LogFileName=$trxName", "--results-directory", $runDir) -OutputPath (Join-Path $runDir $logName)
+                $output = $testResult.Output
+                $code = $testResult.ExitCode
 
                 $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
                 $failures = @()
