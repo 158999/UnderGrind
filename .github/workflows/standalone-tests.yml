@@ -29,6 +29,9 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Build Agent Manager
+        run: dotnet build Tools/AgentManager/UnderGrind.AgentManager.csproj --configuration Release
+
       - name: Run standalone tests
         shell: pwsh
         run: ./Tools/Testing/run-tests.ps1
