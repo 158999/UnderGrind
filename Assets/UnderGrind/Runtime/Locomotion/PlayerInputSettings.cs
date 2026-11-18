@@ -57,6 +57,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private bool lockCursorOnStart;
         [SerializeField] private bool recaptureCursorOnClick;
 
+        public int SettingsVersion => settingsVersion;
         public InputActionAsset ActionAsset => actionAsset;
         public string ActionMapName => actionMapName;
         public float MovementDeadzone => movementDeadzone;
