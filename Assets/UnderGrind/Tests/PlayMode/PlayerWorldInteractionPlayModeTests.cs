@@ -15,6 +15,7 @@ namespace UnderGrind.Tests
         private GameObject _player;
         private GameObject _worldItem;
         private GameObject _worldPrefab;
+        private GameObject _spawnedDrop;
         private InventorySettings _inventorySettings;
         private PlayerInteractionSettings _interactionSettings;
         private ItemDefinition _item;
@@ -76,7 +77,11 @@ namespace UnderGrind.Tests
             foreach (var candidate in spawned)
             {
                 if (candidate == null || candidate.gameObject == _worldPrefab) continue;
-                if (candidate.Item == _item && candidate.Quantity == 1) foundDrop = true;
+                if (candidate.Item == _item && candidate.Quantity == 1)
+                {
+                    foundDrop = true;
+                    _spawnedDrop = candidate.gameObject;
+                }
             }
             Assert.IsTrue(foundDrop);
         }
@@ -127,6 +132,7 @@ namespace UnderGrind.Tests
         {
             if (_player != null) Object.Destroy(_player);
             if (_worldItem != null) Object.Destroy(_worldItem);
+            if (_spawnedDrop != null) Object.Destroy(_spawnedDrop);
             if (_worldPrefab != null) Object.Destroy(_worldPrefab);
             if (_inventorySettings != null) Object.Destroy(_inventorySettings);
             if (_interactionSettings != null) Object.Destroy(_interactionSettings);
