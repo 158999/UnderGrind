@@ -13,7 +13,7 @@ Il builder richiede i due prefab Humanoid maschile e femminile configurati in `P
 
 ## Animazioni
 
-Gli otto movimenti selezionati da PINOC sono elencati in `Assets/UnderGrind/Animations/PlayerAnimationManifest.json`. I relativi FBX `mixamo-fbx` sono nella libreria PINOC dell'utente, non nel repository. Scaricare i file con i nomi indicati nel manifest in `Assets/UnderGrind/Animations`; il builder li importa come Humanoid, assegna le clip per nome e genera l'Animator Controller con **UnderGrind → Player → Refresh Clips and Build Animator Controller**. La mesh X Bot inclusa negli FBX è solo un riferimento per l'animazione e non sostituisce il personaggio UnderGrind.
+Gli otto movimenti selezionati da PINOC sono elencati in `Assets/UnderGrind/Animations/PlayerAnimationManifest.json`. I relativi FBX `mixamo-fbx` sono disponibili tramite gli asset ID nel manifest, ma non sono ancora nel repository. Scaricare i file con i nomi indicati nel manifest in `Assets/UnderGrind/Animations`; il builder li importa come Humanoid, assegna le clip per nome e genera l'Animator Controller con **UnderGrind → Player → Refresh Clips and Build Animator Controller**. La mesh X Bot inclusa negli FBX è solo un riferimento per l'animazione e non sostituisce il personaggio UnderGrind.
 
 ## Creazione della scena
 

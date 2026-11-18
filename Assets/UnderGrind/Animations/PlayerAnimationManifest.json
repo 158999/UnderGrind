@@ -1,5 +1,5 @@
 {
-  "source": "PINOC user motion library",
+  "source": "PINOC motion library",
   "format": "mixamo-fbx",
   "target": "UnderGrind Humanoid Avatar",
   "sourceRig": "Mixamo X Bot",
