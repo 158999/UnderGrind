@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UnderGrind.Inventory
 {
@@ -15,7 +16,27 @@ namespace UnderGrind.Inventory
         [SerializeField, Min(1)] private int slotFontSize;
 
         [Header("Layout")]
+        [SerializeField] private RenderMode canvasRenderMode;
+        [SerializeField] private CanvasScaler.ScaleMode canvasScaleMode;
         [SerializeField] private Vector2 referenceResolution;
+        [SerializeField] private Vector2 panelAnchorMin;
+        [SerializeField] private Vector2 panelAnchorMax;
+        [SerializeField] private Vector2 panelPivot;
+        [SerializeField] private Vector2 titleAnchorMin;
+        [SerializeField] private Vector2 titleAnchorMax;
+        [SerializeField] private Vector2 titlePivot;
+        [SerializeField] private Vector2 weightAnchorMin;
+        [SerializeField] private Vector2 weightAnchorMax;
+        [SerializeField] private Vector2 weightPivot;
+        [SerializeField] private Vector2 gridAnchorMin;
+        [SerializeField] private Vector2 gridAnchorMax;
+        [SerializeField] private GridLayoutGroup.Corner gridStartCorner;
+        [SerializeField] private GridLayoutGroup.Axis gridStartAxis;
+        [SerializeField] private GridLayoutGroup.Constraint gridConstraint;
+        [SerializeField] private TextAnchor titleAlignment;
+        [SerializeField] private TextAnchor weightAlignment;
+        [SerializeField] private TextAnchor slotAlignment;
+        [SerializeField] private TextAnchor gridChildAlignment;
         [SerializeField] private Vector2 panelSize;
         [SerializeField] private Vector2 panelOffset;
         [SerializeField, Min(1)] private int columns;
@@ -45,7 +66,27 @@ namespace UnderGrind.Inventory
         public int TitleFontSize => titleFontSize;
         public int BodyFontSize => bodyFontSize;
         public int SlotFontSize => slotFontSize;
+        public RenderMode CanvasRenderMode => canvasRenderMode;
+        public CanvasScaler.ScaleMode CanvasScaleMode => canvasScaleMode;
         public Vector2 ReferenceResolution => referenceResolution;
+        public Vector2 PanelAnchorMin => panelAnchorMin;
+        public Vector2 PanelAnchorMax => panelAnchorMax;
+        public Vector2 PanelPivot => panelPivot;
+        public Vector2 TitleAnchorMin => titleAnchorMin;
+        public Vector2 TitleAnchorMax => titleAnchorMax;
+        public Vector2 TitlePivot => titlePivot;
+        public Vector2 WeightAnchorMin => weightAnchorMin;
+        public Vector2 WeightAnchorMax => weightAnchorMax;
+        public Vector2 WeightPivot => weightPivot;
+        public Vector2 GridAnchorMin => gridAnchorMin;
+        public Vector2 GridAnchorMax => gridAnchorMax;
+        public GridLayoutGroup.Corner GridStartCorner => gridStartCorner;
+        public GridLayoutGroup.Axis GridStartAxis => gridStartAxis;
+        public GridLayoutGroup.Constraint GridConstraint => gridConstraint;
+        public TextAnchor TitleAlignment => titleAlignment;
+        public TextAnchor WeightAlignment => weightAlignment;
+        public TextAnchor SlotAlignment => slotAlignment;
+        public TextAnchor GridChildAlignment => gridChildAlignment;
         public Vector2 PanelSize => panelSize;
         public Vector2 PanelOffset => panelOffset;
         public int Columns => columns;
@@ -66,11 +107,27 @@ namespace UnderGrind.Inventory
         public Color TextColor => textColor;
         public Color OverloadedWeightColor => overloadedWeightColor;
 
+        private static Vector2 ClampAnchor(Vector2 value)
+        {
+            return new Vector2(Mathf.Clamp01(value.x), Mathf.Clamp01(value.y));
+        }
+
         private void OnValidate()
         {
             titleFontSize = Mathf.Max(1, titleFontSize);
             bodyFontSize = Mathf.Max(1, bodyFontSize);
             slotFontSize = Mathf.Max(1, slotFontSize);
+            panelAnchorMin = ClampAnchor(panelAnchorMin);
+            panelAnchorMax = ClampAnchor(panelAnchorMax);
+            panelPivot = ClampAnchor(panelPivot);
+            titleAnchorMin = ClampAnchor(titleAnchorMin);
+            titleAnchorMax = ClampAnchor(titleAnchorMax);
+            titlePivot = ClampAnchor(titlePivot);
+            weightAnchorMin = ClampAnchor(weightAnchorMin);
+            weightAnchorMax = ClampAnchor(weightAnchorMax);
+            weightPivot = ClampAnchor(weightPivot);
+            gridAnchorMin = ClampAnchor(gridAnchorMin);
+            gridAnchorMax = ClampAnchor(gridAnchorMax);
             referenceResolution.x = Mathf.Max(1f, referenceResolution.x);
             referenceResolution.y = Mathf.Max(1f, referenceResolution.y);
             panelSize.x = Mathf.Max(1f, panelSize.x);
