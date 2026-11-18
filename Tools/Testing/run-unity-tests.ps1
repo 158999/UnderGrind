@@ -50,24 +50,56 @@ foreach ($target in $platforms) {
     & $UnityEditorPath @arguments
     $code = $LASTEXITCODE
     $counts = @{ total = 0; passed = 0; failed = 0; skipped = 0 }
+    $validationErrors = [System.Collections.Generic.List[string]]::new()
+    $hasValidResult = $false
+
     if (Test-Path $xmlPath) {
-        [xml]$testXml = Get-Content $xmlPath -Raw
-        $suite = $testXml.SelectSingleNode("//*[local-name()='test-run']")
-        if ($suite) {
-            $counts.total = [int]$suite.total
-            $counts.passed = [int]$suite.passed
-            $counts.failed = [int]$suite.failed
-            $counts.skipped = [int]$suite.skipped
+        try {
+            [xml]$testXml = Get-Content $xmlPath -Raw
+            $suite = $testXml.SelectSingleNode("//*[local-name()='test-run']")
+            if ($suite) {
+                $counts.total = [int]$suite.total
+                $counts.passed = [int]$suite.passed
+                $counts.failed = [int]$suite.failed
+                $counts.skipped = [int]$suite.skipped
+                $hasValidResult = $true
+                if ($counts.total -le 0) {
+                    $validationErrors.Add("Unity produced a test result with zero executed or discovered tests.")
+                }
+            }
+            else {
+                $validationErrors.Add("The XML result does not contain a Unity test-run node.")
+            }
+        }
+        catch {
+            $validationErrors.Add("The XML result could not be parsed: $($_.Exception.Message)")
         }
     }
+    else {
+        $validationErrors.Add("Unity did not produce the expected XML result file.")
+    }
+
+    if (Test-Path $logPath) {
+        $unityLog = Get-Content $logPath -Raw
+        if ($unityLog -match "Scripts have compiler errors\.|error CS\d+|multiple assembly definition files") {
+            $validationErrors.Add("Unity reported script compilation errors or invalid assembly-definition layout.")
+        }
+    }
+    else {
+        $validationErrors.Add("Unity did not produce the expected log file.")
+    }
+
+    $resultValid = $hasValidResult -and $counts.total -gt 0 -and $validationErrors.Count -eq 0
     $items.Add([ordered]@{
         platform = $target
         exitCode = $code
+        resultValid = $resultValid
+        validationErrors = @($validationErrors)
         resultFile = $xmlName
         logFile = $logName
         totals = $counts
     })
-    if ($code -ne 0 -or $counts.failed -gt 0) { $exit = 1 }
+    if ($code -ne 0 -or $counts.failed -gt 0 -or -not $resultValid) { $exit = 1 }
 }
 
 $totals = @{
