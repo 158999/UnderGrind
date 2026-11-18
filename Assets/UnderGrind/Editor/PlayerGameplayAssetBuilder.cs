@@ -127,8 +127,15 @@ namespace UnderGrind.Editor
             CopyStringIfEmpty(current, template, "femaleSourceAssetPath");
             CopyStringIfEmpty(current, template, "thirdPersonArmsToken");
             CopyStringIfEmpty(current, template, "thirdPersonHandsToken");
+            CopyStringIfEmpty(current, template, "bodyRendererToken");
             if (version != null && defaultVersion != null && version.intValue < defaultVersion.intValue)
+            {
+                current.FindProperty("firstPersonBodyRevealPitch").floatValue =
+                    template.FindProperty("firstPersonBodyRevealPitch").floatValue;
+                current.FindProperty("firstPersonBodyHidePitch").floatValue =
+                    template.FindProperty("firstPersonBodyHidePitch").floatValue;
                 version.intValue = defaultVersion.intValue;
+            }
 
             current.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(asset);
