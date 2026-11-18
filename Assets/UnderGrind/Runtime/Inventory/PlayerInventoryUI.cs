@@ -13,6 +13,7 @@ namespace UnderGrind.Inventory
         [SerializeField] private PlayerInputSettings inputSettings;
         [SerializeField] private PlayerInventory inventory;
         [SerializeField] private HumanLocomotionController locomotion;
+        [SerializeField] private Camera uiCamera;
 
         private readonly List<Image> _slotBackgrounds = new List<Image>();
         private readonly List<Image> _slotIcons = new List<Image>();
@@ -49,6 +50,7 @@ namespace UnderGrind.Inventory
         {
             if (inventory == null) inventory = GetComponent<PlayerInventory>();
             if (locomotion == null) locomotion = GetComponent<HumanLocomotionController>();
+            if (uiCamera == null) uiCamera = GetComponentInChildren<Camera>(true);
             ResolveActions();
             InitializeUI();
         }
@@ -198,6 +200,7 @@ namespace UnderGrind.Inventory
             canvasObject.transform.SetParent(transform, false);
             _canvas = canvasObject.GetComponent<Canvas>();
             _canvas.renderMode = settings.CanvasRenderMode;
+            _canvas.worldCamera = uiCamera;
             _canvas.sortingOrder = settings.SortingOrder;
 
             var scaler = canvasObject.GetComponent<CanvasScaler>();
