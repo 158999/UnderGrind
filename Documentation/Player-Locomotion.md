@@ -44,6 +44,12 @@ I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. Se ma
 
 Le azioni vengono lette dalla stessa action map. Il cursore viene bloccato all'avvio se l'opzione è attiva e può essere liberato o catturato nuovamente tramite le azioni configurate.
 
+\`PlayerInputSettings\` espone due dead zone radiali configurabili: \`MovementDeadzone\` per lo stick di movimento e \`GamepadLookDeadzone\` per lo stick visuale. La sensibilità del mouse e del gamepad resta nell'asset \`PlayerLocomotionSettings\`. Le dead zone vengono applicate prima di trasferire l'input alla locomozione.
+
+\`PlayerInputRebindingController\` viene collegato automaticamente al Player. \`BeginRebind(PlayerInputActionId, bindingIndex)\` avvia la rimappatura della singola binding; \`GetBindingDisplayString\` restituisce l'etichetta da mostrare nell'interfaccia. Una rimappatura completata viene salvata in \`PlayerPrefs\` usando la chiave configurabile \`OverrideStorageKey\`. Il timeout è configurato da \`RebindTimeoutSeconds\`; \`ResetOverrides\` ripristina le binding originali.
+
+Il controller espone l'API di rimappatura, ma nel progetto non è ancora presente una schermata di impostazioni che la richiami: la UI di configurazione dei controlli resta da integrare.
+
 `HumanLocomotionController` crea o riutilizza `PlayerInputRebindingController` quando viene configurato l'input. Il controller espone `InputRebinding` per avviare la rimappatura di una singola binding, leggere la descrizione del controllo, annullare l'operazione e ripristinare le associazioni predefinite. Le rimappature vengono salvate in `PlayerPrefs` come JSON e ricaricate alla configurazione successiva. Timeout e chiave di archiviazione sono configurabili tramite `RebindTimeoutSeconds` e `OverrideStorageKey` in `PlayerInputSettings.asset`. Il runtime espone le API di rimappatura; non è ancora presente una schermata UI dedicata alla configurazione dei controlli.
 
 ## Sovraccarico da inventario
@@ -91,7 +97,7 @@ La sorgente attualmente ispezionata non dimostra ancora una separazione della te
 
 Dopo aver importato le clip in `Assets/UnderGrind/Animations`, il comando **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti mancanti e genera `Assets/UnderGrind/Generated/Animation/PlayerAnimator.controller`.
 
-Le clip richieste sono Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk. Fall e Land sono opzionali. Le soglie di velocità e le transizioni sono lette dall'asset di configurazione. Il controller usa blend tree per locomozione e accovacciamento e stati separati per salto, caduta e atterraggio quando le clip sono disponibili.
+Le clip richieste sono Idle, Walk, Run, Jump, Fall, Land, Crouch Idle e Crouch Walk. Tutte e otto sono necessarie per generare il controller completo. Il generatore individua le clip sia dal nome interno sia dal nome del file FBX; imposta l'importazione Humanoid e abilita l'importazione delle animazioni. Le soglie di velocità e le transizioni sono lette dall'asset di configurazione. Il controller usa blend tree per locomozione e accovacciamento e stati separati per salto, caduta e atterraggio.
 
 `PlayerAnimationDriver` aggiorna soltanto parametri presenti nel controller e con tipo corretto. Il root motion è disabilitato perché lo spostamento del personaggio è gestito da `HumanLocomotionController`.
 
@@ -111,13 +117,14 @@ Di conseguenza, la scena versionata è un prototipo visivo precedente e non cost
 
 ## Stato delle verifiche
 
-Risultati presenti nel repository:
+Risultati effettivamente presenti nel repository:
 
 - Test autonomi C#: 6/6 superati.
-- Unity EditMode: 12/12 superati nel report `TestResults/Unity-20261118-103717-325/EditMode.xml`. Il report comprende 7 test inventario e 5 test di configurazione locomozione.
-- Unity PlayMode: 7/7 superati nel report `TestResults/UnderGrind/PlayMode_20261118_092745.xml`. Questo report precede l'aggiunta dei test PlayMode per sovraccarico, raccolta, rilascio e aggiornamento UI.
-- La successiva esecuzione batch ha prodotto 12 test EditMode superati, ma il processo PlayMode è terminato con codice 1 prima di iniziare i test: Unity era già in uso dal processo EditMode. Il JSON aggregato è marcato Failed e non va interpretato come zero test effettivi.
-- Il runner è stato modificato per attendere il completamento di ogni processo e validare anche i test inconclusivi. La revisione del runner e i nuovi test non sono ancora stati eseguiti nell'Editor Unity.
+- Unity EditMode: 12/12 superati nel report \`TestResults/UnderGrind/EditMode_20261118_103737.xml\`. Il report precede le nuove prove di input e i test aggiunti successivamente all'inventario.
+- Unity PlayMode: 7/7 superati nel report \`TestResults/UnderGrind/PlayMode_20261118_092745.xml\`. Questo report precede i test aggiunti successivamente per sovraccarico, raccolta, rilascio e UI.
+- La suite presente nel codice contiene attualmente 21 test EditMode e 12 test PlayMode. Il conteggio è ricavato dai metodi NUnit presenti nei sei file di test; non è un risultato di esecuzione.
+- La successiva esecuzione batch ha prodotto un report EditMode valido da 12 test, ma il processo PlayMode è terminato con codice 1 prima di produrre un report valido. Il JSON aggregato è marcato Failed e non va interpretato come zero test effettivi.
+- Il runner è stato aggiornato per accettare l'XML \`test-suite\` prodotto da \`TestRunner API\`, selezionare solo report creati durante l'esecuzione corrente e rifiutare report obsoleti. Il runner aggiornato e le suite complete non sono ancora stati eseguiti nell'Editor Unity.
 - La compilazione delle assembly runtime e di test è riuscita nel log EditMode del 18 novembre. Non è una prova di esecuzione PlayMode o di correttezza visiva.
 - Verifica visiva del modello riggato e della scena: non documentata.
 
