@@ -57,6 +57,7 @@ namespace UnderGrind.Locomotion
         public float FirstPersonBodyHidePitch => firstPersonBodyHidePitch;
         public bool RequireSeparateHead => requireSeparateHead;
         public bool RequireFirstPersonArms => requireFirstPersonArms;
+        public bool RequireThirdPersonArms => requireThirdPersonArms;
         public bool ImportAnimation => importAnimation;
         public bool ImportMaterials => importMaterials;
         public bool ImportCameras => importCameras;
