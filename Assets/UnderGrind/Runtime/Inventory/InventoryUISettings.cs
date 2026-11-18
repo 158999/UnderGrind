@@ -21,6 +21,11 @@ namespace UnderGrind.Inventory
         [SerializeField, Min(1)] private int columns;
         [SerializeField] private Vector2 slotSize;
         [SerializeField] private Vector2 slotSpacing;
+        [SerializeField] private Vector2 iconAnchorMin;
+        [SerializeField] private Vector2 iconAnchorMax;
+        [SerializeField] private Vector2 labelAnchorMin;
+        [SerializeField] private Vector2 labelAnchorMax;
+        [SerializeField] private bool preserveIconAspect;
         [SerializeField, Min(0)] private int panelPadding;
         [SerializeField, Min(0f)] private float headerHeight;
         [SerializeField, Min(0)] private int maxVisibleSlots;
@@ -46,6 +51,11 @@ namespace UnderGrind.Inventory
         public int Columns => columns;
         public Vector2 SlotSize => slotSize;
         public Vector2 SlotSpacing => slotSpacing;
+        public Vector2 IconAnchorMin => iconAnchorMin;
+        public Vector2 IconAnchorMax => iconAnchorMax;
+        public Vector2 LabelAnchorMin => labelAnchorMin;
+        public Vector2 LabelAnchorMax => labelAnchorMax;
+        public bool PreserveIconAspect => preserveIconAspect;
         public int PanelPadding => panelPadding;
         public float HeaderHeight => headerHeight;
         public int MaxVisibleSlots => maxVisibleSlots;
@@ -70,6 +80,12 @@ namespace UnderGrind.Inventory
             slotSize.y = Mathf.Max(1f, slotSize.y);
             slotSpacing.x = Mathf.Max(0f, slotSpacing.x);
             slotSpacing.y = Mathf.Max(0f, slotSpacing.y);
+            iconAnchorMin = new Vector2(Mathf.Clamp01(iconAnchorMin.x), Mathf.Clamp01(iconAnchorMin.y));
+            iconAnchorMax = new Vector2(Mathf.Clamp(iconAnchorMax.x, iconAnchorMin.x, 1f),
+                Mathf.Clamp(iconAnchorMax.y, iconAnchorMin.y, 1f));
+            labelAnchorMin = new Vector2(Mathf.Clamp01(labelAnchorMin.x), Mathf.Clamp01(labelAnchorMin.y));
+            labelAnchorMax = new Vector2(Mathf.Clamp(labelAnchorMax.x, labelAnchorMin.x, 1f),
+                Mathf.Clamp(labelAnchorMax.y, labelAnchorMin.y, 1f));
             panelPadding = Mathf.Max(0, panelPadding);
             headerHeight = Mathf.Max(0f, headerHeight);
             maxVisibleSlots = Mathf.Max(0, maxVisibleSlots);
