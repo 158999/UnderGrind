@@ -16,6 +16,21 @@ Valori iniziali della locomozione:
 
 L'altezza del salto è un parametro di bilanciamento del gioco e non una misurazione biomeccanica.
 
+## Sovraccarico da inventario
+
+Il componente `PlayerInventory` calcola il peso trasportato sommando il peso unitario di ogni oggetto per la relativa quantità. Il peso massimo è una soglia di penalità, non un limite alla raccolta: gli oggetti possono essere aggiunti anche quando il nuovo peso supera la soglia, purché vi siano slot disponibili.
+
+Quando il peso corrente supera `MaxCarryWeightKg`:
+
+- la corsa viene disabilitata;
+- il salto viene disabilitato e l'eventuale input di salto bufferizzato viene annullato;
+- la velocità di camminata normale viene ridotta della percentuale configurata;
+- la penalità si applica anche alla camminata accovacciata.
+
+Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità normale vengono ripristinati automaticamente. Un salto già iniziato prima del sovraccarico non viene interrotto a mezz'aria.
+
+La configurazione è contenuta nell'asset `Assets/UnderGrind/Settings/PlayerInventorySettings.asset`, modificabile dall'Inspector. L'asset iniziale contiene 24 slot, 50 kg di soglia e una riduzione del 25%: sono valori iniziali modificabili, non limiti definitivi di progetto. Ogni `ItemDefinition` espone ID, nome, icona, dimensione massima dello stack e peso unitario in chilogrammi.
+
 ## Componenti di runtime
 
 `HumanLocomotionController` gestisce il movimento e il componente Unity `CharacterController`. Comprende input da tastiera, mouse e gamepad, accelerazione e decelerazione, salto con input bufferizzato e coyote time, verifica dello spazio disponibile per rialzarsi e gestione della telecamera in prima e terza persona.
