@@ -32,7 +32,7 @@ function Invoke-TestScript {
     $arguments = @("-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $ScriptPath) + $ScriptArguments
     $argumentLine = [string]::Join(" ", @($arguments | ForEach-Object {
         if ([string]$_ -match '\s') { '"' + [string]$_ + '"' } else { [string]$_ }
-    })))
+    }))
     $remainingSeconds = [int][Math]::Ceiling(($script:overallDeadline - [DateTime]::UtcNow).TotalSeconds)
     if ($remainingSeconds -le 0) {
         Write-Warning "Timeout globale raggiunto prima di avviare $ScriptPath."
