@@ -82,6 +82,9 @@ namespace UnderGrind.Editor
             if (serialized.FindProperty("actionAsset").objectReferenceValue == null)
                 SetObject(serialized, "actionAsset", actions);
 
+            var version = serialized.FindProperty("settingsVersion");
+            if (version != null && version.intValue < defaults.settingsVersion)
+            {
             SetStringIfEmpty(serialized, "actionMapName", defaults.actionMapName);
             SetStringIfEmpty(serialized, "moveActionName", defaults.moveActionName);
             SetStringIfEmpty(serialized, "lookMouseActionName", defaults.lookMouseActionName);
@@ -98,10 +101,6 @@ namespace UnderGrind.Editor
             SetStringIfEmpty(serialized, "nextSlotActionName", defaults.nextSlotActionName);
             SetStringIfEmpty(serialized, "previousSlotActionName", defaults.previousSlotActionName);
             SetStringIfEmpty(serialized, "overrideStorageKey", defaults.overrideStorageKey);
-
-            var version = serialized.FindProperty("settingsVersion");
-            if (version != null && version.intValue < defaults.settingsVersion)
-            {
                 SetFloatIfNotPositive(serialized, "movementDeadzone", defaults.movementDeadzone);
                 SetFloatIfNotPositive(serialized, "gamepadLookDeadzone", defaults.gamepadLookDeadzone);
                 SetFloatIfNotPositive(serialized, "rebindTimeoutSeconds", defaults.rebindTimeoutSeconds);
