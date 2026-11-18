@@ -45,12 +45,14 @@ namespace UnderGrind.Editor
             var asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
             if (asset != null) return asset;
 
-            asset = ScriptableObject.CreateInstance<T>();
-            if (File.Exists(defaultsPath))
-                JsonUtility.FromJsonOverwrite(File.ReadAllText(defaultsPath), asset);
-            else
+            if (!File.Exists(defaultsPath))
+            {
                 Debug.LogError("UnderGrind: file di configurazione non trovato: " + defaultsPath);
+                return null;
+            }
 
+            asset = ScriptableObject.CreateInstance<T>();
+            JsonUtility.FromJsonOverwrite(File.ReadAllText(defaultsPath), asset);
             AssetDatabase.CreateAsset(asset, assetPath);
             EditorUtility.SetDirty(asset);
             return asset;
