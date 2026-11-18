@@ -1,0 +1,78 @@
+using UnityEngine;
+
+namespace UnderGrind.Locomotion
+{
+    [CreateAssetMenu(menuName = "UnderGrind/Player/Animation Settings", fileName = "PlayerAnimationSettings")]
+    public sealed class PlayerAnimationSettings : ScriptableObject
+    {
+        [Header("Controller e clip")]
+        [SerializeField] private RuntimeAnimatorController animatorController;
+        [SerializeField] private AnimationClip idleClip;
+        [SerializeField] private AnimationClip walkClip;
+        [SerializeField] private AnimationClip runClip;
+        [SerializeField] private AnimationClip jumpClip;
+        [SerializeField] private AnimationClip fallClip;
+        [SerializeField] private AnimationClip landClip;
+        [SerializeField] private AnimationClip crouchIdleClip;
+        [SerializeField] private AnimationClip crouchWalkClip;
+
+        [Header("Parametri Animator")]
+        [SerializeField] private string speedParameterName;
+        [SerializeField] private string moveXParameterName;
+        [SerializeField] private string moveYParameterName;
+        [SerializeField] private string groundedParameterName;
+        [SerializeField] private string verticalSpeedParameterName;
+        [SerializeField] private string runningParameterName;
+        [SerializeField] private string crouchingParameterName;
+        [SerializeField] private string jumpingParameterName;
+        [SerializeField] private string fallingParameterName;
+        [SerializeField] private string landedParameterName;
+
+        [Header("Soglie e transizioni")]
+        [SerializeField, Min(0f)] private float idleThreshold;
+        [SerializeField, Min(0f)] private float walkThreshold;
+        [SerializeField, Min(0f)] private float runThreshold;
+        [SerializeField, Min(0f)] private float crouchWalkThreshold;
+        [SerializeField, Min(0f)] private float speedDampTime;
+        [SerializeField, Min(0f)] private float transitionDuration;
+        [SerializeField, Range(0f, 1f)] private float landingExitTime;
+
+        public RuntimeAnimatorController AnimatorController => animatorController;
+        public AnimationClip IdleClip => idleClip;
+        public AnimationClip WalkClip => walkClip;
+        public AnimationClip RunClip => runClip;
+        public AnimationClip JumpClip => jumpClip;
+        public AnimationClip FallClip => fallClip;
+        public AnimationClip LandClip => landClip;
+        public AnimationClip CrouchIdleClip => crouchIdleClip;
+        public AnimationClip CrouchWalkClip => crouchWalkClip;
+        public string SpeedParameterName => speedParameterName;
+        public string MoveXParameterName => moveXParameterName;
+        public string MoveYParameterName => moveYParameterName;
+        public string GroundedParameterName => groundedParameterName;
+        public string VerticalSpeedParameterName => verticalSpeedParameterName;
+        public string RunningParameterName => runningParameterName;
+        public string CrouchingParameterName => crouchingParameterName;
+        public string JumpingParameterName => jumpingParameterName;
+        public string FallingParameterName => fallingParameterName;
+        public string LandedParameterName => landedParameterName;
+        public float IdleThreshold => idleThreshold;
+        public float WalkThreshold => walkThreshold;
+        public float RunThreshold => runThreshold;
+        public float CrouchWalkThreshold => crouchWalkThreshold;
+        public float SpeedDampTime => speedDampTime;
+        public float TransitionDuration => transitionDuration;
+        public float LandingExitTime => landingExitTime;
+
+        private void OnValidate()
+        {
+            idleThreshold = Mathf.Max(0f, idleThreshold);
+            walkThreshold = Mathf.Max(idleThreshold, walkThreshold);
+            runThreshold = Mathf.Max(walkThreshold, runThreshold);
+            crouchWalkThreshold = Mathf.Max(0f, crouchWalkThreshold);
+            speedDampTime = Mathf.Max(0f, speedDampTime);
+            transitionDuration = Mathf.Max(0f, transitionDuration);
+            landingExitTime = Mathf.Clamp01(landingExitTime);
+        }
+    }
+}
