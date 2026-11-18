@@ -50,7 +50,7 @@ Quando entrambi gli FBX sono disponibili:
 
 1. Verificare i percorsi nell'asset `Assets/UnderGrind/Settings/PlayerRigSettings.asset`.
 2. Eseguire **UnderGrind → Player → Build Male and Female Prefabs From Configured FBX**.
-3. Il builder importa ciascun FBX come Humanoid, crea il relativo Avatar, controlla che i due Avatar siano validi e distinti e genera i prefab nella cartella `Assets/UnderGrind/Generated/Prefabs`.
+3. Il builder importa ciascun FBX come Humanoid, crea il relativo Avatar, controlla che i due Avatar siano validi e distinti e genera i prefab nella cartella `Assets/UnderGrind/Generated/Prefabs`. Le opzioni di importazione di animazioni, materiali, camere, luci, ottimizzazione e curve di visibilità sono configurate in `PlayerRigSettings.asset`; il tipo Humanoid e la creazione dell'Avatar dal modello sono requisiti del rig.
 4. Controllare che la testa sia separata e che i gruppi di renderer corrispondano ai token configurati.
 5. Aprire i prefab e verificare le deformazioni prima di usarli nella scena.
 
