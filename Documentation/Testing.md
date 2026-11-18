@@ -44,12 +44,12 @@ Per eseguire standalone, EditMode e PlayMode in sequenza:
 ./Tools/Testing/run-all-tests.ps1
 ```
 
-Il timeout complessivo predefinito è di 1800 secondi. I timeout delle singole fasi e quello complessivo sono configurabili tramite i parametri dello script.
+Il timeout complessivo predefinito è di 1800 secondi. I timeout delle singole fasi e quello complessivo sono configurabili tramite i parametri dello script. L'executor avvia ogni script PowerShell in un processo separato e attende la terminazione del solo processo worker con `Process.WaitForExit(timeout)`; non usa `Start-Process -Wait`, che può attendere anche processi discendenti dopo la conclusione del runner. L'output del worker resta visibile nella console.
 
 ## Risultati
 
-I report correnti vengono scritti in `TestResults/test/`; l'esecuzione precedente viene conservata in `TestResults/test old/`. I report includono stato, durata, conteggi, errori, dettagli dei singoli test Unity falliti, log e file XML/TRX. `run-all-tests.ps1` salva inoltre gli stream di output dei processi figli in `executor-*.stdout.log` e `executor-*.stderr.log`; Unity salva separatamente stdout e stderr per ciascuna piattaforma in `TestResults/test/Unity/`. I processi figli vengono avviati con gli stream reindirizzati su file, per evitare che handle della console condivisi mantengano agganciato il processo orchestratore dopo la conclusione dei test. Questi risultati sono artefatti generati e non devono essere versionati.
+I report correnti vengono scritti in `TestResults/test/`; l'esecuzione precedente viene conservata in `TestResults/test old/`. I report includono stato, durata, conteggi, errori, dettagli dei singoli test Unity falliti, log e file XML/TRX. I log .NET vengono salvati in `TestResults/test/`; Unity salva stdout, stderr, log Editor e XML per ciascuna piattaforma in `TestResults/test/Unity/`. Questi risultati sono artefatti generati e non devono essere versionati.
 
 ## Limiti della CI
 
-Il workflow `Standalone Diagnostics Tests` esegue la compilazione e i test standalone .NET su Windows. Non avvia Unity e quindi non certifica la compilazione degli assembly Unity né il superamento dei test EditMode o PlayMode. Queste verifiche devono essere eseguite con l'Editor della versione richiesta dal progetto.
+Il workflow `Standalone Diagnostics Tests` esegue la compilazione e i test standalone .NET su Windows e verifica la sintassi degli script PowerShell. Non avvia Unity e quindi non certifica la compilazione degli assembly Unity né il superamento dei test EditMode o PlayMode. Queste verifiche devono essere eseguite con l'Editor della versione richiesta dal progetto.
