@@ -77,6 +77,15 @@ namespace UnderGrind.Editor
             SetStringIfEmpty(serialized, "toggleInventoryActionName", "ToggleInventory");
             SetStringIfEmpty(serialized, "nextSlotActionName", "NextSlot");
             SetStringIfEmpty(serialized, "previousSlotActionName", "PreviousSlot");
+            var version = serialized.FindProperty("settingsVersion");
+            if (version != null && version.intValue < 1)
+            {
+                SetFloat(serialized, "movementDeadzone", 0.15f);
+                SetFloat(serialized, "gamepadLookDeadzone", 0.12f);
+                SetFloat(serialized, "rebindTimeoutSeconds", 8f);
+                SetString(serialized, "overrideStorageKey", "UnderGrind.Player.InputOverrides");
+                version.intValue = 1;
+            }
             serialized.ApplyModifiedPropertiesWithoutUndo();
 
             EditorUtility.SetDirty(settings);
@@ -147,6 +156,17 @@ namespace UnderGrind.Editor
             if (property != null) property.stringValue = value;
         }
 
+        private static void SetFloat(SerializedObject serialized, string propertyName, float value)
+        {
+            var property = serialized.FindProperty(propertyName);
+            if (property != null) property.floatValue = value;
+        }
+
+        private static void SetInt(SerializedObject serialized, string propertyName, int value)
+        {
+            var property = serialized.FindProperty(propertyName);
+            if (property != null) property.intValue = value;
+        }
         private static void SetBool(SerializedObject serialized, string propertyName, bool value)
         {
             var property = serialized.FindProperty(propertyName);
