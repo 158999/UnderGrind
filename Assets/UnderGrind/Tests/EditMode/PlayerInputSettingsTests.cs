@@ -29,6 +29,7 @@ namespace UnderGrind.Tests
             serialized.FindProperty("actionMapName").stringValue = "Player";
             serialized.FindProperty("moveActionName").stringValue = "Move";
             serialized.FindProperty("jumpActionName").stringValue = "Jump";
+            serialized.FindProperty("overrideStorageKey").stringValue = "UnderGrind.Tests.InputOverrides";
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
