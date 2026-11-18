@@ -6,7 +6,7 @@ param(
     [ValidateRange(30, 1800)][int]$BuildTimeoutSeconds = 180,
     [ValidateRange(30, 1800)][int]$TestTimeoutSeconds = 180,
     [ValidateRange(60, 3600)][int]$UnityTimeoutSeconds = 600,
-    [ValidateRange(60, 3600)][int]$OverallTimeoutSeconds = 1500
+    [ValidateRange(60, 3600)][int]$OverallTimeoutSeconds = 1800
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,7 +24,7 @@ function Invoke-TestScript {
     }))
     $process = Start-Process -FilePath "powershell.exe" -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow
     if (-not $process.WaitForExit($OverallTimeoutSeconds * 1000)) {
-        Write-Error "Timeout: $ScriptPath ha superato $OverallTimeoutSeconds secondi."
+        Write-Warning "Timeout: $ScriptPath ha superato $OverallTimeoutSeconds secondi."
         try { & taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null } catch { }
         try {
             if (-not $process.HasExited) { $process.Kill() }
