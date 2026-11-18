@@ -73,7 +73,7 @@ Aggiornamento dei risultati disponibili al 18 novembre 2026:
 
 - Test autonomi C#: 6 superati su 6.
 - Test Unity PlayMode: 7 superati su 7.
-- Test Unity EditMode: 0 eseguiti.
+- Test Unity EditMode: risultato non verificabile. Il riepilogo JSON riporta zero test e codice di uscita 0, mentre il log di Unity termina con codice di uscita 1 e manca il file XML dei risultati.
 - Ispezione visiva del modello e della scena: non effettuata.
 
 Il completamento del Player non può essere dichiarato finché i prefab maschile e femminile non dispongono di un rig Humanoid verificato, parti di testa e arti separatamente indirizzabili, animazioni compatibili, importazione Unity corretta, test superati e verifica visiva.

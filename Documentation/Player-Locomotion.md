@@ -91,7 +91,7 @@ Ultima esecuzione disponibile, 18 novembre 2026:
 
 - Test autonomi C#: 6 superati su 6.
 - Test Unity PlayMode: 7 superati su 7.
-- Test Unity EditMode: nessun test eseguito.
+- Test Unity EditMode: risultato non verificabile. Il riepilogo JSON riporta zero test e codice di uscita 0, ma il log di Unity termina con codice di uscita 1 e non è stato prodotto il file XML dei risultati.
 - Verifica visiva nell'Editor: non effettuata.
 
 I risultati dei test automatici non sostituiscono l'ispezione del modello reale, la verifica delle animazioni nell'Editor e il controllo della scena durante il gioco.
