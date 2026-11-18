@@ -68,7 +68,13 @@ namespace UnderGrind.Inventory
             if (locomotion != null)
             {
                 locomotion.SetInputSuppressed(false);
-                locomotion.SetCursorCaptured(_cursorWasCaptured);
+                if (locomotion.isActiveAndEnabled)
+                    locomotion.SetCursorCaptured(_cursorWasCaptured);
+                else
+                {
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
             }
             else
             {
