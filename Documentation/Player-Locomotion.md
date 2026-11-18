@@ -1,130 +1,114 @@
 # Player e locomozione umanoide
 
-## Personaggio di riferimento e parametri di movimento
+## Personaggio di riferimento
 
-Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile presente nella sorgente misura 1,70 m nel profilo iniziale. Entrambe le altezze sono configurabili nell’asset locomozione. Entrambi i modelli originali sono input immutabili: scheletri, pesi e modifiche visive devono essere realizzati su derivati separati.
+Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile presente nella sorgente misura 1,70 m. Entrambe le altezze sono configurabili.
 
-Valori iniziali della locomozione:
-
-- Camminata: 1,80 m/s.
-- Corsa: camminata × 4/3 = 2,40 m/s.
-- Altezza massima teorica del salto: 0,40 m rispetto al punto di partenza.
-- Gravità: 9,81 m/s².
-- Altezza del CharacterController: 1,78 m.
-- Raggio della capsula: 0,28 m.
-- Altezza della capsula accovacciata: 1,12 m.
-
-L'altezza del salto è un parametro di bilanciamento del gioco e non una misurazione biomeccanica.
+La sorgente Blender ispezionata contiene una mesh statica completa per personaggio, senza scheletro, pesi di deformazione o testa separata. Le sorgenti originali non vengono modificate: rig, pesi e parti derivate devono essere prodotti in prefab separati.
 
 ## Configurazione della locomozione
 
-Tutti i parametri che regolano il movimento, la postura, la capsula di collisione e la visuale sono contenuti nell'asset `Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset`. L'asset è un `PlayerLocomotionSettings` e può essere modificato direttamente nell'Inspector. Il componente `HumanLocomotionController` conserva soltanto i riferimenti all'asset, all'inventario e al rig della visuale: non contiene copie dei valori di bilanciamento.
+Tutti i parametri di movimento, postura, collisione e visuale sono contenuti nell'asset `Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset`, di tipo `PlayerLocomotionSettings`. Il componente `HumanLocomotionController` conserva il riferimento all'asset e non duplica i valori di bilanciamento.
 
 Le proprietà sono organizzate in otto gruppi:
 
 1. **Velocità di camminata**: velocità base.
 2. **Velocità di corsa**: moltiplicatore rispetto alla camminata; la velocità effettiva è derivata.
-3. **Salto**: altezza teorica e velocità iniziale, calcolata a partire da altezza e gravità.
-4. **Gravità e comportamento in aria**: gravità, controllo aereo e soglia di passaggio tra salita e discesa.
-5. **Accelerazione e decelerazione**: variazione della velocità orizzontale.
-6. **Accovacciamento e collisioni**: altezza della postura, velocità accovacciata, dimensioni della capsula, controllo dello spazio per rialzarsi, step offset, pendenza, skin width e opzioni del CharacterController.
-7. **Camera e sensibilità**: sensibilità mouse/gamepad, angolo massimo, altezza del punto di vista, offset e distanza in terza persona, collisione camera, interpolazione, FOV e near clip.
-8. **Coyote time e jump buffer**: finestre temporali di tolleranza per il salto, configurabili indipendentemente.
+3. **Salto**: altezza teorica e velocità iniziale, calcolata da altezza e gravità.
+4. **Gravità e comportamento in aria**: gravità, controllo aereo, velocità di aderenza al terreno e soglia tra salita e discesa.
+5. **Accelerazione e decelerazione**: variazione della velocità orizzontale e soglie di input.
+6. **Accovacciamento e collisioni**: altezza, velocità accovacciata, dimensioni della capsula, verifica dello spazio per rialzarsi, layer, step offset, pendenza, skin width e opzioni del CharacterController.
+7. **Camera e sensibilità**: sensibilità mouse/gamepad, angolo massimo, altezza del punto di vista, offset e distanza in terza persona, collisioni, interpolazione, FOV e near clip.
+8. **Coyote time e jump buffer**: finestre temporali indipendenti per il salto.
 
-I valori iniziali sono contenuti nell'asset, non nel codice. Il controller richiede un asset assegnato: se manca, segnala l'errore e non applica il movimento. Il generatore della scena di test assegna automaticamente l'asset al Player e usa la stessa configurazione per dimensionare il CharacterController e la camera.
+I valori iniziali sono contenuti nell'asset e modificabili dall'Inspector. Se manca l'asset, il controller segnala l'errore e non applica il movimento. La scena di test assegna lo stesso asset al controller e al dimensionamento iniziale del CharacterController.
 
-## Sovraccarico da inventario
+## Input e controlli
 
-Il componente `PlayerInventory` calcola il peso trasportato sommando il peso unitario di ogni oggetto per la relativa quantità. Il peso massimo è una soglia di penalità, non un limite alla raccolta: gli oggetti possono essere aggiunti anche quando il nuovo peso supera la soglia, purché vi siano slot disponibili.
-
-Quando il peso corrente supera `MaxCarryWeightKg`:
-
-- la corsa viene disabilitata;
-- il salto viene disabilitato e l'eventuale input di salto bufferizzato viene annullato;
-- la velocità di camminata normale viene ridotta della percentuale configurata;
-- la penalità si applica anche alla camminata accovacciata.
-
-Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità normale vengono ripristinati automaticamente. Un salto già iniziato prima del sovraccarico non viene interrotto a mezz'aria.
-
-Il controller individua `PlayerInventory` sullo stesso GameObject. La scena generata assegna il componente e l'asset di configurazione. La configurazione è contenuta nell'asset `Assets/UnderGrind/Settings/PlayerInventorySettings.asset`, modificabile dall'Inspector. L'asset iniziale contiene 24 slot, 50 kg di soglia e una riduzione del 25%: sono valori iniziali modificabili, non limiti definitivi di progetto. Ogni `ItemDefinition` espone ID, nome, icona, dimensione massima dello stack e peso unitario in chilogrammi.
-
-## Componenti di runtime
-
-`HumanLocomotionController` gestisce il movimento e il componente Unity `CharacterController`. Comprende input da tastiera, mouse e gamepad, accelerazione e decelerazione, salto con input bufferizzato e coyote time, verifica dello spazio disponibile per rialzarsi e gestione della telecamera in prima e terza persona.
-
-`PlayerVisualRig` gestisce la visibilità dei renderer:
-
-- In prima persona nasconde i renderer della testa.
-- In terza persona nasconde gli eventuali renderer destinati esclusivamente alle braccia e alle mani in prima persona.
-- Gli altri renderer mantengono lo stato di abilitazione originale.
-
-`PlayerAnimationDriver` aggiorna soltanto i parametri effettivamente presenti nell'Animator Controller assegnato. Disabilita il root motion, evitando che l'Animator applichi uno spostamento aggiuntivo rispetto a quello gestito dal controller.
-
-## Associazione delle parti del modello
-
-Dopo l'importazione di un modello riggato, il prefab deve configurare il componente tramite `PlayerVisualRig.ConfigureFromHierarchy(rigRoot)`.
-
-La convenzione dei nomi è:
-
-- `*_Head`: testa, nascosta in prima persona e ripristinata in terza persona.
-- `*_FP_Arms`: braccia dedicate alla prima persona.
-- `*_FP_Hands`: mani dedicate alla prima persona.
-
-Le parti `*_FP_Arms` e `*_FP_Hands` sono visibili in prima persona e nascoste in terza persona. Gli altri renderer restano visibili in entrambe le modalità, salvo configurazione esplicita.
-
-Se non viene trovata una testa separata, `ConfigureFromHierarchy` restituisce `false` e non sostituisce la configurazione esistente. È inoltre disponibile `Configure`, che accetta gruppi espliciti di renderer. Le associazioni basate su parole presenti nei nomi sono una soluzione di ripiego per i prototipi, non il criterio previsto per i prefab di produzione.
-
-La visuale in prima persona può nascondere soltanto la testa quando questa è un renderer indipendente o appartiene a un gruppo di renderer assegnato esplicitamente. Il corpo e le braccia devono rimanere visibili. In terza persona la testa viene ripristinata e la telecamera si posiziona dietro il personaggio, verificando gli ostacoli tramite uno sphere cast.
-
-La sorgente attualmente ispezionata contiene una sola mesh statica completa per ciascun personaggio. Non dispone di una testa separata, di uno scheletro o di pesi di deformazione. Per questo motivo i test basati su gerarchie artificiali dimostrano il comportamento del componente, ma non dimostrano che la visuale in prima persona funzioni sul modello reale.
-
-## Comandi
+`PlayerInputSettings` collega il Player a un `InputActionAsset`. L'asset iniziale viene creato da **UnderGrind → Player → Create or Repair Input Actions** e salvato in `Assets/UnderGrind/Settings/PlayerInputActions.asset`; le associazioni tra identificatori logici e nomi delle azioni sono in `PlayerInputSettings.asset`. Le singole binding di tastiera, mouse e gamepad sono modificabili direttamente nell'Input Actions asset.
 
 | Azione | Tastiera e mouse | Gamepad |
 |---|---|---|
 | Movimento | WASD / frecce | Stick sinistro |
 | Visuale | Mouse | Stick destro |
-| Corsa | Shift | — |
+| Corsa | Shift | Pressione stick sinistro |
 | Salto | Spazio | Pulsante sud |
 | Accovacciamento | C | Pulsante est |
 | Cambio telecamera | F5 | Pulsante nord |
-| Sblocco cursore | Esc | — |
-| Blocco cursore | Clic sinistro | — |
+| Sblocco cursore | Esc | Start |
+| Blocca nuovamente il cursore | Clic sinistro | — |
+| Interazione/raccolta | E | Pulsante ovest |
+| Rilascio oggetto | G | D-pad giù |
+| Apri/chiudi inventario | Tab | Select |
+| Slot successivo/precedente | ] / [ | D-pad destra/sinistra |
 
-## Parametri dell'Animator
+Le azioni vengono lette dalla stessa action map. Il cursore viene bloccato all'avvio se l'opzione è attiva e può essere liberato o catturato nuovamente tramite le azioni configurate.
 
-`PlayerAnimationDriver` può aggiornare i seguenti parametri:
+## Sovraccarico da inventario
 
-- `Speed`: velocità in metri al secondo.
-- `MoveX` e `MoveY`: direzione dell'input.
-- `Grounded`: contatto con il terreno.
-- `VerticalSpeed`: velocità verticale.
-- `Running`, `Crouching`, `Jumping` e `Falling`: stati del movimento.
+Il componente `PlayerInventory` calcola il peso trasportato sommando il peso unitario di ogni oggetto per la relativa quantità. Il peso massimo è una soglia di penalità, non un limite alla raccolta.
 
-Prima di aggiornare un parametro, il componente controlla che esista e che abbia il tipo corretto. La sostituzione del Runtime Animator Controller viene rilevata durante l'esecuzione.
+Quando il peso corrente supera `MaxCarryWeightKg`:
 
-Il generatore della scena di test crea i parametri e gli stati idle, camminata, corsa, salto e accovacciamento quando trova clip compatibili e un Avatar valido. Non crea animazioni o Avatar fittizi quando la sorgente Blender non li contiene.
+- la corsa viene disabilitata;
+- il salto viene disabilitato e l'eventuale input bufferizzato viene annullato;
+- la velocità di camminata viene ridotta della percentuale configurata;
+- la penalità si applica anche alla camminata accovacciata.
 
-## Pipeline delle animazioni
+Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità normale vengono ripristinati. Un salto già iniziato non viene interrotto a mezz'aria. I valori iniziali dell'asset inventario sono 24 slot, 50 kg e riduzione del 25%.
 
-I sei movimenti selezionati dalla libreria PINOC sono Standing Idle, Walking, Running, Jump, Crouching Idle e Crouch Walk Forward.
+## Componenti di runtime
 
-Gli export Mixamo contengono una mesh X Bot e uno scheletro con nomi Mixamo: sono candidati per il retargeting sullo scheletro UnderGrind tramite uno strumento DCC. X Bot non è il corpo del giocatore. Gli export Splat sono invece animazioni senza mesh, basate su uno scheletro MetaHuman di 441 ossa; per Unity sono destinati al pacchetto Splat Engine e al rig Generic, non al normale retargeting Humanoid.
+- `HumanLocomotionController`: movimento tramite `CharacterController`, input, accelerazione, decelerazione, salto, postura e gestione delle camere in prima e terza persona.
+- `PlayerInventory`: slot, quantità, peso derivato, operazioni e stato di sovraccarico.
+- `PlayerInventoryUI`: interfaccia overlay con slot, icone, quantità, selezione e peso. Layout e stile sono configurati in `PlayerInventoryUISettings.asset`.
+- `PlayerInteractionController`: raccolta tramite SphereCast dalla camera e rilascio dello stack selezionato. Distanza, raggio, layer, quantità e impulso sono configurati in `PlayerInteractionSettings.asset`.
+- `WorldItemPickup`: componente di un oggetto nel mondo; conserva l'eventuale quantità non trasferita all'inventario.
+- `PlayerVisualRig`: visibilità dei renderer di testa e arti dedicati alla prima persona.
+- `PlayerAnimationDriver`: invia lo stato della locomozione all'Animator senza applicare root motion.
 
-Nessuna delle due famiglie di file è ancora importata nel repository o collegata al personaggio UnderGrind. Prima della distribuzione degli export devono essere verificate le condizioni d'uso del fornitore.
+## Rig e visibilità del modello
+
+`PlayerRigSettings.asset` contiene i nomi delle radici degli scheletri, i nomi dei prefab, i suffissi dei renderer e le opzioni di importazione FBX.
+
+Dopo aver selezionato un FBX riggato, **UnderGrind → Player → Build Prefabs From Selected Rigged FBX** imposta l'importazione Humanoid e genera i prefab maschile e femminile. Il file selezionato deve contenere entrambe le radici configurate e un Avatar Humanoid valido. Il generatore richiede una testa con renderer separato se `RequireSeparateHead` è attivo.
+
+Convenzioni dei renderer:
+
+- `*_Head`: testa, nascosta in prima persona e ripristinata in terza persona.
+- `*_FP_Arms`: braccia dedicate alla prima persona.
+- `*_FP_Hands`: mani dedicate alla prima persona.
+
+Le associazioni esplicite hanno priorità sulla ricerca per nome. I renderer non classificati mantengono lo stato di abilitazione originale. Se il prefab riggato è disponibile, la scena di test lo preferisce al modello statico importato da `humans.blend`. In assenza del prefab riggato, il Player può muoversi ma la sorgente statica non fornisce uno scheletro animabile né una testa indipendente.
+
+La sorgente attualmente ispezionata non dimostra ancora una separazione della testa, pesi di deformazione o parti dedicate alle braccia e alle mani in prima persona. I test su gerarchie artificiali verificano la logica di visibilità, non il modello finale.
+
+## Animazioni
+
+`PlayerAnimationSettings.asset` contiene i riferimenti alle clip, il Runtime Animator Controller, i nomi e i tipi dei parametri, le soglie dei blend e le durate di transizione.
+
+Dopo aver importato le clip in `Assets/UnderGrind/Animations`, il comando **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti mancanti e genera `Assets/UnderGrind/Generated/Animation/PlayerAnimator.controller`.
+
+Le clip richieste sono Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk. Fall e Land sono opzionali. Le soglie di velocità e le transizioni sono lette dall'asset di configurazione. Il controller usa blend tree per locomozione e accovacciamento e stati separati per salto, caduta e atterraggio quando le clip sono disponibili.
+
+`PlayerAnimationDriver` aggiorna soltanto parametri presenti nel controller e con tipo corretto. Il root motion è disabilitato perché lo spostamento del personaggio è gestito da `HumanLocomotionController`.
+
+I sei movimenti individuati nella libreria PINOC sono Standing Idle, Walking, Running, Jump, Crouching Idle e Crouch Walk Forward. Gli export Mixamo sono candidati per il retargeting verso il rig UnderGrind; gli export Splat usano invece uno scheletro MetaHuman e sono destinati al relativo Splat Engine. Gli export non risultano ancora trasferiti sul rig definitivo nel repository.
+
+## Scena di test
+
+**UnderGrind → Build First Locomotion Test Scene** crea o aggiorna `Assets/UnderGrind/Scenes/LocomotionTest.unity`. Il generatore assegna gli asset di configurazione, aggiunge inventario, UI, interazione, controller di locomozione e diagnostica. Se sono presenti i prefab Humanoid configurati, utilizza quelli; altrimenti usa la mesh statica sorgente come riferimento visivo.
 
 ## Stato delle verifiche
 
-Il modello sorgente maschile e quello femminile sono stati ispezionati e risultano distinti, statici e privi di rig. Il progetto Blendstra dei derivati non ha prodotto una versione utilizzabile: l'ultimo tentativo è terminato con l'errore `DUPLICATE_OR_INVALID_OBJECT_ID`. La generazione del rig, la separazione della testa e la verifica dei pesi sono quindi ancora da completare.
+Risultati presenti nel repository:
 
-Il codice del controller, la gestione della visibilità dei renderer, il collegamento con l'Animator e i relativi test sono presenti nel repository.
+- Test autonomi C#: 6/6 superati.
+- Unity EditMode: 12/12 superati nel report `TestResults/Unity-20261118-103717-325/EditMode.xml`. Il report comprende 7 test inventario e 5 test di configurazione locomozione.
+- Unity PlayMode: 7/7 superati nel report `TestResults/UnderGrind/PlayMode_20261118_092745.xml`. Questo report precede l'aggiunta dei test PlayMode per sovraccarico, raccolta, rilascio e aggiornamento UI.
+- La successiva esecuzione batch ha prodotto 12 test EditMode superati, ma il processo PlayMode è terminato con codice 1 prima di iniziare i test: Unity era già in uso dal processo EditMode. Il JSON aggregato è marcato Failed e non va interpretato come zero test effettivi.
+- Il runner è stato modificato per attendere il completamento di ogni processo e validare anche i test inconclusivi. La revisione del runner e i nuovi test non sono ancora stati eseguiti nell'Editor Unity.
+- La compilazione delle assembly runtime e di test è riuscita nel log EditMode del 18 novembre. Non è una prova di esecuzione PlayMode o di correttezza visiva.
+- Verifica visiva del modello riggato e della scena: non documentata.
 
-Ultimi risultati disponibili prima della centralizzazione dei parametri, 18 novembre 2026:
-
-- Test autonomi C#: 6 superati su 6.
-- Test Unity EditMode: 11 superati su 11 nel report XML `TestResults/UnderGrind/EditMode_20261118_101951.xml`.
-- Test Unity PlayMode: 7 superati su 7 nel report XML `TestResults/UnderGrind/PlayMode_20261118_092745.xml`.
-- Il successivo avvio batch del 09:19:36 non ha prodotto i file attesi e il relativo riepilogo è correttamente marcato come non valido. Non annulla i risultati dei report XML separati sopra indicati.
-- Verifica visiva nell'Editor: non documentata.
-
-La centralizzazione in `PlayerLocomotionSettings` modifica il codice e i test dopo quei report: i risultati precedenti non costituiscono una verifica di questa revisione. I test EditMode, PlayMode e autonomi devono essere rieseguiti sul commit aggiornato.
+La verifica finale richiede una nuova esecuzione dei due script PowerShell di test sul commit aggiornato e un controllo visivo in Unity.
