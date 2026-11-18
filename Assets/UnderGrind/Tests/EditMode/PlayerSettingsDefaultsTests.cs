@@ -39,6 +39,7 @@ namespace UnderGrind.Tests
             Assert.AreEqual(CanvasScaler.ScaleMode.ScaleWithScreenSize, settings.CanvasScaleMode);
             Assert.AreEqual(GridLayoutGroup.Constraint.FixedColumnCount, settings.GridConstraint);
             Assert.AreEqual(6, settings.Columns);
+            Assert.AreEqual("LegacyRuntime.ttf", settings.FallbackFontResourceName);
             Assert.AreEqual(0, settings.MaxVisibleSlots);
         }
 
