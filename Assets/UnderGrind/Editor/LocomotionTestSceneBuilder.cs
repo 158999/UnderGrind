@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnderGrind.Locomotion;
 using UnderGrind.Inventory;
+using UnderGrind.Testing;
 
 namespace UnderGrind.Editor
 {
@@ -56,9 +57,11 @@ namespace UnderGrind.Editor
                 "Assets/UnderGrind/Settings/PlayerRigSettings.asset");
             var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(
                 "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset");
+            var grayboxSettings = AssetDatabase.LoadAssetAtPath<PlayerGrayboxSettings>(
+                "Assets/UnderGrind/Settings/PlayerGrayboxSettings.asset");
             if (locomotionSettings == null || inventorySettings == null ||
                 interactionSettings == null || inventoryUISettings == null ||
-                rigSettings == null || animationSettings == null)
+                rigSettings == null || animationSettings == null || grayboxSettings == null)
             {
                 EditorUtility.DisplayDialog("Configurazione Player mancante",
                     "Uno o più asset di configurazione Player non sono disponibili. La scena non è stata modificata.",
@@ -102,9 +105,10 @@ namespace UnderGrind.Editor
                 Debug.LogWarning("UnderGrind: prefab femminile non disponibile. La scena di test maschile verrà comunque creata.");
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            CreateLighting();
-            CreateCourse();
-            CreatePlayer(malePrefab, locomotionSettings, inputSettings, inventorySettings, interactionSettings, inventoryUISettings, rigSettings, animationSettings);
+            CreateLighting(grayboxSettings);
+            CreateCourse(grayboxSettings);
+            CreatePlayer(malePrefab, locomotionSettings, inputSettings, inventorySettings,
+                interactionSettings, inventoryUISettings, rigSettings, animationSettings, grayboxSettings);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             var buildScenes = EditorBuildSettings.scenes.ToList();
@@ -121,10 +125,14 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings, PlayerInputSettings inputSettings, InventorySettings inventorySettings, PlayerInteractionSettings interactionSettings, InventoryUISettings inventoryUISettings, PlayerRigSettings rigSettings, PlayerAnimationSettings animationSettings)
+        private static void CreatePlayer(GameObject human, PlayerLocomotionSettings locomotionSettings,
+            PlayerInputSettings inputSettings, InventorySettings inventorySettings,
+            PlayerInteractionSettings interactionSettings, InventoryUISettings inventoryUISettings,
+            PlayerRigSettings rigSettings, PlayerAnimationSettings animationSettings,
+            PlayerGrayboxSettings grayboxSettings)
         {
             var player = new GameObject("Player - Human " + locomotionSettings.CharacterHeight.ToString("0.00") + "m");
-            player.transform.position = new Vector3(0f, 0.05f, 0f);
+            player.transform.position = grayboxSettings.PlayerSpawnPosition;
             var controller = player.AddComponent<CharacterController>();
             controller.height = locomotionSettings.CharacterHeight;
             controller.radius = locomotionSettings.CapsuleRadius;
@@ -324,81 +332,98 @@ namespace UnderGrind.Editor
             return material;
         }
 
-        private static void CreateCourse()
+        private static void CreateCourse(PlayerGrayboxSettings settings)
         {
-            var ground = MakeMaterial("Test Ground", new Color(0.24f, 0.27f, 0.28f));
-            var concrete = MakeMaterial("Test Concrete", new Color(0.43f, 0.46f, 0.47f));
-            var marker = MakeMaterial("Measurement Marker", new Color(0.83f, 0.69f, 0.34f));
-            var accent = MakeMaterial("Test Accent", new Color(0.30f, 0.52f, 0.49f));
+            var ground = MakeMaterial("Test Ground", settings.GroundColor);
+            var concrete = MakeMaterial("Test Concrete", settings.ConcreteColor);
+            var marker = MakeMaterial("Measurement Marker", settings.MarkerColor);
+            var accent = MakeMaterial("Test Accent", settings.AccentColor);
 
             var floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            floor.name = "Test Floor - 50m x 50m";
-            floor.transform.position = new Vector3(0f, -0.05f, 10f);
-            floor.transform.localScale = new Vector3(5f, 1f, 5f);
+            floor.name = "Test Floor " + settings.FloorSize.x.ToString("0.#") + "m x " + settings.FloorSize.y.ToString("0.#") + "m";
+            floor.transform.position = settings.FloorPosition;
+            floor.transform.localScale = new Vector3(settings.FloorSize.x / 10f, 1f, settings.FloorSize.y / 10f);
             floor.GetComponent<Renderer>().sharedMaterial = ground;
 
-            for (var i = 1; i <= 10; i++)
+            if (settings.MarkerInterval > 0f)
             {
-                var distance = i * 2f;
-                var line = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                line.name = "Distance " + distance + "m";
-                line.transform.position = new Vector3(0f, 0.006f, distance);
-                line.transform.localScale = new Vector3(3f, 0.012f, 0.025f);
-                line.GetComponent<Renderer>().sharedMaterial = marker;
-                UnityEngine.Object.DestroyImmediate(line.GetComponent<Collider>());
-                var label = new GameObject(distance + " m");
-                label.transform.position = new Vector3(1.8f, 0.05f, distance);
-                var text = label.AddComponent<TextMesh>();
-                text.text = distance + " m";
-                text.characterSize = 0.12f;
-                text.fontSize = 48;
-                text.anchor = TextAnchor.MiddleLeft;
-                text.color = Color.white;
+                for (var distance = settings.MarkerInterval; distance <= settings.MarkerMaxDistance + 0.0001f;
+                     distance += settings.MarkerInterval)
+                {
+                    var line = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    line.name = "Distance " + distance.ToString("0.##") + "m";
+                    line.transform.position = new Vector3(settings.MarkerLineX,
+                        settings.FloorPosition.y + settings.MarkerSurfaceOffset, distance);
+                    line.transform.localScale = new Vector3(settings.MarkerLineWidth,
+                        settings.MarkerLineHeight, settings.MarkerLineDepth);
+                    line.GetComponent<Renderer>().sharedMaterial = marker;
+                    UnityEngine.Object.DestroyImmediate(line.GetComponent<Collider>());
+
+                    var label = new GameObject(distance.ToString("0.##") + " m");
+                    label.transform.position = new Vector3(settings.MarkerLineX + settings.MarkerLabelOffset.x,
+                        settings.FloorPosition.y + settings.MarkerLabelOffset.y,
+                        distance + settings.MarkerLabelOffset.z);
+                    var text = label.AddComponent<TextMesh>();
+                    text.text = distance.ToString("0.##") + " m";
+                    text.characterSize = settings.MarkerTextCharacterSize;
+                    text.fontSize = settings.MarkerTextFontSize;
+                    text.anchor = settings.MarkerTextAlignment;
+                    text.color = settings.MarkerTextColor;
+                }
             }
 
-            CreateBlock("Jump step 0.20m", new Vector3(4f, 0.10f, 5f), new Vector3(1.2f, 0.20f, 1.2f), concrete);
-            CreateBlock("Jump step 0.40m", new Vector3(6f, 0.20f, 5f), new Vector3(1.2f, 0.40f, 1.2f), concrete);
-            CreateBlock("Jump step 0.60m", new Vector3(8f, 0.30f, 5f), new Vector3(1.2f, 0.60f, 1.2f), concrete);
-            for (var i = 0; i < 5; i++)
-                CreateBlock("Stair " + (i + 1), new Vector3(-4f, 0.08f + i * 0.16f, 5f + i * 0.48f),
-                    new Vector3(1.5f, 0.16f + i * 0.16f, 0.5f), accent);
+            foreach (var block in settings.Blocks)
+            {
+                var material = ResolveGrayboxMaterial(block.MaterialKind, concrete, accent, marker);
+                CreateBlock(block.ObjectName, block.Position, block.Size, material, block.ColliderEnabled);
+            }
 
-            CreateBlock("Wall 0.80m", new Vector3(-6f, 0.40f, 10f), new Vector3(2.4f, 0.80f, 0.18f), concrete);
-            CreateBlock("Wall 1.00m", new Vector3(-2.5f, 0.50f, 10f), new Vector3(2.4f, 1.00f, 0.18f), concrete);
-            CreateBlock("Wall 1.20m", new Vector3(1f, 0.60f, 10f), new Vector3(2.4f, 1.20f, 0.18f), concrete);
-
-            var ramp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            ramp.name = "Ramp 15 degrees";
-            ramp.transform.position = new Vector3(6f, 0.35f, 11f);
-            ramp.transform.localScale = new Vector3(2.5f, 0.18f, 4f);
-            ramp.transform.rotation = Quaternion.Euler(-15f, 0f, 0f);
-            ramp.GetComponent<Renderer>().sharedMaterial = accent;
-
-            CreateBlock("Platform A", new Vector3(10f, 0.25f, 16f), new Vector3(2f, 0.5f, 2f), concrete);
-            CreateBlock("Platform B", new Vector3(10f, 0.25f, 19.5f), new Vector3(2f, 0.5f, 2f), concrete);
-            CreateBlock("Platform C", new Vector3(10f, 0.25f, 23f), new Vector3(2f, 0.5f, 2f), concrete);
+            foreach (var rampSettings in settings.Ramps)
+            {
+                var ramp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                ramp.name = rampSettings.ObjectName;
+                ramp.transform.position = rampSettings.Position;
+                ramp.transform.localScale = rampSettings.Size;
+                ramp.transform.rotation = Quaternion.Euler(rampSettings.RotationEuler);
+                ramp.GetComponent<Renderer>().sharedMaterial =
+                    ResolveGrayboxMaterial(rampSettings.MaterialKind, concrete, accent, marker);
+                if (!rampSettings.ColliderEnabled)
+                    UnityEngine.Object.DestroyImmediate(ramp.GetComponent<Collider>());
+            }
         }
 
-        private static void CreateBlock(string name, Vector3 position, Vector3 size, Material material)
+        private static Material ResolveGrayboxMaterial(GrayboxMaterialKind kind, Material concrete,
+            Material accent, Material marker)
+        {
+            return kind switch
+            {
+                GrayboxMaterialKind.Accent => accent,
+                GrayboxMaterialKind.Marker => marker,
+                _ => concrete
+            };
+        }
+
+        private static void CreateBlock(string name, Vector3 position, Vector3 size, Material material, bool colliderEnabled)
         {
             var block = GameObject.CreatePrimitive(PrimitiveType.Cube);
             block.name = name;
             block.transform.position = position;
             block.transform.localScale = size;
             block.GetComponent<Renderer>().sharedMaterial = material;
+            if (!colliderEnabled)
+                UnityEngine.Object.DestroyImmediate(block.GetComponent<Collider>());
         }
 
-        private static void CreateLighting()
+        private static void CreateLighting(PlayerGrayboxSettings settings)
         {
             var lightObject = new GameObject("Directional Light");
-            lightObject.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+            lightObject.transform.rotation = Quaternion.Euler(settings.DirectionalLightEuler);
             var light = lightObject.AddComponent<Light>();
             light.type = LightType.Directional;
-            light.intensity = 1.15f;
+            light.intensity = settings.DirectionalLightIntensity;
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.43f, 0.46f, 0.50f);
+            RenderSettings.ambientLight = settings.AmbientColor;
         }
-
         private static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;
