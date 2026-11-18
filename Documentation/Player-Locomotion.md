@@ -4,7 +4,7 @@
 
 Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile presente nella sorgente misura 1,70 m. Entrambe le altezze sono configurabili.
 
-La sorgente Blender ispezionata contiene una mesh statica completa per personaggio, senza scheletro, pesi di deformazione o testa separata. Le sorgenti originali non vengono modificate: rig, pesi e parti derivate devono essere prodotti in prefab separati.
+La versione Blendstra corrente contiene due armature e sei mesh separate per personaggio: corpo, testa, braccia e mani dedicate alla prima e alla terza persona. La sorgente `.blend` nel repository non è stata sostituita automaticamente: l'exporter `Tools/Blender/export-undergrind-humans.py` valida i pesi e produce i due FBX configurati in `PlayerRigSettings.asset`.
 
 ## Configurazione della locomozione
 
@@ -68,7 +68,7 @@ Quando il peso torna uguale o inferiore alla soglia, corsa, salto e velocità no
 - `PlayerInventoryUI`: interfaccia overlay con slot, icone, quantità, selezione e peso. Layout e stile sono configurati in `PlayerInventoryUISettings.asset`.
 - `PlayerInteractionController`: raccolta tramite SphereCast dalla camera e rilascio dello stack selezionato. Distanza, raggio, layer, quantità e impulso sono configurati in `PlayerInteractionSettings.asset`.
 - `WorldItemPickup`: componente di un oggetto nel mondo; conserva l'eventuale quantità non trasferita all'inventario.
-- `PlayerVisualRig`: visibilità dei renderer di testa e arti dedicati alla prima persona.
+- `PlayerVisualRig`: visibilità di testa e corpo in prima persona, arti dedicati alla prima persona e arti dedicati alla terza persona.
 - `PlayerAnimationDriver`: invia lo stato della locomozione all'Animator senza applicare root motion.
 
 ## Rig e visibilità del modello
@@ -89,7 +89,7 @@ Convenzioni dei renderer:
 
 `PlayerVisualRig` applica le convenzioni tramite `PlayerRigSettings`. Le soglie `FirstPersonBodyRevealPitch` e `FirstPersonBodyHidePitch` configurano la rivelazione del corpo con isteresi, evitando cambi continui vicino alla soglia. `RequireSeparateHead` e `RequireFirstPersonArms` rendono obbligatorie le rispettive parti durante la generazione del prefab.
 
-Il generatore della scena usa il prefab maschile riggato quando disponibile; la mesh statica originale resta un fallback visivo e non viene considerata un rig valido.
+Il generatore della scena richiede entrambi i prefab riggati, ciascuno con Animator, Avatar Humanoid valido, SkinnedMeshRenderer e gruppi renderer richiesti. Se i prefab mancano, avvia il builder configurato; se non riesce a generarli, interrompe la creazione della scena. Non crea prefab statici di ripiego.
 
 ## Animazioni
 
