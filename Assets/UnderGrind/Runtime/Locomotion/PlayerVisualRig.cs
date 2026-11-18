@@ -77,6 +77,7 @@ namespace UnderGrind.Locomotion
             }
 
             if (configuration.RequireSeparateHead && heads.Count == 0) return false;
+            if (!string.IsNullOrWhiteSpace(configuration.BodyRendererToken) && bodies.Count == 0) return false;
             if (configuration.RequireFirstPersonArms && firstPersonOnly.Count == 0) return false;
             if (configuration.RequireThirdPersonArms && thirdPersonOnly.Count == 0) return false;
 
