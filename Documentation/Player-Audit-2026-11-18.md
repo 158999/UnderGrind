@@ -24,7 +24,7 @@ I conteggi si riferiscono al tree di base prima dell'aggiunta del nucleo Agent M
 | Modello umanoide | Derivati testa/corpo e armature con nomi corretti in Blendstra | Pesi, ossa, Avatar Humanoid, materiali e deformazioni non validati |
 | Scena di test | Scena presente e inserita nelle Build Settings | Non rigenerata con prefab riggati; non dimostra la pipeline definitiva |
 | Agent Manager | Nucleo .NET/SQLite aggiunto in questo ciclo | Nessun worker MCP/Unity, autenticazione o scheduler autonomo |
-| CI | Workflow standalone diagnostics attivo | Non esegue Unity Editor né test EditMode/PlayMode |
+| CI | Workflow standalone diagnostics e build Agent Manager | Non esegue Unity Editor né test EditMode/PlayMode |
 
 ## Verifica dei test versionati
 
