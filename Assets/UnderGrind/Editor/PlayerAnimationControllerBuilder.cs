@@ -88,27 +88,54 @@ namespace UnderGrind.Editor
 
         private static void PrepareAnimationImports(PlayerAnimationSettings settings)
         {
+            if (!settings.ConfigureFbxImports) return;
+
             var guids = AssetDatabase.FindAssets("t:Model", new[] { AnimationFolder });
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)) continue;
                 var importer = AssetImporter.GetAtPath(path) as ModelImporter;
                 if (importer == null) continue;
 
                 var changed = false;
-                if (importer.animationType != ModelImporterAnimationType.Human)
+                var animationType = settings.FbxRigType == PlayerAnimationRigType.Humanoid
+                    ? ModelImporterAnimationType.Human : ModelImporterAnimationType.Generic;
+                var avatarSetup = settings.CreateAvatarFromFbx
+                    ? ModelImporterAvatarSetup.CreateFromThisModel : ModelImporterAvatarSetup.NoAvatar;
+                if (importer.animationType != animationType)
                 {
-                    importer.animationType = ModelImporterAnimationType.Human;
+                    importer.animationType = animationType;
                     changed = true;
                 }
-                if (importer.avatarSetup == ModelImporterAvatarSetup.NoAvatar)
+                if (importer.avatarSetup != avatarSetup)
                 {
-                    importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                    importer.avatarSetup = avatarSetup;
                     changed = true;
                 }
-                if (!importer.importAnimation)
+                if (importer.importAnimation != settings.ImportAnimationClips)
                 {
-                    importer.importAnimation = true;
+                    importer.importAnimation = settings.ImportAnimationClips;
+                    changed = true;
+                }
+                if (importer.importMaterials != settings.ImportMaterials)
+                {
+                    importer.importMaterials = settings.ImportMaterials;
+                    changed = true;
+                }
+                if (importer.importCameras != settings.ImportCameras)
+                {
+                    importer.importCameras = settings.ImportCameras;
+                    changed = true;
+                }
+                if (importer.importLights != settings.ImportLights)
+                {
+                    importer.importLights = settings.ImportLights;
+                    changed = true;
+                }
+                if (importer.optimizeGameObjects != settings.OptimizeFbxGameObjects)
+                {
+                    importer.optimizeGameObjects = settings.OptimizeFbxGameObjects;
                     changed = true;
                 }
 
@@ -139,19 +166,15 @@ namespace UnderGrind.Editor
 
                 if (changed) importer.SaveAndReimport();
 
-                var assets = AssetDatabase.LoadAllAssetsAtPath(path);
-                var hasValidAvatar = false;
-                foreach (var asset in assets)
-                    if (asset is Avatar avatar && avatar.isHuman && avatar.isValid)
-                    {
-                        hasValidAvatar = true;
-                        break;
-                    }
-                if (!hasValidAvatar)
-                    Debug.LogWarning("UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
+                if (settings.FbxRigType == PlayerAnimationRigType.Humanoid && settings.CreateAvatarFromFbx)
+                {
+                    var assets = AssetDatabase.LoadAllAssetsAtPath(path);
+                    var hasValidAvatar = assets.OfType<Avatar>().Any(avatar => avatar != null && avatar.isHuman && avatar.isValid);
+                    if (!hasValidAvatar)
+                        Debug.LogWarning("UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
+                }
             }
         }
-
         private static bool? GetLoopMode(string assetName, PlayerAnimationSettings settings)
         {
             if (assetName.Contains("standingidle")) return settings.IdleLoops;
