@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: PlayerLocomotionSettings
   m_EditorClassIdentifier:
   characterHeight: 1.78
-  walkSpeed: 1.4
+  walkSpeed: 1.8
   runMultiplier: 1.3333334
   jumpHeight: 0.4
   gravity: 9.81
   acceleration: 12
   deceleration: 16
-  airControl: 0.35
+  airControl: 0.65
   coyoteTime: 0.1
   jumpBufferTime: 0.12
   groundedStickVelocity: 2
