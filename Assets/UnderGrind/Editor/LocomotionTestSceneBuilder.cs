@@ -6,6 +6,7 @@ using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnderGrind.Locomotion;
+using UnderGrind.Inventory;
 
 namespace UnderGrind.Editor
 {
@@ -95,6 +96,11 @@ namespace UnderGrind.Editor
             camera.fieldOfView = 75f;
             camera.nearClipPlane = 0.04f;
             cameraObject.AddComponent<AudioListener>();
+
+            var inventory = player.AddComponent<PlayerInventory>();
+            var inventorySettings = AssetDatabase.LoadAssetAtPath<InventorySettings>(
+                "Assets/UnderGrind/Settings/PlayerInventorySettings.asset");
+            if (inventorySettings != null) inventory.Configure(inventorySettings);
 
             var movement = player.AddComponent<HumanLocomotionController>();
             movement.ConfigureViewRig(pivot, camera);
