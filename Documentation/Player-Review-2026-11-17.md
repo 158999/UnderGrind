@@ -77,7 +77,7 @@ Il generatore della scena di test esclude le clip di accovacciamento dalla selez
 ### Rig e animazioni
 
 - `PlayerVisualRig` supporta associazioni esplicite e convenzioni di nome per testa e parti dedicate alla prima persona.
-- `PlayerAnimationDriver` controlla i parametri effettivamente presenti nell'Animator e disabilita il root motion.
+- `PlayerAnimationDriver` controlla i parametri effettivamente presenti nell'Animator e disabilita il root motion. `PlayerAnimationSettings` configura anche il loop separato per ciascuna delle otto clip; il generatore applica queste opzioni ai rispettivi import FBX.
 - `PlayerAnimationControllerBuilder` genera il controller a partire dalle clip importate e da `PlayerAnimationSettings.asset`. Otto movimenti PINOC sono stati aggiunti alla libreria personale; i relativi export `mixamo-fbx` sono disponibili ma non sono ancora stati importati nel repository né retargettati sul rig UnderGrind.
 - `HumanoidRigPrefabBuilder` configura l'importazione Humanoid e genera prefab da un FBX con entrambe le radici scheletriche.
 - La scena di test preferisce il prefab maschile riggato quando disponibile; la mesh statica resta soltanto un fallback visivo.
