@@ -33,7 +33,7 @@ L'ispezione della sorgente registra quattro mesh derivate distinte:
 
 Le mesh originali restano nel progetto sorgente importato. Il risultato include copie delle armature e mantiene i riferimenti ai componenti sorgente. L'ispezione registra ancora controlli non supportati per configurazione dei modificatori e coordinate UV valutate; il GLB esportato dichiara zero animazioni e non contiene materiali assegnati. La separazione della testa è quindi stata eseguita geometricamente, ma non è una prova di correttezza dei pesi, della deformazione o della topologia dei bordi.
 
-Nella prima esportazione le copie delle armature hanno ricevuto il suffisso automatico `.001`, mentre il builder Unity richiede i nomi esatti `UG_Male_Armature` e `UG_Female_Armature`. È stata avviata una revisione Blendstra per rinominare le armature sorgente importate e assegnare alle copie i nomi attesi; la revisione non è ancora terminata. Il modello non è stato importato nel repository e non è accettato come prefab Humanoid di produzione.
+Nella prima esportazione le copie delle armature avevano ricevuto il suffisso automatico `.001`. La revisione Blendstra successiva è terminata: l'ispezione della versione `version_761640485ef91a3c2d77dde4cba3ea1412e032e2aa753f08c99379afff77828b` conferma i nomi esatti `UG_Male_Armature` e `UG_Female_Armature`, senza suffisso. Sono inoltre presenti le quattro mesh separate per testa e corpo. L'ispezione registra 13 oggetti, nessun materiale assegnato e zero canali di animazione. Restano non supportati i controlli su preservazione completa della sorgente, configurazione dei modificatori, animazioni, adattamento tecnico e permessi delle dipendenze. I nomi richiesti dal builder sono quindi corretti, ma non è ancora dimostrato un rig deformabile né un Avatar Humanoid valido. Il modello non è stato importato nel repository e non è accettato come prefab Humanoid di produzione.
 
 La revisione precedente `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` aveva eseguito una separazione per sole isole geometriche disconnesse. Il risultato conteneva una sola mesh per personaggio: ciascun corpo era un'unica isola connessa e la testa non poteva essere separata con quell'operazione topologica. La successiva separazione per regione pesata descritta sopra è un'operazione distinta.
 
@@ -51,7 +51,7 @@ Il generatore legge `PlayerRigSettings.asset` e `PlayerLocomotionSettings.asset`
 
 La configurazione iniziale richiede un renderer separato per la testa tramite la convenzione `*_Head`. Se la testa non è separata, il generatore rifiuta il prefab invece di applicare una divisione geometrica automatica non verificata. I renderer `*_FP_Arms` e `*_FP_Hands` sono opzionali nella configurazione attuale; se non esistono, il corpo riggato resta visibile in prima persona.
 
-La scena di test preferisce i prefab riggati configurati. Se il prefab maschile non esiste, può usare la mesh statica maschile originale come riferimento visivo; in quel caso il personaggio si muove ma non dispone di un rig animabile.
+La scena `Assets/UnderGrind/Scenes/LocomotionTest.unity` è presente e registrata nelle Build Settings. Il builder preferisce i prefab riggati configurati. Se il prefab maschile non esiste, può usare la mesh statica maschile originale come riferimento visivo; in quel caso il personaggio si muove ma non dispone di un rig animabile. Non è stata rigenerata dopo la revisione Blendstra, perché il modello non è ancora importato e non è stato validato in Unity.
 
 ## Sorgenti delle animazioni
 
@@ -84,7 +84,7 @@ X Bot è un modello di supporto per il retargeting e non deve sostituire il corp
 
 Per il rig Humanoid UnderGrind va usato l'export `mixamo-fbx` di ciascun asset: contiene X Bot e lo scheletro Mixamo ed è il formato previsto per il retargeting. Il formato predefinito restituito da `take_library_motions` è invece un GLB con solo lo scheletro MetaHuman a 441 ossa, senza mesh; è destinato al workflow Splat e non va assegnato direttamente al controller Humanoid.
 
-I file FBX non sono ancora importati nel repository né trasferiti sul rig definitivo. Il builder Unity li riconosce se importati in `Assets/UnderGrind/Animations`. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
+Gli otto asset PINOC sono stati recuperati nuovamente e risultano disponibili nei formati `mixamo-fbx` e `mixamo-glb`; i link di download sono temporanei. I file FBX non sono ancora importati nel repository né trasferiti sul rig definitivo. Il builder Unity li riconosce se importati in `Assets/UnderGrind/Animations`. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
 
 Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti e genera il controller usando `PlayerAnimationSettings.asset`. Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono richieste; Fall e Land sono opzionali.
 
