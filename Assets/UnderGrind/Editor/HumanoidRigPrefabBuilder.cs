@@ -42,6 +42,25 @@ namespace UnderGrind.Editor
                 return;
             }
 
+            var prefabPaths = new[]
+            {
+                OutputFolder + "/" + rigSettings.MalePrefabName + ".prefab",
+                OutputFolder + "/" + rigSettings.FemalePrefabName + ".prefab"
+            };
+            var existingPrefabPaths = prefabPaths
+                .Where(prefabPath => AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
+                .ToArray();
+            var overwriteDetails = existingPrefabPaths.Length > 0
+                ? "\\n\\nPrefab esistenti da sostituire:\\n- " + string.Join("\\n- ", existingPrefabPaths)
+                : "\\n\\nNon esistono ancora prefab di destinazione.";
+
+            if (!EditorUtility.DisplayDialog(
+                "Configurare il FBX e generare i prefab?",
+                "Le impostazioni di importazione del FBX selezionato verranno impostate su Humanoid e Avatar From This Model. " +
+                "La generazione può sostituire i prefab già presenti." + overwriteDetails,
+                "Continua", "Annulla"))
+                return;
+
             importer.animationType = ModelImporterAnimationType.Human;
             importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
             importer.importAnimation = rigSettings.ImportAnimation;
