@@ -58,15 +58,36 @@ namespace UnderGrind.Tests
                 HumanBodyBones.RightFoot
             };
 
-            foreach (var bone in requiredBones)
-                Assert.That(avatar.GetBoneTransform(bone), Is.Not.Null,
-                    "Mapping Humanoid mancante per " + bone + " nel rig " + label);
-
             var armatureName = assetPath == MaleFbxPath
                 ? _settings.MaleArmatureRootName
                 : _settings.FemaleArmatureRootName;
             var armature = FindDeepChild(model.transform, armatureName);
             Assert.That(armature, Is.Not.Null, "Armature root '" + armatureName + "' mancante nel rig " + label);
+
+            var avatarInstance = UnityEngine.Object.Instantiate(model);
+            try
+            {
+                var animator = avatarInstance.GetComponent<Animator>();
+                if (animator == null) animator = avatarInstance.AddComponent<Animator>();
+                animator.avatar = avatar;
+
+                var instanceArmature = FindDeepChild(avatarInstance.transform, armatureName);
+                Assert.That(instanceArmature, Is.Not.Null,
+                    "Armature root '" + armatureName + "' mancante nell'istanza " + label);
+
+                foreach (var bone in requiredBones)
+                {
+                    var mappedBone = animator.GetBoneTransform(bone);
+                    Assert.That(mappedBone, Is.Not.Null,
+                        "Mapping Humanoid mancante per " + bone + " nel rig " + label);
+                    Assert.That(mappedBone == instanceArmature || mappedBone.IsChildOf(instanceArmature), Is.True,
+                        "Il mapping Humanoid di " + bone + " non appartiene all'armatura configurata.");
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(avatarInstance);
+            }
 
             var renderers = model.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             Assert.That(renderers, Has.Length.EqualTo(6),
