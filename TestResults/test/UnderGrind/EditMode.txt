@@ -1,9 +1,9 @@
 UnderGrind EditMode test results
-Completed: 2026-11-20 12:22:08
-Passed: 38
-Failed: 0
+Completed: 2026-11-20 12:33:28
+Passed: 34
+Failed: 4
 Skipped: 0
 Inconclusive: 0
 Total: 38
-Result: Passed
+Result: Failed(Child)
 XML: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\UnderGrind\EditMode.xml
