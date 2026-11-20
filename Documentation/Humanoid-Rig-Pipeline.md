@@ -106,6 +106,8 @@ Per il rig Humanoid UnderGrind va usato l'export `mixamo-fbx` di ciascun asset: 
 
 Gli otto asset PINOC sono stati recuperati nuovamente e risultano disponibili nei formati `mixamo-fbx` e `mixamo-glb`; i link di download sono temporanei. I file FBX non sono ancora importati nel repository né trasferiti sul rig definitivo. Il builder Unity li riconosce se importati in `Assets/UnderGrind/Animations`. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
 
+Prima di includere gli export nel gioco distribuito, verificare il piano e i diritti applicabili a ciascun asset PINOC. I termini ufficiali limitano il piano Free all'uso non commerciale, personale, di valutazione e prototipazione; i piani Starter e Pro indicano l'uso commerciale. La disponibilità di un clip nella libreria non sostituisce la verifica dei diritti sul singolo contenuto. Riferimenti: [PINOC pricing](https://viggle.ai/pinoc/pricing/) e [Viggle Terms of Use](https://viggle.ai/terms-of-use/).
+
 Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti e genera il controller usando `PlayerAnimationSettings.asset`. Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono richieste; Fall e Land sono opzionali.
 
 ## Criteri di completamento
