@@ -25,6 +25,10 @@ Lo script che ha generato questa versione crea una gerarchia di 22 ossa per pers
 
 `Tools/Blender/export-undergrind-humans.py` esegue i controlli direttamente in Blender prima dell'esportazione: ossa Humanoid richieste, sei mesh, parent corretti, modificatore Armature, gruppi di pesi collegati alle ossa deformanti e almeno un peso deformante valido per ogni vertice. Valida entrambi i personaggi prima di esportare e produce due FBX separati. I percorsi provengono da `PlayerRigSettings.asset` o, se l'asset non esiste ancora, dal template JSON.
 
+Il controllo delle ossa verifica anche la catena degli antenati Humanoid (ad esempio `RightHand` discendente da `RightLowerArm`) e registra nel report `boneHierarchy` nome, parent, flag deform e coordinate locali head/tail di ogni osso. Il conteggio totale delle ossa non è sufficiente a dimostrare che Unity possa risolvere il mapping.
+
+
+
 La sorgente nativa della versione Blendstra è stata scaricata e versionata in `Assets/UnderGrind/Art/Source/humans.blend`. Il file corrisponde alla sorgente riggata verificata (SHA-256 `e74b80b77a8b7a9cfe607d2106de6a35bb65117548c91d587e6a77df0310e981`).
 
 Le versioni `version_9333bec316691d50b66236e6ed6e172d9dbb5921f28563f3d3ae9b2b96ff0591`, `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` e il progetto separato `UnderGrind — Rigged Human Derivatives` sono iterazioni precedenti. La versione corrente con le 16 parti è la sorgente da esportare.
@@ -78,6 +82,18 @@ Se il mapping delle ossa è presente ma Unity mostra `Character is not in T pose
 Unity salva queste correzioni nella `HumanDescription` del `ModelImporter`. `HumanoidAvatarImporter.EnsureValidAvatar` conserva ora una descrizione manuale quando produce un Avatar valido; elimina il mapping manuale soltanto se l'Avatar risultante è invalido, quindi riprova con il mapping automatico gerarchico. In questo modo l'inizializzazione dei test non annulla più una correzione T-pose valida.
 
 Il test `EnsureValidAvatarPreservesValidManualPoseCorrections` verifica che una descrizione valida con mapping e posa non venga cancellata. Non sostituisce il controllo visivo della posa, delle deformazioni e del retargeting.
+
+### Diagnostica dell'ultima importazione Unity — 20 novembre 2026
+
+La run `20261120-132802-174` ha eseguito 39 test EditMode: 34 superati e 5 falliti; PlayMode 13/13 e Diagnostics standalone 6/6 superati. I cinque fallimenti si verificano nel `SetUp` di `HumanoidRigImportTests`, quando Unity non genera l'Avatar maschile. Il log ripete `Required human bone 'RightHand' not found`. Non sono presenti diagnostiche di compilazione C#; il codice di uscita 2 indica test EditMode falliti, non un errore del compilatore.
+
+`HumanoidAvatarImporter` registra ora, in caso di Avatar invalido, tutti i percorsi Transform importati, il mapping Humanoid e lo skeleton esposti dal ModelImporter. Questo permette di distinguere un osso assente nell'FBX da un problema di mapping o gerarchia, senza dedurre il nome del transform dal solo conteggio delle ossa.
+
+Il report Blender precedente registra 22 ossa ma non ne elenca i nomi né i parent; inoltre il suo schema non include i nuovi campi UV/materiali prodotti dallo script attuale. Non è quindi prova sufficiente che il report provenga dall'ultima versione dell'esportatore. Eseguire nuovamente lo script Blender aggiornato e verificare il nuovo `boneHierarchy` prima di esportare i FBX.
+
+Il log Unity segnala inoltre che un poligono di `Human_Male_Body` è auto-intersecante ed è stato scartato durante l'importazione. Il warning va risolto nella mesh sorgente e verificato dopo una nuova esportazione; la validità dell'Avatar e la validità della mesh sono controlli distinti.
+
+
 
 Questi test verificano gli asset importati, non soltanto GameObject costruiti artificialmente. Devono essere eseguiti nel Unity Editor tramite Test Runner (EditMode). La workflow GitHub Actions attuale esegue i test standalone Diagnostics e non esegue i test Unity. Finché la nuova suite non viene eseguita in Unity, la validità degli Avatar e il binding dei renderer restano non verificati.
 
