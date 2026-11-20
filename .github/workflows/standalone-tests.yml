@@ -29,6 +29,13 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+      - name: Setup Python for Blender script syntax checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Blender Python tooling syntax
+        shell: pwsh
+        run: python -m py_compile ./Tools/Blender/export-undergrind-humans.py
 
       - name: Validate PowerShell test scripts
         shell: pwsh
