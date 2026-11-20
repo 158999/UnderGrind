@@ -33,8 +33,22 @@ namespace UnderGrind.Tests
             Assert.That(importer, Is.Not.Null, "ModelImporter non disponibile per " + assetPath);
             Assert.That(importer.animationType, Is.EqualTo(ModelImporterAnimationType.Human));
             Assert.That(importer.avatarSetup, Is.EqualTo(ModelImporterAvatarSetup.CreateFromThisModel));
-            Assert.That(importer.optimizeGameObjects, Is.False,
-                "L'ottimizzazione deve restare disattivata finché il binding dei renderer non è verificato.");
+            Assert.That(importer.optimizeGameObjects, Is.EqualTo(_settings.OptimizeGameObjects),
+                "L'ottimizzazione deve rispettare PlayerRigSettings.");
+            Assert.That(importer.importAnimation, Is.EqualTo(_settings.ImportAnimation),
+                "L'importazione delle animazioni deve rispettare PlayerRigSettings.");
+            Assert.That(importer.importCameras, Is.EqualTo(_settings.ImportCameras),
+                "L'importazione delle camere deve rispettare PlayerRigSettings.");
+            Assert.That(importer.importLights, Is.EqualTo(_settings.ImportLights),
+                "L'importazione delle luci deve rispettare PlayerRigSettings.");
+            Assert.That(importer.importVisibility, Is.EqualTo(_settings.ImportVisibility),
+                "L'importazione della visibilità deve rispettare PlayerRigSettings.");
+
+            var expectedMaterialMode = _settings.ImportMaterials
+                ? ModelImporterMaterialImportMode.ImportStandard
+                : ModelImporterMaterialImportMode.None;
+            Assert.That(importer.materialImportMode, Is.EqualTo(expectedMaterialMode),
+                "L'importazione dei materiali deve rispettare PlayerRigSettings.");
 
             var avatar = AssetDatabase.LoadAllAssetsAtPath(assetPath)
                 .OfType<Avatar>()
