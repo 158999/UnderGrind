@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261120-112221-901",
-    "startedUtc":  "2026-11-20T10:22:21.9016728Z",
-    "finishedUtc":  "2026-11-20T10:22:53.7288367Z",
+    "runId":  "20261120-113544-306",
+    "startedUtc":  "2026-11-20T10:35:44.3062297Z",
+    "finishedUtc":  "2026-11-20T10:36:16.6773524Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
@@ -33,13 +33,13 @@
                           "failures":  [
                                            {
                                                "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
-                                               "message":  "L\u0027importazione dei materiali deve rispettare PlayerRigSettings.\n  Expected: LegacyImport\n  But was:  ImportViaMaterialDescription",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0016e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:50"
+                                               "message":  "Unity non ha generato un Avatar Humanoid valido per maschile\n  Expected: not null\n  But was:  null",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x001bd] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:56"
                                            },
                                            {
                                                "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx\",\"femminile\")",
-                                               "message":  "L\u0027importazione dei materiali deve rispettare PlayerRigSettings.\n  Expected: LegacyImport\n  But was:  ImportViaMaterialDescription",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0016e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:50"
+                                               "message":  "Unity non ha generato un Avatar Humanoid valido per femminile\n  Expected: not null\n  But was:  null",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x001bd] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:56"
                                            },
                                            {
                                                "test":  "UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars",
