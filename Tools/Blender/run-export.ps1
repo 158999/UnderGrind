@@ -117,11 +117,13 @@ $startInfo.RedirectStandardOutput = $true
 $startInfo.RedirectStandardError = $true
 
 $process = [System.Diagnostics.Process]::new()
+$processStarted = $false
 try {
     $process.StartInfo = $startInfo
     if (-not $process.Start()) {
         throw "Impossibile avviare Blender."
     }
+    $processStarted = $true
 
     $stdoutTask = $process.StandardOutput.ReadToEndAsync()
     $stderrTask = $process.StandardError.ReadToEndAsync()
@@ -148,7 +150,7 @@ try {
     }
 }
 finally {
-    if (-not $process.HasExited) {
+    if ($processStarted -and -not $process.HasExited) {
         Stop-ProcessTree -Process $process
     }
     $process.Dispose()
