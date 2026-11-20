@@ -52,6 +52,11 @@ namespace UnderGrind.Locomotion
             ResolveAnimator();
             if (animator == null) return;
             if (animator.applyRootMotion) animator.applyRootMotion = false;
+            if (animator.runtimeAnimatorController == null)
+            {
+                ClearParameters();
+                return;
+            }
             if (animator.runtimeAnimatorController != _cachedController ||
                 animator.parameters.Length != _parameterCount) RefreshParameters();
             if (settings == null) return;
@@ -79,8 +84,14 @@ namespace UnderGrind.Locomotion
                 settings.AnimatorController != null &&
                 animator.runtimeAnimatorController != settings.AnimatorController)
                 ApplyConfiguredController();
-            if (animator != null && (animator.runtimeAnimatorController != _cachedController ||
-                animator.parameters.Length != _parameterCount))
+            if (animator == null) return;
+            if (animator.runtimeAnimatorController == null)
+            {
+                ClearParameters();
+                return;
+            }
+            if (animator.runtimeAnimatorController != _cachedController ||
+                animator.parameters.Length != _parameterCount)
                 RefreshParameters();
         }
 
@@ -103,11 +114,24 @@ namespace UnderGrind.Locomotion
                 return;
             }
 
+            if (animator.runtimeAnimatorController == null)
+            {
+                ClearParameters();
+                return;
+            }
+
             var parameters = animator.parameters;
             _cachedController = animator.runtimeAnimatorController;
             _parameterCount = parameters.Length;
             foreach (var parameter in parameters)
                 _availableParameters[parameter.nameHash] = parameter.type;
+        }
+
+        private void ClearParameters()
+        {
+            _availableParameters.Clear();
+            _cachedController = null;
+            _parameterCount = 0;
         }
 
         private void SetFloat(string parameterName, float value)
