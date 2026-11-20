@@ -35,6 +35,12 @@ Le versioni `version_9333bec316691d50b66236e6ed6e172d9dbb5921f28563f3d3ae9b2b96f
 
 La sorgente corrente non contiene canali di animazione. Le clip locomotion vengono importate separatamente da PINOC. L'export FBX è stato eseguito e i due file sono versionati: `Human_Male_Rigged.fbx` (209.468 byte) e `Human_Female_Rigged.fbx` (212.300 byte). Il report `Tools/Blender/last-export-report.json` registra per entrambi 22 ossa e sei mesh non vuote (Body, Head, TP Arms/Hands, FP Arms/Hands). Questa verifica certifica l'export Blender, non l'importazione Unity o la qualità visiva delle deformazioni.
 
+## Orientamento del modello
+
+L'ispezione del modello sorgente nella vista frontale del viewer mostra il personaggio di profilo: il suo asse frontale è `-X`, mentre il controller Player usa `+Z` come forward. Questa differenza spiega la silhouette stretta osservata quando il prefab viene guardato lungo il forward del Player: Avatar, ossa e renderer possono essere presenti e validi, ma il modello è rivolto di 90° rispetto alla camera.
+
+`PlayerRigSettings.asset` espone `ModelYawOffset` (intervallo da -180° a +180°). Il valore predefinito è `90°`: il builder applica questa rotazione al root del modello prima del calcolo dei bounds e del salvataggio del prefab, portando il forward sorgente `-X` verso il forward Player `+Z`. Il valore è configurabile nell'Inspector e può essere regolato se cambia l'orientamento delle sorgenti Blender.
+
 ## Importazione in Unity e generazione dei prefab
 
 Il rig Blender contiene entrambi i personaggi, ma Unity importa e genera un prefab separato per ciascuno. I due FBX devono quindi essere esportati separatamente e collocati nei percorsi configurati in `PlayerRigSettings.asset`:
