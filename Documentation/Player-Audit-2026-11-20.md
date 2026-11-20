@@ -143,6 +143,19 @@ La precedente run valida per Unity, `20261120-123305-368`, aveva 34/38 EditMode 
 La GitHub Action `44734606590` sul commit `875862b75c75048cb936306febd1daa8e195e18b` è conclusa con successo, ma esegue soltanto i test standalone e la validazione sintattica degli strumenti. Non verifica la compilazione Unity, la configurazione T-pose o i test EditMode/PlayMode.
 
 
+## Diagnosi e correzione del mapping Humanoid — 20 novembre 2026
+
+Il report locale `20261120-134632-927` ha eseguito 52 test Unity: 47 superati e 5 falliti. EditMode: 34/39; PlayMode: 13/13. Diagnostics standalone: 6/6. Non sono presenti errori di compilazione. I cinque fallimenti avvengono nel setup di `HumanoidRigImportTests` perché l'Avatar maschile non è valido.
+
+La diagnostica del ModelImporter mostra la causa specifica: il Transform `RightHand` esiste nella gerarchia importata, ma il mapping automatico serializzato assegna `RightLowerArm -> RightHand` e non assegna il bone Humanoid `RightHand`. La gerarchia del FBX è quindi presente; l'errore è nel mapping Humanoid generato da Unity.
+
+Correzione applicata su `main`:
+- `HumanoidAvatarImporter` ricostruisce, quando l'Avatar automatico è invalido, la tabella `HumanBone` usando associazioni esatte tra nome Humanoid e Transform omonimo, preservando lo skeleton e la posa esistenti.
+- I test di importazione controllano ora anche `LeftHand` e `RightHand` tramite `Animator.GetBoneTransform`.
+- La pipeline è documentata in `Humanoid-Rig-Pipeline.md`.
+
+Commit: `5eae01e` (fix), `30f28ed` (assert mani), `e444207` (documentazione). La correzione è stata committata ma non è ancora stata eseguita nella suite Unity locale: non dichiarare l'Avatar risolto finché il nuovo `TESTA.bat` non produce EditMode e PlayMode senza fallimenti. La GitHub Action sul commit documentale è in coda e verifica soltanto Diagnostics standalone.
+
 ## Follow-up dopo il push `fail` — 20 novembre 2026
 
 Run Unity locale `20261120-132751-816` / Unity `20261120-132802-174`:
