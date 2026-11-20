@@ -70,9 +70,9 @@ namespace UnderGrind.Editor
                 "Continua", "Annulla"))
                 return;
 
-            if (!TryPrepareSource(malePath, rigSettings, out var maleSource, out var maleAvatar))
+            if (!TryPrepareSource(malePath, rigSettings, rigSettings.MaleArmatureRootName, out var maleSource, out var maleAvatar))
                 return;
-            if (!TryPrepareSource(femalePath, rigSettings, out var femaleSource, out var femaleAvatar))
+            if (!TryPrepareSource(femalePath, rigSettings, rigSettings.FemaleArmatureRootName, out var femaleSource, out var femaleAvatar))
                 return;
 
             if (maleAvatar == femaleAvatar)
@@ -119,7 +119,7 @@ namespace UnderGrind.Editor
                 "OK");
         }
 
-        private static bool TryPrepareSource(string path, PlayerRigSettings settings,
+        private static bool TryPrepareSource(string path, PlayerRigSettings settings, string armatureRootName,
             out GameObject source, out Avatar avatar)
         {
             source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
@@ -179,6 +179,13 @@ namespace UnderGrind.Editor
                 changed = true;
             }
             if (changed) importer.SaveAndReimport();
+
+            if (!HumanoidAvatarImporter.EnsureValidAvatar(path, armatureRootName))
+            {
+                source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                avatar = null;
+                return false;
+            }
 
             source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             avatar = AssetDatabase.LoadAllAssetsAtPath(path).OfType<Avatar>()

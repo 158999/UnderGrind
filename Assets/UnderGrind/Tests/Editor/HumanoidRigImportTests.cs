@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnderGrind.Locomotion;
+using UnderGrind.Editor;
 
 namespace UnderGrind.Tests
 {
@@ -20,6 +21,10 @@ namespace UnderGrind.Tests
         {
             _settings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(SettingsPath);
             Assert.That(_settings, Is.Not.Null, "PlayerRigSettings deve essere presente nel progetto.");
+            Assert.That(HumanoidAvatarImporter.EnsureValidAvatar(MaleFbxPath, _settings.MaleArmatureRootName), Is.True,
+                "Impossibile generare l'Avatar Humanoid maschile.");
+            Assert.That(HumanoidAvatarImporter.EnsureValidAvatar(FemaleFbxPath, _settings.FemaleArmatureRootName), Is.True,
+                "Impossibile generare l'Avatar Humanoid femminile.");
         }
 
         [TestCase(MaleFbxPath, "maschile")]
