@@ -40,6 +40,63 @@ REQUIRED_HUMANOID_BONES = {
     "RightUpperLeg", "RightLowerLeg", "RightFoot",
 }
 
+REQUIRED_HUMANOID_ANCESTORS = {
+    "Spine": "Hips",
+    "Chest": "Spine",
+    "Neck": "Chest",
+    "Head": "Neck",
+    "LeftShoulder": "Chest",
+    "LeftUpperArm": "LeftShoulder",
+    "LeftLowerArm": "LeftUpperArm",
+    "LeftHand": "LeftLowerArm",
+    "RightShoulder": "Chest",
+    "RightUpperArm": "RightShoulder",
+    "RightLowerArm": "RightUpperArm",
+    "RightHand": "RightLowerArm",
+    "LeftUpperLeg": "Hips",
+    "LeftLowerLeg": "LeftUpperLeg",
+    "LeftFoot": "LeftLowerLeg",
+    "RightUpperLeg": "Hips",
+    "RightLowerLeg": "RightUpperLeg",
+    "RightFoot": "RightLowerLeg",
+}
+
+
+def inspect_armature_hierarchy(armature, character_name):
+    bones = {bone.name: bone for bone in armature.data.bones}
+    problems = []
+
+    for bone_name, expected_ancestor_name in REQUIRED_HUMANOID_ANCESTORS.items():
+        bone = bones.get(bone_name)
+        if bone is None:
+            continue
+
+        ancestor = bone.parent
+        while ancestor is not None and ancestor.name != expected_ancestor_name:
+            ancestor = ancestor.parent
+
+        if ancestor is None:
+            problems.append(
+                character_name + ": " + bone_name +
+                " deve discendere da " + expected_ancestor_name +
+                "; parent attuale: " +
+                (bone.parent.name if bone.parent else "<root>")
+            )
+
+    if problems:
+        raise RuntimeError("Gerarchia Humanoid non valida:\\n" + "\\n".join(problems))
+
+    return [
+        {
+            "name": bone.name,
+            "parent": bone.parent.name if bone.parent else None,
+            "useDeform": bone.use_deform,
+            "head": [round(float(value), 6) for value in bone.head_local],
+            "tail": [round(float(value), 6) for value in bone.tail_local],
+        }
+        for bone in armature.data.bones
+    ]
+
 
 def find_repository_root():
     blend_path = bpy.data.filepath
@@ -138,6 +195,8 @@ def validate_character(character_name, config):
         raise RuntimeError(
             character_name + ": ossa Humanoid mancanti: " + ", ".join(missing_bones)
         )
+
+    bone_hierarchy = inspect_armature_hierarchy(armature, character_name)
 
     parts = []
     for part_name in config["required_parts"]:
@@ -261,6 +320,7 @@ def export_character(character_name, armature, parts, destination):
         "file": str(destination),
         "bytes": destination.stat().st_size,
         "bones": len(armature.data.bones),
+        "boneHierarchy": inspect_armature_hierarchy(armature, character_name),
         "sourceRootTranslation": original_root_translation,
         "exportRootTranslation": [0.0, 0.0, 0.0],
         "parts": [
