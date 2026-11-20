@@ -28,7 +28,7 @@ namespace UnderGrind.Editor
 
             PrepareAnimationImports(settings);
             RefreshClipReferences(settings);
-            var missing = GetMissingRequiredClips(settings);
+            var missing = settings.GetMissingRequiredClipNames();
             if (missing.Count > 0)
             {
                 var message = "Impossibile costruire l'Animator Controller. Mancano queste clip:\n- " +
@@ -233,20 +233,6 @@ namespace UnderGrind.Editor
                 property.objectReferenceValue = match.Clip;
                 return;
             }
-        }
-
-        private static List<string> GetMissingRequiredClips(PlayerAnimationSettings settings)
-        {
-            var missing = new List<string>();
-            if (settings.IdleClip == null) missing.Add("Idle / Standing Idle");
-            if (settings.WalkClip == null) missing.Add("Walk / Walking");
-            if (settings.RunClip == null) missing.Add("Run / Running");
-            if (settings.JumpClip == null) missing.Add("Jump");
-            if (settings.FallClip == null) missing.Add("Fall");
-            if (settings.LandClip == null) missing.Add("Landing");
-            if (settings.CrouchIdleClip == null) missing.Add("Crouch Idle");
-            if (settings.CrouchWalkClip == null) missing.Add("Crouch Walk");
-            return missing;
         }
 
         private static List<string> GetInvalidAnimatorParameters(PlayerAnimationSettings settings)
