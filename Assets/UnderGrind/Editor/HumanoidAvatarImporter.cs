@@ -13,7 +13,7 @@ namespace UnderGrind.Editor
     {
         private static readonly string[] RequiredBones =
         {
-            "Hips", "Spine", "Chest", "Neck", "Head",
+            "Root", "Hips", "Spine", "Chest", "Neck", "Head",
             "LeftUpperArm", "LeftLowerArm", "LeftHand",
             "RightUpperArm", "RightLowerArm", "RightHand",
             "LeftUpperLeg", "LeftLowerLeg", "LeftFoot",
@@ -50,7 +50,9 @@ namespace UnderGrind.Editor
                 return false;
             }
 
-            var transforms = armature.GetComponentsInChildren<Transform>(true);
+            var transforms = armature.GetComponentsInChildren<Transform>(true)
+                .Where(item => item != armature)
+                .ToArray();
             var byName = transforms.GroupBy(item => item.name, StringComparer.Ordinal)
                 .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
             var missing = RequiredBones.Where(name => !byName.ContainsKey(name)).ToArray();
@@ -69,7 +71,7 @@ namespace UnderGrind.Editor
                 scale = item.localScale
             }).ToArray();
 
-            var human = RequiredBones.Select(name => CreateHumanBone(name)).ToList();
+            var human = RequiredBones.Where(name => name != "Root").Select(name => CreateHumanBone(name)).ToList();
             AddOptionalBone(human, byName, "LeftShoulder");
             AddOptionalBone(human, byName, "RightShoulder");
             AddOptionalBone(human, byName, "LeftToes");
