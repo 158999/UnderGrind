@@ -8,7 +8,7 @@
 - Pacchetti: Input System `1.20.1`, URP `17.6.0`, Test Framework `1.8.0`, uGUI `2.6.0`.
 - Sorgente umanoide versionata: `Assets/UnderGrind/Art/Source/humans.blend`, SHA-256 `e74b80b77a8b7a9cfe607d2106de6a35bb65117548c91d587e6a77df0310e981`.
 - FBX esportati e versionati: `Human_Male_Rigged.fbx` (209.468 byte) e `Human_Female_Rigged.fbx` (212.300 byte).
-- Ultimo commit verificato prima della revisione corrente: `52fb7fafc864e597e21d564287914003b94bb0a9` (`created fbxs`); la correzione del builder Animator è registrata nei commit successivi di `main`.
+- HEAD esaminato nell'aggiornamento: `28425af47f6ecf13f7486048367a71ec76ef0962` (`Strengthen humanoid skeleton binding tests`).
 
 ## Stato dei test
 
@@ -70,3 +70,14 @@ Il builder Animator si aspetta le clip in `Assets/UnderGrind/Animations`, le con
 ## Limiti della verifica
 
 In questa sessione sono stati ispezionati repository, report, log e sorgenti; è stato eseguito un audit Blender CPU sul rig. Non è stato possibile eseguire Unity Editor o una build standalone del gioco nell'ambiente di lavoro corrente. Nessuna verifica visiva delle deformazioni, degli Avatar Unity o del gameplay reale viene quindi dichiarata superata.
+
+## Aggiornamento dopo i push del 20 novembre
+
+HEAD corrente al momento dell'aggiornamento: `28425af47f6ecf13f7486048367a71ec76ef0962`.
+
+Sono stati aggiunti `Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs` e il relativo file `.meta`. La nuova suite EditMode carica i due FBX versionati e verifica importazione Humanoid, Avatar distinti e validi, mapping delle ossa principali, presenza dell'armatura configurata, sei `SkinnedMeshRenderer`, bind pose, root bone e appartenenza delle ossa all'armatura. Verifica inoltre che `PlayerVisualRig` riconosca i sei gruppi di renderer configurati.
+
+La suite è stata aggiunta dopo l'ultima esecuzione locale registrata (47 test Unity superati: 34 EditMode e 13 PlayMode). **I nuovi test di importazione non sono compresi in quel risultato e non sono ancora stati eseguiti in Unity.** La workflow GitHub Actions continua a eseguire soltanto Standalone Diagnostics; non certifica la compilazione Unity, gli Avatar FBX o i nuovi test EditMode.
+
+La documentazione di `Assets/UnderGrind/Animations/README.md` è stata allineata a `PlayerAnimationSettings.GetMissingRequiredClipNames()`: Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono obbligatorie; Fall e Land sono opzionali.
+
