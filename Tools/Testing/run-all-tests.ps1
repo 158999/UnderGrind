@@ -41,8 +41,21 @@ function Invoke-TestScript {
     try {
         # Wait for the PowerShell worker process only. Do not use Start-Process -Wait:
         # it can wait for descendants (including Unity helper processes) after the
-        # test runner has already printed its final status.
-        $process = Start-Process -FilePath "powershell.exe" -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -NoNewWindow
+        # test runner has already printed its final status. Process.ExitCode is read
+        # from the same process instance that was started by this runner.
+        $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+        $startInfo.FileName = "powershell.exe"
+        $startInfo.Arguments = $argumentLine
+        $startInfo.WorkingDirectory = $root
+        $startInfo.UseShellExecute = $false
+        $startInfo.CreateNoWindow = $false
+
+        $process = [System.Diagnostics.Process]::new()
+        $process.StartInfo = $startInfo
+        if (-not $process.Start()) {
+            throw "Impossibile avviare il worker PowerShell per la fase $StageName."
+        }
+
         if (-not $process.WaitForExit($remainingSeconds * 1000)) {
             Write-Warning "Timeout globale durante la fase $StageName. Termino il processo e i suoi discendenti."
             try { & taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null } catch { }
@@ -53,18 +66,15 @@ function Invoke-TestScript {
             return 124
         }
 
-        $process.Refresh()
-        if ($process.HasExited) {
-            $exitCode = [int]$process.ExitCode
-        }
-        else {
-            Write-Warning "Il processo della fase $StageName non ha confermato la terminazione."
-            return 124
-        }
+        $process.WaitForExit()
+        $exitCode = [int]$process.ExitCode
     }
     catch {
         Write-Error "Errore durante la fase $StageName - $($_.Exception.Message)"
         return 1
+    }
+    finally {
+        if ($null -ne $process) { $process.Dispose() }
     }
 
     Write-Host "Fase $StageName terminata: exit code $exitCode."
