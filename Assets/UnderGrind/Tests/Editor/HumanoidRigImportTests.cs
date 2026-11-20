@@ -4,7 +4,6 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnderGrind.Locomotion;
-using UnderGrind.Editor;
 
 namespace UnderGrind.Tests
 {
@@ -21,9 +20,9 @@ namespace UnderGrind.Tests
         {
             _settings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(SettingsPath);
             Assert.That(_settings, Is.Not.Null, "PlayerRigSettings deve essere presente nel progetto.");
-            Assert.That(HumanoidAvatarImporter.EnsureValidAvatar(MaleFbxPath, _settings.MaleArmatureRootName), Is.True,
+            Assert.That(EnsureHumanoidAvatar(MaleFbxPath, _settings.MaleArmatureRootName), Is.True,
                 "Impossibile generare l'Avatar Humanoid maschile.");
-            Assert.That(HumanoidAvatarImporter.EnsureValidAvatar(FemaleFbxPath, _settings.FemaleArmatureRootName), Is.True,
+            Assert.That(EnsureHumanoidAvatar(FemaleFbxPath, _settings.FemaleArmatureRootName), Is.True,
                 "Impossibile generare l'Avatar Humanoid femminile.");
         }
 
@@ -160,6 +159,19 @@ namespace UnderGrind.Tests
         {
             AssertVisualRigBindings(MaleFbxPath, "maschile");
             AssertVisualRigBindings(FemaleFbxPath, "femminile");
+        }
+
+        private static bool EnsureHumanoidAvatar(string assetPath, string armatureRootName)
+        {
+            var importerType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("UnderGrind.Editor.HumanoidAvatarImporter", false))
+                .FirstOrDefault(type => type != null);
+            Assert.That(importerType, Is.Not.Null, "HumanoidAvatarImporter deve essere caricato nell'assembly Editor.");
+
+            var method = importerType.GetMethod("EnsureValidAvatar",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            Assert.That(method, Is.Not.Null, "Metodo EnsureValidAvatar non trovato.");
+            return (bool)method.Invoke(null, new object[] { assetPath, armatureRootName });
         }
 
         private static Transform FindDeepChild(Transform root, string targetName)
