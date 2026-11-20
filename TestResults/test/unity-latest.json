@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261120-111416-509",
-    "startedUtc":  "2026-11-20T10:14:16.5095482Z",
-    "finishedUtc":  "2026-11-20T10:14:27.8815872Z",
+    "runId":  "20261120-112221-901",
+    "startedUtc":  "2026-11-20T10:22:21.9016728Z",
+    "finishedUtc":  "2026-11-20T10:22:53.7288367Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
@@ -9,8 +9,8 @@
 
                           ],
     "totals":  {
-                   "total":  38,
-                   "passed":  35,
+                   "total":  51,
+                   "passed":  48,
                    "skipped":  0,
                    "inconclusive":  0,
                    "failed":  3
@@ -33,18 +33,18 @@
                           "failures":  [
                                            {
                                                "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
-                                               "message":  "Expected: Human\n  But was:  Generic",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0005e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:34"
+                                               "message":  "L\u0027importazione dei materiali deve rispettare PlayerRigSettings.\n  Expected: LegacyImport\n  But was:  ImportViaMaterialDescription",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0016e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:50"
                                            },
                                            {
                                                "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx\",\"femminile\")",
-                                               "message":  "Expected: Human\n  But was:  Generic",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0005e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:34"
+                                               "message":  "L\u0027importazione dei materiali deve rispettare PlayerRigSettings.\n  Expected: LegacyImport\n  But was:  ImportViaMaterialDescription",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0016e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:50"
                                            },
                                            {
                                                "test":  "UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars",
                                                "message":  "Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\n  Expected: not null\n  But was:  null",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LoadValidAvatar (System.String assetPath) [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:162\nat UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars () [0x00000] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:132"
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LoadValidAvatar (System.String assetPath) [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:176\nat UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars () [0x00000] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:146"
                                            }
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
@@ -57,6 +57,33 @@
                                          "skipped":  0,
                                          "inconclusive":  0,
                                          "failed":  3
+                                     }
+                      },
+                      {
+                          "platform":  "PlayMode",
+                          "timeoutSeconds":  600,
+                          "timedOut":  false,
+                          "exitCode":  0,
+                          "resultValid":  true,
+                          "validationErrors":  [
+
+                                               ],
+                          "compilerDiagnostics":  [
+
+                                                  ],
+                          "failures":  [
+
+                                       ],
+                          "resultFile":  "TestResults/test/Unity/PlayMode.xml",
+                          "logFile":  "TestResults/test/Unity/PlayMode.log",
+                          "stdoutFile":  "TestResults/test/Unity/PlayMode.stdout.log",
+                          "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
+                          "totals":  {
+                                         "total":  13,
+                                         "passed":  13,
+                                         "skipped":  0,
+                                         "inconclusive":  0,
+                                         "failed":  0
                                      }
                       }
                   ]
