@@ -38,7 +38,7 @@ Il timeout predefinito è di 600 secondi per piattaforma e può essere modificat
 
 ## Esecuzione completa
 
-Per eseguire standalone, EditMode e PlayMode in sequenza:
+Per eseguire standalone, EditMode e PlayMode in sequenza, il punto di ingresso raccomandato è `TESTA.bat` dalla root del repository. Il batch richiama `run-all-tests.ps1`, attende il completamento e restituisce il codice di uscita aggregato (0 soltanto se tutte le suite sono superate). In alternativa, eseguire direttamente:
 
 ```powershell
 ./Tools/Testing/run-all-tests.ps1
