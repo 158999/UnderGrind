@@ -34,7 +34,7 @@ Per eseguire entrambe le piattaforme:
 
 Lo script cerca l'Editor Unity corrispondente alla versione dichiarata in `ProjectSettings/ProjectVersion.txt`, limitando la ricerca alle directory standard di Unity Hub. Se necessario, il percorso può essere indicato con `-UnityEditorPath` oppure con la variabile d'ambiente `UNITY_EDITOR_PATH`.
 
-Il timeout predefinito è di 600 secondi per piattaforma e può essere modificato con `-TimeoutSeconds`. Alla scadenza viene terminato l'albero dei processi Unity e l'esecuzione viene registrata come fallita. Se EditMode rileva errori di compilazione, PlayMode non viene avviato: in presenza degli stessi errori non potrebbe essere eseguito e produrrebbe soltanto un secondo avvio Unity inutile.
+Il timeout predefinito è di 600 secondi per piattaforma e può essere modificato con `-TimeoutSeconds`. Il runner avvia Unity tramite `System.Diagnostics.Process`, drena stdout e stderr in modo asincrono e legge `ExitCode` dalla stessa istanza del processo dopo `WaitForExit()`. Alla scadenza termina l'albero dei processi Unity e registra l'esecuzione come fallita. Se EditMode rileva errori di compilazione, PlayMode non viene avviato: in presenza degli stessi errori non potrebbe essere eseguito e produrrebbe soltanto un secondo avvio Unity inutile.
 
 ## Esecuzione completa
 
