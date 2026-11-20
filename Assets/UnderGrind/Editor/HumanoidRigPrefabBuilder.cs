@@ -153,9 +153,9 @@ namespace UnderGrind.Editor
                 importer.importAnimation = settings.ImportAnimation;
                 changed = true;
             }
-            if (importer.materialImportMode != (settings.ImportMaterials ? ModelImporterMaterialImportMode.ImportStandard : ModelImporterMaterialImportMode.None))
+            if (importer.materialImportMode != (settings.ImportMaterials ? ModelImporterMaterialImportMode.ImportViaMaterialDescription : ModelImporterMaterialImportMode.None))
             {
-                importer.materialImportMode = settings.ImportMaterials ? ModelImporterMaterialImportMode.ImportStandard : ModelImporterMaterialImportMode.None;
+                importer.materialImportMode = settings.ImportMaterials ? ModelImporterMaterialImportMode.ImportViaMaterialDescription : ModelImporterMaterialImportMode.None;
                 changed = true;
             }
             if (importer.importCameras != settings.ImportCameras)
