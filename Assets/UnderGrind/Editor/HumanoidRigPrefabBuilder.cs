@@ -227,6 +227,10 @@ namespace UnderGrind.Editor
                 return null;
             }
 
+            // Generated prefabs must open as complete third-person characters.
+            // First-person visibility is selected later by the gameplay camera mode.
+            visualRig.SetThirdPerson(true);
+
             if (temporary.GetComponentsInChildren<Renderer>(true).Length == 0)
             {
                 Debug.LogError("UnderGrind: nessun Renderer presente nel rig " + rootName);
