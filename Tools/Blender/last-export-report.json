@@ -1,0 +1,78 @@
+[
+  {
+    "character": "male",
+    "file": "C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Art\\Source\\Rigged\\Human_Male_Rigged.fbx",
+    "bytes": 209468,
+    "bones": 22,
+    "parts": [
+      {
+        "name": "Human_Male_Body",
+        "vertices": 106,
+        "triangles": 199
+      },
+      {
+        "name": "Human_Male_Head",
+        "vertices": 81,
+        "triangles": 128
+      },
+      {
+        "name": "Human_Male_TP_Arms",
+        "vertices": 41,
+        "triangles": 52
+      },
+      {
+        "name": "Human_Male_TP_Hands",
+        "vertices": 80,
+        "triangles": 146
+      },
+      {
+        "name": "Human_Male_FP_Arms",
+        "vertices": 41,
+        "triangles": 52
+      },
+      {
+        "name": "Human_Male_FP_Hands",
+        "vertices": 80,
+        "triangles": 146
+      }
+    ]
+  },
+  {
+    "character": "female",
+    "file": "C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Art\\Source\\Rigged\\Human_Female_Rigged.fbx",
+    "bytes": 212300,
+    "bones": 22,
+    "parts": [
+      {
+        "name": "Human_Female_Body",
+        "vertices": 77,
+        "triangles": 135
+      },
+      {
+        "name": "Human_Female_Head",
+        "vertices": 99,
+        "triangles": 156
+      },
+      {
+        "name": "Human_Female_TP_Arms",
+        "vertices": 95,
+        "triangles": 136
+      },
+      {
+        "name": "Human_Female_TP_Hands",
+        "vertices": 88,
+        "triangles": 142
+      },
+      {
+        "name": "Human_Female_FP_Arms",
+        "vertices": 95,
+        "triangles": 136
+      },
+      {
+        "name": "Human_Female_FP_Hands",
+        "vertices": 88,
+        "triangles": 142
+      }
+    ]
+  }
+]
