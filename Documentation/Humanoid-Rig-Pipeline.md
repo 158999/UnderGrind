@@ -79,9 +79,9 @@ La versione Blendstra più recente contiene quattro mesh separate per testa e co
 
 Se il mapping delle ossa è presente ma Unity mostra `Character is not in T pose`, aprire **Configure** sul FBX e usare **Pose → Enforce T-Pose**. Controllare la posa risultante, quindi premere **Apply** e **Done**. Se l'avviso resta, correggere manualmente le ossa residue nella finestra Avatar Configuration e applicare nuovamente.
 
-Unity salva queste correzioni nella `HumanDescription` del `ModelImporter`. `HumanoidAvatarImporter.EnsureValidAvatar` conserva ora una descrizione manuale quando produce un Avatar valido; elimina il mapping manuale soltanto se l'Avatar risultante è invalido, quindi riprova con il mapping automatico gerarchico. In questo modo l'inizializzazione dei test non annulla più una correzione T-pose valida.
+Unity salva queste correzioni nella `HumanDescription` del `ModelImporter`. `HumanoidAvatarImporter.EnsureValidAvatar` conserva una descrizione manuale valida. Se il mapping automatico di Unity produce un Avatar invalido, ricostruisce prima la tabella `HumanBone` associando ogni osso Humanoid al Transform omonimo, preservando lo skeleton e la posa generati dall'importer. Questo evita l'errore osservato nel quale Unity assegnava `RightHand` a `RightLowerArm` e lasciava `RightHand` senza mapping. Se anche il mapping esplicito fallisce, viene tentato il fallback automatico pulito.
 
-Il test `EnsureValidAvatarPreservesValidManualPoseCorrections` verifica che una descrizione valida con mapping e posa non venga cancellata. Non sostituisce il controllo visivo della posa, delle deformazioni e del retargeting.
+Il test `EnsureValidAvatarPreservesValidManualPoseCorrections` verifica che una descrizione valida con mapping e posa non venga cancellata. Non sostituisce il controllo visivo della posa, delle deformazioni e del retargeting. La suite verifica anche che `Animator.GetBoneTransform` restituisca entrambe le mani, oltre agli arti già controllati.
 
 ### Diagnostica dell'ultima importazione Unity — 20 novembre 2026
 
