@@ -69,7 +69,7 @@ namespace UnderGrind.Editor
                 var skeletonBones = currentDescription.skeleton == null
                     ? "nessuno skeleton serializzato"
                     : string.Join(", ", currentDescription.skeleton.Select(item =>
-                        item.name + " (parent: " + item.parentName + ")"));
+                        item.name));
                 var hierarchy = model == null
                     ? "FBX hierarchy non disponibile"
                     : string.Join(Environment.NewLine, model.GetComponentsInChildren<Transform>(true)
