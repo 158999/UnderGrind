@@ -26,6 +26,55 @@ namespace UnderGrind.Tests
                 "Impossibile generare l'Avatar Humanoid femminile.");
         }
 
+        [Test]
+        public void EnsureValidAvatarPreservesValidManualPoseCorrections()
+        {
+            var importer = AssetImporter.GetAtPath(MaleFbxPath) as ModelImporter;
+            Assert.That(importer, Is.Not.Null, "ModelImporter maschile non disponibile.");
+
+            var originalDescription = importer.humanDescription;
+            var originalAnimationType = importer.animationType;
+            var originalAvatarSetup = importer.avatarSetup;
+            var avatar = LoadValidAvatar(MaleFbxPath);
+            var poseDescription = avatar.humanDescription;
+
+            Assert.That(poseDescription.human, Is.Not.Empty,
+                "L'Avatar valido deve esporre il mapping Humanoid.");
+            Assert.That(poseDescription.skeleton, Is.Not.Empty,
+                "L'Avatar valido deve esporre la posa dello skeleton.");
+
+            try
+            {
+                importer.humanDescription = poseDescription;
+                importer.animationType = ModelImporterAnimationType.Human;
+                importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+                importer.SaveAndReimport();
+
+                Assert.That(EnsureHumanoidAvatar(MaleFbxPath, _settings.MaleArmatureRootName), Is.True,
+                    "L'Avatar con correzioni manuali valide deve restare valido.");
+
+                var persistedImporter = AssetImporter.GetAtPath(MaleFbxPath) as ModelImporter;
+                Assert.That(persistedImporter, Is.Not.Null);
+                Assert.That(persistedImporter.humanDescription.human.Length,
+                    Is.EqualTo(poseDescription.human.Length),
+                    "Il mapping Humanoid manuale non deve essere cancellato.");
+                Assert.That(persistedImporter.humanDescription.skeleton.Length,
+                    Is.EqualTo(poseDescription.skeleton.Length),
+                    "La posa corretta manualmente non deve essere cancellata.");
+            }
+            finally
+            {
+                var restoreImporter = AssetImporter.GetAtPath(MaleFbxPath) as ModelImporter;
+                if (restoreImporter != null)
+                {
+                    restoreImporter.humanDescription = originalDescription;
+                    restoreImporter.animationType = originalAnimationType;
+                    restoreImporter.avatarSetup = originalAvatarSetup;
+                    restoreImporter.SaveAndReimport();
+                }
+            }
+        }
+
         [TestCase(MaleFbxPath, "maschile")]
         [TestCase(FemaleFbxPath, "femminile")]
         public void ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(string assetPath, string label)
