@@ -165,7 +165,9 @@ if ($reportFile.LastWriteTimeUtc -lt $startedAtUtc.AddSeconds(-1)) {
     throw "Il report trovato non è stato aggiornato da questa esecuzione."
 }
 
-$report = @(Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json)
+$reportJson = Get-Content -LiteralPath $reportPath -Raw
+$parsedReport = ConvertFrom-Json -InputObject $reportJson
+$report = @($parsedReport)
 if ($report.Count -ne 2) {
     throw "Il report deve contenere esattamente due personaggi; trovati: $($report.Count)."
 }
