@@ -34,11 +34,9 @@ namespace UnderGrind.Editor
             }
 
             var importerChanged = importer.animationType != ModelImporterAnimationType.Human ||
-                                  importer.avatarSetup != ModelImporterAvatarSetup.CreateFromThisModel ||
-                                  importer.optimizeGameObjects;
+                                  importer.avatarSetup != ModelImporterAvatarSetup.CreateFromThisModel;
             importer.animationType = ModelImporterAnimationType.Human;
             importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
-            importer.optimizeGameObjects = false;
 
             if (!importerChanged && FindValidAvatar(assetPath) != null)
                 return true;
