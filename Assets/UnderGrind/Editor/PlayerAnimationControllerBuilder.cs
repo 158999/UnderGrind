@@ -29,7 +29,7 @@ namespace UnderGrind.Editor
             PrepareAnimationImports(settings);
             RefreshClipReferences(settings);
             var missing = settings.GetMissingRequiredClipNames();
-            if (missing.Count > 0)
+            if (missing.Length > 0)
             {
                 var message = "Impossibile costruire l'Animator Controller. Mancano queste clip:\n- " +
                               string.Join("\n- ", missing) +
