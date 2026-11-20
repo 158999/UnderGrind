@@ -31,7 +31,7 @@ La pipeline è stata estesa con `Tools/Testing/test-process-runner.ps1`, che avv
 | Input | Input System, rebinding, persistenza degli override | Manca una schermata UI dedicata al rebinding |
 | Inventario | Slot, stack, peso, sovraccarico, UI, raccolta e rilascio | Mancano salvataggio persistente, contenitori, equipaggiamento e uso oggetti |
 | Interazione | SphereCast dalla camera e pickup/rilascio | Non verificata nella scena di gioco definitiva |
-| Rig | Builder per due FBX distinti e due prefab Humanoid | FBX di output e prefab non sono presenti nel repository |
+| Rig | Due armature Blender con 22 ossa ciascuna; 12 mesh separate con parent, modificatori e pesi verificati | FBX di output, Avatar Humanoid Unity e prefab non ancora generati/verificati |
 | Animazione | Settings, driver e builder Animator | Nessuna clip FBX importata e nessun Animator Controller generato versionato |
 | Scena | Scena LocomotionTest e builder con validazione prefab | La scena versionata contiene ancora geometria proxy; non è una prova del personaggio riggato |
 | CI | Build e test standalone .NET, parsing degli script PowerShell | Nessun test Unity automatico nella CI corrente |
@@ -44,7 +44,9 @@ Il progetto Blendstra `UnderGrind — Humans Source Separation`, versione `versi
 - sei mesh separate per personaggio: Body, Head, TP Arms, TP Hands, FP Arms e FP Hands;
 - le mesh originali complete maschile e femminile conservate come sorgenti.
 
-L'ispezione strutturale conferma oggetti, nomi e gerarchia. Non certifica i modificatori Armature, i pesi dei vertici o la qualità delle deformazioni. Il 20 novembre è stato eseguito un job Blender Python read-only sulla versione derivata `version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6`: il job è riuscito e ha conservato la geometria/gerarchia ispezionata, ma il servizio non ha esposto il report JSON prodotto dallo script. La successiva ispezione continua a dichiarare `MODIFIER_CONFIGURATION` non supportato, quindi non conferma modificatori e pesi. Lo script `Tools/Blender/export-undergrind-humans.py` contiene controlli per ossa Humanoid, parenting, modificatori, gruppi deformanti e pesi per vertice, ma non risulta ancora eseguito con report verificabile sulla versione corrente. Nel repository non risultano FBX riggati né prefab maschile/femminile generati. La correzione di prima persona che nasconde la testa richiede il renderer separato effettivo e non può essere accettata sulla base dei test con gerarchie artificiali.
+Il 20 novembre è stato eseguito un audit Python direttamente in Blender sulla versione corrente pulita `version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6`. Entrambe le armature (`UG_Male_Armature` e `UG_Female_Armature`) contengono 22 ossa, 21 delle quali deformanti; tutte le 18 ossa richieste dal controllo Humanoid sono presenti. Per ciascun personaggio sono state verificate le sei mesh separate (Body, Head, TP Arms/Hands, FP Arms/Hands): parent diretto all'armatura corretta, modificatore Armature collegato, 21 gruppi deformanti, tutti i vertici con almeno un peso deformante valido, zero vertici non pesati e geometria non vuota. Totale: 12/12 mesh superate. Il confronto strutturale con la versione base non registra modifiche alle mesh; la geometria interna delle armature resta fuori dalla copertura dell'ispettore, ma i dati delle ossa e dei pesi sono stati letti direttamente dallo script Blender. L'audit ha prodotto una versione tecnica temporanea con marker, poi rimossa dalla testa del progetto: la versione corrente è stata ripristinata alla versione pulita `f438fed3`.
+
+La verifica certifica struttura e pesi, non la qualità visiva delle deformazioni, l'export FBX o la validità degli Avatar Unity. Lo script `Tools/Blender/export-undergrind-humans.py` effettua i controlli fail-fast prima dell'export. È stato aggiunto `Tools/Blender/run-export.ps1` per avviare Blender in background, acquisire gli stream e verificare report e file FBX; non è stato ancora eseguito perché in questo ambiente non è disponibile un eseguibile Blender locale. Nel repository non risultano ancora FBX riggati né prefab maschile/femminile generati.
 
 ## Animazioni selezionate
 
@@ -56,7 +58,7 @@ Il builder Animator già presente si aspetta le clip in `Assets/UnderGrind/Anima
 
 ## Priorità tecniche
 
-1. **Chiudere la pipeline dei personaggi:** eseguire l'export Blender sui due rig, correggere eventuali errori di pesatura e importare i due FBX in Unity.
+1. **Chiudere la pipeline dei personaggi:** eseguire `./Tools/Blender/run-export.ps1` su Windows con Blender installato; l'audit dei pesi è superato, quindi passare all'export FBX e verificare i due file.
 2. **Validare i due Avatar:** ottenere due Avatar Humanoid validi e distinti, verificare il mapping delle ossa e le deformazioni di entrambe le mesh.
 3. **Generare i prefab:** eseguire `Build Male and Female Prefabs From Configured FBX` e controllare renderer separati per testa, corpo, arti FP e arti TP.
 4. **Integrare le animazioni:** scaricare i clip Mixamo-FBX selezionati, importarli come Humanoid, verificare il retarget e generare il controller.
@@ -66,4 +68,4 @@ Il builder Animator già presente si aspetta le clip in `Assets/UnderGrind/Anima
 
 ## Limiti della verifica
 
-In questa sessione sono stati ispezionati repository, report, log, scene e sorgenti. Non è stato possibile eseguire Unity Editor, Blender o una build standalone del gioco nell'ambiente di lavoro corrente. Nessuna verifica visiva, di deformazione del rig o di gameplay reale viene quindi dichiarata superata.
+In questa sessione sono stati ispezionati repository, report, log e sorgenti; è stato eseguito un audit Blender CPU sul rig. Non è stato possibile eseguire Unity Editor o una build standalone del gioco nell'ambiente di lavoro corrente. Nessuna verifica visiva delle deformazioni, degli Avatar Unity o del gameplay reale viene quindi dichiarata superata.
