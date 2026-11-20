@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           $parseFailures = @()
-          Get-ChildItem ./Tools/Testing -Filter *.ps1 -File | ForEach-Object {
+          @("./Tools/Testing", "./Tools/Blender") | ForEach-Object {\n            Get-ChildItem $_ -Filter *.ps1 -File\n          } | ForEach-Object {
             $tokens = $null
             $parseErrors = $null
             [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$parseErrors) | Out-Null
@@ -46,7 +46,7 @@ jobs:
             $parseFailures | ForEach-Object { Write-Error $_ }
             throw "PowerShell syntax validation failed."
           }
-          Write-Host "PowerShell test scripts: syntax valid."
+          Write-Host "PowerShell tooling scripts: syntax valid."
       - name: Verify child-process exit code handling (Windows PowerShell 5.1)
         shell: powershell
         run: ./Tools/Testing/test-process-runner.ps1
