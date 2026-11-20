@@ -117,6 +117,8 @@ namespace UnderGrind.Tests
                 HumanBodyBones.RightUpperArm,
                 HumanBodyBones.LeftLowerArm,
                 HumanBodyBones.RightLowerArm,
+                HumanBodyBones.LeftHand,
+                HumanBodyBones.RightHand,
                 HumanBodyBones.LeftUpperLeg,
                 HumanBodyBones.RightUpperLeg,
                 HumanBodyBones.LeftLowerLeg,
