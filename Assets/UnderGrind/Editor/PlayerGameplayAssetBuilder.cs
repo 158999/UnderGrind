@@ -180,6 +180,8 @@ namespace UnderGrind.Editor
                     CopyBool(current, template, "requireThirdPersonArms");
                     CopyInt(current, template, "defaultCharacter");
                 }
+                if (previousVersion < 7)
+                    CopyFloat(current, template, "modelYawOffset");
                 if (previousVersion < defaultVersion.intValue)
                     version.intValue = defaultVersion.intValue;
             }
@@ -210,6 +212,11 @@ namespace UnderGrind.Editor
         private static void CopyBool(SerializedObject target, SerializedObject source, string name)
         {
             target.FindProperty(name).boolValue = source.FindProperty(name).boolValue;
+        }
+
+        private static void CopyFloat(SerializedObject target, SerializedObject source, string name)
+        {
+            target.FindProperty(name).floatValue = source.FindProperty(name).floatValue;
         }
         private static T EnsureAsset<T>(string assetPath, string defaultsPath) where T : ScriptableObject
         {
