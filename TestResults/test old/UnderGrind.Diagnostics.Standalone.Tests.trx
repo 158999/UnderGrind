@@ -1,50 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TestRun id="5632344d-5a82-4873-ad18-7e934a02b8dd" name="cgr@NB208 2026-11-20 12:21:50" runUser="INTERCONSULT\cgr" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
-  <Times creation="2026-11-20T12:21:50.6324848+01:00" queuing="2026-11-20T12:21:50.6324852+01:00" start="2026-11-20T12:21:48.6319584+01:00" finish="2026-11-20T12:21:50.6374458+01:00" />
-  <TestSettings name="default" id="c3afd3cf-9f03-420a-b3ac-0850bfef6edf">
-    <Deployment runDeploymentRoot="cgr_NB208_2026-11-20_12_21_50" />
+<TestRun id="e72978bb-ac02-4d7a-a559-050c48049021" name="cgr@NB208 2026-11-20 12:33:14" runUser="INTERCONSULT\cgr" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-11-20T12:33:14.6239460+01:00" queuing="2026-11-20T12:33:14.6239465+01:00" start="2026-11-20T12:33:09.8671589+01:00" finish="2026-11-20T12:33:14.6284358+01:00" />
+  <TestSettings name="default" id="59565b1f-a483-42db-a1d1-495319a6e975">
+    <Deployment runDeploymentRoot="cgr_NB208_2026-11-20_12_33_14" />
   </TestSettings>
   <Results>
-    <UnitTestResult executionId="4216db10-690b-40ee-8392-be4008b9127b" testId="fa2771b9-8483-11b7-a711-5f988308855d" testName="TextWriterLogSink_WritesFormattedEntries" computerName="NB208" duration="00:00:00.0003750" startTime="2026-11-20T12:21:50.5292476+01:00" endTime="2026-11-20T12:21:50.5296227+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4216db10-690b-40ee-8392-be4008b9127b" />
-    <UnitTestResult executionId="4589564f-162d-485c-83ee-a461233e9514" testId="edaf9c7b-fa22-c942-631f-abe8820d9122" testName="LogEvent_PreservesDiagnosticInformation" computerName="NB208" duration="00:00:00.0088500" startTime="2026-11-20T12:21:50.4840125+01:00" endTime="2026-11-20T12:21:50.4928605+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4589564f-162d-485c-83ee-a461233e9514" />
-    <UnitTestResult executionId="50f9fdc5-bfd0-4757-962e-4b5c8e0477d7" testId="57f61c69-4d8e-03ea-fb01-7dd632b9e9a5" testName="Logger_FiltersEntriesBelowMinimumLevel" computerName="NB208" duration="00:00:00.0001850" startTime="2026-11-20T12:21:50.5289486+01:00" endTime="2026-11-20T12:21:50.5291332+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="50f9fdc5-bfd0-4757-962e-4b5c8e0477d7" />
-    <UnitTestResult executionId="83ec6280-94ce-49a4-af7b-cb9ae86c6da4" testId="3a4ed8cf-4cf6-12be-9fbe-3fb83b89bd11" testName="Logger_ContinuesWhenASinkThrows" computerName="NB208" duration="00:00:00.0353730" startTime="2026-11-20T12:21:50.4931023+01:00" endTime="2026-11-20T12:21:50.5284749+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="83ec6280-94ce-49a4-af7b-cb9ae86c6da4" />
-    <UnitTestResult executionId="697552a2-19ab-4ed9-8c8f-69243b7d6f7b" testId="4b78f6c1-1e32-f370-cdad-99b5aa3d96a7" testName="FileLogSink_CreatesDirectoryAndPersistsEntries" computerName="NB208" duration="00:00:00.0288370" startTime="2026-11-20T12:21:50.4522635+01:00" endTime="2026-11-20T12:21:50.4810436+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="697552a2-19ab-4ed9-8c8f-69243b7d6f7b" />
-    <UnitTestResult executionId="d2a56694-a6e6-4c4b-ac2a-a876aa68ee2e" testId="04077cb0-b5a7-7bbf-86ee-6f59f2c73c3c" testName="Logger_DispatchesEntriesToAllSinks" computerName="NB208" duration="00:00:00.0004290" startTime="2026-11-20T12:21:50.5285091+01:00" endTime="2026-11-20T12:21:50.5289382+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d2a56694-a6e6-4c4b-ac2a-a876aa68ee2e" />
+    <UnitTestResult executionId="f82212b7-684e-48db-b964-72b73f892b97" testId="edaf9c7b-fa22-c942-631f-abe8820d9122" testName="LogEvent_PreservesDiagnosticInformation" computerName="NB208" duration="00:00:00.0076980" startTime="2026-11-20T12:33:14.5225768+01:00" endTime="2026-11-20T12:33:14.5302741+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f82212b7-684e-48db-b964-72b73f892b97" />
+    <UnitTestResult executionId="f24d5ad2-8d0c-4a8e-966f-95f3cb4d639a" testId="4b78f6c1-1e32-f370-cdad-99b5aa3d96a7" testName="FileLogSink_CreatesDirectoryAndPersistsEntries" computerName="NB208" duration="00:00:00.0292590" startTime="2026-11-20T12:33:14.4905407+01:00" endTime="2026-11-20T12:33:14.5197372+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f24d5ad2-8d0c-4a8e-966f-95f3cb4d639a" />
+    <UnitTestResult executionId="398a2cbf-2ffb-46d1-aff4-67e825a9ba9d" testId="57f61c69-4d8e-03ea-fb01-7dd632b9e9a5" testName="Logger_FiltersEntriesBelowMinimumLevel" computerName="NB208" duration="00:00:00.0002190" startTime="2026-11-20T12:33:14.5672681+01:00" endTime="2026-11-20T12:33:14.5674868+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="398a2cbf-2ffb-46d1-aff4-67e825a9ba9d" />
+    <UnitTestResult executionId="4aa9b13d-c3a8-484a-8dac-9f2d9a59fd5b" testId="04077cb0-b5a7-7bbf-86ee-6f59f2c73c3c" testName="Logger_DispatchesEntriesToAllSinks" computerName="NB208" duration="00:00:00.0004180" startTime="2026-11-20T12:33:14.5668321+01:00" endTime="2026-11-20T12:33:14.5672499+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4aa9b13d-c3a8-484a-8dac-9f2d9a59fd5b" />
+    <UnitTestResult executionId="dffd991b-b574-49a5-9e83-27546bfb7eb0" testId="fa2771b9-8483-11b7-a711-5f988308855d" testName="TextWriterLogSink_WritesFormattedEntries" computerName="NB208" duration="00:00:00.0003650" startTime="2026-11-20T12:33:14.5675943+01:00" endTime="2026-11-20T12:33:14.5679594+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dffd991b-b574-49a5-9e83-27546bfb7eb0" />
+    <UnitTestResult executionId="05b49243-9d10-43ec-8a7e-fff2d5ed2d6c" testId="3a4ed8cf-4cf6-12be-9fbe-3fb83b89bd11" testName="Logger_ContinuesWhenASinkThrows" computerName="NB208" duration="00:00:00.0362790" startTime="2026-11-20T12:33:14.5305198+01:00" endTime="2026-11-20T12:33:14.5667984+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="05b49243-9d10-43ec-8a7e-fff2d5ed2d6c" />
   </Results>
   <TestDefinitions>
     <UnitTest name="TextWriterLogSink_WritesFormattedEntries" storage="c:\users\cgr\desktop\eee\varie\unity\unity-context\undergrind\tests\standalone\bin\release\net10.0\undergrind.diagnostics.standalone.tests.dll" id="fa2771b9-8483-11b7-a711-5f988308855d">
-      <Execution id="4216db10-690b-40ee-8392-be4008b9127b" />
+      <Execution id="dffd991b-b574-49a5-9e83-27546bfb7eb0" />
       <TestMethod codeBase="C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tests\Standalone\bin\Release\net10.0\UnderGrind.Diagnostics.Standalone.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="UnderGrind.Tests.Diagnostics.TextWriterLogSinkTests" name="TextWriterLogSink_WritesFormattedEntries" />
     </UnitTest>
     <UnitTest name="LogEvent_PreservesDiagnosticInformation" storage="c:\users\cgr\desktop\eee\varie\unity\unity-context\undergrind\tests\standalone\bin\release\net10.0\undergrind.diagnostics.standalone.tests.dll" id="edaf9c7b-fa22-c942-631f-abe8820d9122">
-      <Execution id="4589564f-162d-485c-83ee-a461233e9514" />
+      <Execution id="f82212b7-684e-48db-b964-72b73f892b97" />
       <TestMethod codeBase="C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tests\Standalone\bin\Release\net10.0\UnderGrind.Diagnostics.Standalone.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="UnderGrind.Tests.Diagnostics.LogEventTests" name="LogEvent_PreservesDiagnosticInformation" />
     </UnitTest>
     <UnitTest name="Logger_ContinuesWhenASinkThrows" storage="c:\users\cgr\desktop\eee\varie\unity\unity-context\undergrind\tests\standalone\bin\release\net10.0\undergrind.diagnostics.standalone.tests.dll" id="3a4ed8cf-4cf6-12be-9fbe-3fb83b89bd11">
-      <Execution id="83ec6280-94ce-49a4-af7b-cb9ae86c6da4" />
+      <Execution id="05b49243-9d10-43ec-8a7e-fff2d5ed2d6c" />
       <TestMethod codeBase="C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tests\Standalone\bin\Release\net10.0\UnderGrind.Diagnostics.Standalone.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="UnderGrind.Tests.Diagnostics.LoggerTests" name="Logger_ContinuesWhenASinkThrows" />
     </UnitTest>
     <UnitTest name="Logger_DispatchesEntriesToAllSinks" storage="c:\users\cgr\desktop\eee\varie\unity\unity-context\undergrind\tests\standalone\bin\release\net10.0\undergrind.diagnostics.standalone.tests.dll" id="04077cb0-b5a7-7bbf-86ee-6f59f2c73c3c">
-      <Execution id="d2a56694-a6e6-4c4b-ac2a-a876aa68ee2e" />
+      <Execution id="4aa9b13d-c3a8-484a-8dac-9f2d9a59fd5b" />
       <TestMethod codeBase="C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tests\Standalone\bin\Release\net10.0\UnderGrind.Diagnostics.Standalone.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="UnderGrind.Tests.Diagnostics.LoggerTests" name="Logger_DispatchesEntriesToAllSinks" />
     </UnitTest>
     <UnitTest name="FileLogSink_CreatesDirectoryAndPersistsEntries" storage="c:\users\cgr\desktop\eee\varie\unity\unity-context\undergrind\tests\standalone\bin\release\net10.0\undergrind.diagnostics.standalone.tests.dll" id="4b78f6c1-1e32-f370-cdad-99b5aa3d96a7">
-      <Execution id="697552a2-19ab-4ed9-8c8f-69243b7d6f7b" />
+      <Execution id="f24d5ad2-8d0c-4a8e-966f-95f3cb4d639a" />
       <TestMethod codeBase="C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tests\Standalone\bin\Release\net10.0\UnderGrind.Diagnostics.Standalone.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="UnderGrind.Tests.Diagnostics.FileLogSinkTests" name="FileLogSink_CreatesDirectoryAndPersistsEntries" />
     </UnitTest>
     <UnitTest name="Logger_FiltersEntriesBelowMinimumLevel" storage="c:\users\cgr\desktop\eee\varie\unity\unity-context\undergrind\tests\standalone\bin\release\net10.0\undergrind.diagnostics.standalone.tests.dll" id="57f61c69-4d8e-03ea-fb01-7dd632b9e9a5">
-      <Execution id="50f9fdc5-bfd0-4757-962e-4b5c8e0477d7" />
+      <Execution id="398a2cbf-2ffb-46d1-aff4-67e825a9ba9d" />
       <TestMethod codeBase="C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Tests\Standalone\bin\Release\net10.0\UnderGrind.Diagnostics.Standalone.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="UnderGrind.Tests.Diagnostics.LoggerTests" name="Logger_FiltersEntriesBelowMinimumLevel" />
     </UnitTest>
   </TestDefinitions>
   <TestEntries>
-    <TestEntry testId="fa2771b9-8483-11b7-a711-5f988308855d" executionId="4216db10-690b-40ee-8392-be4008b9127b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="edaf9c7b-fa22-c942-631f-abe8820d9122" executionId="4589564f-162d-485c-83ee-a461233e9514" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="57f61c69-4d8e-03ea-fb01-7dd632b9e9a5" executionId="50f9fdc5-bfd0-4757-962e-4b5c8e0477d7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="3a4ed8cf-4cf6-12be-9fbe-3fb83b89bd11" executionId="83ec6280-94ce-49a4-af7b-cb9ae86c6da4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="4b78f6c1-1e32-f370-cdad-99b5aa3d96a7" executionId="697552a2-19ab-4ed9-8c8f-69243b7d6f7b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
-    <TestEntry testId="04077cb0-b5a7-7bbf-86ee-6f59f2c73c3c" executionId="d2a56694-a6e6-4c4b-ac2a-a876aa68ee2e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="edaf9c7b-fa22-c942-631f-abe8820d9122" executionId="f82212b7-684e-48db-b964-72b73f892b97" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4b78f6c1-1e32-f370-cdad-99b5aa3d96a7" executionId="f24d5ad2-8d0c-4a8e-966f-95f3cb4d639a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="57f61c69-4d8e-03ea-fb01-7dd632b9e9a5" executionId="398a2cbf-2ffb-46d1-aff4-67e825a9ba9d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="04077cb0-b5a7-7bbf-86ee-6f59f2c73c3c" executionId="4aa9b13d-c3a8-484a-8dac-9f2d9a59fd5b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fa2771b9-8483-11b7-a711-5f988308855d" executionId="dffd991b-b574-49a5-9e83-27546bfb7eb0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a4ed8cf-4cf6-12be-9fbe-3fb83b89bd11" executionId="05b49243-9d10-43ec-8a7e-fff2d5ed2d6c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
   </TestEntries>
   <TestLists>
     <TestList name="Risultati non in elenco" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />

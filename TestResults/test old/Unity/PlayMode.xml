@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0,1692141">
-  <test-suite type="TestSuite" id="1023" name="UnderGrind" fullname="UnderGrind" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.169214" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0,1377619">
+  <test-suite type="TestSuite" id="1023" name="UnderGrind" fullname="UnderGrind" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.137762" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
     <properties>
       <property name="platform" value="PlayMode" />
     </properties>
-    <test-suite type="Assembly" id="1017" name="UnderGrind.PlayMode.Tests.dll" fullname="C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind/Library/ScriptAssemblies/UnderGrind.PlayMode.Tests.dll" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.161513" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1017" name="UnderGrind.PlayMode.Tests.dll" fullname="C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind/Library/ScriptAssemblies/UnderGrind.PlayMode.Tests.dll" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.130783" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
-        <property name="_PID" value="38468" />
+        <property name="_PID" value="17692" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="PlayMode" />
         <property name="EditorOnly" value="False" />
       </properties>
-      <test-suite type="TestSuite" id="1018" name="UnderGrind" fullname="UnderGrind" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.160848" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="1018" name="UnderGrind" fullname="UnderGrind" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.130156" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-suite type="TestSuite" id="1019" name="Tests" fullname="UnderGrind.Tests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.160628" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestSuite" id="1019" name="Tests" fullname="UnderGrind.Tests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.129879" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-suite type="TestFixture" id="1001" name="HumanLocomotionPlayModeTests" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.087009" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="1001" name="HumanLocomotionPlayModeTests" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.062737" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-case id="1005" name="AnimationDriverWithoutAnimatorIsSafe" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.AnimationDriverWithoutAnimatorIsSafe" methodname="AnimationDriverWithoutAnimatorIsSafe" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="1831561087" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.013695" asserts="0">
+            <test-case id="1005" name="AnimationDriverWithoutAnimatorIsSafe" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.AnimationDriverWithoutAnimatorIsSafe" methodname="AnimationDriverWithoutAnimatorIsSafe" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="2082940612" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.012587" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1009" name="ExplicitVisualRigBindingsOverrideNameDiscovery" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.ExplicitVisualRigBindingsOverrideNameDiscovery" methodname="ExplicitVisualRigBindingsOverrideNameDiscovery" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="611351686" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.018778" asserts="0">
+            <test-case id="1009" name="ExplicitVisualRigBindingsOverrideNameDiscovery" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.ExplicitVisualRigBindingsOverrideNameDiscovery" methodname="ExplicitVisualRigBindingsOverrideNameDiscovery" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="102741356" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.008321" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1003" name="FirstPersonRevealsBodyOnlyWhenLookingDown" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.FirstPersonRevealsBodyOnlyWhenLookingDown" methodname="FirstPersonRevealsBodyOnlyWhenLookingDown" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="1690386592" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.008725" asserts="0">
+            <test-case id="1003" name="FirstPersonRevealsBodyOnlyWhenLookingDown" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.FirstPersonRevealsBodyOnlyWhenLookingDown" methodname="FirstPersonRevealsBodyOnlyWhenLookingDown" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="1491293771" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.008127" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1002" name="PlayerInitializesWithHumanScaleAndConfiguredMovement" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.PlayerInitializesWithHumanScaleAndConfiguredMovement" methodname="PlayerInitializesWithHumanScaleAndConfiguredMovement" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="111893000" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.016910" asserts="0">
+            <test-case id="1002" name="PlayerInitializesWithHumanScaleAndConfiguredMovement" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.PlayerInitializesWithHumanScaleAndConfiguredMovement" methodname="PlayerInitializesWithHumanScaleAndConfiguredMovement" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="167669242" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.012598" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1007" name="VisualRigBindsStableGeneratedPartNames" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigBindsStableGeneratedPartNames" methodname="VisualRigBindsStableGeneratedPartNames" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="1083316978" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.003932" asserts="0">
+            <test-case id="1007" name="VisualRigBindsStableGeneratedPartNames" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigBindsStableGeneratedPartNames" methodname="VisualRigBindsStableGeneratedPartNames" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="1587304822" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.002440" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1004" name="VisualRigPreservesInitiallyDisabledRenderers" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigPreservesInitiallyDisabledRenderers" methodname="VisualRigPreservesInitiallyDisabledRenderers" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="632024903" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.002630" asserts="0">
+            <test-case id="1004" name="VisualRigPreservesInitiallyDisabledRenderers" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigPreservesInitiallyDisabledRenderers" methodname="VisualRigPreservesInitiallyDisabledRenderers" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="897065098" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.002085" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1006" name="VisualRigRefreshDoesNotLoseOriginalRendererState" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigRefreshDoesNotLoseOriginalRendererState" methodname="VisualRigRefreshDoesNotLoseOriginalRendererState" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="971389851" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.003469" asserts="0">
+            <test-case id="1006" name="VisualRigRefreshDoesNotLoseOriginalRendererState" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigRefreshDoesNotLoseOriginalRendererState" methodname="VisualRigRefreshDoesNotLoseOriginalRendererState" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="319857669" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.002307" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1008" name="VisualRigSwitchesThirdPersonAndFirstPersonLimbGroups" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigSwitchesThirdPersonAndFirstPersonLimbGroups" methodname="VisualRigSwitchesThirdPersonAndFirstPersonLimbGroups" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="1551823284" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.003594" asserts="0">
+            <test-case id="1008" name="VisualRigSwitchesThirdPersonAndFirstPersonLimbGroups" fullname="UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigSwitchesThirdPersonAndFirstPersonLimbGroups" methodname="VisualRigSwitchesThirdPersonAndFirstPersonLimbGroups" classname="UnderGrind.Tests.HumanLocomotionPlayModeTests" runstate="Runnable" seed="403889156" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.003029" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
@@ -74,9 +74,9 @@
               </properties>
             </test-case>
           </test-suite>
-          <test-suite type="TestFixture" id="1010" name="PlayerOverloadPlayModeTests" fullname="UnderGrind.Tests.PlayerOverloadPlayModeTests" classname="UnderGrind.Tests.PlayerOverloadPlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.008065" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="1010" name="PlayerOverloadPlayModeTests" fullname="UnderGrind.Tests.PlayerOverloadPlayModeTests" classname="UnderGrind.Tests.PlayerOverloadPlayModeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.006998" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-case id="1011" name="Overload_DisablesRunAndJumpAndReducesWalkSpeedByConfiguredPercent" fullname="UnderGrind.Tests.PlayerOverloadPlayModeTests.Overload_DisablesRunAndJumpAndReducesWalkSpeedByConfiguredPercent" methodname="Overload_DisablesRunAndJumpAndReducesWalkSpeedByConfiguredPercent" classname="UnderGrind.Tests.PlayerOverloadPlayModeTests" runstate="Runnable" seed="175491826" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.006526" asserts="0">
+            <test-case id="1011" name="Overload_DisablesRunAndJumpAndReducesWalkSpeedByConfiguredPercent" fullname="UnderGrind.Tests.PlayerOverloadPlayModeTests.Overload_DisablesRunAndJumpAndReducesWalkSpeedByConfiguredPercent" methodname="Overload_DisablesRunAndJumpAndReducesWalkSpeedByConfiguredPercent" classname="UnderGrind.Tests.PlayerOverloadPlayModeTests" runstate="Runnable" seed="1174921640" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.006038" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
@@ -84,16 +84,16 @@
               </properties>
             </test-case>
           </test-suite>
-          <test-suite type="TestFixture" id="1012" name="PlayerWorldInteractionPlayModeTests" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.064363" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestFixture" id="1012" name="PlayerWorldInteractionPlayModeTests" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.058667" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-case id="1016" name="DisablingInventoryUI_RestoresPreviousCursorCapture" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.DisablingInventoryUI_RestoresPreviousCursorCapture" methodname="DisablingInventoryUI_RestoresPreviousCursorCapture" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="572061668" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.037551" asserts="0">
+            <test-case id="1016" name="DisablingInventoryUI_RestoresPreviousCursorCapture" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.DisablingInventoryUI_RestoresPreviousCursorCapture" methodname="DisablingInventoryUI_RestoresPreviousCursorCapture" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="792926181" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.031859" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
                 <property name="repeatIteration" value="0" />
               </properties>
             </test-case>
-            <test-case id="1014" name="DropSelectedStack_SpawnsConfiguredWorldPrefabAndRemovesOneItem" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.DropSelectedStack_SpawnsConfiguredWorldPrefabAndRemovesOneItem" methodname="DropSelectedStack_SpawnsConfiguredWorldPrefabAndRemovesOneItem" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="303297660" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.008873" asserts="0">
+            <test-case id="1014" name="DropSelectedStack_SpawnsConfiguredWorldPrefabAndRemovesOneItem" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.DropSelectedStack_SpawnsConfiguredWorldPrefabAndRemovesOneItem" methodname="DropSelectedStack_SpawnsConfiguredWorldPrefabAndRemovesOneItem" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="1341085871" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.007133" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
@@ -102,7 +102,7 @@
               <output><![CDATA[UnderGrind: imposta una quantità positiva per il pickup.
 ]]></output>
             </test-case>
-            <test-case id="1013" name="Interact_PicksUpWorldItemIntoInventory" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.Interact_PicksUpWorldItemIntoInventory" methodname="Interact_PicksUpWorldItemIntoInventory" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="1359450042" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.008651" asserts="0">
+            <test-case id="1013" name="Interact_PicksUpWorldItemIntoInventory" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.Interact_PicksUpWorldItemIntoInventory" methodname="Interact_PicksUpWorldItemIntoInventory" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="1555524438" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.008396" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
@@ -111,7 +111,7 @@
               <output><![CDATA[UnderGrind: imposta una quantità positiva per il pickup.
 ]]></output>
             </test-case>
-            <test-case id="1015" name="InventoryUI_RefreshesWhenConfiguredAfterAwake" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.InventoryUI_RefreshesWhenConfiguredAfterAwake" methodname="InventoryUI_RefreshesWhenConfiguredAfterAwake" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="885150082" result="Passed" start-time="2026-11-20 11:22:25Z" end-time="2026-11-20 11:22:25Z" duration="0.007059" asserts="0">
+            <test-case id="1015" name="InventoryUI_RefreshesWhenConfiguredAfterAwake" fullname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.InventoryUI_RefreshesWhenConfiguredAfterAwake" methodname="InventoryUI_RefreshesWhenConfiguredAfterAwake" classname="UnderGrind.Tests.PlayerWorldInteractionPlayModeTests" runstate="Runnable" seed="1734216831" result="Passed" start-time="2026-11-20 11:33:42Z" end-time="2026-11-20 11:33:42Z" duration="0.009347" asserts="0">
               <properties>
                 <property name="_JOINTYPE" value="UnityCombinatorial" />
                 <property name="retryIteration" value="0" />
