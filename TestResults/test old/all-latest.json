@@ -1,15 +1,15 @@
 {
-  "runId": "20261120-132751-816",
-  "finishedUtc": "2026-11-20T12:28:40.7650116Z",
+  "runId": "20261120-134344-073",
+  "finishedUtc": "2026-11-20T12:44:04.0694350Z",
   "timeoutSeconds": 1800,
   "status": "Failed",
   "standaloneExitCode": 0,
   "unityExitCode": 1,
   "standalone": {
-    "runId":  "20261120-132752-554",
-    "startedUtc":  "2026-11-20T12:27:52.5544747Z",
-    "finishedUtc":  "2026-11-20T12:28:01.0360288Z",
-    "durationSeconds":  8.482,
+    "runId":  "20261120-134344-715",
+    "startedUtc":  "2026-11-20T12:43:44.7155687Z",
+    "finishedUtc":  "2026-11-20T12:43:53.5329339Z",
+    "durationSeconds":  8.817,
     "diagnosticsBuild":  "Passed",
     "buildTimeoutSeconds":  180,
     "testTimeoutSeconds":  180,
@@ -47,101 +47,56 @@
                  ]
 },
   "unity": {
-    "runId":  "20261120-132802-174",
-    "startedUtc":  "2026-11-20T12:28:02.1745302Z",
-    "finishedUtc":  "2026-11-20T12:28:39.9652925Z",
+    "runId":  "20261120-134354-424",
+    "startedUtc":  "2026-11-20T12:43:54.4247808Z",
+    "finishedUtc":  "2026-11-20T12:44:03.7838942Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
     "environmentErrors":  [
-
+                              "PlayMode non avviato: EditMode ha giÃ  rilevato errori di compilazione che impediscono l\u0027esecuzione dei test."
                           ],
     "totals":  {
-                   "total":  52,
-                   "passed":  47,
+                   "total":  0,
+                   "passed":  0,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  5
+                   "failed":  0
                },
     "platforms":  [
                       {
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  2,
+                          "exitCode":  1,
                           "resultValid":  false,
                           "validationErrors":  [
-                                                   "Unity Ã¨ terminato con codice 2.",
-                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
-                                                   "Unity ha riportato 5 test falliti."
+                                                   "Unity Ã¨ terminato con codice 1.",
+                                                   "Unity non ha prodotto un XML nuovo e valido per questa piattaforma.",
+                                                   "Compilazione: Assets\\UnderGrind\\Editor\\HumanoidAvatarImporter.cs(72,57): error CS0122: \u0027SkeletonBone.parentName\u0027 is inaccessible due to its protection level",
+                                                   "Compilazione: Assets\\UnderGrind\\Editor\\HumanoidAvatarImporter.cs(72,57): error CS0122: \u0027SkeletonBone.parentName\u0027 is inaccessible due to its protection level",
+                                                   "Compilazione: Assets\\UnderGrind\\Editor\\HumanoidAvatarImporter.cs(72,57): error CS0122: \u0027SkeletonBone.parentName\u0027 is inaccessible due to its protection level",
+                                                   "Compilazione: Scripts have compiler errors."
                                                ],
                           "compilerDiagnostics":  [
-
+                                                      "Assets\\UnderGrind\\Editor\\HumanoidAvatarImporter.cs(72,57): error CS0122: \u0027SkeletonBone.parentName\u0027 is inaccessible due to its protection level",
+                                                      "Assets\\UnderGrind\\Editor\\HumanoidAvatarImporter.cs(72,57): error CS0122: \u0027SkeletonBone.parentName\u0027 is inaccessible due to its protection level",
+                                                      "Assets\\UnderGrind\\Editor\\HumanoidAvatarImporter.cs(72,57): error CS0122: \u0027SkeletonBone.parentName\u0027 is inaccessible due to its protection level",
+                                                      "Scripts have compiler errors."
                                                   ],
                           "failures":  [
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.BothImportedModelsBindToConfiguredVisualRigParts",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.EnsureValidAvatarPreservesValidManualPoseCorrections",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx\",\"femminile\")",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           }
+
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
                           "logFile":  "TestResults/test/Unity/EditMode.log",
                           "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
-                                         "total":  39,
-                                         "passed":  34,
-                                         "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  5
-                                     }
-                      },
-                      {
-                          "platform":  "PlayMode",
-                          "timeoutSeconds":  600,
-                          "timedOut":  false,
-                          "exitCode":  0,
-                          "resultValid":  true,
-                          "validationErrors":  [
-
-                                               ],
-                          "compilerDiagnostics":  [
-
-                                                  ],
-                          "failures":  [
-
-                                       ],
-                          "resultFile":  "TestResults/test/Unity/PlayMode.xml",
-                          "logFile":  "TestResults/test/Unity/PlayMode.log",
-                          "stdoutFile":  "TestResults/test/Unity/PlayMode.stdout.log",
-                          "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
-                          "totals":  {
-                                         "total":  13,
-                                         "passed":  13,
+                                         "failed":  0,
                                          "skipped":  0,
-                                         "inconclusive":  0,
-                                         "failed":  0
+                                         "total":  0,
+                                         "passed":  0
                                      }
                       }
                   ]
