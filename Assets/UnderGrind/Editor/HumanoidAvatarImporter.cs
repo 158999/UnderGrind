@@ -60,12 +60,43 @@ namespace UnderGrind.Editor
 
             if (avatar == null)
             {
-                Debug.LogError("UnderGrind: Unity non ha generato un Avatar Humanoid valido per " +
-                               assetPath + ". Verificare il mapping e la posa del rig.");
+                var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+                var currentDescription = importer.humanDescription;
+                var mappedBones = currentDescription.human == null
+                    ? "nessun mapping Humanoid serializzato"
+                    : string.Join(", ", currentDescription.human.Select(item =>
+                        item.humanName + " -> " + item.boneName));
+                var skeletonBones = currentDescription.skeleton == null
+                    ? "nessuno skeleton serializzato"
+                    : string.Join(", ", currentDescription.skeleton.Select(item =>
+                        item.name + " (parent: " + item.parentName + ")"));
+                var hierarchy = model == null
+                    ? "FBX hierarchy non disponibile"
+                    : string.Join(Environment.NewLine, model.GetComponentsInChildren<Transform>(true)
+                        .Select(GetTransformPath));
+
+                Debug.LogError("UnderGrind: Avatar Humanoid non valido: " + assetPath +
+                               Environment.NewLine + "Mapping importer: " + mappedBones +
+                               Environment.NewLine + "Skeleton importer: " + skeletonBones +
+                               Environment.NewLine + "Transform FBX importati:" +
+                               Environment.NewLine + hierarchy +
+                               Environment.NewLine + "Root armature configurata: " + armatureRootName);
                 return false;
             }
 
             return true;
+        }
+
+        private static string GetTransformPath(Transform transform)
+        {
+            var segments = new System.Collections.Generic.Stack<string>();
+            while (transform != null)
+            {
+                segments.Push(transform.name);
+                transform = transform.parent;
+            }
+
+            return string.Join("/", segments);
         }
 
         private static Avatar LoadValidAvatar(string assetPath)
