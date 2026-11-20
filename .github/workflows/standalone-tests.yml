@@ -47,8 +47,8 @@ jobs:
             throw "PowerShell syntax validation failed."
           }
           Write-Host "PowerShell test scripts: syntax valid."
-      - name: Verify child-process exit code handling
-        shell: pwsh
+      - name: Verify child-process exit code handling (Windows PowerShell 5.1)
+        shell: powershell
         run: ./Tools/Testing/test-process-runner.ps1
 
       - name: Run standalone tests
