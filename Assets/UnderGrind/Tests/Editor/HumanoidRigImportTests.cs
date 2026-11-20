@@ -45,7 +45,7 @@ namespace UnderGrind.Tests
                 "L'importazione della visibilità deve rispettare PlayerRigSettings.");
 
             var expectedMaterialMode = _settings.ImportMaterials
-                ? ModelImporterMaterialImportMode.ImportStandard
+                ? ModelImporterMaterialImportMode.ImportViaMaterialDescription
                 : ModelImporterMaterialImportMode.None;
             Assert.That(importer.materialImportMode, Is.EqualTo(expectedMaterialMode),
                 "L'importazione dei materiali deve rispettare PlayerRigSettings.");
