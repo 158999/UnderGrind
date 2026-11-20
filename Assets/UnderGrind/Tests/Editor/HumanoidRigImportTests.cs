@@ -62,6 +62,12 @@ namespace UnderGrind.Tests
                 Assert.That(avatar.GetBoneTransform(bone), Is.Not.Null,
                     "Mapping Humanoid mancante per " + bone + " nel rig " + label);
 
+            var armatureName = assetPath == MaleFbxPath
+                ? _settings.MaleArmatureRootName
+                : _settings.FemaleArmatureRootName;
+            var armature = FindDeepChild(model.transform, armatureName);
+            Assert.That(armature, Is.Not.Null, "Armature root '" + armatureName + "' mancante nel rig " + label);
+
             var renderers = model.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             Assert.That(renderers, Has.Length.EqualTo(6),
                 "Il rig " + label + " deve contenere Body, Head, FP Arms/Hands e TP Arms/Hands.");
@@ -89,9 +95,13 @@ namespace UnderGrind.Tests
                 Assert.That(renderer.sharedMesh.bindposes, Is.Not.Empty,
                     renderer.name + " non contiene bind pose.");
                 Assert.That(renderer.rootBone, Is.Not.Null, renderer.name + " non ha rootBone.");
+                Assert.That(renderer.rootBone == armature || renderer.rootBone.IsChildOf(armature), Is.True,
+                    renderer.name + " usa un rootBone esterno all'armatura configurata.");
                 Assert.That(renderer.bones, Is.Not.Empty, renderer.name + " non ha riferimenti alle ossa.");
                 Assert.That(renderer.bones.All(bone => bone != null), Is.True,
                     renderer.name + " contiene riferimenti a ossa mancanti.");
+                Assert.That(renderer.bones.All(bone => bone == armature || bone.IsChildOf(armature)), Is.True,
+                    renderer.name + " contiene ossa non appartenenti all'armatura configurata.");
             }
         }
 
@@ -110,6 +120,17 @@ namespace UnderGrind.Tests
         {
             AssertVisualRigBindings(MaleFbxPath, "maschile");
             AssertVisualRigBindings(FemaleFbxPath, "femminile");
+        }
+
+        private static Transform FindDeepChild(Transform root, string targetName)
+        {
+            if (root.name.Equals(targetName, StringComparison.OrdinalIgnoreCase)) return root;
+            foreach (Transform child in root)
+            {
+                var found = FindDeepChild(child, targetName);
+                if (found != null) return found;
+            }
+            return null;
         }
 
         private static Avatar LoadValidAvatar(string assetPath)
