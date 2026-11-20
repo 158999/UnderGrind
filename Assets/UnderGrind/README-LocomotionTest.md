@@ -2,11 +2,13 @@
 
 ## Requisiti e importazione del personaggio
 
-- Unity **6000.6.7f1**.
+- Unity **6000.6.9f1**.
 - Pacchetti del progetto: Input System e Unity Test Framework.
 - Il file Blender attualmente committato è `Assets/UnderGrind/Art/Source/humans.blend`.
-- La versione di lavoro più recente con armature e mesh separate è nel progetto progetto Blendstra `UnderGrind — Humans Source Separation` (projectId `2cdfaa98-3ea2-4a49-892a-b96488e12bc3`), versione `version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`. Non è ancora stata trasferita nel file locale del repository.
-- Prima di esportare, trasferire la versione Blendstra nel file `humans.blend`, aprirlo in Blender ed eseguire `Tools/Blender/export-undergrind-humans.py`. Lo script interrompe l'export se non trova tutte le mesh, i gruppi di pesi o i modificatori Armature richiesti.
+- La sorgente riggata più recente è il progetto Blendstra `UnderGrind — Humans Source Separation` (projectId `2cdfaa98-3ea2-4a49-892a-b96488e12bc3`), versione `version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6`. Aprire [la versione sorgente](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3&version=version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6) e scaricare il file Blender sorgente. Il file `Assets/UnderGrind/Art/Source/humans.blend` nel repository deve essere sostituito con questa versione: esportare il vecchio file senza prima trasferire la sorgente riggata genera FBX non aggiornati.
+- Copiare la sorgente scaricata in `Assets/UnderGrind/Art/Source/humans.blend`, quindi eseguire da PowerShell nella root del repository `Tools/Blender/run-export.ps1 -Force`. Se Blender non è nel PATH, impostare `BLENDER_EXECUTABLE` o passare `-BlenderExecutable`.
+- Il runner interrompe l'export se mancano armature, mesh, pesi, UV map o immagini texture referenziate ma non disponibili. L'export centra a zero la sola traslazione globale dell'armatura (senza cambiare gli offset relativi mesh/ossa), copia e incorpora le immagini referenziate e produce `Tools/Blender/last-export-report.json` con UV bounds, materiali, immagini e trasformazioni prima/dopo l'export.
+- Dopo l'export, in Unity selezionare entrambi gli FBX e usare **Reimport**. Se le UV bounds riportate sono limitate a una porzione dell'atlante, non rimappare automaticamente: confrontare le coordinate con il layout della texture sorgente. Se l'FBX non contiene le immagini attese, controllare il report e i nodi Image Texture in Blender.
 - Unity importa i file FBX tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, verificare **Edit → Preferences → External Tools** e ripetere Reimport.
 
 Il builder richiede i due prefab Humanoid maschile e femminile configurati in `PlayerRigSettings.asset`. Verifica Animator, Avatar Humanoid valido, SkinnedMeshRenderer, testa, corpo e gruppi renderer FP/TP. La proprietà `DefaultCharacter` dell'asset sceglie quale variante istanziare nella scena; entrambe vengono comunque validate. L'altezza del CharacterController è letta da `PlayerLocomotionSettings`, la stessa fonte usata per normalizzare il prefab. Se i prefab non superano la validazione, la scena non viene creata: non viene usato un manichino statico come sostituto.
