@@ -1,10 +1,10 @@
 ﻿{
-    "runId":  "20261120-091332-966",
-    "startedUtc":  "2026-11-20T08:13:32.9669773Z",
-    "finishedUtc":  "2026-11-20T08:14:29.0221933Z",
+    "runId":  "20261120-095548-440",
+    "startedUtc":  "2026-11-20T08:55:48.4401252Z",
+    "finishedUtc":  "2026-11-20T08:56:23.1667406Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
-    "status":  "Failed",
+    "status":  "Passed",
     "environmentErrors":  [
 
                           ],
@@ -20,11 +20,10 @@
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  1,
-                          "resultValid":  false,
+                          "exitCode":  0,
+                          "resultValid":  true,
                           "validationErrors":  [
-                                                   "Impossibile avviare o attendere Unity: Unity EditMode Ã¨ terminato senza rendere disponibile il codice di uscita.",
-                                                   "Unity Ã¨ terminato con codice 1."
+
                                                ],
                           "compilerDiagnostics":  [
 
@@ -48,11 +47,10 @@
                           "platform":  "PlayMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  1,
-                          "resultValid":  false,
+                          "exitCode":  0,
+                          "resultValid":  true,
                           "validationErrors":  [
-                                                   "Impossibile avviare o attendere Unity: Unity PlayMode Ã¨ terminato senza rendere disponibile il codice di uscita.",
-                                                   "Unity Ã¨ terminato con codice 1."
+
                                                ],
                           "compilerDiagnostics":  [
 

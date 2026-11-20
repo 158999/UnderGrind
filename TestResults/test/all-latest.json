@@ -1,15 +1,15 @@
 {
-  "runId": "20261120-091314-434",
-  "finishedUtc": "2026-11-20T08:14:29.3173393Z",
+  "runId": "20261120-095537-299",
+  "finishedUtc": "2026-11-20T08:56:23.5033255Z",
   "timeoutSeconds": 1800,
-  "status": "Failed",
+  "status": "Passed",
   "standaloneExitCode": 0,
   "unityExitCode": 0,
   "standalone": {
-    "runId":  "20261120-091314-928",
-    "startedUtc":  "2026-11-20T08:13:14.9292644Z",
-    "finishedUtc":  "2026-11-20T08:13:32.2864086Z",
-    "durationSeconds":  17.357,
+    "runId":  "20261120-095537-877",
+    "startedUtc":  "2026-11-20T08:55:37.8773107Z",
+    "finishedUtc":  "2026-11-20T08:55:47.7598844Z",
+    "durationSeconds":  9.883,
     "diagnosticsBuild":  "Passed",
     "buildTimeoutSeconds":  180,
     "testTimeoutSeconds":  180,
@@ -47,12 +47,12 @@
                  ]
 },
   "unity": {
-    "runId":  "20261120-091332-966",
-    "startedUtc":  "2026-11-20T08:13:32.9669773Z",
-    "finishedUtc":  "2026-11-20T08:14:29.0221933Z",
+    "runId":  "20261120-095548-440",
+    "startedUtc":  "2026-11-20T08:55:48.4401252Z",
+    "finishedUtc":  "2026-11-20T08:56:23.1667406Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
-    "status":  "Failed",
+    "status":  "Passed",
     "environmentErrors":  [
 
                           ],
@@ -68,11 +68,10 @@
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  1,
-                          "resultValid":  false,
+                          "exitCode":  0,
+                          "resultValid":  true,
                           "validationErrors":  [
-                                                   "Impossibile avviare o attendere Unity: Unity EditMode Ã¨ terminato senza rendere disponibile il codice di uscita.",
-                                                   "Unity Ã¨ terminato con codice 1."
+
                                                ],
                           "compilerDiagnostics":  [
 
@@ -96,11 +95,10 @@
                           "platform":  "PlayMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  1,
-                          "resultValid":  false,
+                          "exitCode":  0,
+                          "resultValid":  true,
                           "validationErrors":  [
-                                                   "Impossibile avviare o attendere Unity: Unity PlayMode Ã¨ terminato senza rendere disponibile il codice di uscita.",
-                                                   "Unity Ã¨ terminato con codice 1."
+
                                                ],
                           "compilerDiagnostics":  [
 

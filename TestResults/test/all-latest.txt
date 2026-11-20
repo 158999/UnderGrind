@@ -1,7 +1,7 @@
 ﻿UnderGrind complete test run
-Status: Failed
+Status: Passed
 Standalone: Passed | Exit: 0
-Unity: Failed | Exit: 0
+Unity: Passed | Exit: 0
 Standalone logs: TestResults/test/*.log
 Unity logs and XML: TestResults/test/Unity/
 Reports: TestResults/test/
