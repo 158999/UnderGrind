@@ -196,6 +196,14 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void ConfiguredModelYawAlignsAuthoredForwardWithPlayerForward()
+        {
+            var alignedForward = Quaternion.Euler(0f, _settings.ModelYawOffset, 0f) * Vector3.left;
+            Assert.That(Vector3.Dot(alignedForward, Vector3.forward), Is.GreaterThan(0.999f),
+                "Il forward sorgente -X deve essere allineato al forward Player +Z tramite PlayerRigSettings.");
+        }
+
+        [Test]
         public void MaleAndFemaleFbxUseDistinctHumanoidAvatars()
         {
             var maleAvatar = LoadValidAvatar(MaleFbxPath);
