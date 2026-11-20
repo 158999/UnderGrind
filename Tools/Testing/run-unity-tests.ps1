@@ -91,35 +91,57 @@ else {
             $code = 1
 
             $timedOut = $false
+            $process = $null
             try {
-                $process = Start-Process -FilePath $UnityEditorPath -ArgumentList $argumentLine -WorkingDirectory $root -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+                # Use Process directly: Start-Process can return a Process snapshot
+                # whose ExitCode is unavailable in some PowerShell/.NET combinations,
+                # even though Unity has already written a successful TestRunner report.
+                $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+                $startInfo.FileName = $UnityEditorPath
+                $startInfo.Arguments = $argumentLine
+                $startInfo.WorkingDirectory = $root
+                $startInfo.UseShellExecute = $false
+                $startInfo.CreateNoWindow = $true
+                $startInfo.RedirectStandardOutput = $true
+                $startInfo.RedirectStandardError = $true
+
+                $process = [System.Diagnostics.Process]::new()
+                $process.StartInfo = $startInfo
+                if (-not $process.Start()) {
+                    throw "Impossibile avviare Unity $target."
+                }
+
+                # Drain both redirected streams asynchronously to prevent pipe-buffer
+                # deadlocks while Unity imports assets and runs the test assemblies.
+                $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+                $stderrTask = $process.StandardError.ReadToEndAsync()
                 if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
                     $timedOut = $true
                     $validationErrors.Add("Timeout: Unity $target ha superato $TimeoutSeconds secondi. Il processo verrà terminato.")
                     try { & taskkill.exe /PID $process.Id /T /F 2>$null | Out-Null } catch { }
                     try {
                         if (-not $process.HasExited) { $process.Kill() }
-                        $process.WaitForExit()
+                        [void]$process.WaitForExit(10000)
                     } catch { }
                     $code = 124
                 }
                 else {
-                    # Refresh the Process snapshot before reading ExitCode. Without
-                    # this, some PowerShell/.NET process snapshots can expose a null
-                    # exit code even after WaitForExit reports completion.
-                    $process.Refresh()
-                    if (-not $process.HasExited) {
-                        throw "Unity $target ha segnalato il completamento ma risulta ancora in esecuzione."
-                    }
-                    $processExitCode = $process.ExitCode
-                    if ($null -eq $processExitCode) {
-                        throw "Unity $target è terminato senza rendere disponibile il codice di uscita."
-                    }
-                    $code = [int]$processExitCode
+                    # WaitForExit() without a timeout also waits for asynchronous
+                    # output handlers to finish before the streams are persisted.
+                    $process.WaitForExit()
+                    $code = [int]$process.ExitCode
                 }
+
+                $stdout = $stdoutTask.GetAwaiter().GetResult()
+                $stderr = $stderrTask.GetAwaiter().GetResult()
+                [IO.File]::WriteAllText($stdoutPath, $stdout, [Text.UTF8Encoding]::new($false))
+                [IO.File]::WriteAllText($stderrPath, $stderr, [Text.UTF8Encoding]::new($false))
             }
             catch {
                 $validationErrors.Add("Impossibile avviare o attendere Unity: $($_.Exception.Message)")
+            }
+            finally {
+                if ($null -ne $process) { $process.Dispose() }
             }
             if ($code -ne 0 -and -not $timedOut) { $validationErrors.Add("Unity è terminato con codice $code.") }
 
