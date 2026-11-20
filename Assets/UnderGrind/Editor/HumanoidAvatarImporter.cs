@@ -6,9 +6,9 @@ using UnityEngine;
 namespace UnderGrind.Editor
 {
     /// <summary>
-    /// Keeps FBX Humanoid import on Unity's native hierarchy-aware Avatar mapping.
-    /// Valid manual Avatar corrections (including Enforce T-Pose) are preserved.
-    /// Invalid manual descriptions fall back to Unity's automatic hierarchy mapping.
+    /// Imports FBX Humanoid avatars while preserving valid manual pose corrections.
+    /// If Unity's automatic map is invalid, repairs mappings by exact transform names
+    /// before falling back to a clean automatic import.
     /// </summary>
     public static class HumanoidAvatarImporter
     {
@@ -45,6 +45,21 @@ namespace UnderGrind.Editor
             }
 
             var avatar = LoadValidAvatar(assetPath);
+            if (avatar == null)
+            {
+                // Unity's auto-mapper can assign a real RightHand transform to RightLowerArm.
+                // Rebuild the Humanoid map by exact transform names while preserving the
+                // importer-generated skeleton and its sampled pose.
+                var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+                if (TryBuildExactNameMapping(model, description, out var exactDescription))
+                {
+                    importer.humanDescription = exactDescription;
+                    importer.SaveAndReimport();
+                    importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+                    avatar = LoadValidAvatar(assetPath);
+                }
+            }
+
             if (avatar == null && hasManualMapping)
             {
                 // Unity's Avatar Configuration writes pose corrections into humanDescription.
@@ -85,6 +100,53 @@ namespace UnderGrind.Editor
             }
 
             return true;
+        }
+
+        private static bool TryBuildExactNameMapping(
+            GameObject model,
+            HumanDescription sourceDescription,
+            out HumanDescription correctedDescription)
+        {
+            correctedDescription = sourceDescription;
+            if (model == null || sourceDescription.skeleton == null || sourceDescription.skeleton.Length == 0)
+                return false;
+
+            var transforms = model.GetComponentsInChildren<Transform>(true)
+                .GroupBy(transform => transform.name, StringComparer.Ordinal)
+                .ToDictionary(group => group.Key, group => group.First(), StringComparer.Ordinal);
+
+            var requiredBones = new[]
+            {
+                "Hips", "Spine", "Chest", "Neck", "Head",
+                "LeftShoulder", "RightShoulder",
+                "LeftUpperArm", "RightUpperArm",
+                "LeftLowerArm", "RightLowerArm",
+                "LeftHand", "RightHand",
+                "LeftUpperLeg", "RightUpperLeg",
+                "LeftLowerLeg", "RightLowerLeg",
+                "LeftFoot", "RightFoot"
+            };
+
+            if (requiredBones.Any(boneName => !transforms.ContainsKey(boneName)))
+            {
+                Debug.LogError("UnderGrind: mapping Humanoid esplicito impossibile; ossa mancanti: " +
+                               string.Join(", ", requiredBones.Where(boneName => !transforms.ContainsKey(boneName))));
+                return false;
+            }
+
+            var mappings = HumanTrait.BoneName
+                .Where(boneName => !string.IsNullOrEmpty(boneName) && transforms.ContainsKey(boneName))
+                .Select(boneName => new HumanBone
+                {
+                    humanName = boneName,
+                    boneName = boneName,
+                    limit = new HumanLimit { useDefaultValues = true }
+                })
+                .ToArray();
+
+            correctedDescription.human = mappings;
+            return requiredBones.All(required =>
+                mappings.Any(mapping => mapping.humanName == required && mapping.boneName == required));
         }
 
         private static string GetTransformPath(Transform transform)
