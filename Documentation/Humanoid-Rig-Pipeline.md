@@ -71,6 +71,14 @@ La versione Blendstra più recente contiene quattro mesh separate per testa e co
 - sei `SkinnedMeshRenderer` per personaggio, mesh e bind pose presenti, root bone assegnato e riferimenti alle ossa risolti;
 - riconoscimento delle sei parti da parte di `PlayerVisualRig`, con una testa, un corpo, due renderer FP e due TP.
 
+### Correzione della posa T-pose in Unity
+
+Se il mapping delle ossa è presente ma Unity mostra `Character is not in T pose`, aprire **Configure** sul FBX e usare **Pose → Enforce T-Pose**. Controllare la posa risultante, quindi premere **Apply** e **Done**. Se l'avviso resta, correggere manualmente le ossa residue nella finestra Avatar Configuration e applicare nuovamente.
+
+Unity salva queste correzioni nella `HumanDescription` del `ModelImporter`. `HumanoidAvatarImporter.EnsureValidAvatar` conserva ora una descrizione manuale quando produce un Avatar valido; elimina il mapping manuale soltanto se l'Avatar risultante è invalido, quindi riprova con il mapping automatico gerarchico. In questo modo l'inizializzazione dei test non annulla più una correzione T-pose valida.
+
+Il test `EnsureValidAvatarPreservesValidManualPoseCorrections` verifica che una descrizione valida con mapping e posa non venga cancellata. Non sostituisce il controllo visivo della posa, delle deformazioni e del retargeting.
+
 Questi test verificano gli asset importati, non soltanto GameObject costruiti artificialmente. Devono essere eseguiti nel Unity Editor tramite Test Runner (EditMode). La workflow GitHub Actions attuale esegue i test standalone Diagnostics e non esegue i test Unity. Finché la nuova suite non viene eseguita in Unity, la validità degli Avatar e il binding dei renderer restano non verificati.
 
 ## Sorgenti delle animazioni
