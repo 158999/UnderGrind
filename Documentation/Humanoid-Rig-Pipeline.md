@@ -62,6 +62,17 @@ La scena di test richiede entrambi i prefab riggati e verifica Animator, Avatar 
 
 La versione Blendstra più recente contiene quattro mesh separate per testa e corpo e le due armature hanno i nomi esatti richiesti. Questo supera il limite geometrico della prima revisione, ma non certifica ancora pesi, deformazioni, configurazione dei modificatori, UV o Avatar Humanoid. Il builder può quindi verificare gerarchia e renderer solo dopo l'esportazione e l'importazione dei due FBX; l'accettazione del rig resta subordinata ai test di deformazione in Unity.
 
+## Verifica automatica dell'importazione FBX
+
+`Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs` contiene test EditMode che caricano i due FBX effettivi dal progetto Unity. I controlli verificano:
+
+- importazione Humanoid con Avatar generato dal modello e ottimizzazione GameObject disattivata;
+- Avatar distinti, validi e Humanoid, con mapping delle ossa principali;
+- sei `SkinnedMeshRenderer` per personaggio, mesh e bind pose presenti, root bone assegnato e riferimenti alle ossa risolti;
+- riconoscimento delle sei parti da parte di `PlayerVisualRig`, con una testa, un corpo, due renderer FP e due TP.
+
+Questi test verificano gli asset importati, non soltanto GameObject costruiti artificialmente. Devono essere eseguiti nel Unity Editor tramite Test Runner (EditMode). La workflow GitHub Actions attuale esegue i test standalone Diagnostics e non esegue i test Unity. Finché la nuova suite non viene eseguita in Unity, la validità degli Avatar e il binding dei renderer restano non verificati.
+
 ## Sorgenti delle animazioni
 
 Sono stati individuati nella libreria PINOC otto movimenti:
