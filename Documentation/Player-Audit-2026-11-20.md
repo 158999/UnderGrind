@@ -39,7 +39,7 @@ La pipeline è stata estesa con `Tools/Testing/test-process-runner.ps1`, che avv
 
 ## Personaggi e pipeline 3D
 
-Il progetto Blendstra `UnderGrind — Humans Source Separation`, versione `version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`, contiene:
+Il progetto Blendstra `UnderGrind — Humans Source Separation`, versione `version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6`, contiene:
 
 - due armature distinte: `UG_Male_Armature` e `UG_Female_Armature`;
 - sei mesh separate per personaggio: Body, Head, TP Arms, TP Hands, FP Arms e FP Hands;
