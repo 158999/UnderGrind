@@ -212,6 +212,9 @@ namespace UnderGrind.Editor
             // not children of the armature transform itself.
             var temporary = UnityEngine.Object.Instantiate(source);
             temporary.name = prefabName;
+            // The authored human source faces -X. Rotate it into the Player local +Z forward
+            // before measuring bounds and saving the prefab; the offset remains Inspector-configurable.
+            temporary.transform.localRotation = Quaternion.Euler(0f, rigSettings.ModelYawOffset, 0f);
             var animator = temporary.GetComponent<Animator>();
             if (animator == null) animator = temporary.AddComponent<Animator>();
             animator.avatar = avatar;
