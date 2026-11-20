@@ -22,7 +22,31 @@ Ogni rig deve avere sei mesh figlie:
 
 Il token `<Character>` è `Male` o `Female`.
 
-## Esecuzione
+## Esecuzione automatizzata (Windows)
+
+Dalla root del repository:
+
+```powershell
+./Tools/Blender/run-export.ps1
+```
+
+Il runner individua Blender tramite il comando `blender` nel PATH oppure tramite la variabile d'ambiente `BLENDER_EXECUTABLE`. In alternativa è possibile specificare `-BlenderExecutable` e `-TimeoutSeconds`.
+
+Il runner legge i percorsi FBX da `PlayerRigSettings.asset` (con fallback al JSON predefinito), avvia Blender in background, acquisisce separatamente stdout/stderr e verifica codice di uscita, report, presenza dei due personaggi, sei mesh per personaggio e dimensioni effettive dei file.
+
+Per impostazione predefinita non sostituisce FBX già esistenti. Per autorizzare esplicitamente la sostituzione:
+
+```powershell
+./Tools/Blender/run-export.ps1 -Force
+```
+
+Il timeout predefinito è 300 secondi. Per un'installazione Blender non presente nel PATH:
+
+```powershell
+./Tools/Blender/run-export.ps1 -BlenderExecutable "C:\\Program Files\\Blender Foundation\\Blender 4.5\\blender.exe"
+```
+
+## Esecuzione manuale
 
 1. Aprire in Blender il file `Assets/UnderGrind/Art/Source/humans.blend`.
 2. Aprire `Tools/Blender/export-undergrind-humans.py` nell'editor di testo di Blender.
