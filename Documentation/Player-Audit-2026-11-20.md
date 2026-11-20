@@ -81,3 +81,12 @@ La suite è stata aggiunta dopo l'ultima esecuzione locale registrata (47 test U
 
 La documentazione di `Assets/UnderGrind/Animations/README.md` è stata allineata a `PlayerAnimationSettings.GetMissingRequiredClipNames()`: Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono obbligatorie; Fall e Land sono opzionali.
 
+
+## Diagnosi dei risultati EditMode del 20 novembre
+
+Le due esecuzioni EditMode caricate nel repository hanno riportato 35 test superati e 3 falliti su 38. I tre fallimenti non erano errori di compilazione: entrambi gli FBX risultavano importati con `ModelImporterAnimationType.Generic` e `ModelImporterAvatarSetup` non configurato per creare un Avatar dal modello. Di conseguenza non esisteva un Avatar Humanoid valido da verificare.
+
+La causa era nei file `.fbx.meta` versionati: `animationType: 2` e `avatarSetup: 0`, in contrasto con le impostazioni richieste dal builder e dall'asset `PlayerRigSettings`. I due meta-file sono stati aggiornati a importazione Humanoid, Avatar creato dal modello e importazione animazioni disattivata, coerentemente con `PlayerRigSettings`. I test EditMode ora verificano anche che le principali opzioni del ModelImporter coincidano con la configurazione dell'asset.
+
+La correzione è stata pushata, ma deve ancora essere validata eseguendo nuovamente Unity EditMode sul nuovo HEAD. La workflow GitHub Actions verifica soltanto Standalone Diagnostics e non sostituisce l'esecuzione dei test Unity. Non dichiarare risolta la validità degli Avatar finché il nuovo report EditMode non risulta Passed.
+
