@@ -43,7 +43,7 @@ Per impostazione predefinita non sostituisce FBX già esistenti. Per autorizzare
 Il timeout predefinito è 300 secondi. Per un'installazione Blender non presente nel PATH:
 
 ```powershell
-./Tools/Blender/run-export.ps1 -BlenderExecutable "C:\\Program Files\\Blender Foundation\\Blender 4.5\\blender.exe"
+./Tools/Blender/run-export.ps1 -BlenderExecutable "C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"
 ```
 
 ## Esecuzione manuale
