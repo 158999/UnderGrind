@@ -1,61 +1,35 @@
 ﻿{
-    "runId":  "20261120-134640-739",
-    "startedUtc":  "2026-11-20T12:46:40.7391217Z",
-    "finishedUtc":  "2026-11-20T12:47:12.6089411Z",
+    "runId":  "20261120-135017-279",
+    "startedUtc":  "2026-11-20T12:50:17.2794945Z",
+    "finishedUtc":  "2026-11-20T12:51:00.8528263Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
-    "status":  "Failed",
+    "status":  "Passed",
     "environmentErrors":  [
 
                           ],
     "totals":  {
                    "total":  52,
-                   "passed":  47,
+                   "passed":  52,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  5
+                   "failed":  0
                },
     "platforms":  [
                       {
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  2,
-                          "resultValid":  false,
+                          "exitCode":  0,
+                          "resultValid":  true,
                           "validationErrors":  [
-                                                   "Unity Ã¨ terminato con codice 2.",
-                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
-                                                   "Unity ha riportato 5 test falliti."
+
                                                ],
                           "compilerDiagnostics":  [
 
                                                   ],
                           "failures":  [
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.BothImportedModelsBindToConfiguredVisualRigParts",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.EnsureValidAvatarPreservesValidManualPoseCorrections",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx\",\"femminile\")",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars",
-                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
-                                           }
+
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
                           "logFile":  "TestResults/test/Unity/EditMode.log",
@@ -63,10 +37,10 @@
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
                                          "total":  39,
-                                         "passed":  34,
+                                         "passed":  39,
                                          "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  5
+                                         "failed":  0
                                      }
                       },
                       {

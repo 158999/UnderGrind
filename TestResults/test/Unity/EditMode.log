@@ -1,24 +1,24 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 40952)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 42408)
-VBCSCompiler prewarm took 30.26 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 31128)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 38556)
+VBCSCompiler prewarm took 492.85 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.6/staging' branch; Version is '6000.6.9f1 (8c45277fb9c5) revision 9192743'; Using compiler version '194234433'; Build Type 'Release'
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr" at "2026-11-20T12:46:42.2353174Z"
 OS: 'Windows 11  (10.0.26300) Professional' Language: 'it' Physical Memory: 15875 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr" at "2026-11-20T12:50:18.1197543Z"
 System  architecture: x64
 Process architecture: x64
-Date: 2026-11-20T12:46:42Z
+Date: 2026-11-20T12:50:18Z
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 2384, path: "C:/Program Files/WindowsApps/UnityTechnologies.UnityHub_4.0.1.65535_x64__2vrhnee42bhxm/app/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.19.0+4cc3dda
-  Session Id:              de914fb09e6842dc86db1bff73a456dd
+  Session Id:              6b13d35d6d8f466d86b57e00fb4bef9a
   Correlation Id:          7c8eebac9a3251e316ab36739ea7d61a
-  External correlation Id: 5846605351743156079
+  External correlation Id: 3057660601299315605
   Machine Id:              XzjnqROkxgGpDG+9teZZ5ygXX5w=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-cgr" (connect: 0.00s, validation: 0.02s, handshake: 0.07s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr-notifications" at "2026-11-20T12:46:42.3265251Z"
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-cgr" (connect: 0.00s, validation: 0.02s, handshake: 0.17s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr-notifications" at "2026-11-20T12:50:18.3115804Z"
 [Licensing::Module] Error: Access token is unavailable; failed to update
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
@@ -27,7 +27,7 @@ Date: 2026-11-20T12:46:42Z
   Type: Assigned
   Expiration: Unlimited
 [Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
-[Licensing::Module] Licensing Background thread has ended after 0.15s
+[Licensing::Module] Licensing Background thread has ended after 0.26s
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Unity.exe
@@ -83,16 +83,16 @@ C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [19068]  Target information:
+Player connection [31152]  Target information:
 
-Player connection [19068]  * "[IP] 192.168.0.169 [Port] 55504 [Flags] 2 [Guid] 1347072018 [EditorId] 1347072018 [Version] 1048832 [Id] WindowsEditor(7,NB208) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [31152]  * "[IP] 192.168.0.169 [Port] 55504 [Flags] 2 [Guid] 3544671694 [EditorId] 3544671694 [Version] 1048832 [Id] WindowsEditor(7,NB208) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [19068] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [19068] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [31152] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [31152] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-26236" after 0.2 seconds.
+[Package Manager] Connected to IPC stream "Upm-42052" after 0.2 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Initialising UDS system complete:
@@ -127,7 +127,7 @@ Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/Managed
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56236
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56052
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -135,30 +135,30 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.002998 seconds.
+Registered in 0.002825 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.827 seconds
-Domain Reload Profiling: 1572ms
-	BeginReloadAssembly (161ms)
-		CreateAndSetChildDomain (21ms)
-	RebuildCommonClasses (5ms)
-	RebuildNativeTypeToScriptingClass (16ms)
-	initialDomainReloadingComplete (74ms)
-	LoadAllAssembliesAndSetupDomain (487ms)
-		LoadAssemblies (138ms)
-		TypeCache.Refresh (322ms)
-			TypeCache.ScanAssembly (294ms)
+- Finished resetting the current domain, in  0.775 seconds
+Domain Reload Profiling: 1290ms
+	BeginReloadAssembly (146ms)
+		CreateAndSetChildDomain (16ms)
+	RebuildCommonClasses (4ms)
+	RebuildNativeTypeToScriptingClass (14ms)
+	initialDomainReloadingComplete (65ms)
+	LoadAllAssembliesAndSetupDomain (285ms)
+		LoadAssemblies (126ms)
+		TypeCache.Refresh (192ms)
+			TypeCache.ScanAssembly (178ms)
 		AnalyzeDomain (1ms)
-	FinalizeReload (828ms)
+	FinalizeReload (776ms)
 		SetupLoadedEditorAssemblies (0ms)
 			InitializePlatformSupportModulesInManaged (3ms)
-			BeforeProcessingInitializeOnLoad (104ms)
-			ProcessInitializeOnLoadAttributes (100ms)
-			ProcessInitializeOnLoadMethodAttributes (368ms)
+			BeforeProcessingInitializeOnLoad (113ms)
+			ProcessInitializeOnLoadAttributes (87ms)
+			ProcessInitializeOnLoadMethodAttributes (350ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -192,7 +192,7 @@ Application.AssetDatabase Initial Refresh Start
     com.unity.modules.animation@1.0.0 (location: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Library\PackageCache\com.unity.modules.animation)
     com.unity.test-framework.performance@6.6.0 (location: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Library\PackageCache\com.unity.test-framework.performance@816c370aad5b)
 [Subsystems] No new subsystems found in resolved package list.
-[Package Manager] Done registering packages in 0.15 seconds
+[Package Manager] Done registering packages in 0.17 seconds
 [ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
 Starting: C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind
@@ -201,9 +201,21 @@ warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
       Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
 warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
       Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
-ExitCode: 0 Duration: 1s433ms
-[603/770    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-[766/770    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+ExitCode: 0 Duration: 6s82ms
+[602/770    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[762/770    4s] Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.dll (+2 others)
+Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(217,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
+[763/770    4s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+[764/770    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/UnderGrind.Locomotion.Tests.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.dll, with 147 defines and 301 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+[765/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.Locomotion.Tests.pdb
+[766/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.Locomotion.Tests.dll
 [767/770    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
 Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 147 defines and 345 references
 
@@ -214,10 +226,11 @@ processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.Burst
 running Unity.Jobs.CodeGen.JobsILPostProcessor
 [768/770    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
 [769/770    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
-*** Tundra build success (1.37 seconds), 5 items updated, 770 evaluated
+*** Tundra build success (5.89 seconds), 9 items updated, 770 evaluated
+Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(217,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
 Total cache size 20414448
-Total cache size after purge 20414448, took 00:00:00.0606447
-AssetDatabase: script compilation time: 2.268442s
+Total cache size after purge 20414448, took 00:00:00.0764499
+AssetDatabase: script compilation time: 6.941784s
 Begin MonoManager ReloadAssembly
 'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
 'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
@@ -225,118 +238,110 @@ Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.689 seconds
-Domain Reload Profiling: 1569ms
-	BeginReloadAssembly (328ms)
-		DisableScriptedObjects (100ms)
-		CreateAndSetChildDomain (57ms)
-	RebuildCommonClasses (9ms)
+- Finished resetting the current domain, in  0.735 seconds
+Domain Reload Profiling: 1656ms
+	BeginReloadAssembly (322ms)
+		DisableScriptedObjects (107ms)
+		CreateAndSetChildDomain (42ms)
+	RebuildCommonClasses (8ms)
 	RebuildNativeTypeToScriptingClass (14ms)
-	initialDomainReloadingComplete (63ms)
-	LoadAllAssembliesAndSetupDomain (466ms)
-		LoadAssemblies (355ms)
-		TypeCache.Refresh (73ms)
-			TypeCache.ScanAssembly (64ms)
-		AnalyzeDomain (33ms)
-			BuildScriptInfoCaches (26ms)
-			ResolveRequiredComponents (6ms)
-	FinalizeReload (690ms)
+	initialDomainReloadingComplete (64ms)
+	LoadAllAssembliesAndSetupDomain (513ms)
+		LoadAssemblies (376ms)
+		TypeCache.Refresh (83ms)
+			TypeCache.ScanAssembly (74ms)
+		AnalyzeDomain (36ms)
+			BuildScriptInfoCaches (28ms)
+			ResolveRequiredComponents (7ms)
+	FinalizeReload (736ms)
 		SetupLoadedEditorAssemblies (0ms)
-			InitializePlatformSupportModulesInManaged (3ms)
 			BeforeProcessingInitializeOnLoad (103ms)
-			ProcessInitializeOnLoadAttributes (155ms)
-			ProcessInitializeOnLoadMethodAttributes (93ms)
-			AfterProcessingInitializeOnLoad (8ms)
-		AwakeInstancesAfterBackupRestoration (24ms)
+			ProcessInitializeOnLoadAttributes (140ms)
+			ProcessInitializeOnLoadMethodAttributes (122ms)
+			AfterProcessingInitializeOnLoad (22ms)
+			EditorAssembliesLoaded (16ms)
+		AwakeInstancesAfterBackupRestoration (92ms)
 Starting new worker id: 0 with log in C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind/Logs/AssetImportWorkerHW0.log
-Importing 'GUID: 217921afca27e8946873bc4e9e31c462 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx' with importer (FBXImporter)
-A polygon of Mesh 'Human_Male_Body' in Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx is self-intersecting and has been discarded.
-Rig Error:  Invalid Avatar Rig Configuration. Missing or invalid transform:
-	Required human bone 'RightHand' not found
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '2c517b8690d8ac58bd5e831c175e2c77') in 0.164 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=57ec3e4dbec956d2eacdae6345211181 DependenciesID=041f004d7d99ec26640d55b728ecea6c StaticDependenciesID=6b8eeba441df158c4bad3df005196d93 
-Importing 'GUID: aa4a3125da305014c85b367ef0198b36 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx' with importer (FBXImporter)
-Rig Error:  Invalid Avatar Rig Configuration. Missing or invalid transform:
-	Required human bone 'LeftLowerLeg' not found
-Imported 'GUID: aa4a3125da305014c85b367ef0198b36' -> (Import Result ID: '1b14a41c3bc9d10cc598ea16e7195612') in 0.039 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2aac3e7242809d885138ded66ff2dbf1 DependenciesID=6e7c117a365b2dcc78d89f839a04f241 StaticDependenciesID=6d4ed5c5d68288ad9db6530b57078632 
 
-Asset Pipeline Refresh (id=1603a9a68376b5445a4258e459d259bf): Total: 5.210 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=cd34bab6465b253459e6768ade9af438): Total: 9.723 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
 	(Values over 0.05ms)
 	Summary:
-		Imports: total=2 (actual=2, local cache=0, cache server=0)
-		Asset DB Process Time: managed=9 ms, native=1425 ms
-		Asset DB Callback time: managed=346 ms, native=164 ms
-		Scripting: domain reloads=1, domain reload time=946 ms, compile time=2275 ms, other=42 ms
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=1263 ms
+		Asset DB Callback time: managed=309 ms, native=179 ms
+		Scripting: domain reloads=1, domain reload time=983 ms, compile time=6944 ms, other=43 ms
 		Project Asset Count: scripts=861, non-scripts=1631
-		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Asset File Changes: new=0, changed=2, moved=0, deleted=0
 		Scan Filter Count: 0
-	InvokePackagesCallback: 161.071ms
-	ApplyChangesToAssetFolders: 0.748ms
-	Scan: 181.812ms
-	Collect global state as custom dependencies: 10.226ms
-	OnSourceAssetsModified: 0.633ms
-	CategorizeScriptCompilationAssets: 12.810ms
-	ProcessAssetsWithTransientArtifactChanges: 35.972ms
-	CategorizeAssets: 56.352ms
-	CompileScripts: 2275.481ms
-	ImportOutOfDateAssets: 917.396ms (695.689ms without children)
-		ImportManagerImport: 206.915ms (1.581ms without children)
-		UnloadImportedAssets: 1.241ms
-		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.336ms
-		ImportSchedulerStart: 13.199ms
-	PostProcessAllAssets: 351.943ms
-		VCAutoAddAssetPostprocess 2.295ms
-		PostProcessCallbackCreateDeferredMaterials 0.404ms
-		XRBuildSystem.XRAssetImported 0.146ms
-		MonoPostProcessAllAssets: 345.781ms
-			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 188.910ms
-			AssetPostprocessor.OnPostprocessAllAssets 81.109ms
-			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 23.318ms
-			StyleCatalogPostProcessor.OnPostprocessAllAssets 13.710ms
-			BuilderAssetPostprocessor.OnPostprocessAllAssets 5.438ms
-			AssetChangedListener.OnPostprocessAllAssets 2.689ms
-			PostProcessor.OnPostprocessAllAssets 2.078ms
-			SpeedTree9Postprocessor.OnPostprocessAllAssets 2.012ms
-			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 1.931ms
-			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.803ms
-			SyncVS.PostprocessSyncProject 1.200ms
-			EditModeScopePostprocessor.OnPostprocessAllAssets 1.095ms
-			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.811ms
-			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.735ms
-			MaterialPostprocessor.OnPostprocessAllAssets 0.636ms
-			AudioMixerPostprocessor.OnPostprocessAllAssets 0.480ms
-			TextAssetPostProcessor.OnPostprocessAllAssets 0.362ms
-			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.315ms
-			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.294ms
-			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.282ms
-			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.264ms
-			AssetEvents.OnPostprocessAllAssets 0.248ms
-			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.229ms
-			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.221ms
-			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.185ms
-			SpeedTreePostProcessor.OnPostprocessAllAssets 0.157ms
-			ConfigAssetsTracker.OnPostprocessAllAssets 0.142ms
-			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.139ms
-			ThemePostprocessor.OnPostprocessAllAssets 0.124ms
-			AudioContainerPostProcessor.OnPostprocessAllAssets 0.084ms
-			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.082ms
-	PostAssetChangesProfiler: 2.543ms
-	UnloadStreamsBegin: 1.764ms
-	PersistCurrentRevisions: 0.377ms
-	GenerateScriptTypeHashes: 3.082ms
-	GenerateScriptTypeSerializationHashes: 5.961ms
-	Untracked: 1135.024ms
+	InvokePackagesCallback: 174.405ms
+	ApplyChangesToAssetFolders: 0.922ms
+	Scan: 168.796ms
+	Collect global state as custom dependencies: 9.444ms
+	OnSourceAssetsModified: 0.674ms
+	CategorizeScriptCompilationAssets: 12.627ms
+	ProcessAssetsWithTransientArtifactChanges: 44.194ms
+	CategorizeAssets: 41.602ms
+	CompileScripts: 6944.404ms
+	ImportOutOfDateAssets: 765.995ms (741.435ms without children)
+		UnloadImportedAssets: 1.968ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.360ms
+		ImportSchedulerStart: 22.228ms
+	PostProcessAllAssets: 315.205ms
+		VCAutoAddAssetPostprocess 3.392ms
+		ShaderAssetModifiedCallback 0.235ms
+		XRBuildSystem.XRAssetImported 0.205ms
+		WindowTitlePostprocess 0.166ms
+		PostProcessCallbackCreateDeferredMaterials 0.079ms
+		MonoPostProcessAllAssets: 308.705ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 183.096ms
+			AssetPostprocessor.OnPostprocessAllAssets 83.597ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 13.219ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 4.443ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 2.053ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 1.885ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.620ms
+			AssetChangedListener.OnPostprocessAllAssets 1.540ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.373ms
+			SyncVS.PostprocessSyncProject 0.958ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 0.700ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.565ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.527ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.501ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.292ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.279ms
+			PostProcessor.OnPostprocessAllAssets 0.272ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.266ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.261ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.231ms
+			AssetEvents.OnPostprocessAllAssets 0.224ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.215ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.210ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.185ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.164ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.147ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.139ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.125ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.121ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.099ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.057ms
+	PostAssetChangesProfiler: 3.459ms
+	UnloadStreamsBegin: 1.694ms
+	PersistCurrentRevisions: 0.074ms
+	GenerateScriptTypeHashes: 2.176ms
+	GenerateScriptTypeSerializationHashes: 3.998ms
+	Untracked: 1162.973ms
 
 Application.AssetDatabase Initial Refresh End
 Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
-Scanning for USB devices : 6.732ms
+Scanning for USB devices : 7.203ms
 Initializing Unity extensions:
 [MODES] ModeService[none].Initialize
 [MODES] ModeService[none].LoadModes
 [MODES] Loading mode Default (0) for mode-current-id-UnderGrind
-Unloading 148 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 3669 unused Assets / (2.0 MB). Loaded Objects now: 4664.
-Memory consumption went from 329.2 MB to 327.2 MB.
-Total: 7.784700 ms (FindLiveObjects: 0.464200 ms CreateObjectMapping: 0.173400 ms MarkObjects: 5.771500 ms  DeleteObjects: 0.742300 ms)
+Unloading 146 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 3667 unused Assets / (2.2 MB). Loaded Objects now: 4662.
+Memory consumption went from 325.8 MB to 323.6 MB.
+Total: 8.019700 ms (FindLiveObjects: 0.491800 ms CreateObjectMapping: 0.135800 ms MarkObjects: 6.072700 ms  DeleteObjects: 0.864400 ms)
 
 Unity is not designed to run with Administrator privileges.
 
@@ -345,18 +350,18 @@ This could make your system unstable or unbootable.
 
 Restart as a standard user for the safest experience.
 Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported for hardware-accelerated video decoding.
-[Project] Loading completed in 9.965 seconds
-	Project init time: 				9.397 seconds
+[Project] Loading completed in 14.846 seconds
+	Project init time: 				13.565 seconds
 		Template init time: 		0.000 seconds
-		Package Manager init time: 		0.264 seconds
-		Asset Database init time: 		1.634 seconds
+		Package Manager init time: 		0.228 seconds
+		Asset Database init time: 		1.623 seconds
 		Global illumination init time: 	0.004 seconds
-		Assemblies load time: 			1.629 seconds
+		Assemblies load time: 			1.342 seconds
 		Unity extensions init time: 	0.008 seconds
-		Asset Database refresh time: 	5.211 seconds
-	Scene opening time: 			0.133 seconds
-##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1795178812163,"processId":26236,"projectLoad":9.9650519,"projectInit":9.3973537,"templateInit":0.0,"packageManagerInit":0.2637863,"assetDatabaseInit":1.6335444,"globalIlluminationInit":0.0035377,"assembliesLoad":1.6290996,"unityExtensionsInit":0.008299,"assetDatabaseRefresh":5.210539,"sceneOpening":0.1330817}
-##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1795178812164,"processId":26236,"editorVersion":"6000.6.9f1 (8c45277fb9c5)","branch":"6000.6/staging","buildType":"Release","platform":"Windows"}
+		Asset Database refresh time: 	9.723 seconds
+	Scene opening time: 			0.136 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1795179032463,"processId":42052,"projectLoad":14.846327899999999,"projectInit":13.5645324,"templateInit":0.0,"packageManagerInit":0.2279563,"assetDatabaseInit":1.6234712,"globalIlluminationInit":0.0035665,"assembliesLoad":1.3419355,"unityExtensionsInit":0.0084182,"assetDatabaseRefresh":9.723078,"sceneOpening":0.1357099}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1795179032463,"processId":42052,"editorVersion":"6000.6.9f1 (8c45277fb9c5)","branch":"6000.6/staging","buildType":"Release","platform":"Windows"}
 [Licensing::Client] Successfully resolved entitlement details
 Running tests for ExecutionSettings with details:
 targetPlatform = 
@@ -385,21 +390,21 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 (Filename: ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
 
 Importing 'GUID: 4f8f29cb45922534391ad94805a58b16 - Path: Assets/UnderGrind/Settings/PlayerInputSettings.asset' with importer (NativeFormatImporter)
-Imported 'GUID: 4f8f29cb45922534391ad94805a58b16' -> (Import Result ID: '6a796d75a360ec6d59d84718b85328bc') in 0.003 seconds [static dependencies only]. Details - ImportResultOutputID=cdc629896dfa0272dc1d8f2b228899ec DependenciesID=9634db5da1a2cdb477746a7ebe118107 StaticDependenciesID=13c52eb7734aaeb6a9c0e45241daee18 
-Asset Pipeline Refresh (id=ee5826bb80eb32f4694ace1182d906a7): Total: 0.091 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Imported 'GUID: 4f8f29cb45922534391ad94805a58b16' -> (Import Result ID: '6a796d75a360ec6d59d84718b85328bc') in 0.009 seconds [static dependencies only]. Details - ImportResultOutputID=cdc629896dfa0272dc1d8f2b228899ec DependenciesID=9634db5da1a2cdb477746a7ebe118107 StaticDependenciesID=13c52eb7734aaeb6a9c0e45241daee18 
+Asset Pipeline Refresh (id=be7f7d8aeaa9e8e4183d03e21270bafc): Total: 0.060 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Importing 'GUID: 52312daf9eedf2048857a10210a6272b - Path: Assets/UnderGrind/Settings/PlayerRigSettings.asset' with importer (NativeFormatImporter)
-Imported 'GUID: 52312daf9eedf2048857a10210a6272b' -> (Import Result ID: 'eb5d0c8b5c8028e4f08f185e2944597d') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=13d6a50fdb5672b508480611b453730c DependenciesID=ae14919a9beb451c027d49c0f406b8b4 StaticDependenciesID=82de9ace07e0db82f9f38d94ad4728cd 
+Imported 'GUID: 52312daf9eedf2048857a10210a6272b' -> (Import Result ID: 'eb5d0c8b5c8028e4f08f185e2944597d') in 0.006 seconds [static dependencies only]. Details - ImportResultOutputID=13d6a50fdb5672b508480611b453730c DependenciesID=ae14919a9beb451c027d49c0f406b8b4 StaticDependenciesID=82de9ace07e0db82f9f38d94ad4728cd 
 Importing 'GUID: 8cb678d867f2bbe42b3bf8b8d3032209 - Path: Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset' with importer (NativeFormatImporter)
 Imported 'GUID: 8cb678d867f2bbe42b3bf8b8d3032209' -> (Import Result ID: '729e235c4d875909ad9e32cceed39f22') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=d54585928c6f70ab4523a33dc2888dbc DependenciesID=71d2d7a821125535eba08c4a7fa0fcca StaticDependenciesID=e92f41d7c53c669a91db7cf346022a18 
-Asset Pipeline Refresh (id=5921eeba6d79c7849ab338f337621a74): Total: 0.016 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=bf7932419db220742b3275008a82df66): Total: 0.022 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Start Indexing on Editor startup
 [Indexing] Starting Initial Indexing for Assets
 [UnityConnectServicesConfig] config is NOT valid, switching to default
-Created GICache directory at C:/Users/cgr/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.034s, timestamps: [9.970 - 10.004]
+Created GICache directory at C:/Users/cgr/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.023s, timestamps: [14.851 - 14.873]
 Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 9 unused Assets / (23.1 KB). Loaded Objects now: 4822.
-Memory consumption went from 327.0 MB to 327.0 MB.
-Total: 6.203200 ms (FindLiveObjects: 0.335200 ms CreateObjectMapping: 0.054500 ms MarkObjects: 5.555800 ms  DeleteObjects: 0.055400 ms)
+Unloading 9 unused Assets / (18.6 KB). Loaded Objects now: 4822.
+Memory consumption went from 324.4 MB to 324.4 MB.
+Total: 7.369900 ms (FindLiveObjects: 0.492000 ms CreateObjectMapping: 0.067300 ms MarkObjects: 6.385200 ms  DeleteObjects: 0.120800 ms)
 
 Executing IPrebuildSetup for: Unity.PerformanceTesting.Editor.TestRunBuilder.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -532,7 +537,7 @@ UnityEditor.AssetImporter:SaveAndReimport ()
 UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
+UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:225)
 UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
@@ -567,132 +572,11 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 [./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
 
-Rig Error:  Invalid Avatar Rig Configuration. Missing or invalid transform:
-	Required human bone 'RightHand' not found
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
-UnityEditor.AssetDatabase:ImportAsset (string)
-UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-[./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
-
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '2c517b8690d8ac58bd5e831c175e2c77') in 0.038 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=57ec3e4dbec956d2eacdae6345211181 DependenciesID=041f004d7d99ec26640d55b728ecea6c StaticDependenciesID=6b8eeba441df158c4bad3df005196d93 
-Asset Pipeline Refresh (id=21d0e8c3e9830604bbbacdf5097f69e7): Total: 0.087 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
-UnderGrind: Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
-Mapping importer: Hips -> Hips, LeftUpperLeg -> LeftUpperLeg, RightUpperLeg -> RightUpperLeg, LeftLowerLeg -> LeftLowerLeg, RightLowerLeg -> RightLowerLeg, LeftFoot -> LeftFoot, RightFoot -> RightFoot, Spine -> Spine, Neck -> Neck, Head -> Head, RightShoulder -> RightShoulder, LeftUpperArm -> LeftUpperArm, RightUpperArm -> RightUpperArm, LeftLowerArm -> LeftLowerArm, RightLowerArm -> RightHand, LeftHand -> LeftHand, RightToes -> RightToes
-Skeleton importer: Human_Male_Rigged(Clone), Human_Male_Body, Human_Male_FP_Arms, Human_Male_FP_Hands, Human_Male_Head, Human_Male_TP_Arms, Human_Male_TP_Hands, UG_Male_Armature, Root, Hips, Spine, Chest, Neck, Head, LeftShoulder, LeftUpperArm, LeftLowerArm, LeftHand, RightShoulder, RightUpperArm, RightLowerArm, RightHand, LeftUpperLeg, LeftLowerLeg, LeftFoot, LeftToes, RightUpperLeg, RightLowerLeg, RightFoot, RightToes
-Transform FBX importati:
-Human_Male_Rigged
-Human_Male_Rigged/Human_Male_Body
-Human_Male_Rigged/Human_Male_FP_Arms
-Human_Male_Rigged/Human_Male_FP_Hands
-Human_Male_Rigged/Human_Male_Head
-Human_Male_Rigged/Human_Male_TP_Arms
-Human_Male_Rigged/Human_Male_TP_Hands
-Human_Male_Rigged/UG_Male_Armature
-Human_Male_Rigged/UG_Male_Armature/Root
-Human_Male_Rigged/UG_Male_Armature/Root/Hips
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot/LeftToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot/RightToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm/LeftHand
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck/Head
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm/RightHand
-Root armature configurata: UG_Male_Armature
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:LogError (object)
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:78)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-(Filename: Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs Line: 78)
-
+Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '27ca8d493e3413545b6958b6e8eaaaaa') in 0.054 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a855e738cbb17c3d2aa59b6546439c4b DependenciesID=d043ff52701fd9f1dba37915876b7ded StaticDependenciesID=796b545ea806e64a3e3b2eca68bf640e 
+Asset Pipeline Refresh (id=9a2a35a55d48111499f3c382c15b3142): Total: 0.158 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: aa4a3125da305014c85b367ef0198b36 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx' with importer (FBXImporter)
+Imported 'GUID: aa4a3125da305014c85b367ef0198b36' -> (Import Result ID: '99555f9ff6dc61245a05d238be08bdac') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9d35a165974f14ed10ef0bf4ad489df9 DependenciesID=fa7a052aacb538ffb44c6b955aa0951c StaticDependenciesID=1cb80b422efe6c5f49134d57411c6b96 
+Asset Pipeline Refresh (id=3b87d7ce422ae964481f2f6993f39d9f): Total: 0.092 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Importing 'GUID: 217921afca27e8946873bc4e9e31c462 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx' with importer (FBXImporter)
 A polygon of Mesh 'Human_Male_Body' in Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx is self-intersecting and has been discarded.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -700,18 +584,23 @@ UnityEngine.StackTraceUtility:ExtractStackTrace ()
 UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
 UnityEditor.AssetDatabase:ImportAsset (string)
 UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
+UnderGrind.Tests.HumanoidRigImportTests:EnsureValidAvatarPreservesValidManualPoseCorrections () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:51)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
+NUnit.Framework.Internal.MethodWrapper:Invoke (object,object[])
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunNonAsyncTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext)
+UnityEngine.TestTools.UnityTestMethodCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/UnityTestMethodCommand.cs:19)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand/<>c__DisplayClass3_0:<Execute>b__0 () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:32)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand:CaptureException (NUnit.Framework.Internal.TestResult,System.Action) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:93)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand:ExecuteAndCheckLog (UnityEngine.TestTools.Logging.LogScope,NUnit.Framework.Internal.TestResult,System.Action) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:104)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:32)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand/<ExecuteEnumerable>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:43)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<NUnit.Framework.ITestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
+UnityEngine.TestTools.ImmediateEnumerableCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/ImmediateEnumerableCommand.cs:18)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:220)
 UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
 UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
 UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
@@ -738,132 +627,8 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 [./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
 
-Rig Error:  Invalid Avatar Rig Configuration. Missing or invalid transform:
-	Required human bone 'RightHand' not found
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
-UnityEditor.AssetDatabase:ImportAsset (string)
-UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-[./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
-
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '2c517b8690d8ac58bd5e831c175e2c77') in 0.045 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=57ec3e4dbec956d2eacdae6345211181 DependenciesID=041f004d7d99ec26640d55b728ecea6c StaticDependenciesID=6b8eeba441df158c4bad3df005196d93 
-Asset Pipeline Refresh (id=bbb8329a87c4c7c4ebfa28063056e843): Total: 0.063 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
-UnderGrind: Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
-Mapping importer: Hips -> Hips, LeftUpperLeg -> LeftUpperLeg, RightUpperLeg -> RightUpperLeg, LeftLowerLeg -> LeftLowerLeg, RightLowerLeg -> RightLowerLeg, LeftFoot -> LeftFoot, RightFoot -> RightFoot, Spine -> Spine, Neck -> Neck, Head -> Head, RightShoulder -> RightShoulder, LeftUpperArm -> LeftUpperArm, RightUpperArm -> RightUpperArm, LeftLowerArm -> LeftLowerArm, RightLowerArm -> RightHand, LeftHand -> LeftHand, RightToes -> RightToes
-Skeleton importer: Human_Male_Rigged(Clone), Human_Male_Body, Human_Male_FP_Arms, Human_Male_FP_Hands, Human_Male_Head, Human_Male_TP_Arms, Human_Male_TP_Hands, UG_Male_Armature, Root, Hips, Spine, Chest, Neck, Head, LeftShoulder, LeftUpperArm, LeftLowerArm, LeftHand, RightShoulder, RightUpperArm, RightLowerArm, RightHand, LeftUpperLeg, LeftLowerLeg, LeftFoot, LeftToes, RightUpperLeg, RightLowerLeg, RightFoot, RightToes
-Transform FBX importati:
-Human_Male_Rigged
-Human_Male_Rigged/Human_Male_Body
-Human_Male_Rigged/Human_Male_FP_Arms
-Human_Male_Rigged/Human_Male_FP_Hands
-Human_Male_Rigged/Human_Male_Head
-Human_Male_Rigged/Human_Male_TP_Arms
-Human_Male_Rigged/Human_Male_TP_Hands
-Human_Male_Rigged/UG_Male_Armature
-Human_Male_Rigged/UG_Male_Armature/Root
-Human_Male_Rigged/UG_Male_Armature/Root/Hips
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot/LeftToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot/RightToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm/LeftHand
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck/Head
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm/RightHand
-Root armature configurata: UG_Male_Armature
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:LogError (object)
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:78)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-(Filename: Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs Line: 78)
-
+Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '27ca8d493e3413545b6958b6e8eaaaaa') in 0.033 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a855e738cbb17c3d2aa59b6546439c4b DependenciesID=d043ff52701fd9f1dba37915876b7ded StaticDependenciesID=796b545ea806e64a3e3b2eca68bf640e 
+Asset Pipeline Refresh (id=3c65dbbefe0ed8f4aafed96677c0f79f): Total: 0.061 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Importing 'GUID: 217921afca27e8946873bc4e9e31c462 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx' with importer (FBXImporter)
 A polygon of Mesh 'Human_Male_Body' in Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx is self-intersecting and has been discarded.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -871,372 +636,23 @@ UnityEngine.StackTraceUtility:ExtractStackTrace ()
 UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
 UnityEditor.AssetDatabase:ImportAsset (string)
 UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
+UnderGrind.Tests.HumanoidRigImportTests:EnsureValidAvatarPreservesValidManualPoseCorrections () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:73)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-[./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
-
-Rig Error:  Invalid Avatar Rig Configuration. Missing or invalid transform:
-	Required human bone 'RightHand' not found
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
-UnityEditor.AssetDatabase:ImportAsset (string)
-UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-[./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
-
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '2c517b8690d8ac58bd5e831c175e2c77') in 0.032 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=57ec3e4dbec956d2eacdae6345211181 DependenciesID=041f004d7d99ec26640d55b728ecea6c StaticDependenciesID=6b8eeba441df158c4bad3df005196d93 
-Asset Pipeline Refresh (id=725836b71ccf7f846b9c103144f5b4b0): Total: 0.050 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
-UnderGrind: Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
-Mapping importer: Hips -> Hips, LeftUpperLeg -> LeftUpperLeg, RightUpperLeg -> RightUpperLeg, LeftLowerLeg -> LeftLowerLeg, RightLowerLeg -> RightLowerLeg, LeftFoot -> LeftFoot, RightFoot -> RightFoot, Spine -> Spine, Neck -> Neck, Head -> Head, RightShoulder -> RightShoulder, LeftUpperArm -> LeftUpperArm, RightUpperArm -> RightUpperArm, LeftLowerArm -> LeftLowerArm, RightLowerArm -> RightHand, LeftHand -> LeftHand, RightToes -> RightToes
-Skeleton importer: Human_Male_Rigged(Clone), Human_Male_Body, Human_Male_FP_Arms, Human_Male_FP_Hands, Human_Male_Head, Human_Male_TP_Arms, Human_Male_TP_Hands, UG_Male_Armature, Root, Hips, Spine, Chest, Neck, Head, LeftShoulder, LeftUpperArm, LeftLowerArm, LeftHand, RightShoulder, RightUpperArm, RightLowerArm, RightHand, LeftUpperLeg, LeftLowerLeg, LeftFoot, LeftToes, RightUpperLeg, RightLowerLeg, RightFoot, RightToes
-Transform FBX importati:
-Human_Male_Rigged
-Human_Male_Rigged/Human_Male_Body
-Human_Male_Rigged/Human_Male_FP_Arms
-Human_Male_Rigged/Human_Male_FP_Hands
-Human_Male_Rigged/Human_Male_Head
-Human_Male_Rigged/Human_Male_TP_Arms
-Human_Male_Rigged/Human_Male_TP_Hands
-Human_Male_Rigged/UG_Male_Armature
-Human_Male_Rigged/UG_Male_Armature/Root
-Human_Male_Rigged/UG_Male_Armature/Root/Hips
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot/LeftToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot/RightToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm/LeftHand
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck/Head
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm/RightHand
-Root armature configurata: UG_Male_Armature
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:LogError (object)
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:78)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-(Filename: Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs Line: 78)
-
-Importing 'GUID: 217921afca27e8946873bc4e9e31c462 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx' with importer (FBXImporter)
-A polygon of Mesh 'Human_Male_Body' in Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx is self-intersecting and has been discarded.
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
-UnityEditor.AssetDatabase:ImportAsset (string)
-UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-[./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
-
-Rig Error:  Invalid Avatar Rig Configuration. Missing or invalid transform:
-	Required human bone 'RightHand' not found
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
-UnityEditor.AssetDatabase:ImportAsset (string)
-UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-[./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
-
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '2c517b8690d8ac58bd5e831c175e2c77') in 0.050 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=57ec3e4dbec956d2eacdae6345211181 DependenciesID=041f004d7d99ec26640d55b728ecea6c StaticDependenciesID=6b8eeba441df158c4bad3df005196d93 
-Asset Pipeline Refresh (id=d45bf33abe6995c4098d6f69326bd6d2): Total: 0.090 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
-UnderGrind: Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
-Mapping importer: Hips -> Hips, LeftUpperLeg -> LeftUpperLeg, RightUpperLeg -> RightUpperLeg, LeftLowerLeg -> LeftLowerLeg, RightLowerLeg -> RightLowerLeg, LeftFoot -> LeftFoot, RightFoot -> RightFoot, Spine -> Spine, Neck -> Neck, Head -> Head, RightShoulder -> RightShoulder, LeftUpperArm -> LeftUpperArm, RightUpperArm -> RightUpperArm, LeftLowerArm -> LeftLowerArm, RightLowerArm -> RightHand, LeftHand -> LeftHand, RightToes -> RightToes
-Skeleton importer: Human_Male_Rigged(Clone), Human_Male_Body, Human_Male_FP_Arms, Human_Male_FP_Hands, Human_Male_Head, Human_Male_TP_Arms, Human_Male_TP_Hands, UG_Male_Armature, Root, Hips, Spine, Chest, Neck, Head, LeftShoulder, LeftUpperArm, LeftLowerArm, LeftHand, RightShoulder, RightUpperArm, RightLowerArm, RightHand, LeftUpperLeg, LeftLowerLeg, LeftFoot, LeftToes, RightUpperLeg, RightLowerLeg, RightFoot, RightToes
-Transform FBX importati:
-Human_Male_Rigged
-Human_Male_Rigged/Human_Male_Body
-Human_Male_Rigged/Human_Male_FP_Arms
-Human_Male_Rigged/Human_Male_FP_Hands
-Human_Male_Rigged/Human_Male_Head
-Human_Male_Rigged/Human_Male_TP_Arms
-Human_Male_Rigged/Human_Male_TP_Hands
-Human_Male_Rigged/UG_Male_Armature
-Human_Male_Rigged/UG_Male_Armature/Root
-Human_Male_Rigged/UG_Male_Armature/Root/Hips
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot/LeftToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot/RightToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm/LeftHand
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck/Head
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm/RightHand
-Root armature configurata: UG_Male_Armature
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:LogError (object)
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:78)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-(Filename: Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs Line: 78)
-
-Importing 'GUID: 217921afca27e8946873bc4e9e31c462 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx' with importer (FBXImporter)
-A polygon of Mesh 'Human_Male_Body' in Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx is self-intersecting and has been discarded.
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
-UnityEditor.AssetDatabase:ImportAsset (string)
-UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
+NUnit.Framework.Internal.MethodWrapper:Invoke (object,object[])
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunNonAsyncTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:RunTestMethod (NUnit.Framework.Internal.ITestExecutionContext)
+NUnit.Framework.Internal.Commands.TestMethodCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext)
+UnityEngine.TestTools.UnityTestMethodCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/UnityTestMethodCommand.cs:19)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand/<>c__DisplayClass3_0:<Execute>b__0 () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:32)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand:CaptureException (NUnit.Framework.Internal.TestResult,System.Action) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:93)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand:ExecuteAndCheckLog (UnityEngine.TestTools.Logging.LogScope,NUnit.Framework.Internal.TestResult,System.Action) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:104)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:32)
+UnityEngine.TestRunner.NUnitExtensions.Runner.UnityLogCheckDelegatingCommand/<ExecuteEnumerable>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/UnityLogCheckDelegatingCommand.cs:43)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<NUnit.Framework.ITestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
+UnityEngine.TestTools.ImmediateEnumerableCommand:Execute (NUnit.Framework.Internal.ITestExecutionContext) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/ImmediateEnumerableCommand.cs:18)
+UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:220)
 UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
 UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
 UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
@@ -1263,135 +679,11 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 [./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
 
-Rig Error:  Invalid Avatar Rig Configuration. Missing or invalid transform:
-	Required human bone 'RightHand' not found
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEditor.AssetDatabase:ImportAsset (string,UnityEditor.ImportAssetOptions)
-UnityEditor.AssetDatabase:ImportAsset (string)
-UnityEditor.AssetImporter:SaveAndReimport ()
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:57)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-[./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs line 180]
-
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '2c517b8690d8ac58bd5e831c175e2c77') in 0.041 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=57ec3e4dbec956d2eacdae6345211181 DependenciesID=041f004d7d99ec26640d55b728ecea6c StaticDependenciesID=6b8eeba441df158c4bad3df005196d93 
-Asset Pipeline Refresh (id=765a8f6e1e40f0549b0bf1bdd4fca44b): Total: 0.070 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
-UnderGrind: Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
-Mapping importer: Hips -> Hips, LeftUpperLeg -> LeftUpperLeg, RightUpperLeg -> RightUpperLeg, LeftLowerLeg -> LeftLowerLeg, RightLowerLeg -> RightLowerLeg, LeftFoot -> LeftFoot, RightFoot -> RightFoot, Spine -> Spine, Neck -> Neck, Head -> Head, RightShoulder -> RightShoulder, LeftUpperArm -> LeftUpperArm, RightUpperArm -> RightUpperArm, LeftLowerArm -> LeftLowerArm, RightLowerArm -> RightHand, LeftHand -> LeftHand, RightToes -> RightToes
-Skeleton importer: Human_Male_Rigged(Clone), Human_Male_Body, Human_Male_FP_Arms, Human_Male_FP_Hands, Human_Male_Head, Human_Male_TP_Arms, Human_Male_TP_Hands, UG_Male_Armature, Root, Hips, Spine, Chest, Neck, Head, LeftShoulder, LeftUpperArm, LeftLowerArm, LeftHand, RightShoulder, RightUpperArm, RightLowerArm, RightHand, LeftUpperLeg, LeftLowerLeg, LeftFoot, LeftToes, RightUpperLeg, RightLowerLeg, RightFoot, RightToes
-Transform FBX importati:
-Human_Male_Rigged
-Human_Male_Rigged/Human_Male_Body
-Human_Male_Rigged/Human_Male_FP_Arms
-Human_Male_Rigged/Human_Male_FP_Hands
-Human_Male_Rigged/Human_Male_Head
-Human_Male_Rigged/Human_Male_TP_Arms
-Human_Male_Rigged/Human_Male_TP_Hands
-Human_Male_Rigged/UG_Male_Armature
-Human_Male_Rigged/UG_Male_Armature/Root
-Human_Male_Rigged/UG_Male_Armature/Root/Hips
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot/LeftToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/RightUpperLeg/RightLowerLeg/RightFoot/RightToes
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/LeftShoulder/LeftUpperArm/LeftLowerArm/LeftHand
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/Neck/Head
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm
-Human_Male_Rigged/UG_Male_Armature/Root/Hips/Spine/Chest/RightShoulder/RightUpperArm/RightLowerArm/RightHand
-Root armature configurata: UG_Male_Armature
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:LogError (object)
-UnderGrind.Editor.HumanoidAvatarImporter:EnsureValidAvatar (string,string) (at Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs:78)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-UnderGrind.Tests.HumanoidRigImportTests:EnsureHumanoidAvatar (string,string) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:223)
-UnderGrind.Tests.HumanoidRigImportTests:SetUp () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:23)
-System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
-System.Reflection.MethodBase:Invoke (object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
-NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object)
-UnityEngine.TestTools.SetUpTearDownCommand/<InvokeBefore>d__4:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/SetUpTearDownCommand.cs:59)
-UnityEngine.TestTools.EnumeratorHelper/<ProgressOnEnumerator>d__5:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Attributes/EnumeratorHelper.cs:43)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:156)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<System.Reflection.MethodInfo>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.BeforeAfterTestCommandBase`1/<ExecuteEnumerable>d__16<UnityEngine.TestTools.IOuterUnityTestAction>:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/BeforeAfterTestCommandBase.cs:213)
-UnityEngine.TestTools.RetryCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RetryCommand.cs:37)
-UnityEngine.TestTools.RepeatCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/RepeatCommand.cs:36)
-UnityEngine.TestTools.IgnoreTestCommand/<ExecuteEnumerable>d__3:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/IgnoreTestCommand.cs:42)
-UnityEngine.TestTools.StrictCheckCommand/<ExecuteEnumerable>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Commands/StrictCheckCommand.cs:29)
-UnityEngine.TestRunner.NUnitExtensions.Runner.DefaultTestWorkItem/<PerformWork>d__2:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/DefaultTestWorkItem.cs:58)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<RunChildren>d__17:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:209)
-UnityEngine.TestRunner.NUnitExtensions.Runner.CompositeWorkItem/<PerformWork>d__13:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEngine.TestRunner/NUnitExtensions/Runner/CompositeWorkItem.cs:83)
-UnityEditor.TestTools.TestRunner.EditModeRunner:MoveNextAndUpdateYieldObject () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:180)
-UnityEditor.TestTools.TestRunner.EditModeRunner:TestConsumer (UnityEditor.TestTools.TestRunner.TestRunnerStateSerializer) (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRunner/EditModeRunner.cs:220)
-UnityEditor.TestTools.TestRunner.TestRun.Tasks.EditModeRunTask/<Execute>d__1:MoveNext () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/EditModeRunTask.cs:48)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:194)
-UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-(Filename: Assets/UnderGrind/Editor/HumanoidAvatarImporter.cs Line: 78)
-
+Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '27ca8d493e3413545b6958b6e8eaaaaa') in 0.025 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a855e738cbb17c3d2aa59b6546439c4b DependenciesID=d043ff52701fd9f1dba37915876b7ded StaticDependenciesID=796b545ea806e64a3e3b2eca68bf640e 
+Asset Pipeline Refresh (id=d314e9ae5c929ea4ebceb8cb23fe487a): Total: 0.043 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Saving results to: C:/Users/cgr/AppData/LocalLow/DefaultCompany/UnderGrind\TestResults.xml
 Saving results to: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\Unity\EditMode.xml
-UnderGrind: test EditMode completati. Passati 34, falliti 5, saltati 0. Report: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\UnderGrind\EditMode.xml
+UnderGrind: test EditMode completati. Passati 39, falliti 0, saltati 0. Report: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\UnderGrind\EditMode.xml
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
 UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
@@ -1411,6 +703,7 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 (Filename: Assets/UnderGrind/Editor/LocomotionTestResultsRunner.cs Line: 80)
 
+Asset Pipeline Refresh (id=45bd65c5bbef89f43ba5e13f64c2e5e0): Total: 0.017 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
 Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
@@ -1426,13 +719,13 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 (Filename: ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs Line: 48)
 
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 82 unused Assets / (128.9 KB). Loaded Objects now: 4823.
-Memory consumption went from 336.7 MB to 336.6 MB.
-Total: 6.458300 ms (FindLiveObjects: 0.355300 ms CreateObjectMapping: 0.050000 ms MarkObjects: 5.696100 ms  DeleteObjects: 0.142700 ms)
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 5 unused Assets / (12.7 KB). Loaded Objects now: 4976.
+Memory consumption went from 335.5 MB to 335.5 MB.
+Total: 6.298200 ms (FindLiveObjects: 0.316900 ms CreateObjectMapping: 0.052000 ms MarkObjects: 5.669100 ms  DeleteObjects: 0.050900 ms)
 
 DisplayProgressbar: Undo
-Test run completed. Exiting with code 2 (Failed). One or more tests failed.
+Test run completed. Exiting with code 0 (Ok). Run completed.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
 UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
@@ -1445,9 +738,8 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 (Filename: ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
 
-MonoPathRemapper: Attempts to remap: 16785; Successful remaps: 11108
+MonoPathRemapper: Attempts to remap: 16787; Successful remaps: 11108
 Serialized file version minimum: 23, current 23
-Worker ready: AssetImportWorkerHW0 0
 [Physics::Module] Cleanup current backend.
 [Physics::Module] Id: 0xf2b8ea05
 Input System module state changed to: ShutdownInProgress.
@@ -1455,24 +747,23 @@ Input Polling Thread exited.
 Input System module state changed to: Shutdown.
 [Licensing::IpcConnector] LicenseClient-cgr-notifications channel disconnected successfully.
 [Licensing::IpcConnector] LicenseClient-cgr channel disconnected successfully.
-Lingering sessions upon destruction of worker manager
 Unity Data Store service was successfully shut down
 UDS shutting down local client system
 Shut down UDS service system complete
 AcceleratorClientConnectionCallback - disconnected - :0
 Cleanup mono
 CodeReloadManager destroyed
-abort_threads: Failed aborting id: 0000000000005F90, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 000000000000A518, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 000000000000A194, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000008D2C, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 0000000000005F90, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 000000000000A518, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 000000000000A194, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000008D2C, mono_thread_manage will ignore it
 
-debugger-agent: Unable to listen on 3260
+debugger-agent: Unable to listen on 3272
 VBCSCompilerPreWarmer: requested VBCSCompiler shutdown
 Checking for leaked weakptr:
   Found no leaked weakptrs.
 [Package Manager] Server process was shutdown
-##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1795178817155,"processId":26236,"allocatedMemory":13446637,"memoryLabels":[{"Default":168039},{"Permanent":15516},{"NewDelete":71503},{"Thread":4197944},{"Manager":31581},{"VertexData":8},{"Geometry":824},{"Texture":24},{"Shader":839819},{"Material":132},{"GfxDevice":55968},{"Animation":952},{"Audio":696},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":33088},{"Input":42840},{"JobScheduler":264},{"TextLib":336},{"Mono":48},{"MonoCode":64},{"ScriptingNativeRuntime":1259880},{"BaseObject":49360},{"Resource":1444},{"Renderer":2504},{"Transform":4781},{"File":4424},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":750187},{"StaticString":3808},{"Utility":2673718},{"Curl":2696},{"PoolAlloc":2264},{"AI":80},{"TypeTree":17165},{"ScriptManager":12688},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":8296},{"CloudService":288},{"WebRequest":552},{"VR":49650},{"SceneManager":608},{"Video":64},{"LazyScriptCache":32},{"Camera":729},{"Secure":2377},{"SerializationCache":9256},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":464},{"Hierarchy":1188},{"UIElements":40},{"CoreStats":14536},{"Identifiers":7152},{"EntityIdStore":33088},{"Gui":128},{"EditorUtility":117863},{"VersionControl":8},{"Undo":931},{"AssetDatabase":2514889},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":40465},{"Upm":1912},{"UpmDiagnostics":8},{"AssetCompliance":96},{"DrivenProperties":72},{"LocalIPC":256},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3222},{"Windowing":456},{"Licensing":12682},{"AssetReference":32},{"IPCStream":32}]}
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1795179036049,"processId":42052,"allocatedMemory":13244980,"memoryLabels":[{"Default":168039},{"Permanent":15516},{"NewDelete":71711},{"Thread":4197944},{"Manager":31581},{"VertexData":8},{"Geometry":824},{"Texture":24},{"Shader":839819},{"Material":132},{"GfxDevice":55968},{"Animation":952},{"Audio":696},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":33088},{"Input":42840},{"JobScheduler":264},{"TextLib":336},{"Mono":48},{"MonoCode":64},{"ScriptingNativeRuntime":1259880},{"BaseObject":49360},{"Resource":1444},{"Renderer":2504},{"Transform":4781},{"File":4424},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":548714},{"StaticString":3808},{"Utility":2673718},{"Curl":2696},{"PoolAlloc":2264},{"AI":80},{"TypeTree":17165},{"ScriptManager":12688},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":8296},{"CloudService":288},{"WebRequest":552},{"VR":49650},{"SceneManager":608},{"Video":64},{"LazyScriptCache":32},{"Camera":729},{"Secure":2377},{"SerializationCache":9256},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":464},{"Hierarchy":1188},{"UIElements":40},{"CoreStats":14536},{"Identifiers":7152},{"EntityIdStore":33088},{"Gui":128},{"EditorUtility":117471},{"VersionControl":8},{"Undo":931},{"AssetDatabase":2514889},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":40465},{"Upm":1912},{"UpmDiagnostics":8},{"AssetCompliance":96},{"DrivenProperties":72},{"LocalIPC":256},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3222},{"Windowing":456},{"Licensing":12682},{"AssetReference":32},{"IPCStream":32}]}
