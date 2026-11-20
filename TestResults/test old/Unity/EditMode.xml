@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="38" result="Failed(Child)" total="38" passed="35" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0,1660391">
+  <test-suite type="TestSuite" id="1000" name="UnderGrind" fullname="UnderGrind" runstate="Runnable" testcasecount="38" result="Failed" site="Child" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.166039" total="38" passed="35" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1028" name="UnderGrind.EditModeTests.dll" fullname="C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind/Library/ScriptAssemblies/UnderGrind.EditModeTests.dll" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.098822" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="28180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1029" name="UnderGrind" fullname="UnderGrind" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.098091" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1030" name="Tests" fullname="UnderGrind.Tests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.097909" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1002" name="PlayerInputSettingsTests" fullname="UnderGrind.Tests.PlayerInputSettingsTests" classname="UnderGrind.Tests.PlayerInputSettingsTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.063940" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1006" name="BindingOverridesCanBeSavedResetAndRestored" fullname="UnderGrind.Tests.PlayerInputSettingsTests.BindingOverridesCanBeSavedResetAndRestored" methodname="BindingOverridesCanBeSavedResetAndRestored" classname="UnderGrind.Tests.PlayerInputSettingsTests" runstate="Runnable" seed="246224129" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.029807" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="DeadzonesAndRebindPersistenceAreInspectorConfigurable" fullname="UnderGrind.Tests.PlayerInputSettingsTests.DeadzonesAndRebindPersistenceAreInspectorConfigurable" methodname="DeadzonesAndRebindPersistenceAreInspectorConfigurable" classname="UnderGrind.Tests.PlayerInputSettingsTests" runstate="Runnable" seed="1508898734" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.002398" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1004" name="EnableAndDisableActionMap_ControlTheConfiguredMap" fullname="UnderGrind.Tests.PlayerInputSettingsTests.EnableAndDisableActionMap_ControlTheConfiguredMap" methodname="EnableAndDisableActionMap_ControlTheConfiguredMap" classname="UnderGrind.Tests.PlayerInputSettingsTests" runstate="Runnable" seed="843587444" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.009033" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="GetAction_ResolvesConfiguredActionByMapAndName" fullname="UnderGrind.Tests.PlayerInputSettingsTests.GetAction_ResolvesConfiguredActionByMapAndName" methodname="GetAction_ResolvesConfiguredActionByMapAndName" classname="UnderGrind.Tests.PlayerInputSettingsTests" runstate="Runnable" seed="282825097" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.001018" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="MissingActionMapReturnsNoActionWithoutThrowing" fullname="UnderGrind.Tests.PlayerInputSettingsTests.MissingActionMapReturnsNoActionWithoutThrowing" methodname="MissingActionMapReturnsNoActionWithoutThrowing" classname="UnderGrind.Tests.PlayerInputSettingsTests" runstate="Runnable" seed="1378957973" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.004110" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[UnderGrind: action map non trovato: Missing
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1008" name="PlayerInventoryTests" fullname="UnderGrind.Tests.PlayerInventoryTests" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.013001" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1009" name="AddItem_AllowsWeightAboveCapacity" fullname="UnderGrind.Tests.PlayerInventoryTests.AddItem_AllowsWeightAboveCapacity" methodname="AddItem_AllowsWeightAboveCapacity" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="1421521285" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.002110" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1010" name="AddItem_ReportsRemainderWhenSlotsAreFull" fullname="UnderGrind.Tests.PlayerInventoryTests.AddItem_ReportsRemainderWhenSlotsAreFull" methodname="AddItem_ReportsRemainderWhenSlotsAreFull" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="813352120" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000384" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="CapacityReduction_DoesNotAcceptNewItemsIntoOccupiedOverflowSlots" fullname="UnderGrind.Tests.PlayerInventoryTests.CapacityReduction_DoesNotAcceptNewItemsIntoOccupiedOverflowSlots" methodname="CapacityReduction_DoesNotAcceptNewItemsIntoOccupiedOverflowSlots" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="163942665" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000395" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1014" name="ExactWeightCapacity_IsNotOverloaded" fullname="UnderGrind.Tests.PlayerInventoryTests.ExactWeightCapacity_IsNotOverloaded" methodname="ExactWeightCapacity_IsNotOverloaded" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="894988537" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000282" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1012" name="MoveStack_DoesNotChangeTotalWeight" fullname="UnderGrind.Tests.PlayerInventoryTests.MoveStack_DoesNotChangeTotalWeight" methodname="MoveStack_DoesNotChangeTotalWeight" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="553969583" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000439" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1017" name="RemoveFromSlot_RemovesOnlyRequestedQuantityAndUpdatesWeight" fullname="UnderGrind.Tests.PlayerInventoryTests.RemoveFromSlot_RemovesOnlyRequestedQuantityAndUpdatesWeight" methodname="RemoveFromSlot_RemovesOnlyRequestedQuantityAndUpdatesWeight" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="604151920" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000467" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="RemoveItem_UpdatesWeightAndOverloadState" fullname="UnderGrind.Tests.PlayerInventoryTests.RemoveItem_UpdatesWeightAndOverloadState" methodname="RemoveItem_UpdatesWeightAndOverloadState" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="1773505804" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000460" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1016" name="SelectSlot_ChangesActiveSlotAndRejectsOutOfRangeIndices" fullname="UnderGrind.Tests.PlayerInventoryTests.SelectSlot_ChangesActiveSlotAndRejectsOutOfRangeIndices" methodname="SelectSlot_ChangesActiveSlotAndRejectsOutOfRangeIndices" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="1742183506" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.002264" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1013" name="SplitAndMerge_PreserveTotalWeight" fullname="UnderGrind.Tests.PlayerInventoryTests.SplitAndMerge_PreserveTotalWeight" methodname="SplitAndMerge_PreserveTotalWeight" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="2061227604" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000597" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1018" name="WorldPickup_PartiallyTransfersWhenInventoryHasOneFreeSlot" fullname="UnderGrind.Tests.PlayerInventoryTests.WorldPickup_PartiallyTransfersWhenInventoryHasOneFreeSlot" methodname="WorldPickup_PartiallyTransfersWhenInventoryHasOneFreeSlot" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="68210987" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.001971" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[UnderGrind: imposta una quantità positiva per il pickup.
+]]></output>
+            </test-case>
+            <test-case id="1015" name="ZeroWeightItems_AreAllowedAndDoNotIncreaseWeight" fullname="UnderGrind.Tests.PlayerInventoryTests.ZeroWeightItems_AreAllowedAndDoNotIncreaseWeight" methodname="ZeroWeightItems_AreAllowedAndDoNotIncreaseWeight" classname="UnderGrind.Tests.PlayerInventoryTests" runstate="Runnable" seed="2055348234" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000455" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1020" name="PlayerSettingsDefaultsTests" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.019670" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1023" name="AnimationDefaults_LoadLoopFlagsAndAnimatorParameters" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests.AnimationDefaults_LoadLoopFlagsAndAnimatorParameters" methodname="AnimationDefaults_LoadLoopFlagsAndAnimatorParameters" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" seed="1039904048" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.003000" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="GrayboxDefaults_IncludeDistancesObstaclesStairsRampsAndPlatforms" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests.GrayboxDefaults_IncludeDistancesObstaclesStairsRampsAndPlatforms" methodname="GrayboxDefaults_IncludeDistancesObstaclesStairsRampsAndPlatforms" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" seed="522139836" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.002729" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="InputActionsTemplate_LoadsEveryPlayerAction" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests.InputActionsTemplate_LoadsEveryPlayerAction" methodname="InputActionsTemplate_LoadsEveryPlayerAction" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" seed="12841568" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.006884" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="InputDefaults_LoadDeadZonesAndRebindingSettings" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests.InputDefaults_LoadDeadZonesAndRebindingSettings" methodname="InputDefaults_LoadDeadZonesAndRebindingSettings" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" seed="1133870342" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.001828" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="InteractionDefaults_LoadValidLayerMaskAndDropConfiguration" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests.InteractionDefaults_LoadValidLayerMaskAndDropConfiguration" methodname="InteractionDefaults_LoadValidLayerMaskAndDropConfiguration" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" seed="1776596084" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.001311" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="InventoryUIDefaults_LoadFixedColumnLayoutAndVisibleSlots" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests.InventoryUIDefaults_LoadFixedColumnLayoutAndVisibleSlots" methodname="InventoryUIDefaults_LoadFixedColumnLayoutAndVisibleSlots" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" seed="1762740066" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000956" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="RigDefaults_LoadConfiguredArmatureRootsAndHeadRequirement" fullname="UnderGrind.Tests.PlayerSettingsDefaultsTests.RigDefaults_LoadConfiguredArmatureRootsAndHeadRequirement" methodname="RigDefaults_LoadConfiguredArmatureRootsAndHeadRequirement" classname="UnderGrind.Tests.PlayerSettingsDefaultsTests" runstate="Runnable" seed="1149229054" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000799" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1049" name="UnderGrind.Locomotion.Tests.dll" fullname="C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind/Library/ScriptAssemblies/UnderGrind.Locomotion.Tests.dll" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.055305" total="15" passed="12" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="28180" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1050" name="UnderGrind" fullname="UnderGrind" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.055015" total="15" passed="12" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1051" name="Tests" fullname="UnderGrind.Tests" runstate="Runnable" testcasecount="15" result="Failed" site="Child" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.054912" total="15" passed="12" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1031" name="HumanLocomotionTuningTests" fullname="UnderGrind.Tests.HumanLocomotionTuningTests" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.034079" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1042" name="AllEightConfigurationGroupsAreSerializedOnSettingsAsset" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.AllEightConfigurationGroupsAreSerializedOnSettingsAsset" methodname="AllEightConfigurationGroupsAreSerializedOnSettingsAsset" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="1635300084" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.002344" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1040" name="AnimationClipLoopModesAreInspectorConfigurable" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.AnimationClipLoopModesAreInspectorConfigurable" methodname="AnimationClipLoopModesAreInspectorConfigurable" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="2089988215" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.001310" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1033" name="AnimationRunThresholdFallsBetweenWalkAndRunSpeeds" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.AnimationRunThresholdFallsBetweenWalkAndRunSpeeds" methodname="AnimationRunThresholdFallsBetweenWalkAndRunSpeeds" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="361690596" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.001263" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1036" name="CharacterHeightsMatchMaleAndFemaleReferenceModels" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.CharacterHeightsMatchMaleAndFemaleReferenceModels" methodname="CharacterHeightsMatchMaleAndFemaleReferenceModels" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="52018665" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000336" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1039" name="ControllerReferencesSettingsInsteadOfDuplicatingGameplayValues" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.ControllerReferencesSettingsInsteadOfDuplicatingGameplayValues" methodname="ControllerReferencesSettingsInsteadOfDuplicatingGameplayValues" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="279449521" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.006382" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1041" name="FallAndLandingClipsAreOptionalForControllerBuild" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.FallAndLandingClipsAreOptionalForControllerBuild" methodname="FallAndLandingClipsAreOptionalForControllerBuild" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="183614243" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.003329" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1037" name="FemaleCameraHeightsScaleWithFemaleCharacterHeight" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.FemaleCameraHeightsScaleWithFemaleCharacterHeight" methodname="FemaleCameraHeightsScaleWithFemaleCharacterHeight" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="896346325" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000404" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="FemaleVariantAppliesFemaleCharacterControllerHeight" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.FemaleVariantAppliesFemaleCharacterControllerHeight" methodname="FemaleVariantAppliesFemaleCharacterControllerHeight" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="2138502687" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.002739" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1035" name="JumpVelocityProducesConfiguredApexHeight" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.JumpVelocityProducesConfiguredApexHeight" methodname="JumpVelocityProducesConfiguredApexHeight" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="1698346652" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000339" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1034" name="PlayerVisualRigHidesBodyInFirstPersonAndShowsItInThirdPerson" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.PlayerVisualRigHidesBodyInFirstPersonAndShowsItInThirdPerson" methodname="PlayerVisualRigHidesBodyInFirstPersonAndShowsItInThirdPerson" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="1045648575" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.013398" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1032" name="RunIsExactlyOneThirdFasterThanWalk" fullname="UnderGrind.Tests.HumanLocomotionTuningTests.RunIsExactlyOneThirdFasterThanWalk" methodname="RunIsExactlyOneThirdFasterThanWalk" classname="UnderGrind.Tests.HumanLocomotionTuningTests" runstate="Runnable" seed="1973822942" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000397" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1043" name="HumanoidRigImportTests" fullname="UnderGrind.Tests.HumanoidRigImportTests" classname="UnderGrind.Tests.HumanoidRigImportTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.020609" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1048" name="BothImportedModelsBindToConfiguredVisualRigParts" fullname="UnderGrind.Tests.HumanoidRigImportTests.BothImportedModelsBindToConfiguredVisualRigParts" methodname="BothImportedModelsBindToConfiguredVisualRigParts" classname="UnderGrind.Tests.HumanoidRigImportTests" runstate="Runnable" seed="1233974572" result="Passed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.005704" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1046" name="ImportedFbxHasValidHumanoidAvatarAndSkinnedParts" fullname="UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts" classname="UnderGrind.Tests.HumanoidRigImportTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.012085" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1044" name="ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(&quot;Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx&quot;,&quot;maschile&quot;)" fullname="UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(&quot;Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx&quot;,&quot;maschile&quot;)" methodname="ImportedFbxHasValidHumanoidAvatarAndSkinnedParts" classname="UnderGrind.Tests.HumanoidRigImportTests" runstate="Runnable" seed="458265794" result="Failed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.010275" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  L'importazione dei materiali deve rispettare PlayerRigSettings.
+  Expected: LegacyImport
+  But was:  ImportViaMaterialDescription
+]]></message>
+                  <stack-trace><![CDATA[at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0016e] in C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs:50
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1045" name="ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(&quot;Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx&quot;,&quot;femminile&quot;)" fullname="UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(&quot;Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx&quot;,&quot;femminile&quot;)" methodname="ImportedFbxHasValidHumanoidAvatarAndSkinnedParts" classname="UnderGrind.Tests.HumanoidRigImportTests" runstate="Runnable" seed="1414576416" result="Failed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.000513" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  L'importazione dei materiali deve rispettare PlayerRigSettings.
+  Expected: LegacyImport
+  But was:  ImportViaMaterialDescription
+]]></message>
+                  <stack-trace><![CDATA[at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0016e] in C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs:50
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-case id="1047" name="MaleAndFemaleFbxUseDistinctHumanoidAvatars" fullname="UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars" methodname="MaleAndFemaleFbxUseDistinctHumanoidAvatars" classname="UnderGrind.Tests.HumanoidRigImportTests" runstate="Runnable" seed="314307319" result="Failed" start-time="2026-11-20 10:22:34Z" end-time="2026-11-20 10:22:34Z" duration="0.001082" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+  Expected: not null
+  But was:  null
+]]></message>
+                <stack-trace><![CDATA[at UnderGrind.Tests.HumanoidRigImportTests.LoadValidAvatar (System.String assetPath) [0x0002f] in C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs:176
+at UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars () [0x00000] in C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs:146
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[Saving results to: C:/Users/cgr/AppData/LocalLow/DefaultCompany/UnderGrind\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

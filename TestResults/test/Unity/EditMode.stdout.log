@@ -1,3 +1,3 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 37620)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 27636)
-VBCSCompiler prewarm took 32.74 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 37748)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 35956)
+VBCSCompiler prewarm took 40.76 ms
