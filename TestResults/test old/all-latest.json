@@ -1,0 +1,123 @@
+{
+  "runId": "20261118-140943-788",
+  "finishedUtc": "2026-11-18T13:10:38.4288594Z",
+  "timeoutSeconds": 1800,
+  "status": "Failed",
+  "standaloneExitCode": 0,
+  "unityExitCode": 0,
+  "standalone": {
+    "runId":  "20261118-140944-264",
+    "startedUtc":  "2026-11-18T13:09:44.2643509Z",
+    "finishedUtc":  "2026-11-18T13:09:51.6220205Z",
+    "durationSeconds":  7.358,
+    "diagnosticsBuild":  "Passed",
+    "buildTimeoutSeconds":  180,
+    "testTimeoutSeconds":  180,
+    "status":  "Passed",
+    "errors":  [
+
+               ],
+    "totals":  {
+                   "failed":  0,
+                   "skipped":  0,
+                   "total":  6,
+                   "passed":  6
+               },
+    "projects":  [
+                     {
+                         "project":  "Tests\\Standalone\\UnderGrind.Diagnostics.Standalone.Tests.csproj",
+                         "exitCode":  0,
+                         "timedOut":  false,
+                         "timeoutSeconds":  180,
+                         "trx":  "UnderGrind.Diagnostics.Standalone.Tests.trx",
+                         "log":  "UnderGrind.Diagnostics.Standalone.Tests.log",
+                         "totals":  {
+                                        "failed":  0,
+                                        "skipped":  0,
+                                        "total":  6,
+                                        "passed":  6
+                                    },
+                         "failures":  [
+
+                                      ],
+                         "validationErrors":  [
+
+                                              ]
+                     }
+                 ]
+},
+  "unity": {
+    "runId":  "20261118-140952-334",
+    "startedUtc":  "2026-11-18T13:09:52.3355075Z",
+    "finishedUtc":  "2026-11-18T13:10:38.1236856Z",
+    "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
+    "unityTimeoutSeconds":  600,
+    "status":  "Failed",
+    "environmentErrors":  [
+
+                          ],
+    "totals":  {
+                   "total":  46,
+                   "passed":  46,
+                   "skipped":  0,
+                   "inconclusive":  0,
+                   "failed":  0
+               },
+    "platforms":  [
+                      {
+                          "platform":  "EditMode",
+                          "timeoutSeconds":  600,
+                          "timedOut":  false,
+                          "exitCode":  null,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity Ã¨ terminato con codice ."
+                                               ],
+                          "compilerDiagnostics":  [
+
+                                                  ],
+                          "failures":  [
+
+                                       ],
+                          "resultFile":  "TestResults/test/Unity/EditMode.xml",
+                          "logFile":  "TestResults/test/Unity/EditMode.log",
+                          "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
+                          "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
+                          "totals":  {
+                                         "total":  33,
+                                         "passed":  33,
+                                         "skipped":  0,
+                                         "inconclusive":  0,
+                                         "failed":  0
+                                     }
+                      },
+                      {
+                          "platform":  "PlayMode",
+                          "timeoutSeconds":  600,
+                          "timedOut":  false,
+                          "exitCode":  null,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity Ã¨ terminato con codice ."
+                                               ],
+                          "compilerDiagnostics":  [
+
+                                                  ],
+                          "failures":  [
+
+                                       ],
+                          "resultFile":  "TestResults/test/Unity/PlayMode.xml",
+                          "logFile":  "TestResults/test/Unity/PlayMode.log",
+                          "stdoutFile":  "TestResults/test/Unity/PlayMode.stdout.log",
+                          "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
+                          "totals":  {
+                                         "total":  13,
+                                         "passed":  13,
+                                         "skipped":  0,
+                                         "inconclusive":  0,
+                                         "failed":  0
+                                     }
+                      }
+                  ]
+}
+}

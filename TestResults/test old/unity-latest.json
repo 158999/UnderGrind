@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261118-140338-976",
-    "startedUtc":  "2026-11-18T13:03:38.9767230Z",
-    "finishedUtc":  "2026-11-18T13:04:25.8751792Z",
+    "runId":  "20261118-140952-334",
+    "startedUtc":  "2026-11-18T13:09:52.3355075Z",
+    "finishedUtc":  "2026-11-18T13:10:38.1236856Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
@@ -10,10 +10,10 @@
                           ],
     "totals":  {
                    "total":  46,
-                   "passed":  42,
+                   "passed":  46,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  4
+                   "failed":  0
                },
     "platforms":  [
                       {
@@ -23,24 +23,13 @@
                           "exitCode":  null,
                           "resultValid":  false,
                           "validationErrors":  [
-                                                   "Unity Ã¨ terminato con codice .",
-                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
-                                                   "Unity ha riportato 2 test falliti."
+                                                   "Unity Ã¨ terminato con codice ."
                                                ],
                           "compilerDiagnostics":  [
 
                                                   ],
                           "failures":  [
-                                           {
-                                               "test":  "UnderGrind.Tests.PlayerInputSettingsTests.BindingOverridesCanBeSavedResetAndRestored",
-                                               "message":  "Expected: True\n  But was:  False",
-                                               "stackTrace":  "at UnderGrind.Tests.PlayerInputSettingsTests.BindingOverridesCanBeSavedResetAndRestored () [0x00066] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\EditMode\\PlayerInputSettingsTests.cs:93"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanLocomotionTuningTests.FemaleVariantAppliesFemaleCharacterControllerHeight",
-                                               "message":  "Expected: 1.70000005f +/- 9.99999975E-05f\n  But was:  2.0f",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanLocomotionTuningTests.FemaleVariantAppliesFemaleCharacterControllerHeight () [0x0002a] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanLocomotionTuningTests.cs:95"
-                                           }
+
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
                           "logFile":  "TestResults/test/Unity/EditMode.log",
@@ -48,10 +37,10 @@
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
                                          "total":  33,
-                                         "passed":  31,
+                                         "passed":  33,
                                          "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  2
+                                         "failed":  0
                                      }
                       },
                       {
@@ -61,24 +50,13 @@
                           "exitCode":  null,
                           "resultValid":  false,
                           "validationErrors":  [
-                                                   "Unity Ã¨ terminato con codice .",
-                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
-                                                   "Unity ha riportato 2 test falliti."
+                                                   "Unity Ã¨ terminato con codice ."
                                                ],
                           "compilerDiagnostics":  [
 
                                                   ],
                           "failures":  [
-                                           {
-                                               "test":  "UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.DisablingInventoryUI_RestoresPreviousCursorCapture",
-                                               "message":  "System.ArgumentException : Invalid path",
-                                               "stackTrace":  "at (wrapper managed-to-native) UnityEngine.Resources.GetBuiltinResource_Injected(System.Type,UnityEngine.Bindings.ManagedSpanWrapper\u0026)\n  at UnityEngine.Resources.GetBuiltinResource (System.Type type, System.String path) [0x00039] in \u003c6a3be24f609f4c7e856c987d6a26bd21\u003e:0 \n  at UnityEngine.Resources.GetBuiltinResource[T] (System.String path) [0x00000] in \u003c6a3be24f609f4c7e856c987d6a26bd21\u003e:0 \n  at UnderGrind.Inventory.PlayerInventoryUI.BuildSlots (System.Int32 count) [0x00073] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Runtime\\Inventory\\PlayerInventoryUI.cs:268 \n  at UnderGrind.Inventory.PlayerInventoryUI.InitializeUI () [0x00029] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Runtime\\Inventory\\PlayerInventoryUI.cs:177 \n  at UnderGrind.Inventory.PlayerInventoryUI.Configure (UnderGrind.Inventory.InventoryUISettings uiSettings, UnderGrind.Locomotion.PlayerInputSettings playerInput, UnderGrind.Inventory.PlayerInventory playerInventory, UnderGrind.Locomotion.HumanLocomotionController playerLocomotion) [0x0003f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Runtime\\Inventory\\PlayerInventoryUI.cs:46 \n  at UnderGrind.Tests.PlayerWorldInteractionPlayModeTests+\u003cDisablingInventoryUI_RestoresPreviousCursorCapture\u003ed__14.MoveNext () [0x00446] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\PlayMode\\PlayerWorldInteractionPlayModeTests.cs:206 \n  at UnityEngine.TestTools.TestEnumerator+\u003cExecute\u003ed__8.MoveNext () [0x0003a] in .\\Library\\PackageCache\\com.unity.test-framework@01a8b42f9cf6\\UnityEngine.TestRunner\\NUnitExtensions\\Attributes\\TestEnumerator.cs:52"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.PlayerWorldInteractionPlayModeTests.InventoryUI_RefreshesWhenConfiguredAfterAwake",
-                                               "message":  "System.ArgumentException : Invalid path",
-                                               "stackTrace":  "at (wrapper managed-to-native) UnityEngine.Resources.GetBuiltinResource_Injected(System.Type,UnityEngine.Bindings.ManagedSpanWrapper\u0026)\n  at UnityEngine.Resources.GetBuiltinResource (System.Type type, System.String path) [0x00039] in \u003c6a3be24f609f4c7e856c987d6a26bd21\u003e:0 \n  at UnityEngine.Resources.GetBuiltinResource[T] (System.String path) [0x00000] in \u003c6a3be24f609f4c7e856c987d6a26bd21\u003e:0 \n  at UnderGrind.Inventory.PlayerInventoryUI.BuildSlots (System.Int32 count) [0x00073] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Runtime\\Inventory\\PlayerInventoryUI.cs:268 \n  at UnderGrind.Inventory.PlayerInventoryUI.InitializeUI () [0x00029] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Runtime\\Inventory\\PlayerInventoryUI.cs:177 \n  at UnderGrind.Inventory.PlayerInventoryUI.Configure (UnderGrind.Inventory.InventoryUISettings uiSettings, UnderGrind.Locomotion.PlayerInputSettings playerInput, UnderGrind.Inventory.PlayerInventory playerInventory, UnderGrind.Locomotion.HumanLocomotionController playerLocomotion) [0x0003f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Runtime\\Inventory\\PlayerInventoryUI.cs:46 \n  at UnderGrind.Tests.PlayerWorldInteractionPlayModeTests+\u003cInventoryUI_RefreshesWhenConfiguredAfterAwake\u003ed__13.MoveNext () [0x00573] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\PlayMode\\PlayerWorldInteractionPlayModeTests.cs:146 \n  at UnityEngine.TestTools.TestEnumerator+\u003cExecute\u003ed__8.MoveNext () [0x0003a] in .\\Library\\PackageCache\\com.unity.test-framework@01a8b42f9cf6\\UnityEngine.TestRunner\\NUnitExtensions\\Attributes\\TestEnumerator.cs:52"
-                                           }
+
                                        ],
                           "resultFile":  "TestResults/test/Unity/PlayMode.xml",
                           "logFile":  "TestResults/test/Unity/PlayMode.log",
@@ -86,10 +64,10 @@
                           "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
                           "totals":  {
                                          "total":  13,
-                                         "passed":  11,
+                                         "passed":  13,
                                          "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  2
+                                         "failed":  0
                                      }
                       }
                   ]
