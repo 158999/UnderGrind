@@ -13,7 +13,7 @@ L'esportazione di verifica non copre la configurazione dei modificatori e le coo
 
 ## Stato del prototipo di rig
 
-La sorgente corrente è la versione Blendstra [`version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3&version=version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07). L'ispezione registra 16 oggetti:
+La sorgente corrente è la versione Blendstra [`version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6`](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3&version=version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07). L'ispezione registra 16 oggetti:
 
 - Due armature: `UG_Male_Armature` e `UG_Female_Armature`.
 - Sei mesh derivate per personaggio: corpo, testa, braccia e mani dedicate alla prima e alla terza persona.
@@ -25,11 +25,11 @@ Lo script che ha generato questa versione crea una gerarchia di 22 ossa per pers
 
 `Tools/Blender/export-undergrind-humans.py` esegue i controlli direttamente in Blender prima dell'esportazione: ossa Humanoid richieste, sei mesh, parent corretti, modificatore Armature, gruppi di pesi collegati alle ossa deformanti e almeno un peso deformante valido per ogni vertice. Valida entrambi i personaggi prima di esportare e produce due FBX separati. I percorsi provengono da `PlayerRigSettings.asset` o, se l'asset non esiste ancora, dal template JSON.
 
-La sorgente `.blend` presente nel repository non è stata sostituita automaticamente dalla revisione Blendstra. Per usare la geometria corrente, aprire il link della versione sopra in Blendstra, scaricare la sorgente nativa e salvarla come `Assets/UnderGrind/Art/Source/humans.blend`. Poi eseguire lo script Blender descritto in `Tools/Blender/README.md`.
+La sorgente nativa della versione Blendstra è stata scaricata e versionata in `Assets/UnderGrind/Art/Source/humans.blend`. Il file corrisponde alla sorgente riggata verificata (SHA-256 `e74b80b77a8b7a9cfe607d2106de6a35bb65117548c91d587e6a77df0310e981`).
 
 Le versioni `version_9333bec316691d50b66236e6ed6e172d9dbb5921f28563f3d3ae9b2b96ff0591`, `version_b8a60164bd0c3dbcb97cb79bf78d03069c370fc7c28abb093cd4025fbaf1a662` e il progetto separato `UnderGrind — Rigged Human Derivatives` sono iterazioni precedenti. La versione corrente con le 16 parti è la sorgente da esportare.
 
-La sorgente corrente non contiene canali di animazione. Le clip locomotion vengono importate separatamente da PINOC. Non sono ancora stati eseguiti l'export FBX, l'importazione Unity, la generazione dei prefab o i test di deformazione in Unity.
+La sorgente corrente non contiene canali di animazione. Le clip locomotion vengono importate separatamente da PINOC. L'export FBX è stato eseguito e i due file sono versionati: `Human_Male_Rigged.fbx` (209.468 byte) e `Human_Female_Rigged.fbx` (212.300 byte). Il report `Tools/Blender/last-export-report.json` registra per entrambi 22 ossa e sei mesh non vuote (Body, Head, TP Arms/Hands, FP Arms/Hands). Questa verifica certifica l'export Blender, non l'importazione Unity o la qualità visiva delle deformazioni.
 
 ## Importazione in Unity e generazione dei prefab
 
@@ -48,7 +48,7 @@ Quando entrambi gli FBX sono disponibili:
 4. Controllare che la testa sia separata e che i gruppi di renderer corrispondano ai token configurati.
 5. Aprire i prefab e verificare le deformazioni prima di usarli nella scena.
 
-Il builder rifiuta una sorgente se manca l'armatura configurata, l'Avatar Humanoid non è valido oppure la testa non è separata quando `RequireSeparateHead` è attivo. Non effettua tagli geometrici automatici.
+Il builder rifiuta una sorgente se manca l'armatura configurata, l'Avatar Humanoid non è valido oppure la testa non è separata quando `RequireSeparateHead` è attivo. Non effettua tagli geometrici automatici. L'esportazione FBX è completata; il builder deve ancora essere eseguito in Unity per creare e validare i prefab.
 
 `PlayerVisualRig` usa gruppi distinti di renderer:
 
@@ -104,6 +104,7 @@ Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **
 - [ ] Testa separata in un renderer indipendente, verificata da più angolazioni.
 - [ ] Posizione delle ossa verificata su pose di riferimento.
 - [ ] Pesi verificati con deformazioni di spalle, gomiti, polsi, anche, ginocchia e caviglie.
+- [x] Export FBX maschile e femminile generati e versionati; report Blender con 22 ossa e sei mesh ciascuno.
 - [ ] Avatar Humanoid Unity valido per entrambi i personaggi.
 - [ ] Prefab maschile e femminile generati e controllati.
 - [ ] Mesh dedicate a braccia e mani in prima persona create e posate, se richieste dal modello finale.
