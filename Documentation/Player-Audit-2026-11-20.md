@@ -21,7 +21,7 @@ L'ultimo report locale versionato è `TestResults/test/all-latest.json`, run `20
 
 I log Unity riportano `Test run completed. Exiting with code 0 (Ok)` per entrambe le piattaforme. Il report aggregato era comunque Failed perché il wrapper PowerShell non acquisiva in modo affidabile il codice di uscita dai processi avviati con `Start-Process`. Le correzioni sono state applicate a `run-unity-tests.ps1` e `run-all-tests.ps1`, usando `System.Diagnostics.Process` e leggendo `ExitCode` dalla stessa istanza avviata.
 
-La GitHub Action sul commit `6c2a26b7ec41d818f42ed3dbd2e0aca21adbd201` è conclusa con successo. Questa Action valida la sintassi PowerShell e compila/esegue i test standalone .NET; **non avvia Unity**. Le modifiche al runner non sono ancora state verificate da una nuova esecuzione locale completa con Unity 6000.6.9f1.
+La GitHub Action sul commit `6c2a26b7ec41d818f42ed3dbd2e0aca21adbd201` è conclusa con successo. La pipeline è stata poi estesa con `Tools/Testing/test-process-runner.ps1`, che avvia un processo figlio con exit code noto (23) e verifica acquisizione di stdout e stderr. La run CI `44701947919` sul commit `148a355be1f3b8b7aea24505db2209f8c98d1ed5` è conclusa con successo: parsing PowerShell, smoke test del processo e test standalone .NET superati. La CI **non avvia Unity**. Le modifiche al runner non sono ancora state verificate da una nuova esecuzione locale completa con Unity 6000.6.9f1.
 
 ## Stato delle fondamenta del Player
 
