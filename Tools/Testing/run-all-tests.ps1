@@ -127,10 +127,10 @@ $unityStatus = if ($unitySummary -match "(?m)^Status:\s*(Passed|Failed|NotConfig
 
 Write-Host "Lettura report JSON originali..."
 $standaloneJson = if (Test-Path -LiteralPath $standaloneReportPath -PathType Leaf) {
-    [IO.File]::ReadAllText($standaloneReportPath).Trim()
+    [IO.File]::ReadAllText($standaloneReportPath).Trim().TrimStart([char]0xFEFF)
 } else { "null" }
 $unityJson = if (Test-Path -LiteralPath $unityReportPath -PathType Leaf) {
-    [IO.File]::ReadAllText($unityReportPath).Trim()
+    [IO.File]::ReadAllText($unityReportPath).Trim().TrimStart([char]0xFEFF)
 } else { "null" }
 $runId = if (Test-Path -LiteralPath $runIdPath -PathType Leaf) {
     [IO.File]::ReadAllText($runIdPath).Trim()
