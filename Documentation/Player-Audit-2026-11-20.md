@@ -111,3 +111,33 @@ Il terzo problema resta un difetto reale della configurazione Humanoid esportata
 Il launcher ora richiama esclusivamente `run-all-tests.ps1`, che crea una sola cartella di esecuzione e passa `-ReuseCurrentRun` a entrambe le fasi. Il batch conserva e restituisce il codice di uscita aggregato, così una suite fallita non viene mascherata da un completamento apparentemente riuscito.
 
 La correzione del launcher è stata applicata al branch `main`. La GitHub Action continua a verificare standalone e tooling, ma non esegue Unity: il report Unity resta generato dalla macchina locale tramite il launcher batch.
+
+
+## Aggiornamento Humanoid e risultati più recenti — 20 novembre 2026
+
+Il report locale più recente disponibile è la run `20261120-131605-907`:
+
+| Suite | Risultato |
+|---|---:|
+| Diagnostics standalone | 6/6 superati |
+| Unity EditMode | Non eseguito con report valido |
+| Unity PlayMode | Non eseguito con report valido |
+
+Unity è terminato con codice 1 in entrambe le piattaforme e non ha prodotto XML nuovo e valido; i totali Unity sono zero, senza diagnostica del compilatore e senza test conteggiati. Questa run non dimostra né una compilazione Unity fallita né test Unity superati. Nello screenshot delle 13:15 l'Editor Unity è aperto sul progetto mentre viene tentato il runner batchmode: la coincidenza rende plausibile un conflitto con l'istanza già aperta, ma il report non ne identifica direttamente la causa.
+
+La precedente run valida per Unity, `20261120-123305-368`, aveva 34/38 EditMode superati, 4 falliti e 13/13 PlayMode superati. Tutti e quattro i fallimenti EditMode si fermavano nel `SetUp` perché Unity non trovava il transform Humanoid richiesto `RightHand` nel modello maschile. Le schermate successive mostrano `RightHand` nella gerarchia e nel mapping dell'Avatar, ma riportano ancora l'avviso `Character is not in T pose`. Le schermate sono un riscontro visivo dello stato dell'Editor, non una nuova esecuzione dei test né la prova che gli FBX versionati siano stati aggiornati.
+
+### Correzione del mantenimento della posa
+
+`HumanoidAvatarImporter.EnsureValidAvatar` è stato modificato per non cancellare automaticamente una `HumanDescription` manuale che produce già un Avatar Humanoid valido. Questo consente di mantenere le correzioni effettuate nella finestra Avatar Configuration, inclusa **Pose → Enforce T-Pose**. Il fallback al mapping automatico gerarchico avviene soltanto quando la descrizione manuale produce un Avatar invalido.
+
+È stato aggiunto il test EditMode `EnsureValidAvatarPreservesValidManualPoseCorrections`, che applica al ModelImporter la descrizione di un Avatar valido, richiama l'importer UnderGrind e verifica che gli array di mapping e skeleton restino presenti. Il test non è ancora stato eseguito in Unity; il comportamento non è quindi dichiarato verificato.
+
+### Prossimo passaggio di verifica
+
+1. Nella configurazione Avatar di ciascun FBX, applicare **Pose → Enforce T-Pose** e controllare che l'avviso scompaia; premere **Apply** e **Done**.
+2. Chiudere l'istanza grafica di Unity che usa il progetto.
+3. Eseguire `TESTA.bat` e conservare il nuovo report completo.
+4. Verificare che entrambi gli Avatar siano validi, distinti e che i test EditMode/PlayMode siano tutti superati.
+
+La GitHub Action `44734606590` sul commit `875862b75c75048cb936306febd1daa8e195e18b` è conclusa con successo, ma esegue soltanto i test standalone e la validazione sintattica degli strumenti. Non verifica la compilazione Unity, la configurazione T-pose o i test EditMode/PlayMode.
