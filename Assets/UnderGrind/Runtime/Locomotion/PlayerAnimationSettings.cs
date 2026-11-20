@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnderGrind.Locomotion
@@ -108,6 +109,18 @@ namespace UnderGrind.Locomotion
         public float SpeedDampTime => speedDampTime;
         public float TransitionDuration => transitionDuration;
         public float LandingExitTime => landingExitTime;
+
+        public string[] GetMissingRequiredClipNames()
+        {
+            var missing = new List<string>(6);
+            if (idleClip == null) missing.Add("Idle / Standing Idle");
+            if (walkClip == null) missing.Add("Walk / Walking");
+            if (runClip == null) missing.Add("Run / Running");
+            if (jumpClip == null) missing.Add("Jump");
+            if (crouchIdleClip == null) missing.Add("Crouch Idle");
+            if (crouchWalkClip == null) missing.Add("Crouch Walk");
+            return missing.ToArray();
+        }
 
         private void OnValidate()
         {
