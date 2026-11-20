@@ -84,7 +84,7 @@ def inspect_armature_hierarchy(armature, character_name):
             )
 
     if problems:
-        raise RuntimeError("Gerarchia Humanoid non valida:\\n" + "\\n".join(problems))
+        raise RuntimeError("Gerarchia Humanoid non valida:\n" + "\n".join(problems))
 
     return [
         {
