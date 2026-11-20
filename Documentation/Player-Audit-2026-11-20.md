@@ -7,11 +7,11 @@
 - Unity richiesto dal progetto: `6000.6.9f1`
 - Pacchetti: Input System `1.20.1`, URP `17.6.0`, Test Framework `1.8.0`, uGUI `2.6.0`.
 - Sorgente umanoide versionata: `Assets/UnderGrind/Art/Source/humans.blend` (645.776 byte).
-- Ultimo commit considerato per questo audit: aggiornamento della documentazione del runner dopo le correzioni ai processi.
+- Ultimo commit esaminato: `923080faa71ac18455ca42d2fca80d403d009897` (`tests`), che aggiorna i report locali versionati.
 
 ## Stato dei test
 
-L'ultimo report locale versionato è `TestResults/test/all-latest.json`, run `20261120-091314-434`.
+L'ultimo report locale versionato è `TestResults/test/all-latest.json`, run `20261120-095537-299`, aggiornato il 20 novembre 2026 alle 09:56 (ora locale).
 
 | Suite | Risultato XML/TRX | Esito aggregato |
 |---|---:|---|
@@ -19,9 +19,9 @@ L'ultimo report locale versionato è `TestResults/test/all-latest.json`, run `20
 | Unity EditMode | 33/33 superati | Report valido, ma runner segnato Failed |
 | Unity PlayMode | 13/13 superati | Report valido, ma runner segnato Failed |
 
-I log Unity riportano `Test run completed. Exiting with code 0 (Ok)` per entrambe le piattaforme. Il report aggregato era comunque Failed perché il wrapper PowerShell non acquisiva in modo affidabile il codice di uscita dai processi avviati con `Start-Process`. Le correzioni sono state applicate a `run-unity-tests.ps1` e `run-all-tests.ps1`, usando `System.Diagnostics.Process` e leggendo `ExitCode` dalla stessa istanza avviata.
+La run `20261120-095537-299` riporta stato aggregato `Passed`, exit code standalone 0 e Unity 0. I 46 test Unity sono validi: 33 EditMode e 13 PlayMode, senza errori di compilazione, timeout, test falliti o inconclusive. I 6 test standalone Diagnostics sono anch'essi superati. Totale: 52 test superati su 52. Il precedente report `20261120-091314-434` era `Failed` per l'acquisizione errata del codice di uscita Unity; la correzione dei runner `run-unity-tests.ps1` e `run-all-tests.ps1` è ora verificata da questa nuova esecuzione locale.
 
-La pipeline è stata estesa con `Tools/Testing/test-process-runner.ps1`, che avvia un processo figlio con exit code noto (23) e verifica acquisizione di stdout e stderr. La run CI `44702288857` sul commit `57fa45194b5ff59536d900d6576f68abf0944477` è conclusa con successo: parsing PowerShell, smoke test eseguito sotto Windows PowerShell 5.1 e test standalone .NET superati. La CI **non avvia Unity**. Le modifiche al runner non sono ancora state verificate da una nuova esecuzione locale completa con Unity 6000.6.9f1.
+La pipeline è stata estesa con `Tools/Testing/test-process-runner.ps1`, che avvia un processo figlio con exit code noto (23) e verifica acquisizione di stdout e stderr. La run CI `44706657031` sul commit `923080faa71ac18455ca42d2fca80d403d009897` è conclusa con successo: parsing PowerShell, smoke test eseguito sotto Windows PowerShell 5.1 e test standalone .NET superati. La CI **non avvia Unity**; i 46 test Unity sono stati eseguiti localmente con Unity `6000.6.9f1` e sono riportati nei file versionati.
 
 ## Stato delle fondamenta del Player
 
