@@ -162,6 +162,48 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void FallAndLandingClipsAreOptionalForControllerBuild()
+        {
+            var settings = ScriptableObject.CreateInstance<PlayerAnimationSettings>();
+            var clips = new AnimationClip[6];
+            try
+            {
+                var serialized = new SerializedObject(settings);
+                var fields = new[]
+                {
+                    "idleClip", "walkClip", "runClip", "jumpClip",
+                    "crouchIdleClip", "crouchWalkClip"
+                };
+
+                for (var i = 0; i < fields.Length; i++)
+                {
+                    clips[i] = new AnimationClip();
+                    serialized.FindProperty(fields[i]).objectReferenceValue = clips[i];
+                }
+
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                Assert.That(settings.GetMissingRequiredClipNames(), Is.Empty,
+                    "Fall and Landing must remain optional.");
+
+                serialized.FindProperty("fallClip").objectReferenceValue = null;
+                serialized.FindProperty("landClip").objectReferenceValue = null;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                Assert.That(settings.GetMissingRequiredClipNames(), Is.Empty);
+
+                serialized.FindProperty("idleClip").objectReferenceValue = null;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                Assert.That(settings.GetMissingRequiredClipNames(),
+                    Does.Contain("Idle / Standing Idle"));
+            }
+            finally
+            {
+                Object.DestroyImmediate(settings);
+                foreach (var clip in clips)
+                    if (clip != null) Object.DestroyImmediate(clip);
+            }
+        }
+
+        [Test]
         public void AllEightConfigurationGroupsAreSerializedOnSettingsAsset()
         {
             var serialized = new SerializedObject(_settings);
