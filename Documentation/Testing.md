@@ -53,3 +53,5 @@ I report correnti vengono scritti in `TestResults/test/`; l'esecuzione precedent
 ## Limiti della CI
 
 Il workflow `Standalone Diagnostics Tests` esegue la compilazione e i test standalone .NET su Windows e verifica la sintassi degli script PowerShell. Non avvia Unity e quindi non certifica la compilazione degli assembly Unity né il superamento dei test EditMode o PlayMode. Queste verifiche devono essere eseguite con l'Editor della versione richiesta dal progetto.
+
+La GitHub Action esegue anche `Tools/Testing/test-process-runner.ps1`, che verifica un processo figlio con exit code noto e l'acquisizione separata di stdout e stderr.
