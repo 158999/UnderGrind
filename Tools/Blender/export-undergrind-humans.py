@@ -2,6 +2,7 @@ import bpy
 import json
 import re
 from pathlib import Path
+from mathutils import Vector
 
 
 CHARACTERS = {
@@ -73,6 +74,59 @@ def output_path(repo_root, relative_path):
     return candidate if candidate.is_absolute() else repo_root / candidate
 
 
+def inspect_mesh_materials(part):
+    uv_layer = part.data.uv_layers.active or (part.data.uv_layers[0] if part.data.uv_layers else None)
+    uv_bounds = None
+    if uv_layer is not None and uv_layer.data:
+        u_values = [item.uv.x for item in uv_layer.data]
+        v_values = [item.uv.y for item in uv_layer.data]
+        uv_bounds = {
+            "min": [min(u_values), min(v_values)],
+            "max": [max(u_values), max(v_values)],
+            "layer": uv_layer.name,
+        }
+
+    materials = []
+    for slot_index, slot in enumerate(part.material_slots):
+        material = slot.material
+        if material is None:
+            materials.append({"slot": slot_index, "material": None, "images": []})
+            continue
+        images = []
+        if material.use_nodes and material.node_tree:
+            for node in material.node_tree.nodes:
+                if node.type != "TEX_IMAGE" or node.image is None:
+                    continue
+                image = node.image
+                image_path = bpy.path.abspath(image.filepath) if image.filepath else ""
+                packed = image.packed_file is not None
+                exists = image.source == "GENERATED" or packed or (image_path and Path(image_path).is_file())
+                images.append({
+                    "name": image.name,
+                    "filepath": image.filepath,
+                    "resolvedPath": image_path,
+                    "packed": packed,
+                    "available": bool(exists),
+                    "size": list(image.size),
+                })
+        materials.append({"slot": slot_index, "material": material.name, "images": images})
+
+    return {
+        "uvLayerCount": len(part.data.uv_layers),
+        "uvBounds": uv_bounds,
+        "materialSlotCount": len(part.material_slots),
+        "materials": materials,
+        "missingImages": [
+            image["name"] for material in materials for image in material["images"]
+            if not image["available"]
+        ],
+    }
+
+
+def matrix_translation(matrix):
+    return [round(float(value), 6) for value in matrix.translation]
+
+
 def validate_character(character_name, config):
     armature = bpy.data.objects.get(config["armature"])
     if armature is None or armature.type != "ARMATURE":
@@ -130,6 +184,15 @@ def validate_character(character_name, config):
             )
         if not part.data.polygons:
             raise RuntimeError(character_name + ": mesh vuota: " + part_name)
+        if len(part.data.uv_layers) == 0:
+            raise RuntimeError(character_name + ": " + part_name + " non contiene UV map; impossibile garantire la texture.")
+
+        material_audit = inspect_mesh_materials(part)
+        if material_audit["missingImages"]:
+            raise RuntimeError(
+                character_name + ": immagini texture non trovate per " + part_name + ": " +
+                ", ".join(material_audit["missingImages"])
+            )
 
         parts.append(part)
 
@@ -140,10 +203,19 @@ def export_character(character_name, armature, parts, destination):
     destination.parent.mkdir(parents=True, exist_ok=True)
     selected_before = list(bpy.context.selected_objects)
     active_before = bpy.context.view_layer.objects.active
+    original_armature_matrix = armature.matrix_world.copy()
+    original_root_translation = matrix_translation(original_armature_matrix)
 
     try:
         if bpy.context.object and bpy.context.object.mode != "OBJECT":
             bpy.ops.object.mode_set(mode="OBJECT")
+
+        # The source scene keeps the two characters side by side for authoring.
+        # Export each rig at its own origin without changing mesh-to-bone offsets.
+        export_armature_matrix = armature.matrix_world.copy()
+        export_armature_matrix.translation = Vector((0.0, 0.0, 0.0))
+        armature.matrix_world = export_armature_matrix
+        bpy.context.view_layer.update()
 
         bpy.ops.object.select_all(action="DESELECT")
         for obj in [armature, *parts]:
@@ -166,11 +238,14 @@ def export_character(character_name, armature, parts, destination):
             add_leaf_bones=False,
             use_armature_deform_only=False,
             bake_anim=False,
-            path_mode="AUTO",
+            path_mode="COPY",
+            embed_textures=True,
             axis_forward="-Z",
             axis_up="Y",
         )
     finally:
+        armature.matrix_world = original_armature_matrix
+        bpy.context.view_layer.update()
         bpy.ops.object.select_all(action="DESELECT")
         for obj in selected_before:
             if obj.name in bpy.data.objects:
@@ -186,11 +261,14 @@ def export_character(character_name, armature, parts, destination):
         "file": str(destination),
         "bytes": destination.stat().st_size,
         "bones": len(armature.data.bones),
+        "sourceRootTranslation": original_root_translation,
+        "exportRootTranslation": [0.0, 0.0, 0.0],
         "parts": [
             {
                 "name": part.name,
                 "vertices": len(part.data.vertices),
                 "triangles": sum(max(0, len(poly.vertices) - 2) for poly in part.data.polygons),
+                **inspect_mesh_materials(part),
             }
             for part in parts
         ],
