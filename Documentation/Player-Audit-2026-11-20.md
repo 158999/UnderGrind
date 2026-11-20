@@ -141,3 +141,38 @@ La precedente run valida per Unity, `20261120-123305-368`, aveva 34/38 EditMode 
 4. Verificare che entrambi gli Avatar siano validi, distinti e che i test EditMode/PlayMode siano tutti superati.
 
 La GitHub Action `44734606590` sul commit `875862b75c75048cb936306febd1daa8e195e18b` è conclusa con successo, ma esegue soltanto i test standalone e la validazione sintattica degli strumenti. Non verifica la compilazione Unity, la configurazione T-pose o i test EditMode/PlayMode.
+
+
+## Follow-up dopo il push `fail` — 20 novembre 2026
+
+Run Unity locale `20261120-132751-816` / Unity `20261120-132802-174`:
+
+| Suite | Totale | Superati | Falliti |
+|---|---:|---:|---:|
+| Diagnostics standalone | 6 | 6 | 0 |
+| Unity EditMode | 39 | 34 | 5 |
+| Unity PlayMode | 13 | 13 | 0 |
+
+I cinque fallimenti EditMode si verificano tutti nel `SetUp` di `HumanoidRigImportTests`: `HumanoidAvatarImporter.EnsureValidAvatar` restituisce false per il modello maschile. Il log Unity segnala `Rig Error: Invalid Avatar Rig Configuration` e `Required human bone 'RightHand' not found`. Il codice di uscita EditMode è 2; non sono riportati errori del compilatore. Il report complessivo è Failed perché EditMode è fallito, non perché Diagnostics o PlayMode siano falliti.
+
+La meta FBX versionata mostra `animationType: 3`, `avatarSetup: 1`, `autoGenerateAvatarMappingIfUnspecified: 1` e array `humanDescription.human/skeleton` vuoti. L'Avatar non viene quindi risolto dal mapping automatico attuale. Il precedente importer fallback non ha risolto il problema: eliminare una descrizione manuale invalida e chiedere a Unity di mappare automaticamente non corregge un transform assente o una gerarchia incompatibile nell'FBX.
+
+Il report `Tools/Blender/last-export-report.json` indica 22 ossa, ma non contiene la lista delle ossa né i parent; inoltre il formato è più vecchio rispetto ai campi che lo script Blender attuale produce per UV e materiali. Non va usato come prova della struttura del FBX importato da Unity.
+
+### Modifiche diagnostiche successive
+
+- `HumanoidAvatarImporter.cs`: quando Unity non genera un Avatar valido, registra mapping, skeleton e tutti i percorsi Transform effettivamente importati. Questo è un diagnostico, non una correzione dichiarata del rig.
+- `Tools/Blender/export-undergrind-humans.py`: controlla che le ossa Humanoid richieste rispettino anche la catena degli antenati e include `boneHierarchy` nel report con nome, parent, `useDeform`, coordinate locali head/tail.
+- La documentazione Humanoid registra i risultati effettivi e distingue gli errori di Avatar dai problemi geometrici.
+- Il log Unity segnala un poligono auto-intersecante scartato da `Human_Male_Body`. La geometria sorgente deve essere corretta e riesportata separatamente dal mapping Humanoid.
+
+Le nuove diagnostiche non sono ancora state eseguite con Unity o Blender. La GitHub Action associata al commit `cc19ac4c` è verde, ma esegue solo i test standalone: non compila gli assembly Unity e non esegue i test EditMode/PlayMode. Le Actions avviate dai commit diagnostici successivi risultano ancora in corso/in attesa al momento della registrazione.
+
+### Passi necessari per una correzione verificabile
+
+1. Eseguire `Tools/Blender/export-undergrind-humans.py` con Blender sul file sorgente corrente e controllare il nuovo `boneHierarchy` di entrambi i personaggi.
+2. Se il controllo della catena fallisce, correggere la parentela nell'armatura sorgente; se passa, usare i percorsi Transform registrati da Unity per trovare l'eventuale differenza tra nomi Blender e nomi FBX importati.
+3. Correggere il poligono auto-intersecante nella mesh sorgente, quindi esportare nuovamente entrambi gli FBX.
+4. Reimportare in Unity, controllare Avatar Configuration e T-pose, quindi eseguire nuovamente `TESTA.bat`.
+5. Accettare il rig soltanto dopo Avatar validi per entrambi i modelli, EditMode e PlayMode superati e controllo visivo delle deformazioni.
+
