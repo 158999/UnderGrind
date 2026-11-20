@@ -1,17 +1,18 @@
-
 @echo off
 setlocal
 
 cd /d "%~dp0"
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\Tools\Testing\run-tests.ps1"
+powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File ".\Tools\Testing\run-all-tests.ps1"
+set "TEST_EXIT=%ERRORLEVEL%"
 
 echo.
-echo Test uno fatto.
+if "%TEST_EXIT%"=="0" (
+    echo Tutte le suite sono state completate con successo.
+) else (
+    echo Esecuzione test fallita. Exit code: %TEST_EXIT%
+)
+echo Report aggregato: TestResults\test\all-latest.json
 echo.
-
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\Tools\Testing\run-unity-tests.ps1"
-
-echo.
-echo Tutti i test terminati.
 pause
+exit /b %TEST_EXIT%
