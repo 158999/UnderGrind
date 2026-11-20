@@ -49,6 +49,17 @@ jobs:
             throw "PowerShell syntax validation failed."
           }
           Write-Host "PowerShell tooling scripts: syntax valid."
+          $launcher = Get-Content "./TESTA.bat" -Raw
+          if ($launcher -notmatch '(?im)run-all-tests\.ps1') {
+            throw "TESTA.bat must invoke the complete test orchestrator."
+          }
+          if ($launcher -notmatch '(?im)exit\s+/b\s+%TEST_EXIT%') {
+            throw "TESTA.bat must propagate the aggregate test exit code."
+          }
+          if ($launcher -match '(?im)run-tests\.ps1|run-unity-tests\.ps1') {
+            throw "TESTA.bat must not launch test phases separately."
+          }
+          Write-Host "TESTA.bat orchestration and exit-code propagation: valid."
       - name: Verify child-process exit code handling (Windows PowerShell 5.1)
         shell: powershell
         run: ./Tools/Testing/test-process-runner.ps1
