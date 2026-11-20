@@ -1,46 +1,62 @@
 ﻿{
-    "runId":  "20261120-110320-347",
-    "startedUtc":  "2026-11-20T10:03:20.3479006Z",
-    "finishedUtc":  "2026-11-20T10:04:02.4512818Z",
+    "runId":  "20261120-111304-738",
+    "startedUtc":  "2026-11-20T10:13:04.7382692Z",
+    "finishedUtc":  "2026-11-20T10:13:44.7936456Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
-    "status":  "Passed",
+    "status":  "Failed",
     "environmentErrors":  [
 
                           ],
     "totals":  {
-                   "total":  47,
-                   "passed":  47,
+                   "total":  51,
+                   "passed":  48,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  0
+                   "failed":  3
                },
     "platforms":  [
                       {
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  0,
-                          "resultValid":  true,
+                          "exitCode":  2,
+                          "resultValid":  false,
                           "validationErrors":  [
-
+                                                   "Unity Ã¨ terminato con codice 2.",
+                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
+                                                   "Unity ha riportato 3 test falliti."
                                                ],
                           "compilerDiagnostics":  [
 
                                                   ],
                           "failures":  [
-
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
+                                               "message":  "Expected: Human\n  But was:  Generic",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0005e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:34"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx\",\"femminile\")",
+                                               "message":  "Expected: Human\n  But was:  Generic",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts (System.String assetPath, System.String label) [0x0005e] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:34"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars",
+                                               "message":  "Avatar Humanoid non valido: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\n  Expected: not null\n  But was:  null",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LoadValidAvatar (System.String assetPath) [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:162\nat UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars () [0x00000] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:132"
+                                           }
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
                           "logFile":  "TestResults/test/Unity/EditMode.log",
                           "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
-                                         "total":  34,
-                                         "passed":  34,
+                                         "total":  38,
+                                         "passed":  35,
                                          "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  0
+                                         "failed":  3
                                      }
                       },
                       {
