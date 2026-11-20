@@ -2,76 +2,940 @@
   {
     "character": "male",
     "file": "C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Art\\Source\\Rigged\\Human_Male_Rigged.fbx",
-    "bytes": 209468,
+    "bytes": 208812,
     "bones": 22,
+    "boneHierarchy": [
+      {
+        "name": "Root",
+        "parent": null,
+        "useDeform": false,
+        "head": [
+          0.489628,
+          -0.104208,
+          0.004882
+        ],
+        "tail": [
+          0.489628,
+          -0.104208,
+          0.162199
+        ]
+      },
+      {
+        "name": "Hips",
+        "parent": "Root",
+        "useDeform": true,
+        "head": [
+          0.489628,
+          -0.104208,
+          1.613006
+        ],
+        "tail": [
+          0.489628,
+          -0.104208,
+          1.89268
+        ]
+      },
+      {
+        "name": "Spine",
+        "parent": "Hips",
+        "useDeform": true,
+        "head": [
+          0.489628,
+          -0.104208,
+          1.89268
+        ],
+        "tail": [
+          0.489628,
+          -0.104208,
+          2.277231
+        ]
+      },
+      {
+        "name": "Chest",
+        "parent": "Spine",
+        "useDeform": true,
+        "head": [
+          0.489628,
+          -0.104208,
+          2.277231
+        ],
+        "tail": [
+          0.489628,
+          -0.104208,
+          2.661783
+        ]
+      },
+      {
+        "name": "Neck",
+        "parent": "Chest",
+        "useDeform": true,
+        "head": [
+          0.489628,
+          -0.104208,
+          2.661783
+        ],
+        "tail": [
+          0.489628,
+          -0.104208,
+          2.941456
+        ]
+      },
+      {
+        "name": "Head",
+        "parent": "Neck",
+        "useDeform": true,
+        "head": [
+          0.489628,
+          -0.104208,
+          2.941456
+        ],
+        "tail": [
+          0.489628,
+          -0.104208,
+          3.430885
+        ]
+      },
+      {
+        "name": "LeftShoulder",
+        "parent": "Chest",
+        "useDeform": true,
+        "head": [
+          0.489628,
+          -0.104208,
+          2.644303
+        ],
+        "tail": [
+          0.665893,
+          -0.104208,
+          2.644303
+        ]
+      },
+      {
+        "name": "LeftUpperArm",
+        "parent": "LeftShoulder",
+        "useDeform": true,
+        "head": [
+          0.665893,
+          -0.104208,
+          2.644303
+        ],
+        "tail": [
+          0.822574,
+          -0.104208,
+          2.32967
+        ]
+      },
+      {
+        "name": "LeftLowerArm",
+        "parent": "LeftUpperArm",
+        "useDeform": true,
+        "head": [
+          0.822574,
+          -0.104208,
+          2.32967
+        ],
+        "tail": [
+          0.886226,
+          -0.104208,
+          1.980078
+        ]
+      },
+      {
+        "name": "LeftHand",
+        "parent": "LeftLowerArm",
+        "useDeform": true,
+        "head": [
+          0.886226,
+          -0.104208,
+          1.980078
+        ],
+        "tail": [
+          0.910707,
+          -0.104208,
+          1.840241
+        ]
+      },
+      {
+        "name": "RightShoulder",
+        "parent": "Chest",
+        "useDeform": true,
+        "head": [
+          0.489628,
+          -0.104208,
+          2.644303
+        ],
+        "tail": [
+          0.313362,
+          -0.104208,
+          2.644303
+        ]
+      },
+      {
+        "name": "RightUpperArm",
+        "parent": "RightShoulder",
+        "useDeform": true,
+        "head": [
+          0.313362,
+          -0.104208,
+          2.644303
+        ],
+        "tail": [
+          0.156681,
+          -0.104208,
+          2.32967
+        ]
+      },
+      {
+        "name": "RightLowerArm",
+        "parent": "RightUpperArm",
+        "useDeform": true,
+        "head": [
+          0.156681,
+          -0.104208,
+          2.32967
+        ],
+        "tail": [
+          0.093029,
+          -0.104208,
+          1.980078
+        ]
+      },
+      {
+        "name": "RightHand",
+        "parent": "RightLowerArm",
+        "useDeform": true,
+        "head": [
+          0.093029,
+          -0.104208,
+          1.980078
+        ],
+        "tail": [
+          0.068548,
+          -0.104208,
+          1.840241
+        ]
+      },
+      {
+        "name": "LeftUpperLeg",
+        "parent": "Hips",
+        "useDeform": true,
+        "head": [
+          0.582657,
+          -0.104208,
+          1.717884
+        ],
+        "tail": [
+          0.592449,
+          -0.104208,
+          0.966261
+        ]
+      },
+      {
+        "name": "LeftLowerLeg",
+        "parent": "LeftUpperLeg",
+        "useDeform": true,
+        "head": [
+          0.592449,
+          -0.104208,
+          0.966261
+        ],
+        "tail": [
+          0.597346,
+          -0.104208,
+          0.197158
+        ]
+      },
+      {
+        "name": "LeftFoot",
+        "parent": "LeftLowerLeg",
+        "useDeform": true,
+        "head": [
+          0.597346,
+          -0.104208,
+          0.197158
+        ],
+        "tail": [
+          0.597346,
+          0.0775,
+          0.197158
+        ]
+      },
+      {
+        "name": "LeftToes",
+        "parent": "LeftFoot",
+        "useDeform": true,
+        "head": [
+          0.597346,
+          0.0775,
+          0.197158
+        ],
+        "tail": [
+          0.597346,
+          0.125955,
+          0.12724
+        ]
+      },
+      {
+        "name": "RightUpperLeg",
+        "parent": "Hips",
+        "useDeform": true,
+        "head": [
+          0.396598,
+          -0.104208,
+          1.717884
+        ],
+        "tail": [
+          0.386806,
+          -0.104208,
+          0.966261
+        ]
+      },
+      {
+        "name": "RightLowerLeg",
+        "parent": "RightUpperLeg",
+        "useDeform": true,
+        "head": [
+          0.386806,
+          -0.104208,
+          0.966261
+        ],
+        "tail": [
+          0.381909,
+          -0.104208,
+          0.197158
+        ]
+      },
+      {
+        "name": "RightFoot",
+        "parent": "RightLowerLeg",
+        "useDeform": true,
+        "head": [
+          0.381909,
+          -0.104208,
+          0.197158
+        ],
+        "tail": [
+          0.381909,
+          0.0775,
+          0.197158
+        ]
+      },
+      {
+        "name": "RightToes",
+        "parent": "RightFoot",
+        "useDeform": true,
+        "head": [
+          0.381909,
+          0.0775,
+          0.197158
+        ],
+        "tail": [
+          0.381909,
+          0.125955,
+          0.12724
+        ]
+      }
+    ],
+    "sourceRootTranslation": [
+      -1.0,
+      0.0,
+      -0.002486
+    ],
+    "exportRootTranslation": [
+      0.0,
+      0.0,
+      0.0
+    ],
     "parts": [
       {
         "name": "Human_Male_Body",
         "vertices": 106,
-        "triangles": 199
+        "triangles": 199,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Male_Head",
         "vertices": 81,
-        "triangles": 128
+        "triangles": 128,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Male_TP_Arms",
         "vertices": 41,
-        "triangles": 52
+        "triangles": 52,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Male_TP_Hands",
         "vertices": 80,
-        "triangles": 146
+        "triangles": 146,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Male_FP_Arms",
         "vertices": 41,
-        "triangles": 52
+        "triangles": 52,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Male_FP_Hands",
         "vertices": 80,
-        "triangles": 146
+        "triangles": 146,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       }
     ]
   },
   {
     "character": "female",
     "file": "C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Art\\Source\\Rigged\\Human_Female_Rigged.fbx",
-    "bytes": 212300,
+    "bytes": 211660,
     "bones": 22,
+    "boneHierarchy": [
+      {
+        "name": "Root",
+        "parent": null,
+        "useDeform": false,
+        "head": [
+          0.369964,
+          -0.079652,
+          0.002713
+        ],
+        "tail": [
+          0.369964,
+          -0.079652,
+          0.151587
+        ]
+      },
+      {
+        "name": "Hips",
+        "parent": "Root",
+        "useDeform": true,
+        "head": [
+          0.369964,
+          -0.079652,
+          1.524542
+        ],
+        "tail": [
+          0.369964,
+          -0.079652,
+          1.789208
+        ]
+      },
+      {
+        "name": "Spine",
+        "parent": "Hips",
+        "useDeform": true,
+        "head": [
+          0.369964,
+          -0.079652,
+          1.789208
+        ],
+        "tail": [
+          0.369964,
+          -0.079652,
+          2.153123
+        ]
+      },
+      {
+        "name": "Chest",
+        "parent": "Spine",
+        "useDeform": true,
+        "head": [
+          0.369964,
+          -0.079652,
+          2.153123
+        ],
+        "tail": [
+          0.369964,
+          -0.079652,
+          2.517039
+        ]
+      },
+      {
+        "name": "Neck",
+        "parent": "Chest",
+        "useDeform": true,
+        "head": [
+          0.369964,
+          -0.079652,
+          2.517039
+        ],
+        "tail": [
+          0.369964,
+          -0.079652,
+          2.781705
+        ]
+      },
+      {
+        "name": "Head",
+        "parent": "Neck",
+        "useDeform": true,
+        "head": [
+          0.369964,
+          -0.079652,
+          2.781705
+        ],
+        "tail": [
+          0.369964,
+          -0.079652,
+          3.24487
+        ]
+      },
+      {
+        "name": "LeftShoulder",
+        "parent": "Chest",
+        "useDeform": true,
+        "head": [
+          0.369964,
+          -0.079652,
+          2.500497
+        ],
+        "tail": [
+          0.503151,
+          -0.079652,
+          2.500497
+        ]
+      },
+      {
+        "name": "LeftUpperArm",
+        "parent": "LeftShoulder",
+        "useDeform": true,
+        "head": [
+          0.503151,
+          -0.079652,
+          2.500497
+        ],
+        "tail": [
+          0.62154,
+          -0.079652,
+          2.202748
+        ]
+      },
+      {
+        "name": "LeftLowerArm",
+        "parent": "LeftUpperArm",
+        "useDeform": true,
+        "head": [
+          0.62154,
+          -0.079652,
+          2.202748
+        ],
+        "tail": [
+          0.669635,
+          -0.079652,
+          1.871916
+        ]
+      },
+      {
+        "name": "LeftHand",
+        "parent": "LeftLowerArm",
+        "useDeform": true,
+        "head": [
+          0.669635,
+          -0.079652,
+          1.871916
+        ],
+        "tail": [
+          0.688134,
+          -0.079652,
+          1.739583
+        ]
+      },
+      {
+        "name": "RightShoulder",
+        "parent": "Chest",
+        "useDeform": true,
+        "head": [
+          0.369964,
+          -0.079652,
+          2.500497
+        ],
+        "tail": [
+          0.236777,
+          -0.079652,
+          2.500497
+        ]
+      },
+      {
+        "name": "RightUpperArm",
+        "parent": "RightShoulder",
+        "useDeform": true,
+        "head": [
+          0.236777,
+          -0.079652,
+          2.500497
+        ],
+        "tail": [
+          0.118389,
+          -0.079652,
+          2.202748
+        ]
+      },
+      {
+        "name": "RightLowerArm",
+        "parent": "RightUpperArm",
+        "useDeform": true,
+        "head": [
+          0.118389,
+          -0.079652,
+          2.202748
+        ],
+        "tail": [
+          0.070293,
+          -0.079652,
+          1.871916
+        ]
+      },
+      {
+        "name": "RightHand",
+        "parent": "RightLowerArm",
+        "useDeform": true,
+        "head": [
+          0.070293,
+          -0.079652,
+          1.871916
+        ],
+        "tail": [
+          0.051795,
+          -0.079652,
+          1.739583
+        ]
+      },
+      {
+        "name": "LeftUpperLeg",
+        "parent": "Hips",
+        "useDeform": true,
+        "head": [
+          0.440258,
+          -0.079652,
+          1.623791
+        ],
+        "tail": [
+          0.447657,
+          -0.079652,
+          0.912502
+        ]
+      },
+      {
+        "name": "LeftLowerLeg",
+        "parent": "LeftUpperLeg",
+        "useDeform": true,
+        "head": [
+          0.447657,
+          -0.079652,
+          0.912502
+        ],
+        "tail": [
+          0.451356,
+          -0.079652,
+          0.18467
+        ]
+      },
+      {
+        "name": "LeftFoot",
+        "parent": "LeftLowerLeg",
+        "useDeform": true,
+        "head": [
+          0.451356,
+          -0.079652,
+          0.18467
+        ],
+        "tail": [
+          0.451356,
+          0.06733,
+          0.18467
+        ]
+      },
+      {
+        "name": "LeftToes",
+        "parent": "LeftFoot",
+        "useDeform": true,
+        "head": [
+          0.451356,
+          0.06733,
+          0.18467
+        ],
+        "tail": [
+          0.451356,
+          0.106526,
+          0.118504
+        ]
+      },
+      {
+        "name": "RightUpperLeg",
+        "parent": "Hips",
+        "useDeform": true,
+        "head": [
+          0.299671,
+          -0.079652,
+          1.623791
+        ],
+        "tail": [
+          0.292272,
+          -0.079652,
+          0.912502
+        ]
+      },
+      {
+        "name": "RightLowerLeg",
+        "parent": "RightUpperLeg",
+        "useDeform": true,
+        "head": [
+          0.292272,
+          -0.079652,
+          0.912502
+        ],
+        "tail": [
+          0.288572,
+          -0.079652,
+          0.18467
+        ]
+      },
+      {
+        "name": "RightFoot",
+        "parent": "RightLowerLeg",
+        "useDeform": true,
+        "head": [
+          0.288572,
+          -0.079652,
+          0.18467
+        ],
+        "tail": [
+          0.288572,
+          0.06733,
+          0.18467
+        ]
+      },
+      {
+        "name": "RightToes",
+        "parent": "RightFoot",
+        "useDeform": true,
+        "head": [
+          0.288572,
+          0.06733,
+          0.18467
+        ],
+        "tail": [
+          0.288572,
+          0.106526,
+          0.118504
+        ]
+      }
+    ],
+    "sourceRootTranslation": [
+      1.0,
+      0.0,
+      -0.001394
+    ],
+    "exportRootTranslation": [
+      0.0,
+      0.0,
+      0.0
+    ],
     "parts": [
       {
         "name": "Human_Female_Body",
         "vertices": 77,
-        "triangles": 135
+        "triangles": 135,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Female_Head",
         "vertices": 99,
-        "triangles": 156
+        "triangles": 156,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Female_TP_Arms",
         "vertices": 95,
-        "triangles": 136
+        "triangles": 136,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Female_TP_Hands",
         "vertices": 88,
-        "triangles": 142
+        "triangles": 142,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Female_FP_Arms",
         "vertices": 95,
-        "triangles": 136
+        "triangles": 136,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       },
       {
         "name": "Human_Female_FP_Hands",
         "vertices": 88,
-        "triangles": 142
+        "triangles": 142,
+        "uvLayerCount": 1,
+        "uvBounds": {
+          "min": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.0,
+            0.0
+          ],
+          "layer": "UVMap"
+        },
+        "materialSlotCount": 0,
+        "materials": [],
+        "missingImages": []
       }
     ]
   }

@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261120-131619-429",
-    "startedUtc":  "2026-11-20T12:16:19.4292332Z",
-    "finishedUtc":  "2026-11-20T12:16:21.8501790Z",
+    "runId":  "20261120-132802-174",
+    "startedUtc":  "2026-11-20T12:28:02.1745302Z",
+    "finishedUtc":  "2026-11-20T12:28:39.9652925Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
@@ -9,50 +9,74 @@
 
                           ],
     "totals":  {
-                   "total":  0,
-                   "passed":  0,
+                   "total":  52,
+                   "passed":  47,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  0
+                   "failed":  5
                },
     "platforms":  [
                       {
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  1,
+                          "exitCode":  2,
                           "resultValid":  false,
                           "validationErrors":  [
-                                                   "Unity Ã¨ terminato con codice 1.",
-                                                   "Unity non ha prodotto un XML nuovo e valido per questa piattaforma."
+                                                   "Unity Ã¨ terminato con codice 2.",
+                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
+                                                   "Unity ha riportato 5 test falliti."
                                                ],
                           "compilerDiagnostics":  [
 
                                                   ],
                           "failures":  [
-
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.BothImportedModelsBindToConfiguredVisualRigParts",
+                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.EnsureValidAvatarPreservesValidManualPoseCorrections",
+                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
+                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.ImportedFbxHasValidHumanoidAvatarAndSkinnedParts(\"Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx\",\"femminile\")",
+                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.MaleAndFemaleFbxUseDistinctHumanoidAvatars",
+                                               "message":  "SetUp :   Impossibile generare l\u0027Avatar Humanoid maschile.\n  Expected: True\n  But was:  False",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.SetUp () [0x0002f] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:23"
+                                           }
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
                           "logFile":  "TestResults/test/Unity/EditMode.log",
                           "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
-                                         "inconclusive":  0,
-                                         "failed":  0,
+                                         "total":  39,
+                                         "passed":  34,
                                          "skipped":  0,
-                                         "total":  0,
-                                         "passed":  0
+                                         "inconclusive":  0,
+                                         "failed":  5
                                      }
                       },
                       {
                           "platform":  "PlayMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  1,
-                          "resultValid":  false,
+                          "exitCode":  0,
+                          "resultValid":  true,
                           "validationErrors":  [
-                                                   "Unity Ã¨ terminato con codice 1.",
-                                                   "Unity non ha prodotto un XML nuovo e valido per questa piattaforma."
+
                                                ],
                           "compilerDiagnostics":  [
 
@@ -65,11 +89,11 @@
                           "stdoutFile":  "TestResults/test/Unity/PlayMode.stdout.log",
                           "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
                           "totals":  {
-                                         "inconclusive":  0,
-                                         "failed":  0,
+                                         "total":  13,
+                                         "passed":  13,
                                          "skipped":  0,
-                                         "total":  0,
-                                         "passed":  0
+                                         "inconclusive":  0,
+                                         "failed":  0
                                      }
                       }
                   ]
