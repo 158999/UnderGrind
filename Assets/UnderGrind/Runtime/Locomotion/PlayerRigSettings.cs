@@ -29,6 +29,9 @@ namespace UnderGrind.Locomotion
         [Header("Personaggio predefinito nella scena di test")]
         [SerializeField] private PlayerCharacterVariant defaultCharacter;
 
+        [Header("Orientamento del modello rispetto al forward del Player")]
+        [SerializeField, Range(-180f, 180f)] private float modelYawOffset = 90f;
+
         [Header("Nomenclatura delle parti")]
         [SerializeField] private string headRendererSuffix;
         [SerializeField] private string firstPersonArmsToken;
@@ -52,6 +55,7 @@ namespace UnderGrind.Locomotion
 
         public int SettingsVersion => settingsVersion;
         public PlayerCharacterVariant DefaultCharacter => defaultCharacter;
+        public float ModelYawOffset => modelYawOffset;
         public string MaleSourceAssetPath => maleSourceAssetPath;
         public string FemaleSourceAssetPath => femaleSourceAssetPath;
         public string MaleArmatureRootName => maleArmatureRootName;
@@ -90,6 +94,7 @@ namespace UnderGrind.Locomotion
             thirdPersonArmsToken = Normalize(thirdPersonArmsToken);
             thirdPersonHandsToken = Normalize(thirdPersonHandsToken);
             bodyRendererToken = Normalize(bodyRendererToken);
+            modelYawOffset = Mathf.Clamp(modelYawOffset, -180f, 180f);
             firstPersonBodyRevealPitch = Mathf.Clamp(firstPersonBodyRevealPitch, 1f, 89f);
             firstPersonBodyHidePitch = Mathf.Clamp(firstPersonBodyHidePitch, 0f, firstPersonBodyRevealPitch);
         }
