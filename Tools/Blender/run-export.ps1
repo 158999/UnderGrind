@@ -177,13 +177,13 @@ foreach ($characterName in @("male", "female")) {
     }
 
     if ([int]$entry.bones -le 0 -or @($entry.parts).Count -ne 6) {
-        throw "Report non valido per $characterName: scheletro o numero di mesh inatteso."
+        throw "Report non valido per ${characterName}: scheletro o numero di mesh inatteso."
     }
 
     $expectedPath = if ($characterName -eq "male") { $maleOutput } else { $femaleOutput }
     $reportedPath = [IO.Path]::GetFullPath([string]$entry.file)
     if ($reportedPath -ne $expectedPath) {
-        throw "Percorso esportato inatteso per $characterName: $reportedPath"
+        throw "Percorso esportato inatteso per ${characterName}: $reportedPath"
     }
 
     $outputFile = Get-Item -LiteralPath $expectedPath -ErrorAction Stop
@@ -193,7 +193,7 @@ foreach ($characterName in @("male", "female")) {
 
     foreach ($part in @($entry.parts)) {
         if ([int]$part.vertices -le 0 -or [int]$part.triangles -le 0) {
-            throw "Mesh vuota nel report $characterName: $($part.name)"
+            throw "Mesh vuota nel report ${characterName}: $($part.name)"
         }
     }
 
