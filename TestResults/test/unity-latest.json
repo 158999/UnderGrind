@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261120-111304-738",
-    "startedUtc":  "2026-11-20T10:13:04.7382692Z",
-    "finishedUtc":  "2026-11-20T10:13:44.7936456Z",
+    "runId":  "20261120-111416-509",
+    "startedUtc":  "2026-11-20T10:14:16.5095482Z",
+    "finishedUtc":  "2026-11-20T10:14:27.8815872Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
@@ -9,8 +9,8 @@
 
                           ],
     "totals":  {
-                   "total":  51,
-                   "passed":  48,
+                   "total":  38,
+                   "passed":  35,
                    "skipped":  0,
                    "inconclusive":  0,
                    "failed":  3
@@ -57,33 +57,6 @@
                                          "skipped":  0,
                                          "inconclusive":  0,
                                          "failed":  3
-                                     }
-                      },
-                      {
-                          "platform":  "PlayMode",
-                          "timeoutSeconds":  600,
-                          "timedOut":  false,
-                          "exitCode":  0,
-                          "resultValid":  true,
-                          "validationErrors":  [
-
-                                               ],
-                          "compilerDiagnostics":  [
-
-                                                  ],
-                          "failures":  [
-
-                                       ],
-                          "resultFile":  "TestResults/test/Unity/PlayMode.xml",
-                          "logFile":  "TestResults/test/Unity/PlayMode.log",
-                          "stdoutFile":  "TestResults/test/Unity/PlayMode.stdout.log",
-                          "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
-                          "totals":  {
-                                         "total":  13,
-                                         "passed":  13,
-                                         "skipped":  0,
-                                         "inconclusive":  0,
-                                         "failed":  0
                                      }
                       }
                   ]
