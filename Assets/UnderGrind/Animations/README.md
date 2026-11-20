@@ -28,7 +28,7 @@ La mesh X Bot serve come sorgente per il retargeting: non è il modello del gioc
 
 Gli otto movimenti selezionati sono disponibili nella libreria PINOC, ma nessuna delle due famiglie di export è ancora importata in questa cartella o trasferita sul rig UnderGrind.
 
-`PlayerAnimationControllerBuilder` individua i file FBX importati in questa cartella, imposta l'importazione Humanoid e associa le clip mancanti usando il nome della clip o del file. Per generare il controller completo sono necessarie tutte e otto le clip elencate sopra. Il loop di ogni clip è configurabile separatamente nell'asset `PlayerAnimationSettings.asset`; il generatore applica tali valori ai rispettivi `ModelImporterClipAnimation` prima di aggiornare i riferimenti.
+`PlayerAnimationControllerBuilder` individua i file FBX importati in questa cartella, imposta l'importazione Humanoid e associa le clip mancanti usando il nome della clip o del file. Per generare il controller sono obbligatorie sei clip: Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk. Fall e Land sono opzionali e vengono associate quando disponibili. Il loop di ogni clip è configurabile separatamente nell'asset `PlayerAnimationSettings.asset`; il generatore applica tali valori ai rispettivi `ModelImporterClipAnimation` prima di aggiornare i riferimenti.
 
 `LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`. Il modello sorgente attuale non dispone di un Avatar Humanoid valido né di renderer separati per testa e arti FP.
 
