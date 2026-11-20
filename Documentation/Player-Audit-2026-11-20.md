@@ -82,11 +82,32 @@ La suite è stata aggiunta dopo l'ultima esecuzione locale registrata (47 test U
 La documentazione di `Assets/UnderGrind/Animations/README.md` è stata allineata a `PlayerAnimationSettings.GetMissingRequiredClipNames()`: Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono obbligatorie; Fall e Land sono opzionali.
 
 
-## Diagnosi dei risultati EditMode del 20 novembre
+## Diagnosi dei risultati caricati il 20 novembre alle 11:22
 
-Le due esecuzioni EditMode caricate nel repository hanno riportato 35 test superati e 3 falliti su 38. I tre fallimenti non erano errori di compilazione: entrambi gli FBX risultavano importati con `ModelImporterAnimationType.Generic` e `ModelImporterAvatarSetup` non configurato per creare un Avatar dal modello. Di conseguenza non esisteva un Avatar Humanoid valido da verificare.
+Il commit dell'esecuzione ha caricato un report Unity completo. La run `20261120-112221-901` riporta:
 
-La causa era nei file `.fbx.meta` versionati: `animationType: 2` e `avatarSetup: 0`, in contrasto con le impostazioni richieste dal builder e dall'asset `PlayerRigSettings`. I due meta-file sono stati aggiornati a importazione Humanoid, Avatar creato dal modello e importazione animazioni disattivata, coerentemente con `PlayerRigSettings`. I test EditMode ora verificano anche che le principali opzioni del ModelImporter coincidano con la configurazione dell'asset.
+| Suite | Superati | Falliti | Totale |
+|---|---:|---:|---:|
+| Standalone Diagnostics | 6 | 0 | 6 |
+| Unity EditMode | 35 | 3 | 38 |
+| Unity PlayMode | 13 | 0 | 13 |
 
-La correzione è stata pushata, ma deve ancora essere validata eseguendo nuovamente Unity EditMode sul nuovo HEAD. La workflow GitHub Actions verifica soltanto Standalone Diagnostics e non sostituisce l'esecuzione dei test Unity. Non dichiarare risolta la validità degli Avatar finché il nuovo report EditMode non risulta Passed.
+I tre fallimenti EditMode sono:
 
+1. `ImportedFbxHasValidHumanoidAvatarAndSkinnedParts` per il modello maschile: il test si aspettava `LegacyImport` mentre Unity ha restituito `ImportViaMaterialDescription`.
+2. Lo stesso test per il modello femminile, con lo stesso disallineamento.
+3. `MaleAndFemaleFbxUseDistinctHumanoidAvatars`: l'Avatar maschile non è valido.
+
+I log Unity precisano i problemi di mapping Humanoid: nel modello maschile manca il transform richiesto `RightHand`; nel modello femminile manca `LeftLowerLeg`. Non sono errori di compilazione C# né errori del processo di test.
+
+La causa dei primi due fallimenti è un'aspettativa errata nel test e nel builder: `PlayerRigSettings.ImportMaterials` è un booleano, mentre l'importer FBX corrente usa `ImportViaMaterialDescription`. Il valore `materialImportMode: 2` nei due `.meta` corrisponde a questa modalità. Il test e il builder sono stati allineati a tale modalità.
+
+Il terzo problema resta un difetto reale della configurazione Humanoid esportata: la presenza dei nomi delle ossa nel report Blender non dimostra che Unity riesca a mapparli come transform Humanoid validi. Non è stato corretto né deve essere dichiarato risolto finché una nuova esecuzione Unity non conferma Avatar validi per entrambi i personaggi.
+
+## Correzione del launcher di test
+
+`TESTA.bat` avviava prima `run-tests.ps1` e poi `run-unity-tests.ps1` separatamente. Entrambi gli script, se avviati senza `-ReuseCurrentRun`, ruotano `TestResults/test` in `TestResults/test old`; il secondo avvio spostava quindi i report standalone appena prodotti. Inoltre il batch non propagava l'exit code dei test.
+
+Il launcher ora richiama esclusivamente `run-all-tests.ps1`, che crea una sola cartella di esecuzione e passa `-ReuseCurrentRun` a entrambe le fasi. Il batch conserva e restituisce il codice di uscita aggregato, così una suite fallita non viene mascherata da un completamento apparentemente riuscito.
+
+La correzione del launcher è stata applicata al branch `main`. La GitHub Action continua a verificare standalone e tooling, ma non esegue Unity: il report Unity resta generato dalla macchina locale tramite il launcher batch.
