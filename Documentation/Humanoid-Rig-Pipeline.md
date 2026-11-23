@@ -111,6 +111,12 @@ L'accesso a `AvatarSetupTool` avviene tramite reflection perché è un'API inter
 
 `HumanoidRigImportTests` aggiunge controlli espliciti della T-Pose maschile e femminile e un test di retargeting che campiona Walking, Running e Crouch Walk a 30 Hz su X Bot sorgente e sui due Avatar Player. Il test segnala gli incroci quando la separazione laterale dei piedi diventa inferiore a -0,02 m. Questi nuovi controlli sono stati aggiunti dopo la run 53/53 e devono ancora essere eseguiti in Unity. Su Windows, dalla root del repository, eseguire `.\TESTA.bat`. Il dettaglio dei campioni compare in `TestResults/test/Unity/EditMode.log` e il riepilogo in `TestResults/test/all-latest.json`.
 
+### Correzione della soglia Walk/Run — 23 novembre 2026
+
+`HumanLocomotionController` invia all'Animator la velocità orizzontale misurata in metri al secondo. La velocità Walk configurata è `1,4 m/s`, ma la precedente soglia `walkThreshold = 0,1` faceva già dominare il movimento Run a velocità di camminata: con `runThreshold = 1,65`, a 1,4 m/s il Blend Tree assegnava circa l'84% del peso alla corsa e il 16% alla camminata.
+
+La soglia Walk predefinita è ora `1,4`, allineata alla velocità Walk del controller; la soglia Run resta `1,65`, tra velocità Walk e Run. La migrazione `PlayerAnimationSettings` versione 6 aggiorna il vecchio valore predefinito `0,1` a `1,4`, preservando valori personalizzati diversi. `HumanLocomotionTuningTests` verifica che `WalkThreshold == WalkSpeed` e che `RunThreshold` resti compresa tra Walk e Run. La correzione viene applicata quando Unity migra l'asset e quando viene ricostruito l'Animator Controller.
+
 ## Sorgenti delle animazioni
 
 Sono stati individuati nella libreria PINOC otto movimenti:
@@ -159,6 +165,7 @@ Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **
 - [x] Avatar Humanoid Unity valido per entrambi i personaggi (EditMode verificato nella run 53/53 del 23 novembre 2026).
 - [ ] Prefab maschile e femminile generati e controllati.
 - [ ] Mesh dedicate a braccia e mani in prima persona create e posate, se richieste dal modello finale.
+- [x] Soglie Walk/Run del Blend Tree allineate alle velocità misurate; verifica automatica aggiunta, esecuzione Unity ancora da confermare.
 - [ ] Retargeting Humanoid verificato su entrambi gli Avatar, senza incroci o deformazioni dei piedi.
 - [ ] Cicli di camminata e corsa controllati visivamente per scivolamento dei piedi, transizioni e movimento della radice.
 - [ ] Test PlayMode superati sul rig importato.
