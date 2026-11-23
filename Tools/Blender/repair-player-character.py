@@ -1,4 +1,5 @@
 import bpy
+from mathutils import Vector
 import bmesh
 import json
 from pathlib import Path
@@ -64,11 +65,23 @@ def shift_armature_to_body_centerline(armature, body):
         bpy.context.view_layer.objects.active = armature
         bpy.ops.object.mode_set(mode="EDIT")
 
-        # Translate the complete selected bone set as one operation. Editing
-        # connected parent/child endpoints one by one can re-apply connections
-        # and leave the hierarchy partially displaced.
-        bpy.ops.armature.select_all(action="SELECT")
-        bpy.ops.transform.translate(value=(-offset, 0.0, 0.0), orient_type="GLOBAL")
+        edit_bones = list(armature.data.edit_bones)
+        # Snapshot every endpoint first, then write all endpoints in one pass.
+        # This preserves connected parent/child joints while translating the
+        # complete skeleton in armature-local space.
+        shifted = [
+            (bone, bone.head.copy() - Vector((offset, 0.0, 0.0)),
+             bone.tail.copy() - Vector((offset, 0.0, 0.0)))
+            for bone in edit_bones
+        ]
+        for bone, head, tail in shifted:
+            bone.use_connect = False
+            bone.head = head
+            bone.tail = tail
+        for bone, _, _ in shifted:
+            if bone.parent and (bone.head - bone.parent.tail).length < 1e-5:
+                bone.use_connect = True
+
         bpy.ops.object.mode_set(mode="OBJECT")
         bpy.context.view_layer.update()
 
