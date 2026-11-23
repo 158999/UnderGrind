@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9608863aaf6f6ea3a86ed28fb96534a, type: 3}
   m_Name: PlayerRigSettings
   m_EditorClassIdentifier: UnderGrind.Runtime::UnderGrind.Locomotion.PlayerRigSettings
-  settingsVersion: 7
+  settingsVersion: 8
   maleSourceAssetPath: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
   femaleSourceAssetPath: Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
   maleArmatureRootName: UG_Male_Armature
@@ -21,6 +21,7 @@ MonoBehaviour:
   femalePrefabName: Human_Female_Rigged
   defaultCharacter: 0
   modelYawOffset: 90
+  enforceHumanoidTPose: 1
   headRendererSuffix: _Head
   firstPersonArmsToken: _FP_Arms
   firstPersonHandsToken: _FP_Hands
