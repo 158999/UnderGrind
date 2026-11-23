@@ -40,7 +40,7 @@ MonoBehaviour:
   characterStepOffsetHeightRatio: 0.18
   characterSlopeLimit: 48
   characterMinMoveDistance: 0
-  characterSkinWidth: 0.08
+  characterSkinWidth: 0.03
   characterDetectCollisions: 1
   characterEnableOverlapRecovery: 1
   mouseSensitivity: 0.12
