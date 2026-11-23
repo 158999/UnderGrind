@@ -119,7 +119,7 @@ namespace UnderGrind.Editor
             var importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
             if (model == null || importer == null) return false;
 
-            var setupToolType = typeof(Editor).Assembly.GetType("UnityEditor.AvatarSetupTool", false);
+            var setupToolType = GetAvatarSetupToolType();
             if (setupToolType == null)
             {
                 Debug.LogError("UnderGrind: AvatarSetupTool non disponibile nella versione Unity corrente.");
@@ -246,6 +246,13 @@ namespace UnderGrind.Editor
 
             Debug.Log("UnderGrind: T-Pose Humanoid corretta e salvata nel ModelImporter: " + assetPath);
             return true;
+        }
+
+        private static Type GetAvatarSetupToolType()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("UnityEditor.AvatarSetupTool", false))
+                .FirstOrDefault(type => type != null);
         }
 
         private static MethodInfo FindStaticMethod(Type type, string name, int parameterCount, BindingFlags flags)
