@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnderGrind.Locomotion;
 
 namespace UnderGrind.Editor
 {
@@ -12,6 +15,10 @@ namespace UnderGrind.Editor
     /// </summary>
     public static class HumanoidAvatarImporter
     {
+        private const string RigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
+        private const string HumanBonesPropertyPath = "m_HumanDescription.m_Human";
+        private const string SkeletonBonesPropertyPath = "m_HumanDescription.m_Skeleton";
+
         public static bool EnsureValidAvatar(string assetPath, string armatureRootName)
         {
             if (string.IsNullOrWhiteSpace(assetPath) || string.IsNullOrWhiteSpace(armatureRootName))
@@ -99,7 +106,150 @@ namespace UnderGrind.Editor
                 return false;
             }
 
+            var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(RigSettingsPath);
+            if ((rigSettings == null || rigSettings.EnforceHumanoidTPose) && !EnsureTPose(assetPath))
+                return false;
+
             return true;
+        }
+
+        public static bool IsTPoseValid(string assetPath)
+        {
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            var importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+            if (model == null || importer == null) return false;
+
+            var setupToolType = typeof(Editor).Assembly.GetType("UnityEditor.AvatarSetupTool", false);
+            if (setupToolType == null)
+            {
+                Debug.LogError("UnderGrind: AvatarSetupTool non disponibile nella versione Unity corrente.");
+                return false;
+            }
+
+            var isPoseValidOnInstance = setupToolType.GetMethod("IsPoseValidOnInstance",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static, null,
+                new[] { typeof(GameObject), typeof(SerializedObject) }, null);
+            if (isPoseValidOnInstance == null)
+            {
+                Debug.LogError("UnderGrind: API Unity AvatarSetupTool.IsPoseValidOnInstance non disponibile.");
+                return false;
+            }
+
+            using (var serialized = new SerializedObject(importer))
+            {
+                try
+                {
+                    return (bool)isPoseValidOnInstance.Invoke(null, new object[] { model, serialized });
+                }
+                catch (TargetInvocationException exception)
+                {
+                    Debug.LogException(exception.InnerException ?? exception);
+                    return false;
+                }
+            }
+        }
+
+        private static bool EnsureTPose(string assetPath)
+        {
+            if (IsTPoseValid(assetPath)) return true;
+
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            var importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+            if (model == null || importer == null)
+            {
+                Debug.LogError("UnderGrind: impossibile applicare la T-Pose; FBX o ModelImporter non disponibili: " + assetPath);
+                return false;
+            }
+
+            var setupToolType = typeof(Editor).Assembly.GetType("UnityEditor.AvatarSetupTool", false);
+            if (setupToolType == null)
+            {
+                Debug.LogError("UnderGrind: AvatarSetupTool non disponibile. In Unity usa Avatar Configuration > Pose > Enforce T-Pose > Apply > Done.");
+                return false;
+            }
+
+            var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+            var getModelBones = FindStaticMethod(setupToolType, "GetModelBones", 3, flags);
+            var getHumanBones = setupToolType.GetMethod("GetHumanBones", flags, null,
+                new[] { typeof(SerializedProperty), typeof(Dictionary<Transform, bool>) }, null);
+            var transferDescriptionToPose = setupToolType.GetMethod("TransferDescriptionToPose", flags, null,
+                new[] { typeof(SerializedObject), typeof(Transform) }, null);
+            var isPoseValid = FindStaticMethod(setupToolType, "IsPoseValid", 1, flags);
+            var makePoseValid = FindStaticMethod(setupToolType, "MakePoseValid", 1, flags);
+            var transferPoseToDescription = setupToolType.GetMethod("TransferPoseToDescription", flags, null,
+                new[] { typeof(SerializedProperty), typeof(Transform) }, null);
+
+            if (getModelBones == null || getHumanBones == null || transferDescriptionToPose == null ||
+                isPoseValid == null || makePoseValid == null || transferPoseToDescription == null)
+            {
+                Debug.LogError("UnderGrind: API Unity necessarie per Enforce T-Pose non disponibili. " +
+                               "Usa Avatar Configuration > Pose > Enforce T-Pose > Apply > Done.");
+                return false;
+            }
+
+            using (var serialized = new SerializedObject(importer))
+            {
+                var humanBonesProperty = serialized.FindProperty(HumanBonesPropertyPath);
+                var skeletonBonesProperty = serialized.FindProperty(SkeletonBonesPropertyPath);
+                if (humanBonesProperty == null || skeletonBonesProperty == null)
+                {
+                    Debug.LogError("UnderGrind: proprietà HumanDescription mancanti nel ModelImporter: " + assetPath);
+                    return false;
+                }
+
+                var instance = UnityEngine.Object.Instantiate(model);
+                instance.hideFlags = HideFlags.HideAndDontSave;
+                try
+                {
+                    var modelBones = getModelBones.Invoke(null, new object[] { instance.transform, false, null });
+                    if (modelBones == null)
+                    {
+                        Debug.LogError("UnderGrind: Unity non ha individuato le ossa del modello: " + assetPath);
+                        return false;
+                    }
+
+                    var humanBones = getHumanBones.Invoke(null, new[] { humanBonesProperty, modelBones });
+                    if (humanBones == null)
+                    {
+                        Debug.LogError("UnderGrind: Unity non ha costruito il mapping Humanoid: " + assetPath);
+                        return false;
+                    }
+
+                    transferDescriptionToPose.Invoke(null, new object[] { serialized, instance.transform });
+                    if ((bool)isPoseValid.Invoke(null, new[] { humanBones }))
+                        return true;
+
+                    makePoseValid.Invoke(null, new[] { humanBones });
+                    transferPoseToDescription.Invoke(null, new object[] { skeletonBonesProperty, instance.transform });
+                    serialized.ApplyModifiedProperties();
+                }
+                catch (TargetInvocationException exception)
+                {
+                    Debug.LogException(exception.InnerException ?? exception);
+                    return false;
+                }
+                finally
+                {
+                    UnityEngine.Object.DestroyImmediate(instance);
+                }
+            }
+
+            importer.SaveAndReimport();
+            var avatar = LoadValidAvatar(assetPath);
+            if (avatar == null || !IsTPoseValid(assetPath))
+            {
+                Debug.LogError("UnderGrind: correzione T-Pose non verificata dopo la reimportazione: " + assetPath);
+                return false;
+            }
+
+            Debug.Log("UnderGrind: T-Pose Humanoid corretta e salvata nel ModelImporter: " + assetPath);
+            return true;
+        }
+
+        private static MethodInfo FindStaticMethod(Type type, string name, int parameterCount, BindingFlags flags)
+        {
+            return type.GetMethods(flags).FirstOrDefault(method =>
+                method.Name == name && method.GetParameters().Length == parameterCount);
         }
 
         private static bool TryBuildExactNameMapping(
