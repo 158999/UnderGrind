@@ -64,10 +64,14 @@ namespace UnderGrind.Editor
             var requiredClips = new[]
             {
                 settings.IdleClip, settings.WalkClip, settings.RunClip, settings.JumpClip,
-                settings.FallClip, settings.LandClip, settings.CrouchIdleClip, settings.CrouchWalkClip
+                settings.CrouchIdleClip, settings.CrouchWalkClip
             };
             if (requiredClips.Any(clip => clip == null || clip.length <= 0f))
-                throw new InvalidOperationException("UnderGrind: una o più clip richieste sono vuote o non importate.");
+                throw new InvalidOperationException("UnderGrind: una o più clip obbligatorie sono vuote o non importate.");
+
+            var optionalClips = new[] { settings.FallClip, settings.LandClip };
+            if (optionalClips.Any(clip => clip != null && clip.length <= 0f))
+                throw new InvalidOperationException("UnderGrind: una clip opzionale configurata è vuota o non importata.");
 
             var invalidParameters = GetInvalidAnimatorParameters(settings);
             if (invalidParameters.Count > 0)
