@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: PlayerAnimationSettings
   m_EditorClassIdentifier: UnderGrind.Runtime::UnderGrind.Locomotion.PlayerAnimationSettings
   settingsVersion: 6
-  animatorController: {fileID: 0}
-  idleClip: {fileID: 0}
-  walkClip: {fileID: 0}
-  runClip: {fileID: 0}
-  jumpClip: {fileID: 0}
-  fallClip: {fileID: 0}
-  landClip: {fileID: 0}
-  crouchIdleClip: {fileID: 0}
-  crouchWalkClip: {fileID: 0}
+  animatorController: {fileID: 9100000, guid: 85adcf3d08ee7044781f48a13a8016c4, type: 2}
+  idleClip: {fileID: -623603649343465320, guid: 1cbf45b55abe4a8897cda1a21da60d7b, type: 3}
+  walkClip: {fileID: -623603649343465320, guid: 32d71c7fe88a4d1f9c0c1fde2da5f060, type: 3}
+  runClip: {fileID: -623603649343465320, guid: 32c1d7ba29d6466ca2bc56ff17ca4d1a, type: 3}
+  jumpClip: {fileID: -623603649343465320, guid: 08872e23d695493d8c03cb595cd55e9c, type: 3}
+  fallClip: {fileID: -623603649343465320, guid: 2e513074b11f41089ba780f2995ecba8, type: 3}
+  landClip: {fileID: -623603649343465320, guid: 241c8c514bfb4f0cad0bf9a7c50f8ee7, type: 3}
+  crouchIdleClip: {fileID: -623603649343465320, guid: 7cd563940b474fa7b9516658d5ea3da6, type: 3}
+  crouchWalkClip: {fileID: -623603649343465320, guid: 610abb992359776458efcc68afb43c35, type: 3}
   idleLoops: 1
   walkLoops: 1
   runLoops: 1
