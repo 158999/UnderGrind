@@ -1,11 +1,10 @@
-name: Humans Blend Repair
+name: Repair mirrored humanoid source
 
 on:
   push:
-    branches: [repair/humans-blend-audit]
-    paths: ['.github/workflows/humans-blend-repair.yml']
-  pull_request:
-    branches: [main]
+    branches: [fix/mirror-humanoid-meshes]
+    paths:
+      - '.github/workflows/humans-blend-repair.yml'
   workflow_dispatch:
 
 permissions:
@@ -14,40 +13,59 @@ permissions:
 jobs:
   repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: repair/humans-blend-audit
+          ref: ${{ github.ref }}
           lfs: true
       - name: Install Blender
         run: |
           sudo apt-get update
           sudo apt-get install -y blender
           blender --version
-      - name: Repair rigged half-meshes
+      - name: Rebuild missing half of all rigged meshes
+        shell: bash
         run: |
           cat > repair_humans.py <<'PY'
           import bpy, bmesh, json
-          src = "Assets/UnderGrind/Art/Source/humans.blend"
-          out = "humans_repaired.blend"
-          bpy.ops.wm.open_mainfile(filepath=src)
-          targets = [o for o in bpy.data.objects if o.type == "MESH" and o.name not in ("Human_Female", "Human_Male") and any(m.type == "ARMATURE" for m in o.modifiers)]
-          report = {"targets": [], "errors": []}
-          def mirror_group(name, names):
-              if name.startswith("Left") and "Right" + name[4:] in names: return "Right" + name[4:]
-              if name.startswith("Right") and "Left" + name[5:] in names: return "Left" + name[5:]
+          from collections import defaultdict
+
+          SOURCE = "Assets/UnderGrind/Art/Source/humans.blend"
+          OUTPUT = "humans_repaired.blend"
+          EPS = 1e-5
+
+          bpy.ops.wm.open_mainfile(filepath=SOURCE)
+          targets = [
+              obj for obj in bpy.data.objects
+              if obj.type == "MESH"
+              and obj.name not in ("Human_Female", "Human_Male")
+              and any(mod.type == "ARMATURE" and mod.object for mod in obj.modifiers)
+          ]
+          report = {"source": SOURCE, "targets": [], "errors": []}
+
+          def opposite_group(name, available):
+              if name.startswith("Left") and "Right" + name[4:] in available:
+                  return "Right" + name[4:]
+              if name.startswith("Right") and "Left" + name[5:] in available:
+                  return "Left" + name[5:]
               return name
+
           for obj in targets:
               mesh = obj.data
               xs = [v.co.x for v in mesh.vertices]
-              positive = sum(x > 1e-5 for x in xs)
-              negative = sum(x < -1e-5 for x in xs)
-              if not positive or negative:
-                  report["errors"].append(f"{obj.name}: non-half mesh (positive={positive}, negative={negative}); skipped")
-                  continue
+              has_pos = any(x > EPS for x in xs)
+              has_neg = any(x < -EPS for x in xs)
+              if has_pos == has_neg:
+                  raise RuntimeError(
+                      f"{obj.name}: expected exactly one half, found positive={has_pos}, negative={has_neg}"
+                  )
+
+              source_sign = 1 if has_pos else -1
               group_names = [g.name for g in obj.vertex_groups]
-              group_index = {g.name: g.index for g in obj.vertex_groups}
+              group_indices = {g.name: g.index for g in obj.vertex_groups}
+              available = set(group_names)
+
               bm = bmesh.new()
               bm.from_mesh(mesh)
               bm.verts.ensure_lookup_table()
@@ -56,80 +74,132 @@ jobs:
               original_verts = list(bm.verts)
               mirror_map = {}
               center = set()
-              for v in original_verts:
-                  if abs(v.co.x) <= 1e-5:
-                      mirror_map[v] = v
-                      center.add(v)
-                  else:
-                      nv = bm.verts.new((-v.co.x, v.co.y, v.co.z))
-                      nv[deform].clear()
-                      for gi, weight in v[deform].items():
-                          old_name = group_names[gi]
-                          new_name = mirror_group(old_name, set(group_names))
-                          nv[deform][group_index[new_name]] = weight
-                      mirror_map[v] = nv
+
+              for vert in original_verts:
+                  if abs(vert.co.x) <= EPS:
+                      mirror_map[vert] = vert
+                      center.add(vert)
+                      continue
+                  mirrored = bm.verts.new((-vert.co.x, vert.co.y, vert.co.z))
+                  mirrored[deform].clear()
+                  for group_index, weight in vert[deform].items():
+                      source_name = group_names[group_index]
+                      target_name = opposite_group(source_name, available)
+                      mirrored[deform][group_indices[target_name]] = weight
+                  mirror_map[vert] = mirrored
+
               original_faces = list(bm.faces)
               uv_layers = list(bm.loops.layers.uv.values())
               for face in original_faces:
-                  if all(v in center for v in face.verts):
+                  if all(vert in center for vert in face.verts):
                       continue
-                  mirrored = [mirror_map[v] for v in reversed(face.verts)]
-                  nf = bm.faces.new(mirrored)
-                  nf.material_index = face.material_index
-                  nf.smooth = face.smooth
-                  for layer in uv_layers:
-                      source_by_vertex = {loop.vert: loop[layer].uv.copy() for loop in face.loops}
-                      for loop in nf.loops:
-                          source_vert = next(v for v in face.verts if mirror_map[v] == loop.vert)
-                          loop[layer].uv = source_by_vertex[source_vert]
+                  mirrored_face_verts = [mirror_map[vert] for vert in reversed(face.verts)]
+                  mirrored_face = bm.faces.new(mirrored_face_verts)
+                  mirrored_face.material_index = face.material_index
+                  mirrored_face.smooth = face.smooth
+                  source_uv = {
+                      loop.vert: {layer.name: loop[layer].uv.copy() for layer in uv_layers}
+                      for loop in face.loops
+                  }
+                  for loop in mirrored_face.loops:
+                      source_vert = next(v for v in face.verts if mirror_map[v] == loop.vert)
+                      for layer in uv_layers:
+                          loop[layer].uv = source_uv[source_vert][layer.name]
+
               bm.normal_update()
               bm.to_mesh(mesh)
               bm.free()
               mesh.update()
+
+              final_x = [v.co.x for v in mesh.vertices]
+              final_pos = sum(x > EPS for x in final_x)
+              final_neg = sum(x < -EPS for x in final_x)
+              if not final_pos or not final_neg:
+                  raise RuntimeError(f"{obj.name}: mirrored side was not generated")
+
               report["targets"].append({
-                  "name": obj.name, "vertices_before": len(xs), "vertices_after": len(mesh.vertices),
-                  "faces_before": len(original_faces), "faces_after": len(mesh.polygons),
-                  "negative_x_vertices_after": sum(1 for v in mesh.vertices if v.co.x < -1e-5),
-                  "armature_modifiers": [m.name for m in obj.modifiers if m.type == "ARMATURE"]
+                  "name": obj.name,
+                  "source_side": "positive" if source_sign > 0 else "negative",
+                  "vertices_before": len(xs),
+                  "vertices_after": len(mesh.vertices),
+                  "faces_before": len(original_faces),
+                  "faces_after": len(mesh.polygons),
+                  "positive_x_vertices_after": final_pos,
+                  "negative_x_vertices_after": final_neg,
+                  "armature": next(m.object.name for m in obj.modifiers if m.type == "ARMATURE" and m.object),
+                  "vertex_groups": len(obj.vertex_groups),
+                  "uv_layers": len(mesh.uv_layers),
+                  "material_slots": len(mesh.materials)
               })
-          bpy.ops.wm.save_as_mainfile(filepath=out)
-          with open("repair-report.json", "w") as f: json.dump(report, f, indent=2)
+
+          if len(targets) != 12 or len(report["targets"]) != 12:
+              raise RuntimeError(f"Expected 12 rigged meshes, found {len(targets)}")
+          bpy.ops.wm.save_as_mainfile(filepath=OUTPUT)
+          with open("repair-report.json", "w", encoding="utf-8") as stream:
+              json.dump(report, stream, indent=2)
           print(json.dumps(report, indent=2))
-          if report["errors"]: raise RuntimeError("Repair validation errors")
-          if len(report["targets"]) != 12: raise RuntimeError(f"Expected 12 rigged meshes, repaired {len(report['targets'])}")
           PY
           blender -b --python repair_humans.py
-      - name: Verify candidate reopens and preserve rig bindings
+
+      - name: Reopen and verify repaired Blender file
         run: |
           cat > verify_humans.py <<'PY'
           import bpy, json
           bpy.ops.wm.open_mainfile(filepath="humans_repaired.blend")
-          targets = [o for o in bpy.data.objects if o.type == "MESH" and o.name not in ("Human_Female", "Human_Male") and any(m.type == "ARMATURE" for m in o.modifiers)]
+          targets = [
+              obj for obj in bpy.data.objects
+              if obj.type == "MESH"
+              and obj.name not in ("Human_Female", "Human_Male")
+              and any(mod.type == "ARMATURE" and mod.object for mod in obj.modifiers)
+          ]
           errors = []
+          result = []
           for obj in targets:
               xs = [v.co.x for v in obj.data.vertices]
-              if not any(x < -1e-5 for x in xs) or not any(x > 1e-5 for x in xs): errors.append(obj.name + ": missing mirrored side")
-              if not any(m.type == "ARMATURE" and m.object for m in obj.modifiers): errors.append(obj.name + ": missing armature binding")
-              if not obj.vertex_groups: errors.append(obj.name + ": no vertex groups")
-          result = {"mesh_count": len(targets), "errors": errors}
-          print(json.dumps(result, indent=2))
-          if len(targets) != 12 or errors: raise RuntimeError("Candidate verification failed")
+              pos = sum(x > 1e-5 for x in xs)
+              neg = sum(x < -1e-5 for x in xs)
+              armature_mods = [m for m in obj.modifiers if m.type == "ARMATURE" and m.object]
+              if not pos or not neg:
+                  errors.append(obj.name + ": one side is still missing")
+              if not armature_mods:
+                  errors.append(obj.name + ": armature modifier missing")
+              if not obj.vertex_groups:
+                  errors.append(obj.name + ": vertex groups missing")
+              if not obj.data.polygons:
+                  errors.append(obj.name + ": polygons missing")
+              result.append({
+                  "name": obj.name, "vertices": len(obj.data.vertices),
+                  "faces": len(obj.data.polygons), "positive": pos, "negative": neg,
+                  "armatures": [m.object.name for m in armature_mods]
+              })
+          payload = {"mesh_count": len(targets), "errors": errors, "meshes": result}
+          print(json.dumps(payload, indent=2))
+          with open("verification-report.json", "w", encoding="utf-8") as stream:
+              json.dump(payload, stream, indent=2)
+          if len(targets) != 12 or errors:
+              raise RuntimeError("Reopened .blend failed verification")
           PY
           blender -b --python verify_humans.py
-      - name: Commit repaired Blender source
+
+      - name: Commit repaired .blend to this branch
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          cp humans_repaired.blend Assets/UnderGrind/Art/Source/humans.blend
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp humans_repaired.blend Assets/UnderGrind/Art/Source/humans.blend
           git add Assets/UnderGrind/Art/Source/humans.blend
-          git commit -m "fix: restore mirrored human model geometry"
-          git push origin HEAD:repair/humans-blend-audit
-      - name: Upload repaired source and report
+          git diff --cached --quiet && { echo "No source change to commit"; exit 1; }
+          git commit -m "fix: restore complete mirrored humanoid meshes"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload repaired source and verification reports
         uses: actions/upload-artifact@v4
         with:
-          name: humans-repaired-candidate
+          name: verified-humans-blend-repair
           path: |
             humans_repaired.blend
             repair-report.json
+            verification-report.json
           if-no-files-found: error
           retention-days: 14
