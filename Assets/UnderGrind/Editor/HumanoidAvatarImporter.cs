@@ -208,7 +208,7 @@ namespace UnderGrind.Editor
                         return false;
                     }
 
-                    var humanBones = getHumanBones.Invoke(null, new[] { humanBonesProperty, modelBones });
+                    var humanBones = getHumanBones.Invoke(null, new object[] { humanBonesProperty, modelBones });
                     if (humanBones == null)
                     {
                         Debug.LogError("UnderGrind: Unity non ha costruito il mapping Humanoid: " + assetPath);
@@ -216,16 +216,18 @@ namespace UnderGrind.Editor
                     }
 
                     transferDescriptionToPose.Invoke(null, new object[] { serialized, instance.transform });
-                    if ((bool)isPoseValid.Invoke(null, new[] { humanBones }))
+                    if ((bool)isPoseValid.Invoke(null, new object[] { humanBones }))
                         return true;
 
-                    makePoseValid.Invoke(null, new[] { humanBones });
+                    makePoseValid.Invoke(null, new object[] { humanBones });
                     transferPoseToDescription.Invoke(null, new object[] { skeletonBonesProperty, instance.transform });
                     serialized.ApplyModifiedProperties();
                 }
-                catch (TargetInvocationException exception)
+                catch (Exception exception)
                 {
-                    Debug.LogException(exception.InnerException ?? exception);
+                    var cause = exception is TargetInvocationException invocation && invocation.InnerException != null
+                        ? invocation.InnerException : exception;
+                    Debug.LogException(cause);
                     return false;
                 }
                 finally
