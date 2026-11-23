@@ -49,4 +49,5 @@ jobs:
           git add Assets/UnderGrind/Animations/*.fbx
           git diff --cached --quiet && { echo "No motion files downloaded"; exit 1; }
           git commit -m "assets: add selected PINOC Mixamo locomotion clips"
+          git pull --rebase origin fix/player-character-rig-animation
           git push origin HEAD:fix/player-character-rig-animation
