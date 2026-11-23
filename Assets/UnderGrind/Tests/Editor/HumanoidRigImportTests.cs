@@ -3,6 +3,8 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 using UnderGrind.Locomotion;
 
 namespace UnderGrind.Tests
@@ -218,6 +220,168 @@ namespace UnderGrind.Tests
         {
             AssertVisualRigBindings(MaleFbxPath, "maschile");
             AssertVisualRigBindings(FemaleFbxPath, "femminile");
+        }
+
+        [Test]
+        public void LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars()
+        {
+            var clipPaths = new[]
+            {
+                "Assets/UnderGrind/Animations/Walking.fbx",
+                "Assets/UnderGrind/Animations/Running.fbx",
+                "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx"
+            };
+            var failures = new System.Collections.Generic.List<string>();
+
+            foreach (var clipPath in clipPaths)
+            {
+                var clip = AssetDatabase.LoadAllAssetsAtPath(clipPath)
+                    .OfType<AnimationClip>()
+                    .FirstOrDefault(candidate => candidate != null &&
+                        candidate.humanMotion &&
+                        !candidate.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase));
+                Assert.That(clip, Is.Not.Null,
+                    "Clip Humanoid mancante o non importata: " + clipPath);
+
+                var sourceModel = AssetDatabase.LoadAssetAtPath<GameObject>(clipPath);
+                Assert.That(sourceModel, Is.Not.Null, "Modello sorgente Mixamo mancante: " + clipPath);
+                var sourceAvatar = LoadValidAvatar(clipPath);
+                RecordFootCrossingResult("Mixamo source", sourceModel, sourceAvatar, clip, failures);
+
+                var maleModel = AssetDatabase.LoadAssetAtPath<GameObject>(MaleFbxPath);
+                var maleAvatar = LoadValidAvatar(MaleFbxPath);
+                RecordFootCrossingResult("Player male", maleModel, maleAvatar, clip, failures);
+
+                var femaleModel = AssetDatabase.LoadAssetAtPath<GameObject>(FemaleFbxPath);
+                var femaleAvatar = LoadValidAvatar(FemaleFbxPath);
+                RecordFootCrossingResult("Player female", femaleModel, femaleAvatar, clip, failures);
+            }
+
+            Assert.That(failures, Is.Empty,
+                "Rilevati incroci laterali dei piedi durante il retarget Humanoid:" +
+                Environment.NewLine + string.Join(Environment.NewLine, failures));
+        }
+
+        private sealed class FootCrossingResult
+        {
+            public float RestSeparation;
+            public float MinimumSeparation;
+            public float WorstTime;
+            public int CrossingSamples;
+            public int SampleCount;
+        }
+
+        private static void RecordFootCrossingResult(
+            string avatarLabel,
+            GameObject model,
+            Avatar avatar,
+            AnimationClip clip,
+            System.Collections.Generic.ICollection<string> failures)
+        {
+            var result = MeasureFootCrossing(model, avatar, clip);
+            var summary = avatarLabel + " / " + System.IO.Path.GetFileNameWithoutExtension(
+                AssetDatabase.GetAssetPath(clip)) +
+                " / " + clip.name +
+                ": rest=" + result.RestSeparation.ToString("F3") + "m" +
+                ", min=" + result.MinimumSeparation.ToString("F3") + "m" +
+                " a " + result.WorstTime.ToString("F2") + "s" +
+                ", incroci=" + result.CrossingSamples + "/" + result.SampleCount;
+            Debug.Log("UnderGrind foot-crossing diagnostic: " + summary);
+
+            if (result.RestSeparation <= 0f || result.CrossingSamples > 0)
+                failures.Add(summary);
+        }
+
+        private static FootCrossingResult MeasureFootCrossing(
+            GameObject model,
+            Avatar avatar,
+            AnimationClip clip)
+        {
+            const int sampleRate = 30;
+            const float crossingToleranceMeters = 0.02f;
+
+            var instance = UnityEngine.Object.Instantiate(model);
+            PlayableGraph graph = default;
+            try
+            {
+                instance.name = model.name + "_FootCrossingDiagnostic";
+                var animator = instance.GetComponent<Animator>();
+                if (animator == null) animator = instance.AddComponent<Animator>();
+                animator.avatar = avatar;
+                animator.runtimeAnimatorController = null;
+                animator.applyRootMotion = false;
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animator.Rebind();
+                animator.Update(0f);
+
+                var leftHip = animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
+                var rightHip = animator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
+                var leftFoot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+                var rightFoot = animator.GetBoneTransform(HumanBodyBones.RightFoot);
+                Assert.That(leftHip, Is.Not.Null, model.name + ": LeftUpperLeg non mappata.");
+                Assert.That(rightHip, Is.Not.Null, model.name + ": RightUpperLeg non mappata.");
+                Assert.That(leftFoot, Is.Not.Null, model.name + ": LeftFoot non mappata.");
+                Assert.That(rightFoot, Is.Not.Null, model.name + ": RightFoot non mappata.");
+
+                var lateral = instance.transform.InverseTransformDirection(
+                    leftHip.position - rightHip.position).normalized;
+                Assert.That(lateral.sqrMagnitude, Is.GreaterThan(0.9f),
+                    model.name + ": asse laterale delle anche non valido.");
+
+                var restLeft = instance.transform.InverseTransformPoint(leftFoot.position);
+                var restRight = instance.transform.InverseTransformPoint(rightFoot.position);
+                var restSeparation = Vector3.Dot(restLeft - restRight, lateral);
+
+                graph = PlayableGraph.Create("FootCrossing_" + clip.name);
+                graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
+                var output = AnimationPlayableOutput.Create(graph, "FootCrossing", animator);
+                var playable = AnimationClipPlayable.Create(graph, clip);
+                playable.SetApplyFootIK(false);
+                playable.SetApplyPlayableIK(false);
+                playable.SetSpeed(0d);
+                output.SetSourcePlayable(playable);
+                graph.Play();
+
+                var sampleCount = Mathf.Max(2, Mathf.CeilToInt(clip.length * sampleRate) + 1);
+                var minimumSeparation = float.PositiveInfinity;
+                var worstTime = 0f;
+                var crossingSamples = 0;
+
+                for (var sample = 0; sample < sampleCount; sample++)
+                {
+                    var normalizedTime = sample / (float)(sampleCount - 1);
+                    var sampleTime = Mathf.Min(clip.length * normalizedTime,
+                        Mathf.Max(0f, clip.length - 0.0001f));
+                    playable.SetTime(sampleTime);
+                    graph.Evaluate(0f);
+
+                    var leftPosition = instance.transform.InverseTransformPoint(leftFoot.position);
+                    var rightPosition = instance.transform.InverseTransformPoint(rightFoot.position);
+                    var separation = Vector3.Dot(leftPosition - rightPosition, lateral);
+                    if (separation < minimumSeparation)
+                    {
+                        minimumSeparation = separation;
+                        worstTime = sampleTime;
+                    }
+
+                    if (separation < -crossingToleranceMeters)
+                        crossingSamples++;
+                }
+
+                return new FootCrossingResult
+                {
+                    RestSeparation = restSeparation,
+                    MinimumSeparation = minimumSeparation,
+                    WorstTime = worstTime,
+                    CrossingSamples = crossingSamples,
+                    SampleCount = sampleCount
+                };
+            }
+            finally
+            {
+                if (graph.IsValid()) graph.Destroy();
+                UnityEngine.Object.DestroyImmediate(instance);
+            }
         }
 
         private static bool EnsureHumanoidAvatar(string assetPath, string armatureRootName)
