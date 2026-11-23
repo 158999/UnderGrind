@@ -1,0 +1,51 @@
+name: Import generated PINOC running candidates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-pinoc-running-candidates.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import-running-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Download four generated running candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p Assets/UnderGrind/Animations/Candidates/PINOC_Running
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4dac68a1-2371-4080-8f57-0d46e9eb8a25/sample_00.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=NX_jPtHPvKWK0aIMnDjj2_VK84Q' --output Assets/UnderGrind/Animations/Candidates/PINOC_Running/Running_Candidate_01.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4dac68a1-2371-4080-8f57-0d46e9eb8a25/sample_01.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=vjUokKEkYd1-GlOKepWyus1bZH8' --output Assets/UnderGrind/Animations/Candidates/PINOC_Running/Running_Candidate_02.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4dac68a1-2371-4080-8f57-0d46e9eb8a25/sample_02.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=0kQmDn5Gu4QmbKnzN2acMF9Clm4' --output Assets/UnderGrind/Animations/Candidates/PINOC_Running/Running_Candidate_03.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4dac68a1-2371-4080-8f57-0d46e9eb8a25/sample_03.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=IgTtv56GiCpqg0O1c-h00NZfv4Y' --output Assets/UnderGrind/Animations/Candidates/PINOC_Running/Running_Candidate_04.fbx
+          for file in Assets/UnderGrind/Animations/Candidates/PINOC_Running/*.fbx; do
+            test -s "$file"
+            size=$(stat -c %s "$file")
+            if [ "$size" -lt 10000 ]; then
+              echo "Invalid or truncated FBX: $file ($size bytes)"
+              exit 1
+            fi
+            printf '%s %s bytes\n' "$file" "$size"
+          done
+          test "$(find Assets/UnderGrind/Animations/Candidates/PINOC_Running -maxdepth 1 -name '*.fbx' | wc -l)" -eq 4
+
+      - name: Commit candidate source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Assets/UnderGrind/Animations/Candidates/PINOC_Running/*.fbx
+          git diff --cached --quiet && { echo "No candidate FBX files downloaded"; exit 1; }
+          git commit -m "assets: add generated running animation candidates"
+          git pull --rebase origin main
+          git push origin HEAD:main
