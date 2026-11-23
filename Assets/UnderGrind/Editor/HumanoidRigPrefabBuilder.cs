@@ -15,6 +15,7 @@ namespace UnderGrind.Editor
         private const string OutputFolder = "Assets/UnderGrind/Generated/Prefabs";
         private const string RigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
         private const string LocomotionSettingsPath = "Assets/UnderGrind/Settings/PlayerLocomotionSettings.asset";
+        private const string SkinMaterialPath = "Assets/UnderGrind/Generated/Fallback_Skin.mat";
 
         [MenuItem("UnderGrind/Player/Build Male and Female Prefabs From Configured FBX")]
         public static void BuildFromConfiguredSources()
@@ -234,6 +235,12 @@ namespace UnderGrind.Editor
             // First-person visibility is selected later by the gameplay camera mode.
             visualRig.SetThirdPerson(true);
 
+            if (!AssignOpaqueSkinMaterial(temporary))
+            {
+                UnityEngine.Object.DestroyImmediate(temporary);
+                return null;
+            }
+
             if (temporary.GetComponentsInChildren<Renderer>(true).Length == 0)
             {
                 Debug.LogError("UnderGrind: nessun Renderer presente nel rig " + rootName);
@@ -252,6 +259,43 @@ namespace UnderGrind.Editor
                 return null;
             }
             return temporary;
+        }
+
+        private static bool AssignOpaqueSkinMaterial(GameObject root)
+        {
+            var skin = AssetDatabase.LoadAssetAtPath<Material>(SkinMaterialPath);
+            if (skin == null)
+            {
+                Debug.LogError("UnderGrind: materiale pelle non disponibile: " + SkinMaterialPath);
+                return false;
+            }
+
+            var flesh = new Color(0.72f, 0.55f, 0.43f, 1f);
+            if (skin.HasProperty("_BaseColor")) skin.SetColor("_BaseColor", flesh);
+            if (skin.HasProperty("_Color")) skin.SetColor("_Color", flesh);
+            if (skin.HasProperty("_Surface")) skin.SetFloat("_Surface", 0f);
+            if (skin.HasProperty("_AlphaClip")) skin.SetFloat("_AlphaClip", 0f);
+            if (skin.HasProperty("_ZWrite")) skin.SetFloat("_ZWrite", 1f);
+            if (skin.HasProperty("_Cull")) skin.SetFloat("_Cull", 0f);
+            skin.renderQueue = -1;
+            EditorUtility.SetDirty(skin);
+
+            var renderers = root.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            if (renderers.Length == 0)
+            {
+                Debug.LogError("UnderGrind: nessuno SkinnedMeshRenderer da colorare in " + root.name);
+                return false;
+            }
+
+            foreach (var renderer in renderers)
+            {
+                var subMeshCount = renderer.sharedMesh != null ? renderer.sharedMesh.subMeshCount : 1;
+                renderer.sharedMaterials = Enumerable.Repeat(skin, Mathf.Max(1, subMeshCount)).ToArray();
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                renderer.receiveShadows = true;
+            }
+
+            return true;
         }
 
         private static bool IsFbxPath(string path) =>

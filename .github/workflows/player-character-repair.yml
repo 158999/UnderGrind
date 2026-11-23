@@ -1,0 +1,132 @@
+name: UnderGrind player character repair and export
+
+on:
+  push:
+    branches: [fix/player-character-rig-animation]
+    paths:
+      - '.github/workflows/player-character-repair.yml'
+      - 'Tools/Blender/repair-player-character.py'
+      - 'Tools/Blender/export-undergrind-humans.py'
+      - 'Assets/UnderGrind/Art/Source/humans.blend'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair-and-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 36
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/player-character-rig-animation
+          lfs: true
+
+      - name: Install Blender 5.2.4
+        run: |
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+            https://mirror.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+            --output "$RUNNER_TEMP/blender.tar.xz"
+          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/blender-5.2.4-linux-x64/blender" --version
+
+      - name: Center skeletons, repair mesh faces, normals, UVs and skin material
+        run: |
+          blender -b Assets/UnderGrind/Art/Source/humans.blend --python-exit-code 1 --python Tools/Blender/repair-player-character.py
+
+      - name: Audit repaired Blender source
+        run: |
+          blender -b Assets/UnderGrind/Art/Source/humans.blend --python-exit-code 1 --python Tools/Blender/player-character-audit.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("Tools/Blender/player-character-audit.json").read_text(encoding="utf-8"))
+          if report.get("errors"):
+              raise SystemExit("; ".join(report["errors"]))
+          if set(report.get("characters", {})) != {"male", "female"}:
+              raise SystemExit("Expected male and female character audits")
+          for name, character in report["characters"].items():
+              if abs(character["skeletonOffsetFromBodyMeters"]) > 0.01:
+                  raise SystemExit(f"{name}: skeleton offset {character['skeletonOffsetFromBodyMeters']} m")
+              if len(character["parts"]) != 6:
+                  raise SystemExit(f"{name}: expected 6 rigged parts")
+              for part in character["parts"]:
+                  if part["materials"] != ["UG_Skin"]:
+                      raise SystemExit(f"{part['name']}: UG_Skin missing")
+                  if part["selfIntersectingPolygons"]:
+                      raise SystemExit(f"{part['name']}: self-intersecting polygons remain")
+                  if part["zeroAreaFaces"]:
+                      raise SystemExit(f"{part['name']}: zero-area faces remain")
+                  if part["unweightedVertices"]:
+                      raise SystemExit(f"{part['name']}: unweighted vertices remain")
+                  uv = part["uvBounds"]
+                  if not uv or min(uv["max"][axis] - uv["min"][axis] for axis in (0, 1)) < 0.01:
+                      raise SystemExit(f"{part['name']}: UV map is still collapsed")
+          print("Verified: 12 meshes, centered rigs, valid topology, UVs, weights and opaque skin material.")
+          PY
+
+      - name: Regenerate Unity FBX assets
+        run: |
+          rm -f Tools/Blender/last-export-report.json
+          rm -f Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+          rm -f Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
+          blender -b Assets/UnderGrind/Art/Source/humans.blend --python-exit-code 1 --python Tools/Blender/export-undergrind-humans.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("Tools/Blender/last-export-report.json").read_text(encoding="utf-8"))
+          expected = {
+              "male": Path("Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx"),
+              "female": Path("Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx"),
+          }
+          if len(report) != 2:
+              raise SystemExit("Expected two FBX export reports")
+          for character, path in expected.items():
+              item = next((row for row in report if row["character"] == character), None)
+              if item is None or not path.is_file() or path.stat().st_size <= 0:
+                  raise SystemExit(f"{character}: FBX export missing")
+              if len(item.get("parts", [])) != 6:
+                  raise SystemExit(f"{character}: expected 6 exported mesh parts")
+              if abs(item["rigAlignment"]["skeletonOffsetFromBodyMeters"]) > 0.01:
+                  raise SystemExit(f"{character}: rig alignment validation failed")
+              if path.stat().st_size != item["bytes"]:
+                  raise SystemExit(f"{character}: FBX size does not match export report")
+              for part in item["parts"]:
+                  if part["materialSlotCount"] != 1 or part["materials"][0]["material"] != "UG_Skin":
+                      raise SystemExit(f"{part['name']}: FBX material missing")
+          print("Verified: male and female FBX exports contain six skinned parts and UG_Skin.")
+          PY
+
+      - name: Commit repaired source and FBX assets
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Assets/UnderGrind/Art/Source/humans.blend
+          git add Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+          git add Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
+          git add Tools/Blender/last-export-report.json
+          git add Tools/Blender/player-character-repair-report.json
+          git diff --cached --quiet && { echo "No repaired assets to commit"; exit 1; }
+          git commit -m "fix: align humanoid rigs and repair character surfaces"
+          git pull --rebase origin "$TARGET_BRANCH"
+          git push origin "HEAD:$TARGET_BRANCH"
+
+      - name: Upload repaired character package
+        uses: actions/upload-artifact@v4
+        with:
+          name: undergrind-repaired-player-character
+          path: |
+            Assets/UnderGrind/Art/Source/humans.blend
+            Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+            Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
+            Tools/Blender/player-character-repair-report.json
+            Tools/Blender/player-character-audit.json
+            Tools/Blender/last-export-report.json
+          if-no-files-found: error
+          retention-days: 30

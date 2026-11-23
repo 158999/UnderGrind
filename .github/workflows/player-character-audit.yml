@@ -1,0 +1,42 @@
+name: UnderGrind player character audit
+
+on:
+  push:
+    branches: [fix/player-character-rig-animation]
+    paths:
+      - '.github/workflows/player-character-audit.yml'
+      - 'Assets/UnderGrind/Art/Source/humans.blend'
+      - 'Tools/Blender/player-character-audit.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install Blender 5.2.4
+        run: |
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+            https://mirror.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+            --output "$RUNNER_TEMP/blender.tar.xz"
+          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/blender-5.2.4-linux-x64/blender" --version
+
+      - name: Audit rig alignment, mesh topology, materials and UVs
+        run: blender -b Assets/UnderGrind/Art/Source/humans.blend --python Tools/Blender/player-character-audit.py
+
+      - name: Upload audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: player-character-audit
+          path: Tools/Blender/player-character-audit.json
+          if-no-files-found: error
+          retention-days: 14

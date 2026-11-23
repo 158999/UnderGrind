@@ -1,0 +1,53 @@
+name: Import selected PINOC player motions
+
+on:
+  push:
+    branches: [fix/player-character-rig-animation]
+    paths:
+      - '.github/workflows/import-pinoc-player-motions.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/player-character-rig-animation
+
+      - name: Download selected Mixamo FBX motions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p Assets/UnderGrind/Animations
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/b17fe31f-292a-49ab-83f2-64f1290a45a1_Standing_Idle.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=-SQQnYixE03Es6Fhfq2OhSvRd9M' --output Assets/UnderGrind/Animations/Standing_Idle.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/45a5bd7d-700f-4041-9dbc-6e4dcffcd954_Walking.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=yUWKZOfk_xe6zGnhvvxMfJbqiWw' --output Assets/UnderGrind/Animations/Walking.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/15beccf3-c030-4b5b-af3d-00e3dc6d2f0a_Running.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=bd2LYf603TCqeo8ys_fc3ww8dRM' --output Assets/UnderGrind/Animations/Running.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/51e2faff-6851-496a-9d23-40e34a865064_Jump.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=HGyqZ8ZM5lHF1Fi0u3I3ekaj15E' --output Assets/UnderGrind/Animations/Jump.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/9b874288-20fc-439e-98ae-957180286d34_Fall_down.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=qfzLOatBztdGaQAZre69tUpk4R4' --output Assets/UnderGrind/Animations/Fall_down.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/9d67c0e3-d3e1-41b2-bf01-92637c372524_Hard_Landing.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=VcOHyxwqx7L6oOpCPSFOtysTrQE' --output Assets/UnderGrind/Animations/Hard_Landing.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/32251c58-5b55-4143-abc1-ef8cccd0332f_Crouching_Idle.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=fu9h8pU9L8nTrNZlMNUsJlpcWeo' --output Assets/UnderGrind/Animations/Crouching_Idle.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/35936fd1-eabb-40c2-9604-5432aad7b95a_Crouch_Walk_Forward.fbx?Expires=1795431600&KeyName=vigglecloudcdn2&Signature=gsO0SlS4jGm83MxjzM9x6XRv_Ds' --output Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx
+          for file in Assets/UnderGrind/Animations/*.fbx; do
+            test -s "$file"
+            size=$(stat -c %s "$file")
+            if [ "$size" -lt 10000 ]; then
+              echo "Invalid or truncated FBX: $file ($size bytes)"
+              exit 1
+            fi
+            echo "$file: $size bytes"
+          done
+          test "$(find Assets/UnderGrind/Animations -maxdepth 1 -name '*.fbx' | wc -l)" -eq 8
+
+      - name: Commit imported motion source files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Assets/UnderGrind/Animations/*.fbx
+          git diff --cached --quiet && { echo "No motion files downloaded"; exit 1; }
+          git commit -m "assets: add selected PINOC Mixamo locomotion clips"
+          git pull --rebase origin fix/player-character-rig-animation
+          git push origin HEAD:fix/player-character-rig-animation

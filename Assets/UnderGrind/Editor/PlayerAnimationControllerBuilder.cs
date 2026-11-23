@@ -18,13 +18,20 @@ namespace UnderGrind.Editor
         [MenuItem("UnderGrind/Player/Refresh Clips and Build Animator Controller")]
         public static void BuildFromSettings()
         {
+            BuildFromSettingsInternal(true);
+        }
+
+        public static void BuildFromSettingsBatch()
+        {
+            BuildFromSettingsInternal(false);
+        }
+
+        private static void BuildFromSettingsInternal(bool interactive)
+        {
             PlayerGameplayAssetBuilder.EnsureAssets();
             var settings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(SettingsPath);
             if (settings == null)
-            {
-                Debug.LogError("UnderGrind: PlayerAnimationSettings non disponibile.");
-                return;
-            }
+                throw new InvalidOperationException("UnderGrind: PlayerAnimationSettings non disponibile.");
 
             PrepareAnimationImports(settings);
             RefreshClipReferences(settings);
@@ -34,10 +41,19 @@ namespace UnderGrind.Editor
                 var message = "Impossibile costruire l'Animator Controller. Mancano queste clip:\n- " +
                               string.Join("\n- ", missing) +
                               "\n\nImportare i file FBX nella cartella Animations e ripetere l'operazione.";
-                Debug.LogWarning("UnderGrind: " + message);
-                EditorUtility.DisplayDialog("Clip Player mancanti", message, "OK");
+                Debug.LogError("UnderGrind: " + message);
+                if (interactive) EditorUtility.DisplayDialog("Clip Player mancanti", message, "OK");
+                else throw new InvalidOperationException(message);
                 return;
             }
+
+            var requiredClips = new[]
+            {
+                settings.IdleClip, settings.WalkClip, settings.RunClip, settings.JumpClip,
+                settings.FallClip, settings.LandClip, settings.CrouchIdleClip, settings.CrouchWalkClip
+            };
+            if (requiredClips.Any(clip => clip == null || clip.length <= 0f))
+                throw new InvalidOperationException("UnderGrind: una o più clip richieste sono vuote o non importate.");
 
             var invalidParameters = GetInvalidAnimatorParameters(settings);
             if (invalidParameters.Count > 0)
@@ -45,7 +61,8 @@ namespace UnderGrind.Editor
                 var message = "Impossibile costruire l'Animator Controller. Correggere i parametri configurati:\n- " +
                               string.Join("\n- ", invalidParameters);
                 Debug.LogError("UnderGrind: " + message);
-                EditorUtility.DisplayDialog("Parametri Animator non validi", message, "OK");
+                if (interactive) EditorUtility.DisplayDialog("Parametri Animator non validi", message, "OK");
+                else throw new InvalidOperationException(message);
                 return;
             }
 
@@ -53,7 +70,7 @@ namespace UnderGrind.Editor
             EnsureFolder(ControllerFolder);
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) != null)
             {
-                if (!EditorUtility.DisplayDialog(
+                if (interactive && !EditorUtility.DisplayDialog(
                     "Sostituire l'Animator Controller?",
                     "Il controller generato esistente verrà eliminato e ricreato. Eventuali modifiche manuali a stati, transizioni e layer andranno perse.",
                     "Sostituisci controller", "Annulla"))
@@ -64,10 +81,7 @@ namespace UnderGrind.Editor
 
             var controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
             if (controller == null)
-            {
-                Debug.LogError("UnderGrind: creazione Animator Controller fallita.");
-                return;
-            }
+                throw new InvalidOperationException("UnderGrind: creazione Animator Controller fallita.");
 
             AddParameters(controller, settings);
             BuildStateMachine(controller.layers[0].stateMachine, settings);
@@ -77,8 +91,49 @@ namespace UnderGrind.Editor
             EditorUtility.SetDirty(settings);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Selection.activeObject = settings;
-            Debug.Log("UnderGrind: Animator Controller creato in " + ControllerPath);
+
+            AssignControllerToConfiguredPrefabs(controller);
+            if (interactive) Selection.activeObject = settings;
+            Debug.Log("UnderGrind: Animator Controller creato e assegnato ai prefab in " + ControllerPath);
+        }
+
+        private static void AssignControllerToConfiguredPrefabs(AnimatorController controller)
+        {
+            const string rigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
+            var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(rigSettingsPath);
+            if (rigSettings == null)
+                throw new InvalidOperationException("UnderGrind: PlayerRigSettings non disponibile.");
+
+            var prefabPaths = new[]
+            {
+                "Assets/UnderGrind/Generated/Prefabs/" + rigSettings.MalePrefabName + ".prefab",
+                "Assets/UnderGrind/Generated/Prefabs/" + rigSettings.FemalePrefabName + ".prefab"
+            };
+
+            foreach (var path in prefabPaths)
+            {
+                if (AssetDatabase.LoadAssetAtPath<GameObject>(path) == null)
+                    throw new InvalidOperationException("UnderGrind: prefab non disponibile: " + path);
+
+                var root = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    var animator = root.GetComponentInChildren<Animator>(true);
+                    if (animator == null)
+                        throw new InvalidOperationException("UnderGrind: Animator mancante nel prefab " + path);
+                    if (animator.avatar == null || !animator.avatar.isHuman || !animator.avatar.isValid)
+                        throw new InvalidOperationException("UnderGrind: Avatar Humanoid non valido nel prefab " + path);
+
+                    animator.runtimeAnimatorController = controller;
+                    animator.applyRootMotion = false;
+                    EditorUtility.SetDirty(animator);
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+                finally
+                {
+                    PrefabUtility.UnloadPrefabContents(root);
+                }
+            }
         }
 
         private sealed class AnimationClipSource
@@ -172,7 +227,8 @@ namespace UnderGrind.Editor
                     var assets = AssetDatabase.LoadAllAssetsAtPath(path);
                     var hasValidAvatar = assets.OfType<Avatar>().Any(avatar => avatar != null && avatar.isHuman && avatar.isValid);
                     if (!hasValidAvatar)
-                        Debug.LogWarning("UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
+                        throw new InvalidOperationException(
+                            "UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
                 }
             }
         }
