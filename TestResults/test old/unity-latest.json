@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261123-122209-140",
-    "startedUtc":  "2026-11-23T11:22:09.1405527Z",
-    "finishedUtc":  "2026-11-23T11:22:52.8528146Z",
+    "runId":  "20261123-122409-288",
+    "startedUtc":  "2026-11-23T11:24:09.2881547Z",
+    "finishedUtc":  "2026-11-23T11:24:48.3830390Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
