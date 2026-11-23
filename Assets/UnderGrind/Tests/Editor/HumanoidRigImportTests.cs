@@ -228,10 +228,12 @@ namespace UnderGrind.Tests
             var settings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(SettingsPath);
             Assert.That(settings, Is.Not.Null);
             var serialized = new SerializedObject(settings);
-            var property = serialized.FindProperty("enforceHumanoidTPose");
-            Assert.That(property, Is.Not.Null,
+            Assert.That(serialized.FindProperty("enforceHumanoidTPose"), Is.Not.Null,
                 "La correzione T-Pose deve essere configurabile da PlayerRigSettings nell'Inspector.");
-            Assert.That(property.boolValue, Is.True,
+
+            var defaultsPath = "Assets/UnderGrind/Settings/Defaults/PlayerRigSettings.json";
+            var defaults = System.IO.File.ReadAllText(defaultsPath);
+            StringAssert.Contains("\"enforceHumanoidTPose\": true", defaults,
                 "La correzione T-Pose deve essere attiva nella configurazione predefinita.");
         }
 
