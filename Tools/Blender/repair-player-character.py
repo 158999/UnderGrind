@@ -63,9 +63,12 @@ def shift_armature_to_body_centerline(armature, body):
         armature.select_set(True)
         bpy.context.view_layer.objects.active = armature
         bpy.ops.object.mode_set(mode="EDIT")
-        for bone in armature.data.edit_bones:
-            bone.head.x -= offset
-            bone.tail.x -= offset
+
+        # Translate the complete selected bone set as one operation. Editing
+        # connected parent/child endpoints one by one can re-apply connections
+        # and leave the hierarchy partially displaced.
+        bpy.ops.armature.select_all(action="SELECT")
+        bpy.ops.transform.translate(value=(-offset, 0.0, 0.0), orient_type="GLOBAL")
         bpy.ops.object.mode_set(mode="OBJECT")
         bpy.context.view_layer.update()
 
