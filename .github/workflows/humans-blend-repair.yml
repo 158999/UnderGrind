@@ -183,15 +183,44 @@ jobs:
           PY
           blender -b --python verify_humans.py
 
-      - name: Commit repaired .blend to this branch
+      - name: Regenerate the FBX assets consumed by Unity
+        run: |
+          cp humans_repaired.blend Assets/UnderGrind/Art/Source/humans.blend
+          blender -b Assets/UnderGrind/Art/Source/humans.blend --python Tools/Blender/export-undergrind-humans.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report_path = Path("Tools/Blender/last-export-report.json")
+          if not report_path.is_file():
+              raise SystemExit("FBX export report missing")
+          report = json.loads(report_path.read_text(encoding="utf-8"))
+          if len(report) != 2 or {item.get("character") for item in report} != {"male", "female"}:
+              raise SystemExit("FBX export report must contain male and female")
+          expected = {
+              "male": Path("Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx"),
+              "female": Path("Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx"),
+          }
+          for character, path in expected.items():
+              item = next(row for row in report if row["character"] == character)
+              if len(item.get("parts", [])) != 6:
+                  raise SystemExit(f"{character}: expected 6 exported parts")
+              if not path.is_file() or path.stat().st_size <= 0:
+                  raise SystemExit(f"{character}: FBX missing or empty: {path}")
+              if path.stat().st_size != item["bytes"]:
+                  raise SystemExit(f"{character}: FBX size differs from export report")
+              print(f"{character}: {path.stat().st_size} bytes, 6 meshes")
+          PY
+
+      - name: Commit repaired Blender source and regenerated FBX files
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          cp humans_repaired.blend Assets/UnderGrind/Art/Source/humans.blend
           git add Assets/UnderGrind/Art/Source/humans.blend
+          git add Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+          git add Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
           git diff --cached --quiet && { echo "No source change to commit"; exit 1; }
           git commit -m "fix: restore complete mirrored humanoid meshes"
           git push origin "HEAD:${TARGET_BRANCH}"
