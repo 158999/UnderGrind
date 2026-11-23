@@ -1,0 +1,71 @@
+name: Import and audit PINOC crouched-walk candidates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-pinoc-crouch-walk-candidates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Download four generated crouched-walk candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4542434b-3f80-4c4c-b3c3-36ce4ac17273/sample_00.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=kaEHh2phMRTORJ6dRY55jlT5QYM' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_01.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4542434b-3f80-4c4c-b3c3-36ce4ac17273/sample_01.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=9YSP7LiBB67h2Us5gztFHJcC1nU' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_02.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4542434b-3f80-4c4c-b3c3-36ce4ac17273/sample_02.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=ohcN_n6EFjcvlr6L0_I9JO4u5oY' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_03.fbx
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/4542434b-3f80-4c4c-b3c3-36ce4ac17273/sample_03.fbx?Expires=1795442400&KeyName=vigglecloudcdn2&Signature=athqRHqupPZSiDLiQwMpGyuxn0U' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_04.fbx
+          for file in Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/*.fbx; do
+            test -s "$file"
+            size=$(stat -c %s "$file")
+            if [ "$size" -lt 10000 ]; then
+              echo "Invalid or truncated FBX: $file ($size bytes)"
+              exit 1
+            fi
+            printf '%s %s bytes\n' "$file" "$size"
+          done
+          test "$(find Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk -maxdepth 1 -name '*.fbx' | wc -l)" -eq 4
+
+      - name: Install Blender
+        run: |
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+            https://mirror.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+            --output "$RUNNER_TEMP/blender.tar.xz"
+          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
+
+      - name: Audit candidate leg separation and loop continuity
+        run: blender -b --python Tools/Blender/audit-pinoc-crouch-walk-candidates.py
+
+      - name: Commit candidate source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/*.fbx Tools/Blender/pinoc-crouch-walk-candidate-audit.json
+          git diff --cached --quiet && { echo "No crouched-walk candidates or audit to commit"; exit 1; }
+          git commit -m "assets: add audited crouched-walk animation candidates"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload candidate audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinoc-crouch-walk-candidate-audit
+          path: Tools/Blender/pinoc-crouch-walk-candidate-audit.json
+          if-no-files-found: error
+          retention-days: 14
