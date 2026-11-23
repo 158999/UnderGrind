@@ -335,7 +335,31 @@ def export_character(character_name, armature, parts, destination):
     }
 
 
+def ensure_fbx_exporter():
+    import addon_utils
+
+    try:
+        addon_utils.enable("io_scene_fbx", default_set=False, persistent=True)
+    except Exception as exc:
+        raise RuntimeError("Impossibile attivare l'add-on ufficiale io_scene_fbx: " + str(exc)) from exc
+
+    operator = bpy.ops.export_scene.fbx
+    try:
+        property_names = {prop.identifier for prop in operator.get_rna_type().properties}
+    except Exception as exc:
+        raise RuntimeError("Operatore export_scene.fbx non registrato correttamente.") from exc
+
+    required_properties = {"filepath", "use_selection", "object_types", "use_mesh_modifiers"}
+    missing = sorted(required_properties - property_names)
+    if missing:
+        raise RuntimeError(
+            "Operatore FBX incompatibile; proprietà mancanti: " + ", ".join(missing)
+        )
+
+
+
 def main():
+    ensure_fbx_exporter()
     repo_root, defaults_path = find_repository_root()
     defaults = json.loads(defaults_path.read_text(encoding="utf-8"))
     rig_asset_path = repo_root / "Assets" / "UnderGrind" / "Settings" / "PlayerRigSettings.asset"
