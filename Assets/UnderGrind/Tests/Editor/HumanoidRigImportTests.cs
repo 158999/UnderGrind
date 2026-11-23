@@ -223,6 +223,31 @@ namespace UnderGrind.Tests
         }
 
         [Test]
+        public void HumanoidTPoseCorrectionIsInspectorConfigurableAndEnabledByDefault()
+        {
+            var settings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(SettingsPath);
+            Assert.That(settings, Is.Not.Null);
+            var serialized = new SerializedObject(settings);
+            var property = serialized.FindProperty("enforceHumanoidTPose");
+            Assert.That(property, Is.Not.Null,
+                "La correzione T-Pose deve essere configurabile da PlayerRigSettings nell'Inspector.");
+            Assert.That(property.boolValue, Is.True,
+                "La correzione T-Pose deve essere attiva nella configurazione predefinita.");
+        }
+
+        [TestCase(MaleFbxPath)]
+        [TestCase(FemaleFbxPath)]
+        public void ImportedHumanoidAvatarHasValidTPose(string assetPath)
+        {
+            var settings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(SettingsPath);
+            if (settings != null && !settings.EnforceHumanoidTPose)
+                Assert.Ignore("La correzione T-Pose è disabilitata in PlayerRigSettings.");
+
+            Assert.That(IsTPoseValid(assetPath), Is.True,
+                "La posa Humanoid deve essere valida dopo EnsureValidAvatar: " + assetPath);
+        }
+
+        [Test]
         public void LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars()
         {
             var clipPaths = new[]
@@ -382,6 +407,19 @@ namespace UnderGrind.Tests
                 if (graph.IsValid()) graph.Destroy();
                 UnityEngine.Object.DestroyImmediate(instance);
             }
+        }
+
+        private static bool IsTPoseValid(string assetPath)
+        {
+            var importerType = AppDomain.CurrentDomain.GetAssemblies()
+                .Select(assembly => assembly.GetType("UnderGrind.Editor.HumanoidAvatarImporter", false))
+                .FirstOrDefault(type => type != null);
+            Assert.That(importerType, Is.Not.Null, "HumanoidAvatarImporter deve essere caricato nell'assembly Editor.");
+
+            var method = importerType.GetMethod("IsTPoseValid",
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            Assert.That(method, Is.Not.Null, "Metodo IsTPoseValid non trovato.");
+            return (bool)method.Invoke(null, new object[] { assetPath });
         }
 
         private static bool EnsureHumanoidAvatar(string assetPath, string armatureRootName)
