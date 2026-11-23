@@ -8,6 +8,7 @@ from mathutils import Vector
 CHARACTERS = {
     "male": {
         "armature": "UG_Male_Armature",
+        "body": "Human_Male_Body",
         "prefix": "Human_Male",
         "required_parts": (
             "Human_Male_Body",
@@ -20,6 +21,7 @@ CHARACTERS = {
     },
     "female": {
         "armature": "UG_Female_Armature",
+        "body": "Human_Female_Body",
         "prefix": "Human_Female",
         "required_parts": (
             "Human_Female_Body",
@@ -184,6 +186,35 @@ def matrix_translation(matrix):
     return [round(float(value), 6) for value in matrix.translation]
 
 
+def inspect_rig_alignment(armature, body):
+    central_bones = ("Hips", "Spine", "Chest", "Neck", "Head")
+    bones = {bone.name: bone for bone in armature.data.bones}
+    missing = [name for name in central_bones if name not in bones]
+    if missing:
+        raise RuntimeError(armature.name + ": ossa centrali mancanti: " + ", ".join(missing))
+
+    inverse = armature.matrix_world.inverted()
+    local_vertices = [
+        inverse @ (body.matrix_world @ vertex.co)
+        for vertex in body.data.vertices
+    ]
+    if not local_vertices:
+        raise RuntimeError(body.name + ": mesh senza vertici")
+
+    minimum_x = min(vertex.x for vertex in local_vertices)
+    maximum_x = max(vertex.x for vertex in local_vertices)
+    body_center_x = (minimum_x + maximum_x) * 0.5
+    bone_center_x = sum(float(bones[name].head_local.x) for name in central_bones) / len(central_bones)
+    scale = armature.matrix_world.to_3x3().col[0].length
+    offset_meters = (bone_center_x - body_center_x) * scale
+
+    return {
+        "bodyCenterlineX": round(float(body_center_x), 6),
+        "centralBoneCenterlineX": round(float(bone_center_x), 6),
+        "skeletonOffsetFromBodyMeters": round(float(offset_meters), 6),
+    }
+
+
 def validate_character(character_name, config):
     armature = bpy.data.objects.get(config["armature"])
     if armature is None or armature.type != "ARMATURE":
@@ -197,6 +228,15 @@ def validate_character(character_name, config):
         )
 
     bone_hierarchy = inspect_armature_hierarchy(armature, character_name)
+    body = bpy.data.objects.get(config["body"])
+    if body is None or body.type != "MESH":
+        raise RuntimeError(character_name + ": mesh corpo centrale mancante: " + config["body"])
+    alignment = inspect_rig_alignment(armature, body)
+    if abs(alignment["skeletonOffsetFromBodyMeters"]) > 0.01:
+        raise RuntimeError(
+            character_name + ": scheletro fuori asse di " +
+            str(alignment["skeletonOffsetFromBodyMeters"]) + " m rispetto al corpo"
+        )
 
     parts = []
     for part_name in config["required_parts"]:
@@ -247,6 +287,8 @@ def validate_character(character_name, config):
             raise RuntimeError(character_name + ": " + part_name + " non contiene UV map; impossibile garantire la texture.")
 
         material_audit = inspect_mesh_materials(part)
+        if material_audit["materialSlotCount"] != 1 or material_audit["materials"][0]["material"] != "UG_Skin":
+            raise RuntimeError(character_name + ": materiale UG_Skin non assegnato a " + part_name)
         if material_audit["missingImages"]:
             raise RuntimeError(
                 character_name + ": immagini texture non trovate per " + part_name + ": " +
@@ -255,10 +297,10 @@ def validate_character(character_name, config):
 
         parts.append(part)
 
-    return armature, parts
+    return armature, parts, alignment
 
 
-def export_character(character_name, armature, parts, destination):
+def export_character(character_name, armature, parts, alignment, destination):
     destination.parent.mkdir(parents=True, exist_ok=True)
     selected_before = list(bpy.context.selected_objects)
     active_before = bpy.context.view_layer.objects.active
@@ -323,6 +365,7 @@ def export_character(character_name, armature, parts, destination):
         "boneHierarchy": inspect_armature_hierarchy(armature, character_name),
         "sourceRootTranslation": original_root_translation,
         "exportRootTranslation": [0.0, 0.0, 0.0],
+        "rigAlignment": alignment,
         "parts": [
             {
                 "name": part.name,
