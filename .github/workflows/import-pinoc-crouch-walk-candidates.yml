@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/import-pinoc-crouch-walk-candidates.yml'
+      - 'Tools/Blender/audit-pinoc-crouch-walk-candidates.py'
   workflow_dispatch:
 
 permissions:
