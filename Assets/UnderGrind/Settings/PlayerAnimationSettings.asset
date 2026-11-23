@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef8d47fe26ebfdf96dd125a02687b84, type: 3}
   m_Name: PlayerAnimationSettings
   m_EditorClassIdentifier: UnderGrind.Runtime::UnderGrind.Locomotion.PlayerAnimationSettings
-  settingsVersion: 5
+  settingsVersion: 6
   animatorController: {fileID: 0}
   idleClip: {fileID: 0}
   walkClip: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   fallingParameterName: Falling
   landedParameterName: Landed
   idleThreshold: 0
-  walkThreshold: 0.1
+  walkThreshold: 1.4
   runThreshold: 1.65
   crouchWalkThreshold: 0.1
   speedDampTime: 0.1
