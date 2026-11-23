@@ -58,10 +58,25 @@ jobs:
               xs = [v.co.x for v in mesh.vertices]
               has_pos = any(x > EPS for x in xs)
               has_neg = any(x < -EPS for x in xs)
-              if has_pos == has_neg:
-                  raise RuntimeError(
-                      f"{obj.name}: expected exactly one half, found positive={has_pos}, negative={has_neg}"
-                  )
+              if not has_pos and not has_neg:
+                  raise RuntimeError(f"{obj.name}: mesh has no vertices away from the mirror plane")
+
+              if has_pos and has_neg:
+                  report["targets"].append({
+                      "name": obj.name,
+                      "source_side": "already_complete",
+                      "vertices_before": len(xs),
+                      "vertices_after": len(mesh.vertices),
+                      "faces_before": len(mesh.polygons),
+                      "faces_after": len(mesh.polygons),
+                      "positive_x_vertices_after": sum(x > EPS for x in xs),
+                      "negative_x_vertices_after": sum(x < -EPS for x in xs),
+                      "armature": next(m.object.name for m in obj.modifiers if m.type == "ARMATURE" and m.object),
+                      "vertex_groups": len(obj.vertex_groups),
+                      "uv_layers": len(mesh.uv_layers),
+                      "material_slots": len(mesh.materials)
+                  })
+                  continue
 
               source_sign = 1 if has_pos else -1
               group_names = [g.name for g in obj.vertex_groups]
