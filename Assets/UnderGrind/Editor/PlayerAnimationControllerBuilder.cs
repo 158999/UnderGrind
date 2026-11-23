@@ -15,6 +15,14 @@ namespace UnderGrind.Editor
         private const string ControllerFolder = "Assets/UnderGrind/Generated/Animation";
         private const string ControllerPath = ControllerFolder + "/PlayerAnimator.controller";
 
+        [MenuItem("UnderGrind/Player/Validate and Enforce Humanoid T-Pose")]
+        public static void ValidateAndEnforceHumanoidTPose()
+        {
+            PlayerGameplayAssetBuilder.EnsureAssets();
+            EnsureConfiguredHumanoidAvatars();
+            Debug.Log("UnderGrind: Avatar maschile e femminile validi; controllo T-Pose completato.");
+        }
+
         [MenuItem("UnderGrind/Player/Refresh Clips and Build Animator Controller")]
         public static void BuildFromSettings()
         {
@@ -29,6 +37,7 @@ namespace UnderGrind.Editor
         private static void BuildFromSettingsInternal(bool interactive)
         {
             PlayerGameplayAssetBuilder.EnsureAssets();
+            EnsureConfiguredHumanoidAvatars();
             var settings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(SettingsPath);
             if (settings == null)
                 throw new InvalidOperationException("UnderGrind: PlayerAnimationSettings non disponibile.");
@@ -95,6 +104,22 @@ namespace UnderGrind.Editor
             AssignControllerToConfiguredPrefabs(controller);
             if (interactive) Selection.activeObject = settings;
             Debug.Log("UnderGrind: Animator Controller creato e assegnato ai prefab in " + ControllerPath);
+        }
+
+        private static void EnsureConfiguredHumanoidAvatars()
+        {
+            const string rigSettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
+            var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(rigSettingsPath);
+            if (rigSettings == null)
+                throw new InvalidOperationException("UnderGrind: PlayerRigSettings non disponibile.");
+
+            if (!HumanoidAvatarImporter.EnsureValidAvatar(
+                    rigSettings.MaleSourceAssetPath, rigSettings.MaleArmatureRootName))
+                throw new InvalidOperationException("UnderGrind: Avatar maschile non valido o T-Pose non verificata.");
+
+            if (!HumanoidAvatarImporter.EnsureValidAvatar(
+                    rigSettings.FemaleSourceAssetPath, rigSettings.FemaleArmatureRootName))
+                throw new InvalidOperationException("UnderGrind: Avatar femminile non valido o T-Pose non verificata.");
         }
 
         private static void AssignControllerToConfiguredPrefabs(AnimatorController controller)
