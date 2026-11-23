@@ -47,6 +47,14 @@ namespace UnderGrind.Editor
                 return;
             }
 
+            var requiredClips = new[]
+            {
+                settings.IdleClip, settings.WalkClip, settings.RunClip, settings.JumpClip,
+                settings.FallClip, settings.LandClip, settings.CrouchIdleClip, settings.CrouchWalkClip
+            };
+            if (requiredClips.Any(clip => clip == null || clip.length <= 0f))
+                throw new InvalidOperationException("UnderGrind: una o più clip richieste sono vuote o non importate.");
+
             var invalidParameters = GetInvalidAnimatorParameters(settings);
             if (invalidParameters.Count > 0)
             {
@@ -219,7 +227,8 @@ namespace UnderGrind.Editor
                     var assets = AssetDatabase.LoadAllAssetsAtPath(path);
                     var hasValidAvatar = assets.OfType<Avatar>().Any(avatar => avatar != null && avatar.isHuman && avatar.isValid);
                     if (!hasValidAvatar)
-                        Debug.LogWarning("UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
+                        throw new InvalidOperationException(
+                            "UnderGrind: il file animazione non ha generato un Avatar Humanoid valido: " + path);
                 }
             }
         }
