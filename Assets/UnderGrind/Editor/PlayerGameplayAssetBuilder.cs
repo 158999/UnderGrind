@@ -135,6 +135,14 @@ namespace UnderGrind.Editor
                     runThreshold.floatValue >= 2f)
                     runThreshold.floatValue = defaultRunThreshold.floatValue;
 
+                // The previous 0.1 threshold made the Run child dominate at normal walk speed.
+                // Update only the legacy default and preserve intentional custom thresholds.
+                var walkThreshold = current.FindProperty("walkThreshold");
+                var defaultWalkThreshold = template.FindProperty("walkThreshold");
+                if (previousVersion < 6 && walkThreshold != null && defaultWalkThreshold != null &&
+                    Mathf.Approximately(walkThreshold.floatValue, 0.1f))
+                    walkThreshold.floatValue = defaultWalkThreshold.floatValue;
+
                 version.intValue = defaultVersion.intValue;
                 current.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(asset);
