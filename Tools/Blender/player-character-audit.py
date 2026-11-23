@@ -103,7 +103,13 @@ def audit_mesh(obj, armature):
             zero_area_faces.append(polygon.index)
         hits = polygon_self_intersections(mesh, polygon)
         if hits:
-            intersections.append({"polygon": polygon.index, "hits": hits})
+            intersections.append({
+                "polygon": polygon.index,
+                "vertices": list(polygon.vertices),
+                "coordinates": [[round(float(v), 6) for v in mesh.vertices[index].co] for index in polygon.vertices],
+                "normal": [round(float(v), 6) for v in polygon.normal],
+                "hits": hits,
+            })
 
     return {
         "name": obj.name,
