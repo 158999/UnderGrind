@@ -117,8 +117,8 @@ namespace UnderGrind.Locomotion
             if (walkClip == null) missing.Add("Walk / Walking");
             if (runClip == null) missing.Add("Run / Running");
             if (jumpClip == null) missing.Add("Jump");
-            if (fallClip == null) missing.Add("Fall");
-            if (landClip == null) missing.Add("Hard Landing");
+            // Fall and landing states are added only when their clips are configured.
+            // They are optional so a minimal locomotion controller can still be built.
             if (crouchIdleClip == null) missing.Add("Crouch Idle");
             if (crouchWalkClip == null) missing.Add("Crouch Walk");
             return missing.ToArray();
