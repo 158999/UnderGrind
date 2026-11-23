@@ -10,8 +10,8 @@ namespace UnderGrind.Editor
 {
     /// <summary>
     /// Imports FBX Humanoid avatars while preserving valid manual pose corrections.
-    /// If Unity's automatic map is invalid, repairs mappings by exact transform names
-    /// before falling back to a clean automatic import.
+    /// Repairs invalid mappings by exact transform names and applies Unity's Enforce T-Pose
+    /// operation only when the configured option is enabled and the current pose is invalid.
     /// </summary>
     public static class HumanoidAvatarImporter
     {
