@@ -20,7 +20,12 @@ namespace UnderGrind.Editor
         {
             PlayerGameplayAssetBuilder.EnsureAssets();
             EnsureConfiguredHumanoidAvatars();
-            Debug.Log("UnderGrind: Avatar maschile e femminile validi; controllo T-Pose completato.");
+            var rigSettings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(
+                "Assets/UnderGrind/Settings/PlayerRigSettings.asset");
+            var result = rigSettings != null && rigSettings.EnforceHumanoidTPose
+                ? "T-Pose verificata e applicata se necessario."
+                : "Avatar validati; correzione automatica T-Pose disabilitata nell'Inspector.";
+            Debug.Log("UnderGrind: Avatar maschile e femminile validi. " + result);
         }
 
         [MenuItem("UnderGrind/Player/Refresh Clips and Build Animator Controller")]
