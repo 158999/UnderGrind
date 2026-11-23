@@ -2,6 +2,6 @@
 Diagnostics build: Passed
 Status: Passed
 Total: 6 | Passed: 6 | Failed: 0 | Skipped: 0
-Duration: 9.835s
+Duration: 7.946s
 Errors: 
 Run details: TestResults/test/

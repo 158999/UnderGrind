@@ -1,46 +1,57 @@
 ﻿{
-    "runId":  "20261123-104104-654",
-    "startedUtc":  "2026-11-23T09:41:04.6548230Z",
-    "finishedUtc":  "2026-11-23T09:41:46.5908515Z",
+    "runId":  "20261123-115635-698",
+    "startedUtc":  "2026-11-23T10:56:35.6984168Z",
+    "finishedUtc":  "2026-11-23T10:57:26.5316438Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
-    "status":  "Passed",
+    "status":  "Failed",
     "environmentErrors":  [
 
                           ],
     "totals":  {
-                   "total":  53,
-                   "passed":  53,
+                   "total":  57,
+                   "passed":  55,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  0
+                   "failed":  2
                },
     "platforms":  [
                       {
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  0,
-                          "resultValid":  true,
+                          "exitCode":  2,
+                          "resultValid":  false,
                           "validationErrors":  [
-
+                                                   "Unity Ã¨ terminato con codice 2.",
+                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
+                                                   "Unity ha riportato 2 test falliti."
                                                ],
                           "compilerDiagnostics":  [
 
                                                   ],
                           "failures":  [
-
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanLocomotionTuningTests.FallAndLandingClipsAreOptionalForControllerBuild",
+                                               "message":  "Fall and Landing must remain optional.\n  Expected: \u003cempty\u003e\n  But was:  \u003c \"Fall\", \"Hard Landing\" \u003e",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanLocomotionTuningTests.FallAndLandingClipsAreOptionalForControllerBuild () [0x00080] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanLocomotionTuningTests.cs:189"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars",
+                                               "message":  "Rilevati incroci laterali dei piedi durante il retarget Humanoid:\nPlayer male / Walking / Scene: rest=0,110m, min=-0,046m a 9,50s, incroci=16/308\nPlayer female / Walking / Scene: rest=0,084m, min=-0,063m a 9,50s, incroci=37/308\nMixamo source / Running / Scene: rest=0,097m, min=-0,157m a 1,20s, incroci=14/65\nPlayer male / Running / Scene: rest=0,110m, min=-0,151m a 1,20s, incroci=34/65\nPlayer female / Running / Scene: rest=0,084m, min=-0,164m a 1,20s, incroci=37/65\nMixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min=-0,377m a 7,20s, incroci=54/232\nPlayer male / Crouch_Walk_Forward / Scene: rest=0,110m, min=-0,305m a 7,20s, incroci=50/232\nPlayer female / Crouch_Walk_Forward / Scene: rest=0,084m, min=-0,310m a 7,20s, incroci=54/232\n  Expected: \u003cempty\u003e\n  But was:  \u003c \"Player male / Walking / Scene: rest=0,110m, min=-0,046m a 9,50s, incroci=16/308\", \"Player female / Walking / Scene: rest=0,084m, min=-0,063m a 9,50s, incroci=37/308\", \"Mixamo source / Running / Scene: rest=0,097m, min=-0,157m a 1,20s, incroci=14/65\", \"Player male / Running / Scene: rest=0,110m, min=-0,151m a 1,20s, incroci=34/65\", \"Player female / Running / Scene: rest=0,084m, min=-0,164m a 1,20s, incroci=37/65\", \"Mixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min=-0,377m a 7,20s, incroci=54/232\", \"Player male / Crouch_Walk_Forward / Scene: rest=0,110m, min=-0,305m a 7,20s, incroci=50/232\", \"Player female / Crouch_Walk_Forward / Scene: rest=0,084m, min=-0,310m a 7,20s, incroci=54/232\" \u003e",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () [0x00123] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:287"
+                                           }
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
                           "logFile":  "TestResults/test/Unity/EditMode.log",
                           "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
-                                         "total":  40,
-                                         "passed":  40,
+                                         "total":  44,
+                                         "passed":  42,
                                          "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  0
+                                         "failed":  2
                                      }
                       },
                       {
