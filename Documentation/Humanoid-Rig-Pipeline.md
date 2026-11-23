@@ -150,6 +150,10 @@ Per il rig Humanoid UnderGrind va usato l'export `mixamo-fbx` di ciascun asset: 
 
 Gli otto export `mixamo-fbx` sono ora versionati in `Assets/UnderGrind/Animations`. `PlayerAnimationControllerBuilder` li importa come clip Humanoid, genera il controller e lo assegna ai prefab maschile e femminile. Il retargeting attualmente usato è quello Humanoid di Unity, con un Avatar sorgente per ciascun FBX; non è un bake DCC delle curve sullo scheletro UnderGrind. La presenza delle clip nel controller non certifica la qualità della deformazione: il controllo di T-Pose, piedi e transizioni resta necessario. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
 
+### Rigenerazione delle mesh e degli export — 23 novembre 2026
+
+Il workflow `Repair mirrored humanoid source` è terminato con successo e ha rigenerato il file Blender e gli FBX maschile/femminile con Blender 5.2.4. Il report ha classificato tutte le 12 mesh come `already_complete`: non sono state aggiunte metà mancanti e i conteggi di vertici/facce sono rimasti invariati. La run verifica quindi il passaggio di export, ma non certifica da sola la qualità dei pesi o delle animazioni.
+
 Prima di includere gli export nel gioco distribuito, verificare il piano e i diritti applicabili a ciascun asset PINOC. I termini ufficiali limitano il piano Free all'uso non commerciale, personale, di valutazione e prototipazione; i piani Starter e Pro indicano l'uso commerciale. La disponibilità di un clip nella libreria non sostituisce la verifica dei diritti sul singolo contenuto. Riferimenti: [PINOC pricing](https://viggle.ai/pinoc/pricing/) e [Viggle Terms of Use](https://viggle.ai/terms-of-use/).
 
 Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **UnderGrind → Player → Refresh Clips and Build Animator Controller** aggiorna i riferimenti e genera il controller usando `PlayerAnimationSettings.asset`. Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono richieste; Fall e Land sono opzionali.
