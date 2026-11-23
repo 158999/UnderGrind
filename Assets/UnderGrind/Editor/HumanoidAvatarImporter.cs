@@ -161,7 +161,7 @@ namespace UnderGrind.Editor
                 return false;
             }
 
-            var setupToolType = typeof(Editor).Assembly.GetType("UnityEditor.AvatarSetupTool", false);
+            var setupToolType = GetAvatarSetupToolType();
             if (setupToolType == null)
             {
                 Debug.LogError("UnderGrind: AvatarSetupTool non disponibile. In Unity usa Avatar Configuration > Pose > Enforce T-Pose > Apply > Done.");
