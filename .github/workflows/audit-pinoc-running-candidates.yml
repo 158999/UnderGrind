@@ -1,0 +1,39 @@
+name: Audit PINOC running candidates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Tools/Blender/audit-pinoc-running-candidates.py'
+      - '.github/workflows/audit-pinoc-running-candidates.yml'
+      - 'Assets/UnderGrind/Animations/Candidates/PINOC_Running/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Blender
+        run: |
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+            https://mirror.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+            --output "$RUNNER_TEMP/blender.tar.xz"
+          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
+
+      - name: Audit candidate leg separation and loop continuity
+        run: blender -b --python Tools/Blender/audit-pinoc-running-candidates.py
+
+      - name: Upload candidate audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinoc-running-candidate-audit
+          path: Tools/Blender/pinoc-running-candidate-audit.json
+          if-no-files-found: error
+          retention-days: 14
