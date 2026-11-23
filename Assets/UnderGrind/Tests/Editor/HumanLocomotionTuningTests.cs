@@ -31,7 +31,9 @@ namespace UnderGrind.Tests
                 "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset");
             Assert.That(animationSettings, Is.Not.Null,
                 "L'asset di configurazione animazioni deve esistere.");
-            Assert.That(animationSettings.RunThreshold, Is.GreaterThan(_settings.WalkSpeed));
+            Assert.That(animationSettings.WalkThreshold, Is.EqualTo(_settings.WalkSpeed).Within(0.0001f),
+                "A velocità di camminata il Blend Tree deve selezionare la clip Walk, non una miscela dominata dalla corsa.");
+            Assert.That(animationSettings.RunThreshold, Is.GreaterThan(animationSettings.WalkThreshold));
             Assert.That(animationSettings.RunThreshold, Is.LessThan(_settings.RunSpeed));
         }
 
