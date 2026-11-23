@@ -1,0 +1,245 @@
+{
+  "source": "/home/runner/work/UnderGrind/UnderGrind/Assets/UnderGrind/Art/Source/humans.blend",
+  "blenderVersion": "5.2.4 LTS",
+  "skinMaterial": {
+    "name": "UG_Skin",
+    "baseColor": [
+      0.72,
+      0.55,
+      0.43,
+      1.0
+    ],
+    "alpha": 1.0,
+    "backfaceCulling": false
+  },
+  "characters": {
+    "male": {
+      "armature": "UG_Male_Armature",
+      "alignment": {
+        "bodyCenterlineX": 0.0,
+        "boneCenterlineXBefore": 0.489628,
+        "localShiftApplied": 0.489627,
+        "offsetBeforeMeters": 0.249301,
+        "boneCenterlineXAfter": 0.0,
+        "offsetAfterMeters": 0.0
+      },
+      "parts": [
+        {
+          "name": "Human_Male_Body",
+          "vertices": 201,
+          "polygonsAfter": 216,
+          "triangulatedFaces": [
+            {
+              "sourceFace": 92,
+              "trianglesCreated": 30
+            },
+            {
+              "sourceFace": 186,
+              "trianglesCreated": 30
+            }
+          ],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.95568,
+            0.98773
+          ],
+          "weights": {
+            "weightedVertices": 201,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Male_Armature"
+        },
+        {
+          "name": "Human_Male_Head",
+          "vertices": 140,
+          "polygonsAfter": 144,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.968833,
+            0.988738
+          ],
+          "weights": {
+            "weightedVertices": 140,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Male_Armature"
+        },
+        {
+          "name": "Human_Male_TP_Arms",
+          "vertices": 77,
+          "polygonsAfter": 54,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.989573,
+            0.986858
+          ],
+          "weights": {
+            "weightedVertices": 77,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Male_Armature"
+        },
+        {
+          "name": "Human_Male_TP_Hands",
+          "vertices": 160,
+          "polygonsAfter": 146,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.988183,
+            0.983391
+          ],
+          "weights": {
+            "weightedVertices": 160,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Male_Armature"
+        },
+        {
+          "name": "Human_Male_FP_Arms",
+          "vertices": 77,
+          "polygonsAfter": 54,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.989573,
+            0.986858
+          ],
+          "weights": {
+            "weightedVertices": 77,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Male_Armature"
+        },
+        {
+          "name": "Human_Male_FP_Hands",
+          "vertices": 160,
+          "polygonsAfter": 146,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.988183,
+            0.983391
+          ],
+          "weights": {
+            "weightedVertices": 160,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Male_Armature"
+        }
+      ]
+    },
+    "female": {
+      "armature": "UG_Female_Armature",
+      "alignment": {
+        "bodyCenterlineX": 0.0,
+        "boneCenterlineXBefore": 0.369964,
+        "localShiftApplied": 0.369964,
+        "offsetBeforeMeters": 0.190108,
+        "boneCenterlineXAfter": 0.0,
+        "offsetAfterMeters": 0.0
+      },
+      "parts": [
+        {
+          "name": "Human_Female_Body",
+          "vertices": 154,
+          "polygonsAfter": 130,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.988102,
+            0.879884
+          ],
+          "weights": {
+            "weightedVertices": 154,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Female_Armature"
+        },
+        {
+          "name": "Human_Female_Head",
+          "vertices": 174,
+          "polygonsAfter": 178,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.971978,
+            0.986942
+          ],
+          "weights": {
+            "weightedVertices": 174,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Female_Armature"
+        },
+        {
+          "name": "Human_Female_TP_Arms",
+          "vertices": 175,
+          "polygonsAfter": 140,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.987329,
+            0.978563
+          ],
+          "weights": {
+            "weightedVertices": 175,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Female_Armature"
+        },
+        {
+          "name": "Human_Female_TP_Hands",
+          "vertices": 172,
+          "polygonsAfter": 142,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.985674,
+            0.962263
+          ],
+          "weights": {
+            "weightedVertices": 172,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Female_Armature"
+        },
+        {
+          "name": "Human_Female_FP_Arms",
+          "vertices": 175,
+          "polygonsAfter": 140,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.987329,
+            0.978563
+          ],
+          "weights": {
+            "weightedVertices": 175,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Female_Armature"
+        },
+        {
+          "name": "Human_Female_FP_Hands",
+          "vertices": 172,
+          "polygonsAfter": 142,
+          "triangulatedFaces": [],
+          "material": "UG_Skin",
+          "uvSpan": [
+            0.985674,
+            0.962263
+          ],
+          "weights": {
+            "weightedVertices": 172,
+            "unweightedVertices": 0
+          },
+          "armature": "UG_Female_Armature"
+        }
+      ]
+    }
+  },
+  "errors": []
+}
