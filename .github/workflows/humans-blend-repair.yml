@@ -4,6 +4,8 @@ on:
   push:
     branches: [repair/humans-blend-audit]
     paths: ['.github/workflows/humans-blend-repair.yml']
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,6 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: repair/humans-blend-audit
           lfs: true
       - name: Install Blender
         run: |
@@ -105,12 +108,9 @@ jobs:
           errors = []
           for obj in targets:
               xs = [v.co.x for v in obj.data.vertices]
-              if not any(x < -1e-5 for x in xs) or not any(x > 1e-5 for x in xs):
-                  errors.append(obj.name + ": missing mirrored side")
-              if not any(m.type == "ARMATURE" and m.object for m in obj.modifiers):
-                  errors.append(obj.name + ": missing armature binding")
-              if not obj.vertex_groups:
-                  errors.append(obj.name + ": no vertex groups")
+              if not any(x < -1e-5 for x in xs) or not any(x > 1e-5 for x in xs): errors.append(obj.name + ": missing mirrored side")
+              if not any(m.type == "ARMATURE" and m.object for m in obj.modifiers): errors.append(obj.name + ": missing armature binding")
+              if not obj.vertex_groups: errors.append(obj.name + ": no vertex groups")
           result = {"mesh_count": len(targets), "errors": errors}
           print(json.dumps(result, indent=2))
           if len(targets) != 12 or errors: raise RuntimeError("Candidate verification failed")
