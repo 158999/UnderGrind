@@ -21,10 +21,14 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref }}
           lfs: true
-      - name: Install Blender
+      - name: Install Blender 5.2.4 (FBX exporter fix)
         run: |
-          sudo apt-get install -y blender
-          blender --version
+          curl --fail --location --retry 3 --retry-delay 2 \
+            https://download.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+            --output "$RUNNER_TEMP/blender.tar.xz"
+          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/blender-5.2.4-linux-x64/blender" --version
       - name: Rebuild missing half of all rigged meshes
         shell: bash
         run: |
