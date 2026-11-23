@@ -32,6 +32,9 @@ namespace UnderGrind.Locomotion
         [Header("Orientamento del modello rispetto al forward del Player")]
         [SerializeField, Range(-180f, 180f)] private float modelYawOffset = 90f;
 
+        [Header("Configurazione Avatar Humanoid")]
+        [SerializeField] private bool enforceHumanoidTPose = true;
+
         [Header("Nomenclatura delle parti")]
         [SerializeField] private string headRendererSuffix;
         [SerializeField] private string firstPersonArmsToken;
@@ -56,6 +59,7 @@ namespace UnderGrind.Locomotion
         public int SettingsVersion => settingsVersion;
         public PlayerCharacterVariant DefaultCharacter => defaultCharacter;
         public float ModelYawOffset => modelYawOffset;
+        public bool EnforceHumanoidTPose => enforceHumanoidTPose;
         public string MaleSourceAssetPath => maleSourceAssetPath;
         public string FemaleSourceAssetPath => femaleSourceAssetPath;
         public string MaleArmatureRootName => maleArmatureRootName;
