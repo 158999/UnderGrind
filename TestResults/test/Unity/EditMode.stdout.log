@@ -1,7 +1,3 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 46004)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 56284)
-VBCSCompiler prewarm took 50.12 ms
-
-Aborting batchmode due to failure:
-Scripts have compiler errors.
-
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 55612)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 44064)
+VBCSCompiler prewarm took 49.45 ms
