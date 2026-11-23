@@ -109,7 +109,7 @@ I report versionati `TestResults/test/all-latest.json` registrano la run `202611
 
 L'accesso a `AvatarSetupTool` avviene tramite reflection perché è un'API interna dell'Editor Unity. Se la versione Unity non espone i metodi attesi, l'operazione fallisce con un messaggio che indica il percorso manuale **Avatar Configuration → Pose → Enforce T-Pose → Apply → Done**; non dichiara la correzione completata senza verifica.
 
-`HumanoidRigImportTests` aggiunge controlli espliciti della T-Pose maschile e femminile e un test di retargeting che campiona Walking, Running e Crouch Walk a 30 Hz su X Bot sorgente e sui due Avatar Player. Il test segnala gli incroci quando la separazione laterale dei piedi diventa inferiore a -0,02 m. Questi nuovi controlli sono stati aggiunti dopo la run 53/53 e devono ancora essere eseguiti in Unity.
+`HumanoidRigImportTests` aggiunge controlli espliciti della T-Pose maschile e femminile e un test di retargeting che campiona Walking, Running e Crouch Walk a 30 Hz su X Bot sorgente e sui due Avatar Player. Il test segnala gli incroci quando la separazione laterale dei piedi diventa inferiore a -0,02 m. Questi nuovi controlli sono stati aggiunti dopo la run 53/53 e devono ancora essere eseguiti in Unity. Su Windows, dalla root del repository, eseguire `.\\TESTA.bat`. Il dettaglio dei campioni compare in `TestResults/test/Unity/EditMode.log` e il riepilogo in `TestResults/test/all-latest.json`.
 
 ## Sorgenti delle animazioni
 
@@ -156,7 +156,7 @@ Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **
 - [ ] Posizione delle ossa verificata su pose di riferimento.
 - [ ] Pesi verificati con deformazioni di spalle, gomiti, polsi, anche, ginocchia e caviglie.
 - [x] Export FBX maschile e femminile generati e versionati; report Blender con 22 ossa e sei mesh ciascuno.
-- [ ] Avatar Humanoid Unity valido per entrambi i personaggi.
+- [x] Avatar Humanoid Unity valido per entrambi i personaggi (EditMode verificato nella run 53/53 del 23 novembre 2026).
 - [ ] Prefab maschile e femminile generati e controllati.
 - [ ] Mesh dedicate a braccia e mani in prima persona create e posate, se richieste dal modello finale.
 - [ ] Retargeting Humanoid verificato su entrambi gli Avatar, senza incroci o deformazioni dei piedi.
