@@ -109,7 +109,16 @@ I report versionati `TestResults/test/all-latest.json` registrano la run `202611
 
 L'accesso a `AvatarSetupTool` avviene tramite reflection perché è un'API interna dell'Editor Unity. Se la versione Unity non espone i metodi attesi, l'operazione fallisce con un messaggio che indica il percorso manuale **Avatar Configuration → Pose → Enforce T-Pose → Apply → Done**; non dichiara la correzione completata senza verifica.
 
-`HumanoidRigImportTests` aggiunge controlli espliciti della T-Pose maschile e femminile e un test di retargeting che campiona Walking, Running e Crouch Walk a 30 Hz su X Bot sorgente e sui due Avatar Player. Il test segnala gli incroci quando la separazione laterale dei piedi diventa inferiore a -0,02 m. Questi nuovi controlli sono stati aggiunti dopo la run 53/53 e devono ancora essere eseguiti in Unity. Su Windows, dalla root del repository, eseguire `.\TESTA.bat`. Il dettaglio dei campioni compare in `TestResults/test/Unity/EditMode.log` e il riepilogo in `TestResults/test/all-latest.json`.
+\`HumanoidRigImportTests\` verifica la T-Pose maschile e femminile e campiona Walking, Running e Crouch Walk a 30 Hz sullo scheletro Mixamo sorgente e sui due Avatar Player. La prima esecuzione Unity, run \`20261123-120617-992\`, ha riportato 42/44 EditMode, 13/13 PlayMode e 6/6 test standalone. Il controllo dei piedi ha rilevato:
+- Walking: nessun incrocio sul Mixamo sorgente; incroci sui due Avatar Player (minimo -0,046 m maschile e -0,063 m femminile).
+- Running: incroci già presenti sul sorgente (-0,157 m) e sui due Avatar Player.
+- Crouch Walk: incroci già presenti sul sorgente (-0,377 m) e sui due Avatar Player.
+
+Questi valori provengono dalla prima versione del diagnostico, che proiettava i piedi su un asse laterale fisso ricavato dalla posa di riposo. Il controllo è stato aggiornato per misurare la separazione lungo l'asse anatomico sinistro-destro ricalcolato a ogni campione, mantenendo anche la misura sull'asse fisso per confronto. Il nuovo risultato deve essere raccolto con un'altra esecuzione Unity prima di concludere quali incroci siano reali e quali dipendano dalla rotazione del bacino.
+
+La stessa run ha individuato anche una regressione: Fall e Hard Landing risultavano obbligatorie nonostante la documentazione e il builder le trattassero come opzionali. Il controllo delle clip obbligatorie è stato corretto: Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono richieste; Fall e Land possono essere assenti, ma se assegnate devono essere clip valide.
+
+Per ripetere la verifica, su Windows dalla root del repository eseguire \`.\\TESTA.bat\`. I campioni dettagliati sono registrati in \`TestResults/test/Unity/EditMode.log\`; il riepilogo è in \`TestResults/test/all-latest.json\`.
 
 ### Correzione della soglia Walk/Run — 23 novembre 2026
 
