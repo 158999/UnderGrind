@@ -2,7 +2,7 @@ name: UnderGrind player character repair and export
 
 on:
   push:
-    branches: [fix/player-character-rig-animation]
+    branches: [main]
     paths:
       - '.github/workflows/player-character-repair.yml'
       - 'Tools/Blender/repair-player-character.py'
@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/player-character-rig-animation
+          ref: main
           lfs: true
 
       - name: Install Blender 5.2.4
@@ -103,7 +103,7 @@ jobs:
 
       - name: Commit repaired source and FBX assets
         env:
-          TARGET_BRANCH: ${{ github.ref_name }}
+          TARGET_BRANCH: main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -113,7 +113,7 @@ jobs:
           git add Tools/Blender/last-export-report.json
           git add Tools/Blender/player-character-repair-report.json
           git diff --cached --quiet && { echo "No repaired assets to commit"; exit 1; }
-          git commit -m "fix: align humanoid rigs and repair character surfaces"
+          git commit -m "fix: align humanoid rigs and repair character surfaces [skip ci]"
           git pull --rebase origin "$TARGET_BRANCH"
           git push origin "HEAD:$TARGET_BRANCH"
 
