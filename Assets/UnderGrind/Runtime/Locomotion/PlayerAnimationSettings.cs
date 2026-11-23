@@ -59,7 +59,7 @@ namespace UnderGrind.Locomotion
 
         [Header("Soglie e transizioni")]
         [SerializeField, Min(0f)] private float idleThreshold;
-        [SerializeField, Min(0f)] private float walkThreshold;
+        [SerializeField, Min(0f)] private float walkThreshold = 1.4f;
         [SerializeField, Min(0f)] private float runThreshold;
         [SerializeField, Min(0f)] private float crouchWalkThreshold;
         [SerializeField, Min(0f)] private float speedDampTime;
