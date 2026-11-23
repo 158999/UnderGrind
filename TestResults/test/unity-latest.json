@@ -1,16 +1,16 @@
 ﻿{
-    "runId":  "20261120-135017-279",
-    "startedUtc":  "2026-11-20T12:50:17.2794945Z",
-    "finishedUtc":  "2026-11-20T12:51:00.8528263Z",
+    "runId":  "20261123-093120-594",
+    "startedUtc":  "2026-11-23T08:31:20.5943428Z",
+    "finishedUtc":  "2026-11-23T08:31:24.0395288Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
-    "status":  "Passed",
+    "status":  "Failed",
     "environmentErrors":  [
 
                           ],
     "totals":  {
-                   "total":  52,
-                   "passed":  52,
+                   "total":  0,
+                   "passed":  0,
                    "skipped":  0,
                    "inconclusive":  0,
                    "failed":  0
@@ -20,10 +20,11 @@
                           "platform":  "EditMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  0,
-                          "resultValid":  true,
+                          "exitCode":  1,
+                          "resultValid":  false,
                           "validationErrors":  [
-
+                                                   "Unity Ã¨ terminato con codice 1.",
+                                                   "Unity non ha prodotto un XML nuovo e valido per questa piattaforma."
                                                ],
                           "compilerDiagnostics":  [
 
@@ -36,21 +37,22 @@
                           "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
-                                         "total":  39,
-                                         "passed":  39,
-                                         "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  0
+                                         "failed":  0,
+                                         "skipped":  0,
+                                         "total":  0,
+                                         "passed":  0
                                      }
                       },
                       {
                           "platform":  "PlayMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
-                          "exitCode":  0,
-                          "resultValid":  true,
+                          "exitCode":  1,
+                          "resultValid":  false,
                           "validationErrors":  [
-
+                                                   "Unity Ã¨ terminato con codice 1.",
+                                                   "Unity non ha prodotto un XML nuovo e valido per questa piattaforma."
                                                ],
                           "compilerDiagnostics":  [
 
@@ -63,11 +65,11 @@
                           "stdoutFile":  "TestResults/test/Unity/PlayMode.stdout.log",
                           "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
                           "totals":  {
-                                         "total":  13,
-                                         "passed":  13,
-                                         "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  0
+                                         "failed":  0,
+                                         "skipped":  0,
+                                         "total":  0,
+                                         "passed":  0
                                      }
                       }
                   ]
