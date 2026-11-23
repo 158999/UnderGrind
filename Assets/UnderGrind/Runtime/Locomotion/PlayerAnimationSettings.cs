@@ -112,11 +112,13 @@ namespace UnderGrind.Locomotion
 
         public string[] GetMissingRequiredClipNames()
         {
-            var missing = new List<string>(6);
+            var missing = new List<string>(8);
             if (idleClip == null) missing.Add("Idle / Standing Idle");
             if (walkClip == null) missing.Add("Walk / Walking");
             if (runClip == null) missing.Add("Run / Running");
             if (jumpClip == null) missing.Add("Jump");
+            if (fallClip == null) missing.Add("Fall");
+            if (landClip == null) missing.Add("Hard Landing");
             if (crouchIdleClip == null) missing.Add("Crouch Idle");
             if (crouchWalkClip == null) missing.Add("Crouch Walk");
             return missing.ToArray();
