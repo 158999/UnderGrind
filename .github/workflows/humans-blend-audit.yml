@@ -89,3 +89,5 @@ jobs:
           path: audit/*.json
           if-no-files-found: error
           retention-days: 7
+
+# Trigger audit after workflow registration.
