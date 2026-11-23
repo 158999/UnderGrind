@@ -101,7 +101,15 @@ Il log Unity segnala inoltre che un poligono di `Human_Male_Body` è auto-inters
 
 
 
-Questi test verificano gli asset importati, non soltanto GameObject costruiti artificialmente. Devono essere eseguiti nel Unity Editor tramite Test Runner (EditMode). La workflow GitHub Actions attuale esegue i test standalone Diagnostics e non esegue i test Unity. Finché la nuova suite non viene eseguita in Unity, la validità degli Avatar e il binding dei renderer restano non verificati.
+I report versionati `TestResults/test/all-latest.json` registrano la run `20261123-104029-879`: Diagnostics standalone 6/6, Unity EditMode 40/40 e PlayMode 13/13, totale Unity 53/53, senza errori di compilazione o test falliti. Questa run precede i nuovi controlli di posa e di incrocio dei piedi descritti sotto: non dimostra che le clip si deformino correttamente durante il movimento. I test Unity vengono eseguiti localmente tramite Test Runner; la GitHub Action non avvia Unity.
+
+### Correzione automatica della T-Pose — 23 novembre 2026
+
+`PlayerRigSettings.EnforceHumanoidTPose` è un'opzione serializzata e modificabile dall'Inspector, attiva per impostazione predefinita. `HumanoidAvatarImporter` verifica la posa usando `UnityEditor.AvatarSetupTool`. Se la posa è già valida, conserva integralmente le correzioni manuali. Se non è valida, applica `MakePoseValid` e salva lo skeleton corretto nel `ModelImporter` prima della reimportazione. Il menu **UnderGrind → Player → Validate and Enforce Humanoid T-Pose** esegue la verifica per entrambi i personaggi; anche la generazione dell'Animator Controller la esegue automaticamente.
+
+L'accesso a `AvatarSetupTool` avviene tramite reflection perché è un'API interna dell'Editor Unity. Se la versione Unity non espone i metodi attesi, l'operazione fallisce con un messaggio che indica il percorso manuale **Avatar Configuration → Pose → Enforce T-Pose → Apply → Done**; non dichiara la correzione completata senza verifica.
+
+`HumanoidRigImportTests` aggiunge controlli espliciti della T-Pose maschile e femminile e un test di retargeting che campiona Walking, Running e Crouch Walk a 30 Hz su X Bot sorgente e sui due Avatar Player. Il test segnala gli incroci quando la separazione laterale dei piedi diventa inferiore a -0,02 m. Questi nuovi controlli sono stati aggiunti dopo la run 53/53 e devono ancora essere eseguiti in Unity.
 
 ## Sorgenti delle animazioni
 
@@ -134,7 +142,7 @@ X Bot è un modello di supporto per il retargeting e non deve sostituire il corp
 
 Per il rig Humanoid UnderGrind va usato l'export `mixamo-fbx` di ciascun asset: contiene X Bot e lo scheletro Mixamo ed è il formato previsto per il retargeting. Il formato predefinito restituito da `take_library_motions` è invece un GLB con solo lo scheletro MetaHuman a 441 ossa, senza mesh; è destinato al workflow Splat e non va assegnato direttamente al controller Humanoid.
 
-Gli otto asset PINOC sono stati recuperati nuovamente e risultano disponibili nei formati `mixamo-fbx` e `mixamo-glb`; i link di download sono temporanei. I file FBX non sono ancora importati nel repository né trasferiti sul rig definitivo. Il builder Unity li riconosce se importati in `Assets/UnderGrind/Animations`. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
+Gli otto export `mixamo-fbx` sono ora versionati in `Assets/UnderGrind/Animations`. `PlayerAnimationControllerBuilder` li importa come clip Humanoid, genera il controller e lo assegna ai prefab maschile e femminile. Il retargeting attualmente usato è quello Humanoid di Unity, con un Avatar sorgente per ciascun FBX; non è un bake DCC delle curve sullo scheletro UnderGrind. La presenza delle clip nel controller non certifica la qualità della deformazione: il controllo di T-Pose, piedi e transizioni resta necessario. Prima di distribuire o includere gli export nel prodotto occorre verificare le condizioni d'uso applicabili.
 
 Prima di includere gli export nel gioco distribuito, verificare il piano e i diritti applicabili a ciascun asset PINOC. I termini ufficiali limitano il piano Free all'uso non commerciale, personale, di valutazione e prototipazione; i piani Starter e Pro indicano l'uso commerciale. La disponibilità di un clip nella libreria non sostituisce la verifica dei diritti sul singolo contenuto. Riferimenti: [PINOC pricing](https://viggle.ai/pinoc/pricing/) e [Viggle Terms of Use](https://viggle.ai/terms-of-use/).
 
@@ -151,7 +159,7 @@ Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **
 - [ ] Avatar Humanoid Unity valido per entrambi i personaggi.
 - [ ] Prefab maschile e femminile generati e controllati.
 - [ ] Mesh dedicate a braccia e mani in prima persona create e posate, se richieste dal modello finale.
-- [ ] Animazioni PINOC in formato Mixamo trasferite sullo scheletro UnderGrind.
-- [ ] Cicli di camminata e corsa controllati per scivolamento dei piedi e movimento della radice.
+- [ ] Retargeting Humanoid verificato su entrambi gli Avatar, senza incroci o deformazioni dei piedi.
+- [ ] Cicli di camminata e corsa controllati visivamente per scivolamento dei piedi, transizioni e movimento della radice.
 - [ ] Test PlayMode superati sul rig importato.
 - [ ] Visuale in prima e terza persona controllata nella scena Unity.
