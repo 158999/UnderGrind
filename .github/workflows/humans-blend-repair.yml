@@ -200,7 +200,13 @@ jobs:
       - name: Regenerate the FBX assets consumed by Unity
         run: |
           cp humans_repaired.blend Assets/UnderGrind/Art/Source/humans.blend
+          rm -f Tools/Blender/last-export-report.json
+          rm -f Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+          rm -f Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
           blender -b Assets/UnderGrind/Art/Source/humans.blend --python Tools/Blender/export-undergrind-humans.py
+          test -s Tools/Blender/last-export-report.json
+          test -s Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+          test -s Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -247,5 +253,6 @@ jobs:
             humans_repaired.blend
             repair-report.json
             verification-report.json
+            Tools/Blender/last-export-report.json
           if-no-files-found: error
           retention-days: 14
