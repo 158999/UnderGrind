@@ -23,8 +23,8 @@ jobs:
 
       - name: Install Blender 5.2.4
         run: |
-          curl --fail --location --retry 3 --retry-delay 2 \
-            https://download.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+            https://mirror.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
             --output "$RUNNER_TEMP/blender.tar.xz"
           tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
