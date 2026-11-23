@@ -27,12 +27,14 @@ namespace UnderGrind.Editor
                 return;
             }
 
+            Undo.RecordObject(controller, "Enable Animator IK Pass");
             var layers = controller.layers;
             for (var i = 0; i < layers.Length; i++)
-            {
                 layers[i].iKPass = true;
-                controller.SetLayer(i, layers[i]);
-            }
+
+            // AnimatorController exposes its layers through a get/set property;
+            // there is no SetLayer method in the Unity Editor API.
+            controller.layers = layers;
 
             if (target.GetComponent<PlayerFootSeparationIK>() == null)
                 Undo.AddComponent<PlayerFootSeparationIK>(target);
