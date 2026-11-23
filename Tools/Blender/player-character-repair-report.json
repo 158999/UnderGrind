@@ -17,9 +17,9 @@
       "armature": "UG_Male_Armature",
       "alignment": {
         "bodyCenterlineX": 0.0,
-        "boneCenterlineXBefore": 0.489628,
-        "localShiftApplied": 0.489627,
-        "offsetBeforeMeters": 0.249301,
+        "boneCenterlineXBefore": 0.0,
+        "localShiftApplied": 0.0,
+        "offsetBeforeMeters": 0.0,
         "boneCenterlineXAfter": 0.0,
         "offsetAfterMeters": 0.0
       },
@@ -31,11 +31,11 @@
           "triangulatedFaces": [
             {
               "sourceFace": 92,
-              "trianglesCreated": 30
+              "trianglesCreated": 2
             },
             {
               "sourceFace": 186,
-              "trianglesCreated": 30
+              "trianglesCreated": 2
             }
           ],
           "material": "UG_Skin",
@@ -135,9 +135,9 @@
       "armature": "UG_Female_Armature",
       "alignment": {
         "bodyCenterlineX": 0.0,
-        "boneCenterlineXBefore": 0.369964,
-        "localShiftApplied": 0.369964,
-        "offsetBeforeMeters": 0.190108,
+        "boneCenterlineXBefore": 0.0,
+        "localShiftApplied": 0.0,
+        "offsetBeforeMeters": 0.0,
         "boneCenterlineXAfter": 0.0,
         "offsetAfterMeters": 0.0
       },
