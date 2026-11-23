@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   repair:
@@ -31,12 +31,10 @@ jobs:
           bpy.ops.wm.open_mainfile(filepath=src)
           targets = [o for o in bpy.data.objects if o.type == "MESH" and o.name not in ("Human_Female", "Human_Male") and any(m.type == "ARMATURE" for m in o.modifiers)]
           report = {"targets": [], "errors": []}
-
           def mirror_group(name, names):
               if name.startswith("Left") and "Right" + name[4:] in names: return "Right" + name[4:]
               if name.startswith("Right") and "Left" + name[5:] in names: return "Left" + name[5:]
               return name
-
           for obj in targets:
               mesh = obj.data
               xs = [v.co.x for v in mesh.vertices]
@@ -45,7 +43,6 @@ jobs:
               if not positive or negative:
                   report["errors"].append(f"{obj.name}: non-half mesh (positive={positive}, negative={negative}); skipped")
                   continue
-
               group_names = [g.name for g in obj.vertex_groups]
               group_index = {g.name: g.index for g in obj.vertex_groups}
               bm = bmesh.new()
@@ -68,7 +65,6 @@ jobs:
                           new_name = mirror_group(old_name, set(group_names))
                           nv[deform][group_index[new_name]] = weight
                       mirror_map[v] = nv
-
               original_faces = list(bm.faces)
               uv_layers = list(bm.loops.layers.uv.values())
               for face in original_faces:
@@ -83,21 +79,16 @@ jobs:
                       for loop in nf.loops:
                           source_vert = next(v for v in face.verts if mirror_map[v] == loop.vert)
                           loop[layer].uv = source_by_vertex[source_vert]
-
               bm.normal_update()
               bm.to_mesh(mesh)
               bm.free()
               mesh.update()
               report["targets"].append({
-                  "name": obj.name,
-                  "vertices_before": len(xs),
-                  "vertices_after": len(mesh.vertices),
-                  "faces_before": len(original_faces),
-                  "faces_after": len(mesh.polygons),
+                  "name": obj.name, "vertices_before": len(xs), "vertices_after": len(mesh.vertices),
+                  "faces_before": len(original_faces), "faces_after": len(mesh.polygons),
                   "negative_x_vertices_after": sum(1 for v in mesh.vertices if v.co.x < -1e-5),
                   "armature_modifiers": [m.name for m in obj.modifiers if m.type == "ARMATURE"]
               })
-
           bpy.ops.wm.save_as_mainfile(filepath=out)
           with open("repair-report.json", "w") as f: json.dump(report, f, indent=2)
           print(json.dumps(report, indent=2))
@@ -105,6 +96,34 @@ jobs:
           if len(report["targets"]) != 12: raise RuntimeError(f"Expected 12 rigged meshes, repaired {len(report['targets'])}")
           PY
           blender -b --python repair_humans.py
+      - name: Verify candidate reopens and preserve rig bindings
+        run: |
+          cat > verify_humans.py <<'PY'
+          import bpy, json
+          bpy.ops.wm.open_mainfile(filepath="humans_repaired.blend")
+          targets = [o for o in bpy.data.objects if o.type == "MESH" and o.name not in ("Human_Female", "Human_Male") and any(m.type == "ARMATURE" for m in o.modifiers)]
+          errors = []
+          for obj in targets:
+              xs = [v.co.x for v in obj.data.vertices]
+              if not any(x < -1e-5 for x in xs) or not any(x > 1e-5 for x in xs):
+                  errors.append(obj.name + ": missing mirrored side")
+              if not any(m.type == "ARMATURE" and m.object for m in obj.modifiers):
+                  errors.append(obj.name + ": missing armature binding")
+              if not obj.vertex_groups:
+                  errors.append(obj.name + ": no vertex groups")
+          result = {"mesh_count": len(targets), "errors": errors}
+          print(json.dumps(result, indent=2))
+          if len(targets) != 12 or errors: raise RuntimeError("Candidate verification failed")
+          PY
+          blender -b --python verify_humans.py
+      - name: Commit repaired Blender source
+        run: |
+          cp humans_repaired.blend Assets/UnderGrind/Art/Source/humans.blend
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Assets/UnderGrind/Art/Source/humans.blend
+          git commit -m "fix: restore mirrored human model geometry"
+          git push origin HEAD:repair/humans-blend-audit
       - name: Upload repaired source and report
         uses: actions/upload-artifact@v4
         with:
