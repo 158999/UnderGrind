@@ -293,8 +293,10 @@ namespace UnderGrind.Tests
         {
             public float RestSeparation;
             public float MinimumSeparation;
+            public float StaticAxisMinimumSeparation;
             public float WorstTime;
             public int CrossingSamples;
+            public int StaticAxisCrossingSamples;
             public int SampleCount;
         }
 
@@ -310,9 +312,11 @@ namespace UnderGrind.Tests
                 AssetDatabase.GetAssetPath(clip)) +
                 " / " + clip.name +
                 ": rest=" + result.RestSeparation.ToString("F3") + "m" +
-                ", min=" + result.MinimumSeparation.ToString("F3") + "m" +
+                ", min anatomico=" + result.MinimumSeparation.ToString("F3") + "m" +
+                ", min asse fisso=" + result.StaticAxisMinimumSeparation.ToString("F3") + "m" +
                 " a " + result.WorstTime.ToString("F2") + "s" +
-                ", incroci=" + result.CrossingSamples + "/" + result.SampleCount;
+                ", incroci anatomici=" + result.CrossingSamples + "/" + result.SampleCount +
+                ", incroci asse fisso=" + result.StaticAxisCrossingSamples + "/" + result.SampleCount;
             Debug.Log("UnderGrind foot-crossing diagnostic: " + summary);
 
             if (result.RestSeparation <= 0f || result.CrossingSamples > 0)
@@ -350,14 +354,14 @@ namespace UnderGrind.Tests
                 Assert.That(leftFoot, Is.Not.Null, model.name + ": LeftFoot non mappata.");
                 Assert.That(rightFoot, Is.Not.Null, model.name + ": RightFoot non mappata.");
 
-                var lateral = instance.transform.InverseTransformDirection(
+                var restLateral = instance.transform.InverseTransformDirection(
                     leftHip.position - rightHip.position).normalized;
-                Assert.That(lateral.sqrMagnitude, Is.GreaterThan(0.9f),
+                Assert.That(restLateral.sqrMagnitude, Is.GreaterThan(0.9f),
                     model.name + ": asse laterale delle anche non valido.");
 
                 var restLeft = instance.transform.InverseTransformPoint(leftFoot.position);
                 var restRight = instance.transform.InverseTransformPoint(rightFoot.position);
-                var restSeparation = Vector3.Dot(restLeft - restRight, lateral);
+                var restSeparation = Vector3.Dot(restLeft - restRight, restLateral);
 
                 graph = PlayableGraph.Create("FootCrossing_" + clip.name);
                 graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
@@ -371,8 +375,10 @@ namespace UnderGrind.Tests
 
                 var sampleCount = Mathf.Max(2, Mathf.CeilToInt(clip.length * sampleRate) + 1);
                 var minimumSeparation = float.PositiveInfinity;
+                var staticAxisMinimumSeparation = float.PositiveInfinity;
                 var worstTime = 0f;
                 var crossingSamples = 0;
+                var staticAxisCrossingSamples = 0;
 
                 for (var sample = 0; sample < sampleCount; sample++)
                 {
@@ -384,23 +390,37 @@ namespace UnderGrind.Tests
 
                     var leftPosition = instance.transform.InverseTransformPoint(leftFoot.position);
                     var rightPosition = instance.transform.InverseTransformPoint(rightFoot.position);
-                    var separation = Vector3.Dot(leftPosition - rightPosition, lateral);
+                    var footDelta = leftPosition - rightPosition;
+                    var currentLateral = instance.transform.InverseTransformDirection(
+                        leftHip.position - rightHip.position).normalized;
+                    Assert.That(currentLateral.sqrMagnitude, Is.GreaterThan(0.9f),
+                        model.name + ": asse laterale delle anche non valido al campione " + sampleTime);
+
+                    // Compare the feet in the character's current anatomical left/right frame.
+                    // A fixed rest-pose axis can report false crossings when the pelvis turns.
+                    var separation = Vector3.Dot(footDelta, currentLateral);
+                    var staticAxisSeparation = Vector3.Dot(footDelta, restLateral);
                     if (separation < minimumSeparation)
                     {
                         minimumSeparation = separation;
                         worstTime = sampleTime;
                     }
+                    staticAxisMinimumSeparation = Mathf.Min(staticAxisMinimumSeparation, staticAxisSeparation);
 
                     if (separation < -crossingToleranceMeters)
                         crossingSamples++;
+                    if (staticAxisSeparation < -crossingToleranceMeters)
+                        staticAxisCrossingSamples++;
                 }
 
                 return new FootCrossingResult
                 {
                     RestSeparation = restSeparation,
                     MinimumSeparation = minimumSeparation,
+                    StaticAxisMinimumSeparation = staticAxisMinimumSeparation,
                     WorstTime = worstTime,
                     CrossingSamples = crossingSamples,
+                    StaticAxisCrossingSamples = staticAxisCrossingSamples,
                     SampleCount = sampleCount
                 };
             }
