@@ -1,5 +1,5 @@
 {
-  "source": "PINOC motion library",
+  "source": "PINOC text-to-motion",
   "format": "mixamo-fbx",
   "target": "UnderGrind Humanoid Avatar",
   "sourceRig": "Mixamo X Bot",
@@ -7,13 +7,77 @@
   "importedIntoUnity": false,
   "retargeted": false,
   "motions": [
-    { "state": "Idle", "name": "Standing Idle", "file": "Standing_Idle.fbx", "assetPublicId": "1cbf45b5-5abe-4a88-97cd-a1a21da60d7b", "loop": true },
-    { "state": "Walk", "name": "Walking", "file": "Walking.fbx", "assetPublicId": "32d71c7f-e88a-4d1f-9c0c-1fde2da5f060", "loop": true },
-    { "state": "Run", "name": "Running", "file": "Running.fbx", "assetPublicId": "32c1d7ba-29d6-466c-a2bc-56ff17ca4d1a", "loop": true },
-    { "state": "Jump", "name": "Jump", "file": "Jump.fbx", "assetPublicId": "08872e23-d695-493d-8c03-cb595cd55e9c", "loop": false },
-    { "state": "Fall", "name": "Fall down", "file": "Fall_down.fbx", "assetPublicId": "2e513074-b11f-4108-9ba7-80f2995ecba8", "loop": false },
-    { "state": "Land", "name": "Hard Landing", "file": "Hard_Landing.fbx", "assetPublicId": "241c8c51-4bfb-4f0c-ad0b-f9a7c50f8ee7", "loop": false },
-    { "state": "Crouch Idle", "name": "Crouching Idle", "file": "Crouching_Idle.fbx", "assetPublicId": "7cd56394-0b47-4fa7-b951-6658d5ea3da6", "loop": true },
-    { "state": "Crouch Walk", "name": "Crouch Walk Forward", "file": "Crouch_Walk_Forward.fbx", "assetPublicId": "e4f5b9e6-381c-4227-88d4-94d6a0615df8", "loop": true }
-  ]
+    {
+      "state": "Idle",
+      "name": "Standing Idle",
+      "file": "Standing_Idle.fbx",
+      "assetPublicId": "1cbf45b5-5abe-4a88-97cd-a1a21da60d7b",
+      "loop": true
+    },
+    {
+      "state": "Walk",
+      "name": "Walking",
+      "file": "Walking.fbx",
+      "assetPublicId": "32d71c7f-e88a-4d1f-9c0c-1fde2da5f060",
+      "loop": true
+    },
+    {
+      "state": "Run",
+      "name": "Running Cycle (4)",
+      "file": "Running.fbx",
+      "assetPublicId": "523040bc-2141-4368-bfad-b24def5c32ca",
+      "loop": true
+    },
+    {
+      "state": "Jump",
+      "name": "Jump",
+      "file": "Jump.fbx",
+      "assetPublicId": "08872e23-d695-493d-8c03-cb595cd55e9c",
+      "loop": false
+    },
+    {
+      "state": "Fall",
+      "name": "Fall down",
+      "file": "Fall_down.fbx",
+      "assetPublicId": "2e513074-b11f-4108-9ba7-80f2995ecba8",
+      "loop": false
+    },
+    {
+      "state": "Land",
+      "name": "Hard Landing",
+      "file": "Hard_Landing.fbx",
+      "assetPublicId": "241c8c51-4bfb-4f0c-ad0b-f9a7c50f8ee7",
+      "loop": false
+    },
+    {
+      "state": "Crouch Idle",
+      "name": "Crouching Idle",
+      "file": "Crouching_Idle.fbx",
+      "assetPublicId": "7cd56394-0b47-4fa7-b951-6658d5ea3da6",
+      "loop": true
+    },
+    {
+      "state": "Crouch Walk",
+      "name": "Crouch Walk Forward",
+      "file": "Crouch_Walk_Forward.fbx",
+      "assetPublicId": "e4f5b9e6-381c-4227-88d4-94d6a0615df8",
+      "loop": true
+    }
+  ],
+  "runningCandidateAudit": {
+    "selectedCandidate": "Running_Candidate_04.fbx",
+    "selectionPriority": [
+      "zero left/right foot crossings",
+      "lowest loop endpoint error",
+      "lowest root drift",
+      "largest remaining lateral foot separation"
+    ],
+    "sampledFrames": 250,
+    "crossingCount": 0,
+    "minimumFootSeparation": 0.11043283715844154,
+    "minimumKneeSeparation": 0.20257171988487244,
+    "rootDrift": 0.17912935888334414,
+    "loopEndpointError": 0.1357886608760463,
+    "note": "Blender transform-space audit only; Unity Humanoid import and in-game visual validation remain pending."
+  }
 }
