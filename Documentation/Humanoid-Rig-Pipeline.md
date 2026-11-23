@@ -115,7 +115,7 @@ L'accesso a `AvatarSetupTool` avviene tramite reflection perché è un'API inter
 
 `HumanLocomotionController` invia all'Animator la velocità orizzontale misurata in metri al secondo. La velocità Walk configurata è `1,4 m/s`, ma la precedente soglia `walkThreshold = 0,1` faceva già dominare il movimento Run a velocità di camminata: con `runThreshold = 1,65`, a 1,4 m/s il Blend Tree assegnava circa l'84% del peso alla corsa e il 16% alla camminata.
 
-La soglia Walk predefinita è ora `1,4`, allineata alla velocità Walk del controller; la soglia Run resta `1,65`, tra velocità Walk e Run. La migrazione `PlayerAnimationSettings` versione 6 aggiorna il vecchio valore predefinito `0,1` a `1,4`, preservando valori personalizzati diversi. `HumanLocomotionTuningTests` verifica che `WalkThreshold == WalkSpeed` e che `RunThreshold` resti compresa tra Walk e Run. La correzione viene applicata quando Unity migra l'asset e quando viene ricostruito l'Animator Controller.
+La soglia Walk predefinita è ora `1,4`, allineata alla velocità Walk del controller; la soglia Run resta `1,65`, tra velocità Walk e Run. La migrazione `PlayerAnimationSettings` versione 6 aggiorna il vecchio valore predefinito `0,1` a `1,4`, preservando valori personalizzati diversi. `HumanLocomotionTuningTests` verifica che `WalkThreshold == WalkSpeed` e che `RunThreshold` resti compresa tra Walk e Run. La correzione viene applicata quando Unity migra l'asset e quando viene ricostruito l'Animator Controller. Dopo aver aggiornato il repository, eseguire in Unity **UnderGrind → Player → Refresh Clips and Build Animator Controller**: il builder applica la T-Pose, aggiorna i riferimenti delle clip e rigenera il Blend Tree con la soglia Walk corretta.
 
 ## Sorgenti delle animazioni
 
