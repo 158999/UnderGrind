@@ -129,9 +129,9 @@ def main():
     valid = [item for item in results if item["status"] == "ok"]
     valid.sort(key=lambda item: (
         item["crossingCount"],
-        -item["minimumFootSeparation"],
+        item["loopEndpointError"],
         item["rootDrift"],
-        item["loopEndpointError"]
+        -item["minimumFootSeparation"]
     ))
     report = {
         "source": "PINOC text-to-motion candidates",
