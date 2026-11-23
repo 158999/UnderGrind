@@ -182,6 +182,8 @@ namespace UnderGrind.Editor
                 }
                 if (previousVersion < 7)
                     CopyFloat(current, template, "modelYawOffset");
+                if (previousVersion < 8)
+                    CopyBool(current, template, "enforceHumanoidTPose");
                 if (previousVersion < defaultVersion.intValue)
                     version.intValue = defaultVersion.intValue;
             }
