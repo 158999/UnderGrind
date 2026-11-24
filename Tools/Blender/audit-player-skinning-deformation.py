@@ -41,6 +41,7 @@ POSE_BONES = (
 ROTATION_AXES = ("X", "Y", "Z")
 POSE_ANGLE_DEGREES = 25.0
 MOVED_VERTEX_EPSILON_METERS = 0.0001
+SCENE_UNIT_SCALE_METERS = bpy.context.scene.unit_settings.scale_length or 1.0
 
 
 def get_repository_root():
@@ -130,7 +131,8 @@ def evaluated_world_vertices(obj, depsgraph):
 def deformation_summary(rest_vertices, posed_vertices):
     if len(rest_vertices) != len(posed_vertices):
         raise RuntimeError("Il numero di vertici valutati cambia durante la deformazione.")
-    displacements = [(posed - rest).length for rest, posed in zip(rest_vertices, posed_vertices)]
+    displacements = [(posed - rest).length * SCENE_UNIT_SCALE_METERS
+                    for rest, posed in zip(rest_vertices, posed_vertices)]
     moved = sum(value > MOVED_VERTEX_EPSILON_METERS for value in displacements)
     return {
         "movedVertices": moved,
@@ -212,8 +214,8 @@ def audit_character(character_name, config, depsgraph):
                     "parts": part_results,
                 })
 
-                pose_bone.rotation_mode = original_mode
-                pose_bone.matrix_basis = original_basis.copy()
+                pose_bone.rotation_mode = "XYZ"
+                pose_bone.matrix_basis = Matrix.Identity(4)
                 bpy.context.view_layer.update()
                 depsgraph = bpy.context.evaluated_depsgraph_get()
 
@@ -251,6 +253,7 @@ def main():
         "source": bpy.data.filepath,
         "blenderVersion": bpy.app.version_string,
         "poseAngleDegrees": POSE_ANGLE_DEGREES,
+        "sceneUnitScaleMeters": SCENE_UNIT_SCALE_METERS,
         "movedVertexEpsilonMeters": MOVED_VERTEX_EPSILON_METERS,
         "characters": {},
         "errors": [],
