@@ -250,9 +250,8 @@ namespace UnderGrind.Editor
 
         private static Type GetAvatarSetupToolType()
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .Select(assembly => assembly.GetType("UnityEditor.AvatarSetupTool", false))
-                .FirstOrDefault(type => type != null);
+            // AvatarSetupTool is declared in the UnityEditor.CoreModule assembly.
+            return typeof(Editor).Assembly.GetType("UnityEditor.AvatarSetupTool", false);
         }
 
         private static MethodInfo FindStaticMethod(Type type, string name, int parameterCount, BindingFlags flags)
