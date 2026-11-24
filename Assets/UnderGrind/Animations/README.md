@@ -26,11 +26,27 @@ La mesh X Bot serve come sorgente per il retargeting: non è il modello del gioc
 
 ## Stato dell'importazione
 
-Gli otto movimenti selezionati sono disponibili nella libreria PINOC, ma nessuna delle due famiglie di export è ancora importata in questa cartella o trasferita sul rig UnderGrind.
+Gli otto movimenti di produzione sono già versionati in questa cartella e assegnati a `Assets/UnderGrind/Settings/PlayerAnimationSettings.asset`. L'asset assegna anche il controller Animator generato. Gli FBX sono importati come Humanoid con Avatar sorgente separato; Unity esegue il retargeting runtime sull'Avatar del Player maschile o femminile. Le curve non sono state ribake-ate sullo scheletro UnderGrind.
 
-`PlayerAnimationControllerBuilder` individua i file FBX importati in questa cartella, imposta l'importazione Humanoid e associa le clip mancanti usando il nome della clip o del file. Per generare il controller sono obbligatorie sei clip: Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk. Fall e Land sono opzionali e vengono associate quando disponibili. Il loop di ogni clip è configurabile separatamente nell'asset `PlayerAnimationSettings.asset`; il generatore applica tali valori ai rispettivi `ModelImporterClipAnimation` prima di aggiornare i riferimenti.
+`PlayerAnimationControllerBuilder` individua i file FBX, applica le impostazioni Humanoid e aggiorna i riferimenti alle clip mancanti. Le sei clip Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono obbligatorie; Fall e Land sono opzionali. Il loop di ogni clip è configurabile separatamente nell'asset `PlayerAnimationSettings.asset`.
 
-`LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`. Il modello sorgente attuale non dispone di un Avatar Humanoid valido né di renderer separati per testa e arti FP.
+### Validazione
+
+- **Walking** e **Running**: la run Unity del 23 novembre 2026 ha registrato zero incroci anatomici dei piedi su sorgente, Player maschile e Player femminile. Il risultato precede la riparazione dei pesi del 24 novembre e va ripetuto sul rig aggiornato.
+- **Crouch Walk Forward**: la run Unity del 24 novembre 2026 è fallita. Ha rilevato 6/232 campioni con incrocio sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. Il clip resta assegnato ma non è considerato approvato.
+- **Jump, Fall, Land, Idle e Crouch Idle**: importati e assegnati; non sono coperti dal test di incrocio dei piedi e non sono ancora validati visivamente sul rig riparato.
+
+### Candidati Crouch Walk
+
+La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili come Humanoid. Non sono assegnate al controller di produzione e non sostituiscono `Crouch_Walk_Forward.fbx`.
+
+Il report `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` misura la separazione anatomica sullo scheletro FBX grezzo. Le varianti 05–08 non mostrano incroci grezzi di piedi o ginocchia, ma l'audit Blender non equivale al retargeting Humanoid di Unity. Non è stato selezionato alcun sostituto.
+
+Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` confronta il clip corrente e gli otto candidati sulla sorgente, sull'Avatar maschile e sull'Avatar femminile. Scrive `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`, includendo mapping delle ossa e separazione di piedi/ginocchia. Il test è stato aggiunto ma non è ancora stato eseguito nell'Editor Unity.
+
+Non assegnare un candidato al controller finché il report Unity non mostra un risultato accettabile su entrambi gli Avatar e la verifica visiva non conferma un ciclo continuo senza deformazioni.
+
+`LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`.
 
 ## Provenienza dei movimenti selezionati
 
