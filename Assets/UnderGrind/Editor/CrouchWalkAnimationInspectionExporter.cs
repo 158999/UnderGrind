@@ -512,12 +512,17 @@ namespace UnderGrind.Editor
             {
                 if (Graph.IsValid())
                     Graph.Destroy();
-                if (Instance != null)
-                    UnityEngine.Object.DestroyImmediate(Instance);
+
                 if (Preview != null)
                 {
                     Preview.Cleanup();
                     Preview = null;
+                    Instance = null;
+                }
+                else if (Instance != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(Instance);
+                    Instance = null;
                 }
             }
         }
@@ -693,6 +698,7 @@ namespace UnderGrind.Editor
                 rig.Dispose();
                 throw new InvalidOperationException("Impossibile istanziare in preview scene: " + prefabPath);
             }
+            rig.Preview.AddSingleGO(rig.Instance);
 
             rig.Animator = rig.Instance.GetComponentInChildren<Animator>(true);
             if (rig.Animator == null || rig.Animator.avatar == null ||
