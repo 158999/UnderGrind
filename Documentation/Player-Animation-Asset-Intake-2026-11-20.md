@@ -84,7 +84,7 @@ Il prompt richiede:
 | 03 | Crouch Walk (3) | `0ff23662-9938-41d3-8e99-def4e4d1e7de` | `mixamo-fbx` |
 | 04 | Crouch Walk (4) | `17dc1540-bfe8-4f08-b293-5053305aaef8` | `mixamo-fbx` |
 
-**Stato:** i quattro FBX sono stati importati nel branch `fix/crouch-walk-animation-validation` con metadata Humanoid e loop attivo. Il controllo d'integrità dei file è passato; l'audit Blender grezzo ha analizzato tutti e quattro. Il retarget Humanoid sui prefab Player, l'ispezione visiva e la matrice di test Unity sono ancora da eseguire. Nessuno dei quattro è assegnato a `PlayerAnimationSettings.asset`.
+**Stato:** i quattro FBX sono stati importati nel branch `fix/crouch-walk-animation-validation` con metadata Humanoid e loop attivo. Il controllo d'integrità dei file è passato; l'audit Blender grezzo ha analizzato tutti e quattro. Il retarget Humanoid sui prefab Player, l'ispezione visiva e la matrice di test Unity sono ancora da eseguire. Generated 03 è assegnata provvisoriamente a `PlayerAnimationSettings.asset` soltanto nel branch di validazione; `main` non è stato modificato.
 
 | Campione | Incroci piedi Blender | Separazione minima | Deriva bacino | Errore endpoint loop | Valutazione grezza |
 |---|---:|---:|---:|---:|---|
