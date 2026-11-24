@@ -4,64 +4,88 @@
   "target": "UnderGrind Humanoid Avatar",
   "sourceRig": "Mixamo X Bot",
   "sourceMeshUsage": "Reference mesh only; do not use as the UnderGrind player body.",
-  "importedIntoUnity": false,
-  "retargeted": false,
+  "importedIntoUnity": true,
+  "retargeted": true,
   "motions": [
     {
       "state": "Idle",
       "name": "Standing Idle",
       "file": "Standing_Idle.fbx",
       "assetPublicId": "1cbf45b5-5abe-4a88-97cd-a1a21da60d7b",
-      "loop": true
+      "loop": true,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Standing_Idle.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Imported and assigned to PlayerAnimationSettings; not covered by the foot-crossing test and not visually validated on the repaired rig."
     },
     {
       "state": "Walk",
       "name": "Walking",
       "file": "Walking.fbx",
       "assetPublicId": "32d71c7f-e88a-4d1f-9c0c-1fde2da5f060",
-      "loop": true
+      "loop": true,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Walking.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Zero anatomical foot crossings in Unity run 2026-11-23, before the 2026-11-24 rig repair. Rerun required on the repaired rig."
     },
     {
       "state": "Run",
       "name": "Running Cycle (4)",
       "file": "Running.fbx",
       "assetPublicId": "523040bc-2141-4368-bfad-b24def5c32ca",
-      "loop": true
+      "loop": true,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Running.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Zero anatomical foot crossings in Unity run 2026-11-23, before the 2026-11-24 rig repair. Rerun required on the repaired rig."
     },
     {
       "state": "Jump",
       "name": "Jump",
       "file": "Jump.fbx",
       "assetPublicId": "08872e23-d695-493d-8c03-cb595cd55e9c",
-      "loop": false
+      "loop": false,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Jump.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Imported and assigned to PlayerAnimationSettings; not covered by the foot-crossing test and not visually validated on the repaired rig."
     },
     {
       "state": "Fall",
       "name": "Fall down",
       "file": "Fall_down.fbx",
       "assetPublicId": "2e513074-b11f-4108-9ba7-80f2995ecba8",
-      "loop": false
+      "loop": false,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Fall_down.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Imported and assigned to PlayerAnimationSettings; not covered by the foot-crossing test and not visually validated on the repaired rig."
     },
     {
       "state": "Land",
       "name": "Hard Landing",
       "file": "Hard_Landing.fbx",
       "assetPublicId": "241c8c51-4bfb-4f0c-ad0b-f9a7c50f8ee7",
-      "loop": false
+      "loop": false,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Hard_Landing.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Imported and assigned to PlayerAnimationSettings; not covered by the foot-crossing test and not visually validated on the repaired rig."
     },
     {
       "state": "Crouch Idle",
       "name": "Crouching Idle",
       "file": "Crouching_Idle.fbx",
       "assetPublicId": "7cd56394-0b47-4fa7-b951-6658d5ea3da6",
-      "loop": true
+      "loop": true,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Crouching_Idle.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Imported and assigned to PlayerAnimationSettings; not covered by the foot-crossing test and not visually validated on the repaired rig."
     },
     {
       "state": "Crouch Walk",
       "name": "Crouch Walk Forward",
       "file": "Crouch_Walk_Forward.fbx",
       "assetPublicId": "e4f5b9e6-381c-4227-88d4-94d6a0615df8",
-      "loop": true
+      "loop": true,
+      "unityAssetPath": "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx",
+      "retargetedAtRuntime": true,
+      "validationStatus": "Known failure in Unity run 2026-11-24: 6/232 source foot crossings, 10/232 male Player, 12/232 female Player. Replacement not selected."
     }
   ],
   "runningCandidateAudit": {
@@ -78,6 +102,34 @@
     "minimumKneeSeparation": 0.20257171988487244,
     "rootDrift": 0.17912935888334414,
     "loopEndpointError": 0.1357886608760463,
-    "note": "Blender transform-space audit only; Unity Humanoid import and in-game visual validation remain pending."
+    "note": "Blender raw transform-space audit only. The Unity run 2026-11-23 reported zero anatomical foot crossings for source, male Player and female Player; the result predates the 2026-11-24 skin-weight repair and still requires visual validation."
+  },
+  "retargetingMode": "Unity Humanoid runtime retargeting: each source FBX has its own Humanoid Avatar and its AnimationClip is evaluated on the Player's male or female Humanoid Avatar. Curves are not baked onto the UnderGrind skeleton.",
+  "visualValidationComplete": false,
+  "crouchWalkCandidateAudit": {
+    "currentUnityResult": {
+      "runId": "20261124-110717-910",
+      "sourceFootCrossings": 6,
+      "malePlayerFootCrossings": 10,
+      "femalePlayerFootCrossings": 12,
+      "minimumAnatomicalFootSeparationMeters": {
+        "source": -0.114,
+        "male": -0.119,
+        "female": -0.133
+      },
+      "status": "failed"
+    },
+    "rawBlenderCandidateAudit": {
+      "reportPath": "Tools/Blender/pinoc-crouch-walk-candidate-audit.json",
+      "generationTaskId": "827b8373-42df-479a-a82f-22b5a339678d",
+      "candidateCount": 8,
+      "interpretation": "Raw FBX armature audit only. It is not equivalent to Unity Humanoid retargeting and cannot select a production clip."
+    },
+    "unityCandidateDiagnostic": {
+      "test": "UnderGrind.Tests.HumanoidRigImportTests.CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars",
+      "reportPath": "TestResults/test/Unity/CrouchWalkCandidateAudit.txt",
+      "status": "Added on fix/crouch-walk-animation-audit; not yet executed in Unity."
+    },
+    "selectedReplacement": null
   }
 }
