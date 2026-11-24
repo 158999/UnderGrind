@@ -21,7 +21,7 @@ MonoBehaviour:
   fallClip: {fileID: -623603649343465320, guid: 2e513074b11f41089ba780f2995ecba8, type: 3}
   landClip: {fileID: -623603649343465320, guid: 241c8c514bfb4f0cad0bf9a7c50f8ee7, type: 3}
   crouchIdleClip: {fileID: -623603649343465320, guid: 7cd563940b474fa7b9516658d5ea3da6, type: 3}
-  crouchWalkClip: {fileID: -623603649343465320, guid: 5d550ae720c143f6be9a9ac91bf77bd5, type: 3}
+  crouchWalkClip: {fileID: -623603649343465320, guid: 610abb992359776458efcc68afb43c35, type: 3}
   idleLoops: 1
   walkLoops: 1
   runLoops: 1
