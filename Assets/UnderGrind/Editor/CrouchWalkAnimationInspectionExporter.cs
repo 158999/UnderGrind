@@ -1906,12 +1906,23 @@ namespace UnderGrind.Editor
                 html.AppendLine("<section><h2>" + Html(entry.clipName) + " — " + Html(entry.character) + "</h2>");
                 html.AppendLine("<p>Asset: <code>" + Html(entry.clipAssetPath) + "</code></p>");
                 html.AppendLine("<p>Campioni: " + entry.poseSampleCount + " · Curve: " + entry.curveBindingCount +
-                                " · Incroci piedi: " + entry.footCrossingSamples +
-                                " · Incroci ginocchia: " + entry.kneeCrossingSamples + "</p>");
-                html.AppendLine("<p>Separazione minima piedi: " + entry.minimumFootSeparation.ToString("F4", CultureInfo.InvariantCulture) +
-                                " m · Ginocchia: " + entry.minimumKneeSeparation.ToString("F4", CultureInfo.InvariantCulture) +
-                                " m · Loop position error: " + entry.loopPositionError.ToString("F4", CultureInfo.InvariantCulture) +
-                                " m / " + entry.loopRotationErrorDegrees.ToString("F2", CultureInfo.InvariantCulture) + "°</p>");
+                                " · Incroci anatomici dinamici: piedi " + entry.footCrossingSamples +
+                                " / ginocchia " + entry.kneeCrossingSamples + "</p>");
+                html.AppendLine("<p>Separazione firmata minima: piedi " + entry.minimumFootSeparation.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m a " + entry.minimumFootSeparationTimeSeconds.ToString("F3", CultureInfo.InvariantCulture) +
+                                " s · ginocchia " + entry.minimumKneeSeparation.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m a " + entry.minimumKneeSeparationTimeSeconds.ToString("F3", CultureInfo.InvariantCulture) + " s</p>");
+                html.AppendLine("<p>Asse anatomico iniziale (locale): " + Html(entry.restAnatomicalLateralAxisLocal.ToString("F4")) +
+                                " · soglia incrocio: " + entry.crossingToleranceMeters.ToString("F3", CultureInfo.InvariantCulture) + " m</p>");
+                html.AppendLine("<p>Confronto asse statico: piedi min " + entry.minimumStaticAxisFootSeparationMeters.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m / " + entry.staticAxisFootCrossingSampleCount + " campioni · ginocchia min " +
+                                entry.minimumStaticAxisKneeSeparationMeters.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m / " + entry.staticAxisKneeCrossingSampleCount + " campioni</p>");
+                html.AppendLine("<p>Rest separation: piedi " + entry.restFootSeparationMeters.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m · ginocchia " + entry.restKneeSeparationMeters.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m · loop piedi rispetto alle anche " + entry.loopPositionError.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m / " + entry.loopRotationErrorDegrees.ToString("F2", CultureInfo.InvariantCulture) +
+                                "° · deriva world ossa " + entry.loopWorldBonePositionErrorMeters.ToString("F4", CultureInfo.InvariantCulture) + " m</p>");
                 html.AppendLine("<img src=\"" + Html(sheetPath) + "\" alt=\"Contact sheet\">");
                 html.AppendLine("<p><b>Colonne:</b> " + Html(string.Join(" · ", entry.contactSheetColumns)) + "</p>");
                 html.AppendLine("<p><b>Tempi righe:</b> " + Html(string.Join(" · ", entry.contactSheetTimes.Select(time => time.ToString("F3", CultureInfo.InvariantCulture) + " s"))) + "</p>");
