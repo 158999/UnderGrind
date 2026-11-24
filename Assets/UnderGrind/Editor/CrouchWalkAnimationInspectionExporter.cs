@@ -1975,9 +1975,10 @@ namespace UnderGrind.Editor
             text.AppendLine("LETTURA DELLE MISURE");
             text.AppendLine("- Le posizioni/rotazioni world sono misurate sull'istanza temporanea del prefab nel preview scene; quelle local sono relative al parent Transform.");
             text.AppendLine("- Velocità e accelerazioni sono differenze finite tra campioni; l'accuratezza dipende dalla frequenza e dai tempi keyframe inclusi.");
-            text.AppendLine("- Il contatto del piede è una stima basata sull'altezza minima osservata nel ciclo e sulla velocità. Non equivale al grounded state del controller.");
-            text.AppendLine("- Gli incroci sono rilevati confrontando il segno della separazione laterale rispetto al lato iniziale, proiettata sull'asse right dell'Animator.");
-            text.AppendLine("- L'errore di loop confronta i campioni esattamente a 0 e a durata clip. Alcune clip non sono progettate per chiudersi in posa identica; interpretare insieme a loop settings e immagini.");
+            text.AppendLine("- Il contatto del piede è una stima basata sull'altezza minima osservata nel ciclo e sulla velocità. La percentuale è una frazione dei campioni, non una durata ponderata; non equivale al grounded state del controller.");
+            text.AppendLine("- Gli incroci dinamici usano lo stesso riferimento del test Unity: asse laterale ricalcolato a ogni campione dalla differenza LeftUpperLeg - RightUpperLeg, in coordinate locali del root. Un campione è incrociato quando la separazione firmata è inferiore a -crossingToleranceMeters.");
+            text.AppendLine("- Viene registrata anche la separazione su un asse laterale statico ricavato dalla posa iniziale, così si può distinguere l'incrocio anatomico da un artefatto causato dalla rotazione del bacino.");
+            text.AppendLine("- Il loop position error confronta la posizione dei piedi relativa alle anche tra t=0 e l'ultimo campione prima della fine (clip.length - 0.0001 s); è riportato separatamente anche l'errore world di ossa selezionate. Alcune clip non sono progettate per chiudersi in posa identica; interpretare insieme a loop settings e immagini.");
             text.AppendLine("- Le immagini sono viste statiche renderizzate dal preview scene, non catture del Game View né prova del controller/IK di produzione.");
             text.AppendLine("- L'Animator Controller e il root motion sono disattivati nell'anteprima: le curve root motion sono comunque elencate nel CSV delle curve.");
             text.AppendLine("- La mesh baked è una diagnostica geometrica, non sostituisce il rendering con materiali/luci di gioco.");
