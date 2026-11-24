@@ -39,6 +39,7 @@ namespace UnderGrind.Editor
             public bool captureSkinnedMeshDiagnostics = true;
             public float contactHeightToleranceMeters = 0.04f;
             public float contactSpeedToleranceMetersPerSecond = 0.15f;
+            public float crossingToleranceMeters = 0.02f;
         }
 
         [Serializable]
@@ -86,6 +87,19 @@ namespace UnderGrind.Editor
             public float rightFootEstimatedContactRatio;
             public float maximumHipsDriftMeters;
             public float maximumTorsoLeanDegrees;
+            public float restFootSeparationMeters;
+            public float restKneeSeparationMeters;
+            public float crossingToleranceMeters;
+            public Vector3 restAnatomicalLateralAxisLocal;
+            public float minimumStaticAxisFootSeparationMeters;
+            public int staticAxisFootCrossingSampleCount;
+            public List<float> staticAxisFootCrossingTimesSeconds = new List<float>();
+            public float minimumStaticAxisKneeSeparationMeters;
+            public int staticAxisKneeCrossingSampleCount;
+            public List<float> staticAxisKneeCrossingTimesSeconds = new List<float>();
+            public float loopWorldBonePositionErrorMeters;
+            public float minimumFootSeparationTimeSeconds;
+            public float minimumKneeSeparationTimeSeconds;
             public List<float> contactSheetTimes = new List<float>();
             public List<string> contactSheetColumns = new List<string>();
         }
@@ -296,15 +310,24 @@ namespace UnderGrind.Editor
             public Quaternion rootWorldRotation;
             public Vector3 rootLocalPosition;
             public Vector3 hipsWorldPosition;
-            public Vector3 hipsLocalPosition;
+            public Quaternion hipsWorldRotation;
+            public Vector3 hipsRootLocalPosition;
+            public Vector3 anatomicalLateralAxisLocal;
+            public Vector3 restAnatomicalLateralAxisLocal;
+            public Vector3 leftFootRelativeToHips;
+            public Vector3 rightFootRelativeToHips;
+            public Quaternion leftFootRelativeRotationToHips;
+            public Quaternion rightFootRelativeRotationToHips;
             public float hipsDriftFromStartMeters;
             public float torsoLeanDegrees;
             public float leftFootSignedLateralSeparation;
             public float leftRightFootDistanceMeters;
             public float leftRightFootLateralSeparationMeters;
+            public float leftRightFootStaticAxisSeparationSigned;
             public float leftRightKneeSignedLateralSeparation;
             public float leftRightKneeDistanceMeters;
             public float leftRightKneeLateralSeparationMeters;
+            public float leftRightKneeStaticAxisSeparationSigned;
             public float leftFootHeightInRootSpace;
             public float rightFootHeightInRootSpace;
             public float leftFootHeightAboveObservedMinimum;
@@ -370,7 +393,10 @@ namespace UnderGrind.Editor
             public float rightFootEstimatedContactRatio;
             public float maximumHipsDriftMeters;
             public float loopPositionErrorMeters;
+            public float loopWorldBonePositionErrorMeters;
             public float loopRotationErrorDegrees;
+            public float minimumFootSeparationTimeSeconds;
+            public float minimumKneeSeparationTimeSeconds;
             public float maximumTorsoLeanDegrees;
             public float minimumTorsoLeanDegrees;
         }
@@ -521,6 +547,7 @@ namespace UnderGrind.Editor
             options.maxPoseSamples = Mathf.Clamp(options.maxPoseSamples, 100, 50000);
             options.contactHeightToleranceMeters = Mathf.Max(0f, options.contactHeightToleranceMeters);
             options.contactSpeedToleranceMetersPerSecond = Mathf.Max(0f, options.contactSpeedToleranceMetersPerSecond);
+            options.crossingToleranceMeters = Mathf.Max(0f, options.crossingToleranceMeters);
         }
 
         private static BundleManifest CreateManifest(ExportOptions options)
