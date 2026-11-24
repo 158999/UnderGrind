@@ -243,16 +243,21 @@ namespace UnderGrind.Tests
         }
 
         [TestCase(MaleFbxPath, "maschile")]
+        [TestCase(FemaleFbxPath, "femminile")]
         [TestCase(MalePrefabPath, "maschile")]
         [TestCase(FemalePrefabPath, "femminile")]
         public void VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(string assetPath, string label)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
             Assert.That(prefab, Is.Not.Null, "Prefab " + label + " non trovato: " + assetPath);
-            // The generated prefab intentionally opens in third-person preview mode.
-            // Runtime visibility must not treat these serialized FP-disabled states as defaults.
-            AssertRendererEnabled(prefab, _settings.FirstPersonArmsToken, false);
-            AssertRendererEnabled(prefab, _settings.FirstPersonHandsToken, false);
+            // Source FBXs and generated prefabs retain neutral enabled defaults.
+            // Camera mode is applied by PlayerVisualRig at runtime, never baked into the asset.
+            AssertRendererEnabled(prefab, _settings.HeadRendererSuffix, true);
+            AssertRendererEnabled(prefab, _settings.BodyRendererToken, true);
+            AssertRendererEnabled(prefab, _settings.FirstPersonArmsToken, true);
+            AssertRendererEnabled(prefab, _settings.FirstPersonHandsToken, true);
+            AssertRendererEnabled(prefab, _settings.ThirdPersonArmsToken, true);
+            AssertRendererEnabled(prefab, _settings.ThirdPersonHandsToken, true);
 
             var instance = UnityEngine.Object.Instantiate(prefab);
             var viewReference = new GameObject("Test View Reference").transform;
