@@ -1,24 +1,24 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 58484)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 70520)
-VBCSCompiler prewarm took 46.64 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 66348)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 69980)
+VBCSCompiler prewarm took 57.40 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.6/staging' branch; Version is '6000.6.9f1 (8c45277fb9c5) revision 9192743'; Using compiler version '194234433'; Build Type 'Release'
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr" at "2026-11-24T10:21:11.2573359Z"
 OS: 'Windows 11  (10.0.26300) Professional' Language: 'it' Physical Memory: 15875 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-11-24T10:21:11Z
+Date: 2026-11-24T10:21:44Z
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr" at "2026-11-24T10:21:44.7636958Z"
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 51304, path: "C:/Program Files/WindowsApps/UnityTechnologies.UnityHub_4.0.1.65535_x64__2vrhnee42bhxm/app/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.19.0+4cc3dda
-  Session Id:              aeb1008a8af44b32827ec78461283a26
+  Session Id:              cc7e3751155142629228ff70c3b32c19
   Correlation Id:          62c2c2d628b500ca490b4688516a52c1
-  External correlation Id: 7125889593635162264
+  External correlation Id: 5393687172558109606
   Machine Id:              XzjnqROkxgGpDG+9teZZ5ygXX5w=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-cgr" (connect: 0.00s, validation: 0.07s, handshake: 0.18s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr-notifications" at "2026-11-24T10:21:11.5108873Z"
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-cgr" (connect: 0.00s, validation: 0.02s, handshake: 0.07s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr-notifications" at "2026-11-24T10:21:44.8529884Z"
 [Licensing::Module] Error: Access token is unavailable; failed to update
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
@@ -26,8 +26,8 @@ Date: 2026-11-24T10:21:11Z
   Product: Unity Personal
   Type: Assigned
   Expiration: Unlimited
-[Licensing::Client] Successfully updated license, isAsync: True, time: 0.02
-[Licensing::Module] Licensing Background thread has ended after 0.34s
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Module] Licensing Background thread has ended after 0.13s
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Unity.exe
@@ -83,16 +83,16 @@ C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [71148]  Target information:
+Player connection [72568]  Target information:
 
-Player connection [71148]  * "[IP] 192.168.0.169 [Port] 55504 [Flags] 2 [Guid] 3787148995 [EditorId] 3787148995 [Version] 1048832 [Id] WindowsEditor(7,NB208) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [72568]  * "[IP] 192.168.0.169 [Port] 55504 [Flags] 2 [Guid] 2670929978 [EditorId] 2670929978 [Version] 1048832 [Id] WindowsEditor(7,NB208) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [71148] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [71148] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [72568] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [72568] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-71944" after 0.3 seconds.
+[Package Manager] Connected to IPC stream "Upm-70808" after 0.3 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Initialising UDS system complete:
@@ -127,7 +127,7 @@ Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/Managed
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56944
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56808
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -135,30 +135,30 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.006600 seconds.
+Registered in 0.004849 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  1.522 seconds
-Domain Reload Profiling: 2252ms
-	BeginReloadAssembly (179ms)
-		CreateAndSetChildDomain (14ms)
-	RebuildCommonClasses (7ms)
-	RebuildNativeTypeToScriptingClass (21ms)
-	initialDomainReloadingComplete (110ms)
-	LoadAllAssembliesAndSetupDomain (412ms)
-		LoadAssemblies (160ms)
-		TypeCache.Refresh (275ms)
-			TypeCache.ScanAssembly (257ms)
+- Finished resetting the current domain, in  1.235 seconds
+Domain Reload Profiling: 1902ms
+	BeginReloadAssembly (167ms)
+		CreateAndSetChildDomain (7ms)
+	RebuildCommonClasses (5ms)
+	RebuildNativeTypeToScriptingClass (19ms)
+	initialDomainReloadingComplete (114ms)
+	LoadAllAssembliesAndSetupDomain (362ms)
+		LoadAssemblies (155ms)
+		TypeCache.Refresh (245ms)
+			TypeCache.ScanAssembly (226ms)
 		AnalyzeDomain (1ms)
-	FinalizeReload (1523ms)
+	FinalizeReload (1237ms)
 		SetupLoadedEditorAssemblies (0ms)
 			InitializePlatformSupportModulesInManaged (5ms)
-			BeforeProcessingInitializeOnLoad (193ms)
-			ProcessInitializeOnLoadAttributes (150ms)
-			ProcessInitializeOnLoadMethodAttributes (891ms)
+			BeforeProcessingInitializeOnLoad (124ms)
+			ProcessInitializeOnLoadAttributes (107ms)
+			ProcessInitializeOnLoadMethodAttributes (744ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -192,8 +192,7 @@ Application.AssetDatabase Initial Refresh Start
     com.unity.modules.animation@1.0.0 (location: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Library\PackageCache\com.unity.modules.animation)
     com.unity.test-framework.performance@6.6.0 (location: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Library\PackageCache\com.unity.test-framework.performance@816c370aad5b)
 [Subsystems] No new subsystems found in resolved package list.
-[Package Manager] Done registering packages in 0.74 seconds
-[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+[Package Manager] Done registering packages in 0.17 seconds
 Starting: C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind
 DisplayProgressbar: Compiling Scripts
@@ -201,57 +200,9 @@ warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
       Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
 warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
       Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
-ExitCode: 3 Duration: 4s649ms
-[599/770    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-[750/770    1s] Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Runtime.dll (+2 others)
-[751/770    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/UnderGrind.Runtime.dll (+pdb)
-Processing assembly Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Runtime.dll, with 149 defines and 267 references
-
-processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
-
-1 processor(s) skipped this assembly
-
-running Unity.Jobs.CodeGen.JobsILPostProcessor
-[752/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.Runtime.pdb
-[753/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.Runtime.dll
-[754/770    1s] Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.EditModeTests.dll (+2 others)
-[755/770    1s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
-Assets\UnderGrind\Editor\HumanoidAvatarImporter.cs(253,20): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
-[756/770    1s] Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.PlayMode.Tests.dll (+2 others)
-Assets\UnderGrind\Tests\PlayMode\PlayerWorldInteractionPlayModeTests.cs(76,69): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
-
-Assets\UnderGrind\Tests\PlayMode\PlayerWorldInteractionPlayModeTests.cs(76,27): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
-[757/770    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/UnderGrind.PlayMode.Tests.dll (+pdb)
-Processing assembly Library/Bee/artifacts/1900b0aE.dag/UnderGrind.PlayMode.Tests.dll, with 149 defines and 265 references
-
-processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
-
-1 processor(s) skipped this assembly
-
-running Unity.Jobs.CodeGen.JobsILPostProcessor
-[758/770    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/UnderGrind.EditModeTests.dll (+pdb)
-Processing assembly Library/Bee/artifacts/1900b0aE.dag/UnderGrind.EditModeTests.dll, with 147 defines and 302 references
-
-processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
-
-1 processor(s) skipped this assembly
-
-running Unity.Jobs.CodeGen.JobsILPostProcessor
-[759/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.PlayMode.Tests.pdb
-[760/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.EditModeTests.pdb
-[761/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.PlayMode.Tests.dll
-[762/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.EditModeTests.dll
-[763/770    1s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
-Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 147 defines and 345 references
-
-processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
-
-1 processor(s) skipped this assembly
-
-running Unity.Jobs.CodeGen.JobsILPostProcessor
-[764/770    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
-[765/770    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
-[766/770    1s] Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.dll (+2 others)
+ExitCode: 3 Duration: 1s316ms
+[603/770    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[766/770    0s] Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.dll (+2 others)
 ##### CommandLine
 "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\DotNetSdk\dotnet.exe" exec "C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/DotNetSdk/sdk/8.0.318/Roslyn/bincore/csc.dll" /nostdlib /noconfig /shared "@Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.rsp" "@Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.rsp2"
 ##### Contents of Library\Bee\artifacts\1900b0aE.dag\UnderGrind.Locomotion.Tests.rsp
@@ -744,7 +695,7 @@ Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(657,25): error CS0103: 
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(728,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
 
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(741,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
-*** Tundra build failed (4.48 seconds), 18 items updated, 770 evaluated
+*** Tundra build failed (1.17 seconds), 2 items updated, 770 evaluated
 ## Script Compilation Error for: Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.dll (+2 others)
 ## CmdLine: "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\DotNetSdk\dotnet.exe" exec "C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/DotNetSdk/sdk/8.0.318/Roslyn/bincore/csc.dll" /nostdlib /noconfig /shared "@Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.rsp" "@Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.rsp2"
 ## Output:
@@ -753,15 +704,12 @@ Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(657,25): error CS0103: 
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(728,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(741,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
 
-Assets\UnderGrind\Editor\HumanoidAvatarImporter.cs(253,20): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
-Assets\UnderGrind\Tests\PlayMode\PlayerWorldInteractionPlayModeTests.cs(76,69): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
-Assets\UnderGrind\Tests\PlayMode\PlayerWorldInteractionPlayModeTests.cs(76,27): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(651,25): error CS0103: The name 'i' does not exist in the current context
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(657,25): error CS0103: The name 'i' does not exist in the current context
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(728,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
 Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(741,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
 Total cache size 20414448
-Total cache size after purge 20414448, took 00:00:00.1424544
-AssetDatabase: script compilation time: 6.157314s
+Total cache size after purge 20414448, took 00:00:00.0876934
+AssetDatabase: script compilation time: 3.404501s
 Scripts have compiler errors.
 [ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 1

@@ -7,6 +7,6 @@ Esecuzione dei test per C:\Users\cgr\Desktop\eee\varie\unity\unity-context\Under
 Un totale di 1 file di test corrisponde al criterio specificato.
 File di risultati: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\UnderGrind.Diagnostics.Standalone.Tests.trx
 
-Superato!     - Non superati:     0. Superati:     6. Ignorati:     0. Totale:     6. Durata: 107 ms - UnderGrind.Diagnostics.Standalone.Tests.dll (net10.0)
+Superato!     - Non superati:     0. Superati:     6. Ignorati:     0. Totale:     6. Durata: 69 ms - UnderGrind.Diagnostics.Standalone.Tests.dll (net10.0)
 
 === STDERR ===

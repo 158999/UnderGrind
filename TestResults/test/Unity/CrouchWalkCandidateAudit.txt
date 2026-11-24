@@ -1,0 +1,84 @@
+UnderGrind — audit Unity Humanoid retarget Crouch Walk
+Misura i piedi nel frame anatomico corrente; nessun candidato viene promosso automaticamente.
+
+Crouch_Walk_Forward.fbx — 7,67 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,376m, min piedi=-0,114m, incroci piedi=6/232, min ginocchia=0,123m, incroci ginocchia=0/232, errore loop=0,000m, deriva anche=0,140m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=-0,119m, incroci piedi=10/232, min ginocchia=0,068m, incroci ginocchia=0/232, errore loop=0,000m, deriva anche=0,152m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=-0,133m, incroci piedi=12/232, min ginocchia=0,045m, incroci ginocchia=0/232, errore loop=0,000m, deriva anche=0,145m
+
+Crouch_Walk_Candidate_01.fbx — 7,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,290m, min piedi=-0,405m, incroci piedi=34/241, min ginocchia=0,042m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,065m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=-0,393m, incroci piedi=50/241, min ginocchia=-0,003m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,074m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=-0,397m, incroci piedi=55/241, min ginocchia=-0,023m, incroci ginocchia=2/241, errore loop=0,000m, deriva anche=0,071m
+
+Crouch_Walk_Candidate_02.fbx — 7,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,136m, min piedi=-0,145m, incroci piedi=16/241, min ginocchia=0,200m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,073m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=-0,168m, incroci piedi=43/241, min ginocchia=0,131m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,122m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=-0,181m, incroci piedi=56/241, min ginocchia=0,106m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,117m
+
+Crouch_Walk_Candidate_03.fbx — 7,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,242m, min piedi=-0,299m, incroci piedi=33/241, min ginocchia=0,188m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,081m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=-0,288m, incroci piedi=40/241, min ginocchia=0,122m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,110m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=-0,296m, incroci piedi=42/241, min ginocchia=0,097m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,105m
+
+Crouch_Walk_Candidate_04.fbx — 7,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,151m, min piedi=-0,119m, incroci piedi=48/241, min ginocchia=0,303m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,066m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=-0,129m, incroci piedi=56/241, min ginocchia=0,222m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,087m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=-0,145m, incroci piedi=62/241, min ginocchia=0,192m, incroci ginocchia=0/241, errore loop=0,000m, deriva anche=0,083m
+
+Crouch_Walk_Candidate_05.fbx — 5,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,199m, min piedi=0,178m, incroci piedi=0/181, min ginocchia=0,180m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,122m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=0,124m, incroci piedi=0/181, min ginocchia=0,117m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,131m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=0,098m, incroci piedi=0/181, min ginocchia=0,092m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,126m
+
+Crouch_Walk_Candidate_06.fbx — 5,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,328m, min piedi=0,167m, incroci piedi=0/181, min ginocchia=0,168m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,122m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=0,114m, incroci piedi=0/181, min ginocchia=0,108m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,122m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=0,088m, incroci piedi=0/181, min ginocchia=0,083m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,117m
+
+Crouch_Walk_Candidate_07.fbx — 5,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,386m, min piedi=0,182m, incroci piedi=0/181, min ginocchia=0,265m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,122m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=0,130m, incroci piedi=0/181, min ginocchia=0,191m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,101m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=0,103m, incroci piedi=0/181, min ginocchia=0,162m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,096m
+
+Crouch_Walk_Candidate_08.fbx — 5,97 s
+  Mapping sorgente: feetSpacing=0,000; LeftUpperLeg=mixamorig:LeftUpLeg, RightUpperLeg=mixamorig:RightUpLeg, LeftLowerLeg=mixamorig:LeftLeg, RightLowerLeg=mixamorig:RightLeg, LeftFoot=mixamorig:LeftFoot, RightFoot=mixamorig:RightFoot
+  Sorgente: rest=0,403m, min piedi=0,254m, incroci piedi=0/181, min ginocchia=0,206m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,120m
+  Mapping Player maschile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player maschile: rest=0,110m, min piedi=0,183m, incroci piedi=0/181, min ginocchia=0,140m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,130m
+  Mapping Player femminile: feetSpacing=0,000; LeftUpperLeg=LeftUpperLeg, RightUpperLeg=RightUpperLeg, LeftLowerLeg=LeftLowerLeg, RightLowerLeg=RightLowerLeg, LeftFoot=LeftFoot, RightFoot=RightFoot
+  Player femminile: rest=0,084m, min piedi=0,155m, incroci piedi=0/181, min ginocchia=0,114m, incroci ginocchia=0/181, errore loop=0,000m, deriva anche=0,125m
+
+Classifica diagnostica (non sostituisce la verifica visiva):
+Crouch_Walk_Candidate_08.fbx: incroci piedi target max=0, incroci ginocchia target max=0, errore loop max=0,000m, deriva anche max=0,130m, separazione minima piedi=0,155m, separazione minima ginocchia=0,114m
+Crouch_Walk_Candidate_07.fbx: incroci piedi target max=0, incroci ginocchia target max=0, errore loop max=0,000m, deriva anche max=0,101m, separazione minima piedi=0,103m, separazione minima ginocchia=0,162m
+Crouch_Walk_Candidate_05.fbx: incroci piedi target max=0, incroci ginocchia target max=0, errore loop max=0,000m, deriva anche max=0,131m, separazione minima piedi=0,098m, separazione minima ginocchia=0,092m
+Crouch_Walk_Candidate_06.fbx: incroci piedi target max=0, incroci ginocchia target max=0, errore loop max=0,000m, deriva anche max=0,122m, separazione minima piedi=0,088m, separazione minima ginocchia=0,083m
+Crouch_Walk_Candidate_03.fbx: incroci piedi target max=42, incroci ginocchia target max=0, errore loop max=0,000m, deriva anche max=0,110m, separazione minima piedi=-0,296m, separazione minima ginocchia=0,097m
+Crouch_Walk_Candidate_01.fbx: incroci piedi target max=55, incroci ginocchia target max=2, errore loop max=0,000m, deriva anche max=0,074m, separazione minima piedi=-0,397m, separazione minima ginocchia=-0,023m
+Crouch_Walk_Candidate_02.fbx: incroci piedi target max=56, incroci ginocchia target max=0, errore loop max=0,000m, deriva anche max=0,122m, separazione minima piedi=-0,181m, separazione minima ginocchia=0,106m
+Crouch_Walk_Candidate_04.fbx: incroci piedi target max=62, incroci ginocchia target max=0, errore loop max=0,000m, deriva anche max=0,087m, separazione minima piedi=-0,145m, separazione minima ginocchia=0,192m
