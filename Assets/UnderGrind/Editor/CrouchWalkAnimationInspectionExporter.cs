@@ -948,14 +948,6 @@ namespace UnderGrind.Editor
                 name = avatar.name,
                 isValid = avatar.isValid,
                 isHuman = avatar.isHuman,
-                feetSpacing = description.feetSpacing,
-                armStretch = description.armStretch,
-                legStretch = description.legStretch,
-                upperArmTwist = description.upperArmTwist,
-                lowerArmTwist = description.lowerArmTwist,
-                upperLegTwist = description.upperLegTwist,
-                lowerLegTwist = description.lowerLegTwist,
-                hasTranslationDoF = description.hasTranslationDoF,
                 rootMotionBoneName = string.Empty
             };
 
