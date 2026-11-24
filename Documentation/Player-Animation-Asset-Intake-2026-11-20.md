@@ -38,6 +38,31 @@ Non confondere il formato di default riportato da PINOC (GLB scheletrico MetaHum
 
 Fonte: libreria curata PINOC, asset identificati dagli ID sopra. Il servizio descrive la libreria come gratuita da usare; la risposta dello strumento non espone un identificatore di licenza né chiarisce separatamente i diritti per distribuzione commerciale. Conservare provenienza e ID; verificare le condizioni del provider prima di una release commerciale.
 
-## Stato
+## Stato iniziale — 20 novembre 2026
 
-Gli otto asset sono stati acquisiti nella libreria PINOC. I file FBX non sono ancora presenti in `Assets/UnderGrind/Animations`, non sono stati importati in Unity e non sono stati retargettati sul rig UnderGrind. Nessuna animazione è quindi considerata integrata o verificata.
+Al momento dell'acquisizione gli otto asset erano disponibili nella libreria PINOC ma non ancora presenti nel repository.
+
+## Stato aggiornato — 24 novembre 2026
+
+Gli otto FBX `mixamo-fbx` sono ora versionati in `Assets/UnderGrind/Animations`. I riferimenti alle otto clip e al controller sono assegnati in `Assets/UnderGrind/Settings/PlayerAnimationSettings.asset`. Ogni FBX usa un Avatar Humanoid sorgente; il Player usa il proprio Avatar maschile o femminile per il retargeting runtime. Non è stato eseguito un bake DCC delle curve sullo scheletro UnderGrind.
+
+### Risultati Unity disponibili
+
+La run Unity `20261124-110717-910` ha eseguito 55 test EditMode e 13 PlayMode: 65 superati e 3 falliti. I fallimenti registrati sono:
+- `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`: Crouch Walk Forward, 6/232 incroci sulla sorgente, 10/232 sul Player maschile, 12/232 sul femminile.
+- `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: aspettativa non coerente con gli stati iniziali dei renderer FP.
+- `VisualRigPreservesInitiallyDisabledRenderers`: il rig riattivava un renderer disabilitato in origine.
+
+Le due anomalie dei renderer sono corrette nel branch `fix/crouch-walk-animation-audit`: il rig conserva lo stato enabled originale, il builder ripristina i default prima di salvare i prefab e gli asset prefab mantengono i gruppi renderer in stato neutro. La correzione non è ancora stata verificata con una nuova esecuzione Unity.
+
+### Ricerca di un sostituto per Crouch Walk
+
+Otto candidati PINOC sono presenti in `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk`, con importazione Humanoid e Avatar sorgente. L'audit Blender grezzo è in `Tools/Blender/pinoc-crouch-walk-candidate-audit.json`. Le varianti 05–08 non presentano incroci di piedi o ginocchia sullo scheletro FBX grezzo; tuttavia l'audit non riproduce la mappatura Avatar Humanoid di Unity e non può determinare da solo il candidato definitivo.
+
+È stato aggiunto il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars`. Confronta la clip corrente e gli otto candidati su sorgente, Avatar maschile e Avatar femminile, registra il mapping delle ossa e genera `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il test non è ancora stato eseguito.
+
+Nessun candidato è stato assegnato al controller di produzione. La clip originale resta assegnata finché una variante non supera il confronto Unity su entrambi gli Avatar e la verifica visiva del ciclo.
+
+### Limiti e diritti
+
+La presenza di un asset nella libreria o nel progetto non certifica i diritti di distribuzione commerciale. Prima di una release commerciale verificare le condizioni d'uso del piano PINOC applicabile e conservare gli identificativi di provenienza riportati in questo documento.
