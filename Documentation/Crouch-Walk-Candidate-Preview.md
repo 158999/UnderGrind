@@ -177,3 +177,5 @@ Le contact sheet Blender a quattro viste e sei campioni per ciclo sono state gen
 - **Generated 04:** deriva molto elevata; il personaggio esce dall'inquadratura in più campioni. Da scartare.
 
 Questa valutazione riguarda il FBX sorgente in Blender. Non certifica il retarget Humanoid, le animazioni sui prefab maschile/femminile o il comportamento nel controller Unity.
+
+Nel branch di validazione anche il Blend Tree `Crouch Blend` di `PlayerAnimator.controller` è stato aggiornato per usare la stessa clip configurata in `PlayerAnimationSettings.asset`. Il nuovo test EditMode `AnimatorControllerUsesConfiguredCrouchWalkClip` verifica che le due assegnazioni non divergano.
