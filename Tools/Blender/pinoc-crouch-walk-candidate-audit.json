@@ -1,5 +1,6 @@
 {
-  "source": "PINOC crouched-walk and stealth-walk text-to-motion candidates",
+  "source": "Current crouch-walk clip compared with PINOC crouched-walk and stealth-walk candidates",
+  "currentSource": "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx",
   "generationTaskId": "827b8373-42df-479a-a82f-22b5a339678d",
   "method": "Blender FBX import; anatomical foot separation matches HumanoidRigImportTests.MeasureFootCrossing: project LeftFoot-RightFoot onto the current LeftUpperLeg-RightUpperLeg axis. Knee separation uses the same axis and LeftLeg-RightLeg. Crossing tolerance: 0.02m.",
   "ranking": [
@@ -7,6 +8,7 @@
     "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_06.fbx",
     "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_05.fbx",
     "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_08.fbx",
+    "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx",
     "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_02.fbx",
     "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_04.fbx",
     "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_03.fbx",
@@ -15,7 +17,36 @@
   "results": [
     {
       "status": "ok",
+      "file": "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx",
+      "candidateType": "current-source",
+      "assetPublicId": "e4f5b9e6-381c-4227-88d4-94d6a0615df8",
+      "armature": "Armature.001",
+      "action": "Armature.001|Scene",
+      "frameStart": 1,
+      "frameEnd": 250,
+      "sampledFrames": 250,
+      "leftHipBone": "mixamorig:LeftUpLeg",
+      "rightHipBone": "mixamorig:RightUpLeg",
+      "leftKneeBone": "mixamorig:LeftLeg",
+      "rightKneeBone": "mixamorig:RightLeg",
+      "leftFootBone": "mixamorig:LeftFoot",
+      "rightFootBone": "mixamorig:RightFoot",
+      "restAnatomicalFootSeparation": 0.16415575146637248,
+      "crossingToleranceMeters": 0.02,
+      "crossedFrames": [],
+      "crossingCount": 0,
+      "minimumAnatomicalFootSeparation": 0.16193833015859127,
+      "minimumStaticAxisFootSeparation": -0.5042660391623031,
+      "crossedKneeFrames": [],
+      "kneeCrossingCount": 0,
+      "minimumAnatomicalKneeSeparation": 0.29862719727680087,
+      "maxHipTranslationDrift": 6.424583927454834,
+      "loopEndpointError": 0.643302009714074
+    },
+    {
+      "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_01.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "6dff3f2b-250b-4506-8712-7e12f3988296",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
@@ -165,6 +196,7 @@
     {
       "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_02.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "bc1a6551-9608-43eb-9d60-a08c54e4247a",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
@@ -205,6 +237,7 @@
     {
       "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_03.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "f74b1c97-33c0-462c-a4b9-fb0186d2e278",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
@@ -320,6 +353,7 @@
     {
       "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_04.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "657d2212-de9b-4524-8bc2-091767afa6a6",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
@@ -395,6 +429,7 @@
     {
       "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_05.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "40dac395-75f7-4911-b234-97fb94cf548b",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
@@ -422,6 +457,7 @@
     {
       "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_06.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "58d94313-09b2-4ecd-a404-300f61c9909c",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
@@ -449,6 +485,7 @@
     {
       "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_07.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "cac937f4-fa78-4905-b124-edddde4612d8",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
@@ -476,6 +513,7 @@
     {
       "status": "ok",
       "file": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_08.fbx",
+      "candidateType": "generated-candidate",
       "assetPublicId": "5d550ae7-20c1-43f6-be9a-9ac91bf77bd5",
       "armature": "Armature.001",
       "action": "Armature.001|Scene",
