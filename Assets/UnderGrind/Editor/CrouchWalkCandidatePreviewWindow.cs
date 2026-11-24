@@ -109,7 +109,8 @@ namespace UnderGrind.Editor
 
         private void DrawSelectionControls()
         {
-            EditorGUI.BeginChangeCheck();
+            var previousCharacter = _character;
+            var previousClipIndex = _clipIndex;
             _character = (CharacterVariant)EditorGUILayout.EnumPopup("Personaggio", _character);
             var labels = _clipOptions.Select(option => option.Label).ToArray();
             if (labels.Length == 0) labels = new[] { "Nessuna clip disponibile" };
@@ -117,11 +118,11 @@ namespace UnderGrind.Editor
             _clipIndex = EditorGUILayout.Popup("Animazione", _clipIndex, labels);
             _cameraAngle = (CameraAngle)EditorGUILayout.EnumPopup("Inquadratura", _cameraAngle);
             _cameraDistance = EditorGUILayout.Slider("Distanza camera", _cameraDistance, 1.5f, 8f);
-            if (EditorGUI.EndChangeCheck())
-            {
-                if (_character != GetCurrentCharacter()) RebuildCharacter();
-                else RebuildGraph();
-            }
+
+            if (_character != previousCharacter)
+                RebuildCharacter();
+            else if (_clipIndex != previousClipIndex)
+                RebuildGraph();
 
             using (new EditorGUILayout.HorizontalScope())
             {
@@ -133,11 +134,6 @@ namespace UnderGrind.Editor
                 if (GUILayout.Button("Ricarica personaggio"))
                     RebuildCharacter();
             }
-        }
-
-        private CharacterVariant GetCurrentCharacter()
-        {
-            return _character;
         }
 
         private void DrawPlaybackControls()
@@ -277,6 +273,7 @@ namespace UnderGrind.Editor
         {
             DestroyGraph();
             DestroyPreviewInstance();
+            _animator = null;
             if (_preview == null)
                 return;
 
@@ -421,7 +418,6 @@ namespace UnderGrind.Editor
             if (_graph.IsValid())
                 _graph.Destroy();
             _hasGraph = false;
-            _animator = null;
         }
 
         private void DestroyPreviewInstance()
