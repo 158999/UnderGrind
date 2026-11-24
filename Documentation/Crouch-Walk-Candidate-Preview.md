@@ -130,4 +130,15 @@ Non vengono modificati o salvati:
 
 Al termine vengono distrutti Playable Graph, mesh temporanee, texture e istanze di preview.
 
-Il 24 novembre 2026 la clip 08 è stata assegnata provvisoriamente a `PlayerAnimationSettings.asset` perché è l'unico candidato senza incroci di piedi o ginocchia nei test di retargeting sui tre Avatar. La promozione definitiva resta subordinata alla verifica visiva del report e a una prova Play Mode su entrambi i personaggi: il report segnala circa 15,3° di errore di rotazione al loop, 8,6 mm di errore di posizione e una stima di contatto dei piedi del 4–5% dei campioni.
+## Stato della validazione — 24 novembre 2026
+
+Nessuno degli otto candidati è approvato. In `PlayerAnimationSettings.asset` è configurata nuovamente la clip originale `Crouch_Walk_Forward.fbx`; il difetto di incrocio dei piedi resta quindi visibile nei test. Il candidato 08 non è assegnato.
+
+L'ultimo pacchetto `UnderGrind-Animation-Inspection-20261124-121818-534` non è valido come prova visiva: le nove contact sheet maschili hanno lo stesso SHA-256 e le nove femminili hanno un altro SHA-256 comune; le righe mostrano pose ripetute. I campioni CSV e la diagnostica BakeMesh variano nel tempo, ma le immagini esportate non rappresentano correttamente tali campioni. La qualità visiva dei candidati non può essere approvata usando quelle contact sheet.
+
+I dati numerici confermano che nessun candidato è pronto:
+- I candidati 01–03 presentano incroci dei piedi sui rig Player o traiettorie fortemente asimmetriche.
+- Il candidato 04 ha una stima di contatto elevata (circa 87% per entrambi i piedi), ma presenta un errore di rotazione al loop di circa 31,5° e un errore world delle ossa di circa 0,36 m; inoltre i risultati del report e del test comparativo precedente non concordano sul conteggio degli incroci.
+- I candidati 05–08 hanno percentuali di contatto stimate molto basse (circa 0,5–5%) e chiusure world del loop nell'ordine di 0,29–0,46 m. L'assenza di incroci non basta a renderli camminate utilizzabili.
+
+Nel branch `fix/crouch-walk-animation-validation` l'esportatore è stato modificato per renderizzare mesh temporanee ottenute con `SkinnedMeshRenderer.BakeMesh` a ogni campione, anziché affidarsi al rendering di una posa skinned potenzialmente non aggiornata. L'esportazione ora rifiuta anche una contact sheet senza variazioni visive tra i campioni. La modifica è presente nel codice, ma **non è ancora stata eseguita in Unity**: occorre rigenerare il pacchetto e controllare le nuove immagini prima di considerare risolta la pipeline di ispezione.
