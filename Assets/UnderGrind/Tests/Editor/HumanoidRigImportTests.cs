@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
@@ -364,6 +365,32 @@ namespace UnderGrind.Tests
 
             Assert.That(IsTPoseValid(assetPath), Is.True,
                 "La posa Humanoid deve essere valida dopo EnsureValidAvatar: " + assetPath);
+        }
+
+        [Test]
+        public void AnimatorControllerUsesConfiguredCrouchWalkClip()
+        {
+            var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(AnimationSettingsPath);
+            Assert.That(animationSettings, Is.Not.Null);
+            Assert.That(animationSettings.CrouchWalkClip, Is.Not.Null);
+
+            var controller = animationSettings.AnimatorController as AnimatorController;
+            Assert.That(controller, Is.Not.Null,
+                "PlayerAnimationSettings deve puntare al controller generato verificabile.");
+
+            var controllerPath = AssetDatabase.GetAssetPath(controller);
+            var crouchBlendTree = AssetDatabase.LoadAllAssetsAtPath(controllerPath)
+                .OfType<BlendTree>()
+                .FirstOrDefault(tree => tree != null && tree.name == "Crouch Blend");
+            Assert.That(crouchBlendTree, Is.Not.Null,
+                "Il controller deve contenere il Blend Tree Crouch Blend.");
+
+            var crouchWalkChild = crouchBlendTree.children
+                .FirstOrDefault(child => child.motion == animationSettings.CrouchWalkClip);
+            Assert.That(crouchWalkChild.motion, Is.SameAs(animationSettings.CrouchWalkClip),
+                "Il Blend Tree deve usare esattamente la clip Crouch Walk configurata nell'Inspector.");
+            Assert.That(animationSettings.CrouchWalkLoops, Is.True,
+                "La camminata accovacciata deve essere configurata come ciclo.");
         }
 
         [Test]
