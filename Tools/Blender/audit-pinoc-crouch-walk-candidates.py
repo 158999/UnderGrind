@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path("Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk")
 SOURCE_CLIP = Path("Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx")
 OUTPUT = Path("Tools/Blender/pinoc-crouch-walk-candidate-audit.json")
-CROSSING_TOLERANCE_METERS = 0.02
+CROSSING_TOLERANCE = 0.02
 GENERATION_TASK_ID = "827b8373-42df-479a-a82f-22b5a339678d"
 
 ASSET_IDS = {
@@ -50,6 +50,7 @@ def audit_candidate(path):
         armature.animation_data_create()
         armature.animation_data.action = actions[0]
 
+    action = armature.animation_data.action
     hips = find_bone(armature, "hips")
     left_upper_leg = find_bone(armature, "leftupleg")
     right_upper_leg = find_bone(armature, "rightupleg")
@@ -61,9 +62,15 @@ def audit_candidate(path):
         names = [bone.name for bone in armature.pose.bones]
         raise RuntimeError("required Humanoid bones missing; imported bones: " + ", ".join(names[:80]))
 
-    # Match HumanoidRigImportTests.MeasureFootCrossing:
-    # derive the anatomical lateral axis from LeftUpperLeg - RightUpperLeg,
-    # then project LeftFoot - RightFoot onto that axis at every sampled frame.
+    # Use the Action's actual keyed range, not the FBX scene range. The scene range
+    # can contain padding frames that are not part of Unity's imported AnimationClip.
+    action_start, action_end = action.frame_range
+    start = math.floor(action_start)
+    end = math.ceil(action_end)
+    scene = bpy.context.scene
+    scene.frame_start = start
+    scene.frame_end = end
+
     rest_lateral = (
         armature.data.bones[left_upper_leg.name].head_local
         - armature.data.bones[right_upper_leg.name].head_local
@@ -72,15 +79,6 @@ def audit_candidate(path):
         raise RuntimeError("rest-pose anatomical hip axis is degenerate")
     rest_lateral.normalize()
 
-    rest_foot_delta = (
-        armature.data.bones[left_foot.name].head_local
-        - armature.data.bones[right_foot.name].head_local
-    )
-    rest_separation = rest_foot_delta.dot(rest_lateral)
-
-    scene = bpy.context.scene
-    start = int(scene.frame_start)
-    end = int(scene.frame_end)
     frame_samples = list(range(start, end + 1))
     if len(frame_samples) > 600:
         stride = max(1, math.ceil(len(frame_samples) / 600))
@@ -90,9 +88,9 @@ def audit_candidate(path):
 
     crossed_frames = []
     crossed_knee_frames = []
-    min_anatomical_separation = float("inf")
+    min_foot_separation = float("inf")
     min_knee_separation = float("inf")
-    min_static_axis_separation = float("inf")
+    min_static_axis_foot_separation = float("inf")
     max_hip_translation_drift = 0.0
     first_local_feet = None
     last_local_feet = None
@@ -102,27 +100,23 @@ def audit_candidate(path):
         scene.frame_set(frame)
         bpy.context.view_layer.update()
 
-        left_hip_position = left_upper_leg.matrix.translation
-        right_hip_position = right_upper_leg.matrix.translation
-        current_lateral = left_hip_position - right_hip_position
+        current_lateral = left_upper_leg.matrix.translation - right_upper_leg.matrix.translation
         if current_lateral.length_squared < 1e-8:
             raise RuntimeError(f"degenerate anatomical hip axis at frame {frame}")
         current_lateral.normalize()
 
-        left_foot_position = left_foot.matrix.translation
-        right_foot_position = right_foot.matrix.translation
-        foot_delta = left_foot_position - right_foot_position
-        anatomical_separation = foot_delta.dot(current_lateral)
-        static_axis_separation = foot_delta.dot(rest_lateral)
-        min_anatomical_separation = min(min_anatomical_separation, anatomical_separation)
-        min_static_axis_separation = min(min_static_axis_separation, static_axis_separation)
-        if anatomical_separation < -CROSSING_TOLERANCE_METERS:
+        foot_delta = left_foot.matrix.translation - right_foot.matrix.translation
+        foot_separation = foot_delta.dot(current_lateral)
+        static_foot_separation = foot_delta.dot(rest_lateral)
+        min_foot_separation = min(min_foot_separation, foot_separation)
+        min_static_axis_foot_separation = min(min_static_axis_foot_separation, static_foot_separation)
+        if foot_separation < -CROSSING_TOLERANCE:
             crossed_frames.append(frame)
 
         knee_delta = left_lower_leg.matrix.translation - right_lower_leg.matrix.translation
         knee_separation = knee_delta.dot(current_lateral)
         min_knee_separation = min(min_knee_separation, knee_separation)
-        if knee_separation < -CROSSING_TOLERANCE_METERS:
+        if knee_separation < -CROSSING_TOLERANCE:
             crossed_knee_frames.append(frame)
 
         hips_position = hips.matrix.translation.copy()
@@ -149,9 +143,8 @@ def audit_candidate(path):
         "candidateType": "current-source" if path == SOURCE_CLIP else "generated-candidate",
         "assetPublicId": ASSET_IDS.get(path.name),
         "armature": armature.name,
-        "action": armature.animation_data.action.name,
-        "frameStart": start,
-        "frameEnd": end,
+        "action": action.name,
+        "actionFrameRange": [action_start, action_end],
         "sampledFrames": len(frame_samples),
         "leftHipBone": left_upper_leg.name,
         "rightHipBone": right_upper_leg.name,
@@ -159,24 +152,27 @@ def audit_candidate(path):
         "rightKneeBone": right_lower_leg.name,
         "leftFootBone": left_foot.name,
         "rightFootBone": right_foot.name,
-        "restAnatomicalFootSeparation": rest_separation,
-        "crossingToleranceMeters": CROSSING_TOLERANCE_METERS,
-        "crossedFrames": crossed_frames,
-        "crossingCount": len(crossed_frames),
-        "minimumAnatomicalFootSeparation": min_anatomical_separation,
-        "minimumStaticAxisFootSeparation": min_static_axis_separation,
-        "crossedKneeFrames": crossed_knee_frames,
-        "kneeCrossingCount": len(crossed_knee_frames),
-        "minimumAnatomicalKneeSeparation": min_knee_separation,
-        "maxHipTranslationDrift": max_hip_translation_drift,
-        "loopEndpointError": loop_endpoint_error
+        "crossingToleranceBlenderUnits": CROSSING_TOLERANCE,
+        "rawBlenderFootCrossingFrames": crossed_frames,
+        "rawBlenderFootCrossingCount": len(crossed_frames),
+        "rawBlenderMinimumAnatomicalFootSeparation": min_foot_separation,
+        "rawBlenderMinimumStaticAxisFootSeparation": min_static_axis_foot_separation,
+        "rawBlenderKneeCrossingFrames": crossed_knee_frames,
+        "rawBlenderKneeCrossingCount": len(crossed_knee_frames),
+        "rawBlenderMinimumAnatomicalKneeSeparation": min_knee_separation,
+        "rawBlenderHipTranslationDrift": max_hip_translation_drift,
+        "rawBlenderLoopEndpointError": loop_endpoint_error,
+        "blenderUnitScaleLength": scene.unit_settings.scale_length
     }
 
 
 def main():
+    source_result = None
+    if SOURCE_CLIP.is_file():
+        source_result = audit_candidate(SOURCE_CLIP)
+
     results = []
-    paths = ([SOURCE_CLIP] if SOURCE_CLIP.is_file() else []) + sorted(ROOT.glob("*.fbx"))
-    for path in paths:
+    for path in sorted(ROOT.glob("*.fbx")):
         try:
             results.append({"status": "ok", **audit_candidate(path)})
         except Exception as exc:
@@ -184,24 +180,26 @@ def main():
 
     valid = [item for item in results if item["status"] == "ok"]
     valid.sort(key=lambda item: (
-        item["crossingCount"],
-        item["kneeCrossingCount"],
-        item["loopEndpointError"],
-        item["maxHipTranslationDrift"],
-        -item["minimumAnatomicalFootSeparation"]
+        item["rawBlenderFootCrossingCount"],
+        item["rawBlenderKneeCrossingCount"],
+        item["rawBlenderLoopEndpointError"],
+        item["rawBlenderHipTranslationDrift"],
+        -item["rawBlenderMinimumAnatomicalFootSeparation"]
     ))
     report = {
-        "source": "Current crouch-walk clip compared with PINOC crouched-walk and stealth-walk candidates",
-        "currentSource": str(SOURCE_CLIP).replace("\\", "/"),
+        "source": "Raw Blender armature audit; not a Unity Humanoid retarget result",
         "generationTaskId": GENERATION_TASK_ID,
+        "currentSource": source_result,
+        "unityRetargetValidationRequired": True,
         "method": (
-            "Blender FBX import; anatomical foot separation matches "
-            "HumanoidRigImportTests.MeasureFootCrossing: project LeftFoot-RightFoot "
-            "onto the current LeftUpperLeg-RightUpperLeg axis. Knee separation uses "
-            "the same axis and LeftLeg-RightLeg. Crossing tolerance: 0.02m."
+            "Samples the imported FBX Action frame range and projects LeftFoot-RightFoot "
+            "onto the current LeftUpperLeg-RightUpperLeg axis; knee separation uses "
+            "LeftLeg-RightLeg on the same axis. Tolerance is 0.02 Blender units. "
+            "Unity Avatar mapping and Humanoid retargeting can change these measurements; "
+            "this report only filters raw FBX motion and cannot certify a Unity candidate."
         ),
-        "ranking": [item["file"] for item in valid],
-        "results": results
+        "candidateRanking": [item["file"] for item in valid],
+        "candidates": results
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(report, indent=2), encoding="utf-8")
