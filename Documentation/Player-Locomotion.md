@@ -62,7 +62,7 @@ Le dead zone radiali, la sensibilità, il comportamento del cursore, il timeout 
 
 `PlayerRigSettings.asset` contiene i percorsi FBX maschile/femminile, le radici degli scheletri, i requisiti Avatar Humanoid, il mapping dei renderer e la variante predefinita della scena di test. Il builder valida entrambi i personaggi e interrompe la generazione se un Avatar o un gruppo renderer richiesto manca.
 
-`PlayerVisualRig` gestisce gruppi distinti per testa, corpo, arti FP e arti TP. In prima persona nasconde la testa, usa i renderer FP e mostra il corpo quando il pitch supera la soglia configurata; in terza persona mostra testa, corpo e renderer TP. La correzione in corso nel branch `fix/crouch-walk-animation-audit` conserva lo stato `Renderer.enabled` originale e fa salvare i prefab con valori neutri prima dell'applicazione della modalità camera. I prefab versionati sono stati aggiornati nello stesso branch. Il nuovo comportamento non è ancora stato confermato da una nuova esecuzione Unity.
+`PlayerVisualRig` gestisce gruppi distinti per testa, corpo, arti FP e arti TP. In prima persona nasconde la testa, usa i renderer FP e mostra il corpo quando il pitch supera la soglia configurata; in terza persona mostra testa, corpo e renderer TP. La correzione integrata in `main` con la PR #12 conserva lo stato `Renderer.enabled` originale e fa salvare i prefab con valori neutri prima dell'applicazione della modalità camera. I prefab versionati sono stati aggiornati nello stesso branch. Il nuovo comportamento non è ancora stato confermato da una nuova esecuzione Unity.
 
 La registrazione del 23 novembre mostra ancora geometria/arti troppo vicini alla camera in prima persona. La selezione corretta dei gruppi renderer non certifica la posizione degli arti rispetto alla camera né elimina eventuali intersezioni; serve ancora una verifica visiva in Play Mode dopo la correzione dei pesi.
 
@@ -101,7 +101,7 @@ I tre fallimenti registrati sono:
 2. `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: aspettativa di stato FP non coerente con l'asset FBX/prefab.
 3. `VisualRigPreservesInitiallyDisabledRenderers`: il rig riattivava un renderer disabilitato in origine.
 
-I due problemi dei renderer sono corretti nel branch `fix/crouch-walk-animation-audit`: il baseline conserva lo stato enabled originale; il builder ripristina i default prima di salvare il prefab; gli FBX e i prefab versionati mantengono i gruppi renderer in stato neutro. La correzione deve ancora essere verificata eseguendo nuovamente EditMode e PlayMode.
+I due problemi dei renderer sono corretti in `main` tramite PR #12: il baseline conserva lo stato enabled originale; il builder ripristina i default prima di salvare il prefab; gli FBX e i prefab versionati mantengono i gruppi renderer in stato neutro. La correzione integrata in `main` deve ancora essere verificata eseguendo nuovamente EditMode e PlayMode.
 
 Il fallimento Crouch Walk resta aperto. I candidati PINOC sono stati sottoposti ad audit Blender grezzo, ma la selezione deve essere fatta con il test Unity di retargeting aggiunto nel branch. Nessuna variante è stata promossa al controller.
 

@@ -128,7 +128,7 @@
     "unityCandidateDiagnostic": {
       "test": "UnderGrind.Tests.HumanoidRigImportTests.CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars",
       "reportPath": "TestResults/test/Unity/CrouchWalkCandidateAudit.txt",
-      "status": "Added on fix/crouch-walk-animation-audit; not yet executed in Unity."
+      "status": "Merged into main via PR #12 on 2026-11-24; not yet executed in Unity."
     },
     "selectedReplacement": null
   }
