@@ -723,7 +723,7 @@ namespace UnderGrind.Editor
             report.clip.minimumSampleIntervalSeconds = CalculateMinimumInterval(sampleTimes);
             report.clip.maximumSampleIntervalSeconds = CalculateMaximumInterval(sampleTimes);
 
-            report.poseFrames = SamplePoses(rig, clip, sampleTimes, options);
+            report.poseFrames = SamplePoses(rig, clip, sampleTimes);
             CalculatePoseDerivatives(report.poseFrames);
             CalculateFootMetrics(report.poseFrames, report.motion, options);
             report.motion.sampleCount = report.poseFrames.Count;
@@ -864,7 +864,7 @@ namespace UnderGrind.Editor
                 importerType = importer.GetType().FullName,
                 animationType = importer.animationType.ToString(),
                 avatarSetup = importer.avatarSetup.ToString(),
-                sourceAvatar = importer.sourceAvatar == null ? string.Empty : importer.sourceAvatar.name,
+                sourceAvatar = importer.sourceAvatar == null ? string.Empty : AssetDatabase.GetAssetPath(importer.sourceAvatar) + "|" + importer.sourceAvatar.name,
                 importAnimation = importer.importAnimation,
                 resampleCurves = importer.resampleCurves,
                 optimizeGameObjects = importer.optimizeGameObjects,
@@ -917,10 +917,10 @@ namespace UnderGrind.Editor
                     return property.objectReferenceValue == null
                         ? string.Empty
                         : AssetDatabase.GetAssetPath(property.objectReferenceValue) + "|" + property.objectReferenceValue.name;
-                case SerializedPropertyType.Vector2: return property.vector2Value.ToString("R");
-                case SerializedPropertyType.Vector3: return property.vector3Value.ToString("R");
-                case SerializedPropertyType.Vector4: return property.vector4Value.ToString("R");
-                case SerializedPropertyType.Quaternion: return property.quaternionValue.ToString("R");
+                case SerializedPropertyType.Vector2: return property.vector2Value.ToString("R", CultureInfo.InvariantCulture);
+                case SerializedPropertyType.Vector3: return property.vector3Value.ToString("R", CultureInfo.InvariantCulture);
+                case SerializedPropertyType.Vector4: return property.vector4Value.ToString("R", CultureInfo.InvariantCulture);
+                case SerializedPropertyType.Quaternion: return property.quaternionValue.ToString("R", CultureInfo.InvariantCulture);
                 case SerializedPropertyType.Color: return property.colorValue.ToString();
                 case SerializedPropertyType.Bounds: return property.boundsValue.ToString();
                 case SerializedPropertyType.Rect: return property.rectValue.ToString();
@@ -1185,8 +1185,7 @@ namespace UnderGrind.Editor
         private static List<PoseFrame> SamplePoses(
             PreviewRig rig,
             AnimationClip clip,
-            IReadOnlyList<float> times,
-            ExportOptions options)
+            IReadOnlyList<float> times)
         {
             var frames = new List<PoseFrame>(times.Count);
             var root = rig.Instance.transform;
