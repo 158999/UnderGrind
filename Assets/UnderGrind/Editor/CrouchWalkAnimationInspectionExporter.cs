@@ -40,6 +40,7 @@ namespace UnderGrind.Editor
             public float contactHeightToleranceMeters = 0.04f;
             public float contactSpeedToleranceMetersPerSecond = 0.15f;
             public float crossingToleranceMeters = 0.02f;
+            public float crossingToleranceMeters = 0.02f;
         }
 
         [Serializable]
@@ -309,6 +310,8 @@ namespace UnderGrind.Editor
             public Vector3 rootWorldPosition;
             public Quaternion rootWorldRotation;
             public Vector3 rootLocalPosition;
+            public Vector3 modelForwardWorld;
+            public Vector3 modelRightWorld;
             public Vector3 hipsWorldPosition;
             public Quaternion hipsWorldRotation;
             public Vector3 hipsRootLocalPosition;
@@ -547,6 +550,7 @@ namespace UnderGrind.Editor
             options.maxPoseSamples = Mathf.Clamp(options.maxPoseSamples, 100, 50000);
             options.contactHeightToleranceMeters = Mathf.Max(0f, options.contactHeightToleranceMeters);
             options.contactSpeedToleranceMetersPerSecond = Mathf.Max(0f, options.contactSpeedToleranceMetersPerSecond);
+            options.crossingToleranceMeters = Mathf.Max(0f, options.crossingToleranceMeters);
             options.crossingToleranceMeters = Mathf.Max(0f, options.crossingToleranceMeters);
         }
 
@@ -1086,7 +1090,7 @@ namespace UnderGrind.Editor
 
         private static List<float> BuildSampleTimes(AnimationClip clip, ExportOptions options, out bool limitReached)
         {
-            var times = new SortedSet<float> { 0f, clip.length };
+            var times = new SortedSet<float> { 0f, clip.length, Mathf.Max(0f, clip.length - 0.0001f) };
             var interval = 1f / options.sampleRateHz;
             var uniformCount = Mathf.CeilToInt(clip.length * options.sampleRateHz);
             for (var index = 1; index < uniformCount; index++)
@@ -1209,6 +1213,8 @@ namespace UnderGrind.Editor
                     rootWorldPosition = root.position,
                     rootWorldRotation = root.rotation,
                     rootLocalPosition = root.localPosition,
+                    modelForwardWorld = modelForward,
+                    modelRightWorld = modelRight,
                     hipsWorldPosition = hips.position,
                     hipsWorldRotation = hips.rotation,
                     hipsRootLocalPosition = root.InverseTransformPoint(hips.position),
@@ -1334,10 +1340,10 @@ namespace UnderGrind.Editor
             if (frames.Count == 0) return;
 
             var first = frames[0];
-            var restFootSign = Mathf.Sign(first.leftFootSignedLateralSeparation);
-            if (Mathf.Abs(restFootSign) < 0.5f) restFootSign = 1f;
-            var restKneeSign = Mathf.Sign(first.leftRightKneeSignedLateralSeparation);
-            if (Mathf.Abs(restKneeSign) < 0.5f) restKneeSign = 1f;
+            summary.restFootSeparationMeters = first.leftFootSignedLateralSeparation;
+            summary.restKneeSeparationMeters = first.leftRightKneeSignedLateralSeparation;
+            summary.crossingToleranceMeters = options.crossingToleranceMeters;
+            summary.restAnatomicalLateralAxisLocal = first.restAnatomicalLateralAxisLocal;
 
             var minFootHeight = frames.Min(frame => Mathf.Min(
                 frame.leftFootHeightInRootSpace, frame.rightFootHeightInRootSpace));
@@ -1356,10 +1362,13 @@ namespace UnderGrind.Editor
 
             summary.minimumFootSeparationMeters = float.MaxValue;
             summary.minimumKneeSeparationMeters = float.MaxValue;
+            summary.minimumStaticAxisFootSeparationMeters = float.MaxValue;
+            summary.minimumStaticAxisKneeSeparationMeters = float.MaxValue;
+            summary.minimumFootSeparationTimeSeconds = 0f;
+            summary.minimumKneeSeparationTimeSeconds = 0f;
 
             foreach (var frame in frames)
             {
-                frame.leftRightFootDistanceMeters = Mathf.Max(0f, frame.leftRightFootDistanceMeters);
                 frame.leftFootHeightAboveObservedMinimum = frame.leftFootHeightInRootSpace - minFootHeight;
                 frame.rightFootHeightAboveObservedMinimum = frame.rightFootHeightInRootSpace - minFootHeight;
 
@@ -1395,27 +1404,54 @@ namespace UnderGrind.Editor
                 if (frame.leftFootEstimatedContact) leftMaxSlide = Mathf.Max(leftMaxSlide, frame.leftFootSpeedMetersPerSecond);
                 if (frame.rightFootEstimatedContact) rightMaxSlide = Mathf.Max(rightMaxSlide, frame.rightFootSpeedMetersPerSecond);
 
+                var absoluteFootSeparation = Mathf.Abs(frame.leftFootSignedLateralSeparation);
+                var absoluteKneeSeparation = Mathf.Abs(frame.leftRightKneeSignedLateralSeparation);
                 summary.minimumFootSeparationMeters = Mathf.Min(
-                    summary.minimumFootSeparationMeters, frame.leftRightFootLateralSeparationMeters);
+                    summary.minimumFootSeparationMeters, frame.leftFootSignedLateralSeparation);
                 summary.maximumFootSeparationMeters = Mathf.Max(
-                    summary.maximumFootSeparationMeters, frame.leftRightFootLateralSeparationMeters);
-                footSeparationSum += frame.leftRightFootLateralSeparationMeters;
+                    summary.maximumFootSeparationMeters, absoluteFootSeparation);
+                footSeparationSum += absoluteFootSeparation;
 
-                if (frame.leftFootSignedLateralSeparation * restFootSign <= 0f)
+                if (frame.leftFootSignedLateralSeparation < -options.crossingToleranceMeters)
                 {
                     summary.footCrossingSampleCount++;
                     summary.footCrossingTimesSeconds.Add(frame.timeSeconds);
                 }
 
+                if (frame.leftRightFootStaticAxisSeparationSigned < -options.crossingToleranceMeters)
+                {
+                    summary.staticAxisFootCrossingSampleCount++;
+                    summary.staticAxisFootCrossingTimesSeconds.Add(frame.timeSeconds);
+                }
+
                 summary.minimumKneeSeparationMeters = Mathf.Min(
-                    summary.minimumKneeSeparationMeters, frame.leftRightKneeLateralSeparationMeters);
+                    summary.minimumKneeSeparationMeters, frame.leftRightKneeSignedLateralSeparation);
                 summary.maximumKneeSeparationMeters = Mathf.Max(
-                    summary.maximumKneeSeparationMeters, frame.leftRightKneeLateralSeparationMeters);
-                if (frame.leftRightKneeSignedLateralSeparation * restKneeSign <= 0f)
+                    summary.maximumKneeSeparationMeters, absoluteKneeSeparation);
+
+                if (frame.leftRightKneeSignedLateralSeparation < -options.crossingToleranceMeters)
                 {
                     summary.kneeCrossingSampleCount++;
                     summary.kneeCrossingTimesSeconds.Add(frame.timeSeconds);
                 }
+
+                if (frame.leftRightKneeStaticAxisSeparationSigned < -options.crossingToleranceMeters)
+                {
+                    summary.staticAxisKneeCrossingSampleCount++;
+                    summary.staticAxisKneeCrossingTimesSeconds.Add(frame.timeSeconds);
+                }
+
+                summary.minimumStaticAxisFootSeparationMeters = Mathf.Min(
+                    summary.minimumStaticAxisFootSeparationMeters,
+                    frame.leftRightFootStaticAxisSeparationSigned);
+                summary.minimumStaticAxisKneeSeparationMeters = Mathf.Min(
+                    summary.minimumStaticAxisKneeSeparationMeters,
+                    frame.leftRightKneeStaticAxisSeparationSigned);
+
+                if (frame.leftFootSignedLateralSeparation == summary.minimumFootSeparationMeters)
+                    summary.minimumFootSeparationTimeSeconds = frame.timeSeconds;
+                if (frame.leftRightKneeSignedLateralSeparation == summary.minimumKneeSeparationMeters)
+                    summary.minimumKneeSeparationTimeSeconds = frame.timeSeconds;
             }
 
             summary.meanFootSeparationMeters = footSeparationSum / frames.Count;
@@ -1429,13 +1465,27 @@ namespace UnderGrind.Editor
             summary.rightFootEstimatedContactRatio = (float)rightContactCount / frames.Count;
             if (summary.minimumFootSeparationMeters == float.MaxValue) summary.minimumFootSeparationMeters = 0f;
             if (summary.minimumKneeSeparationMeters == float.MaxValue) summary.minimumKneeSeparationMeters = 0f;
+            if (summary.minimumStaticAxisFootSeparationMeters == float.MaxValue) summary.minimumStaticAxisFootSeparationMeters = 0f;
+            if (summary.minimumStaticAxisKneeSeparationMeters == float.MaxValue) summary.minimumStaticAxisKneeSeparationMeters = 0f;
         }
 
         private static float CalculateLoopPositionError(List<PoseFrame> frames)
         {
             if (frames.Count < 2) return 0f;
             var first = frames[0];
-            var last = frames[frames.Count - 1];
+            var endFrame = frames[frames.Count - 1].timeSeconds >= frames[frames.Count - 2].timeSeconds
+                ? frames[frames.Count - 2]
+                : frames[frames.Count - 1];
+            return Mathf.Max(
+                Vector3.Distance(first.leftFootRelativeToHips, endFrame.leftFootRelativeToHips),
+                Vector3.Distance(first.rightFootRelativeToHips, endFrame.rightFootRelativeToHips));
+        }
+
+        private static float CalculateLoopWorldBonePositionError(List<PoseFrame> frames)
+        {
+            if (frames.Count < 2) return 0f;
+            var first = frames[0];
+            var last = frames[frames.Count - 2];
             var names = new[] { "Hips", "LeftFoot", "RightFoot", "LeftLowerLeg", "RightLowerLeg" };
             var errors = new List<float>();
             foreach (var name in names)
@@ -1452,17 +1502,10 @@ namespace UnderGrind.Editor
         {
             if (frames.Count < 2) return 0f;
             var first = frames[0];
-            var last = frames[frames.Count - 1];
-            var names = new[] { "Hips", "Spine", "Chest", "UpperChest", "LeftFoot", "RightFoot" };
-            var errors = new List<float>();
-            foreach (var name in names)
-            {
-                var a = first.bones.FirstOrDefault(bone => bone.humanBone == name);
-                var b = last.bones.FirstOrDefault(bone => bone.humanBone == name);
-                if (a != null && b != null)
-                    errors.Add(Quaternion.Angle(a.worldRotation, b.worldRotation));
-            }
-            return errors.Count == 0 ? 0f : errors.Max();
+            var endFrame = frames[frames.Count - 2];
+            return Mathf.Max(
+                Quaternion.Angle(first.leftFootRelativeRotationToHips, endFrame.leftFootRelativeRotationToHips),
+                Quaternion.Angle(first.rightFootRelativeRotationToHips, endFrame.rightFootRelativeRotationToHips));
         }
 
         private static List<float> BuildContactSheetTimes(AnimationClip clip, int frameCount)
