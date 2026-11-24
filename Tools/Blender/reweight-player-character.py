@@ -137,15 +137,6 @@ def nearest_allowed_bone(point, allowed_names, bones):
     return candidates[0][1]
 
 
-def existing_allowed_weights(vertex, group_names, allowed_names):
-    result = {}
-    for assignment in vertex.groups:
-        group_name = group_names.get(assignment.group)
-        if group_name in allowed_names and assignment.weight > WEIGHT_EPSILON:
-            result[group_name] = result.get(group_name, 0.0) + float(assignment.weight)
-    return result
-
-
 def normalized_top_weights(raw_weights):
     selected = sorted(
         ((name, weight) for name, weight in raw_weights.items() if weight > WEIGHT_EPSILON),
