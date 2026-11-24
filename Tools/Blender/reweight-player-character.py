@@ -226,6 +226,7 @@ def reweight_mesh(obj, armature):
     planned_weights = []
     fallback_vertices = 0
     removed_influence_assignments = 0
+    remapped_side_influence_assignments = 0
     allowed_union = set()
     fallback_samples = []
     side_weight_totals = {
@@ -257,11 +258,15 @@ def reweight_mesh(obj, armature):
                 side_weight_totals[side_key]["right"] += float(assignment.weight)
 
         raw_weights = existing_allowed_weights(vertex, group_by_index, allowed_names, target_side)
-        removed_influence_assignments += sum(
-            1 for assignment in vertex.groups
-            if group_by_index.get(assignment.group) not in allowed_names
-            and assignment.weight > WEIGHT_EPSILON
-        )
+        for assignment in vertex.groups:
+            if assignment.weight <= WEIGHT_EPSILON:
+                continue
+            original_name = group_by_index.get(assignment.group)
+            mapped_name = remap_group_to_anatomical_side(original_name, target_side) if original_name else None
+            if mapped_name != original_name:
+                remapped_side_influence_assignments += 1
+            if mapped_name not in allowed_names:
+                removed_influence_assignments += 1
 
         if not raw_weights:
             fallback_vertices += 1
@@ -299,6 +304,7 @@ def reweight_mesh(obj, armature):
     verification["fallbackVertices"] = fallback_vertices
     verification["fallbackVertexSamples"] = fallback_samples
     verification["removedInfluenceAssignments"] = removed_influence_assignments
+    verification["remappedSideInfluenceAssignments"] = remapped_side_influence_assignments
     verification["allowedGroups"] = sorted(allowed_union)
     verification["positiveXAnatomicalSide"] = positive_x_side
     verification["originalLeftRightWeightByVertexSide"] = {
@@ -375,6 +381,7 @@ def main():
             part["name"]: {
                 "fallbackVertices": part["fallbackVertices"],
                 "removedInfluenceAssignments": part["removedInfluenceAssignments"],
+                "remappedSideInfluenceAssignments": part["remappedSideInfluenceAssignments"],
                 "unweighted": part["unweightedVertices"],
                 "overFourInfluences": part["verticesOverInfluenceLimit"],
                 "unnormalized": part["verticesWithUnnormalizedWeights"],
