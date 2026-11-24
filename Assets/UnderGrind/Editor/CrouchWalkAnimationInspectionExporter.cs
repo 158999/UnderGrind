@@ -1759,7 +1759,7 @@ namespace UnderGrind.Editor
         private sealed class BakedPreviewRenderer : IDisposable
         {
             private readonly SkinnedMeshRenderer _source;
-            private readonly bool _sourceWasEnabled;
+            private readonly bool _sourceWasForceRenderingOff;
             private readonly GameObject _previewObject;
             private readonly Mesh _bakedMesh;
             private readonly MeshFilter _meshFilter;
@@ -1768,7 +1768,7 @@ namespace UnderGrind.Editor
             public BakedPreviewRenderer(SkinnedMeshRenderer source)
             {
                 _source = source;
-                _sourceWasEnabled = source.enabled;
+                _sourceWasForceRenderingOff = source.forceRenderingOff;
                 _bakedMesh = new Mesh { name = "UnderGrind_ContactSheet_BakedMesh" };
                 _previewObject = new GameObject("UnderGrind_ContactSheet_" + source.name)
                 {
@@ -1785,7 +1785,7 @@ namespace UnderGrind.Editor
                 _meshRenderer.lightProbeUsage = source.lightProbeUsage;
                 _meshRenderer.reflectionProbeUsage = source.reflectionProbeUsage;
                 _meshRenderer.motionVectorGenerationMode = source.motionVectorGenerationMode;
-                source.enabled = false;
+                source.forceRenderingOff = true;
             }
 
             public void Bake()
@@ -1800,7 +1800,7 @@ namespace UnderGrind.Editor
             public void Dispose()
             {
                 if (_source != null)
-                    _source.enabled = _sourceWasEnabled;
+                    _source.forceRenderingOff = _sourceWasForceRenderingOff;
                 if (_previewObject != null)
                     UnityEngine.Object.DestroyImmediate(_previewObject);
                 if (_bakedMesh != null)
