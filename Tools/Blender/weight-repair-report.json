@@ -1,0 +1,423 @@
+{
+  "sourceBlend": "/home/runner/work/UnderGrind/UnderGrind/Assets/UnderGrind/Art/Source/humans.blend",
+  "derivedBlend": "/home/runner/work/UnderGrind/UnderGrind/Tools/Blender/Generated/humans_reweighted.blend",
+  "maxInfluencesPerVertex": 4,
+  "characters": {
+    "male": {
+      "armature": "UG_Male_Armature",
+      "parts": [
+        {
+          "name": "Human_Male_Body",
+          "vertexCount": 201,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 62,
+            "2": 86,
+            "3": 45,
+            "4": 8
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "Chest": 23,
+            "LeftFoot": 30,
+            "LeftLowerLeg": 14,
+            "LeftUpperLeg": 14,
+            "Neck": 6,
+            "RightFoot": 30,
+            "RightLowerLeg": 14,
+            "RightUpperLeg": 18,
+            "Spine": 52
+          },
+          "fallbackVertices": 26,
+          "removedInfluenceAssignments": 506,
+          "allowedGroups": [
+            "Chest",
+            "Head",
+            "Hips",
+            "LeftFoot",
+            "LeftLowerLeg",
+            "LeftToes",
+            "LeftUpperLeg",
+            "Neck",
+            "RightFoot",
+            "RightLowerLeg",
+            "RightToes",
+            "RightUpperLeg",
+            "Spine"
+          ]
+        },
+        {
+          "name": "Human_Male_Head",
+          "vertexCount": 140,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "2": 140
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "Head": 120,
+            "Neck": 20
+          },
+          "fallbackVertices": 0,
+          "removedInfluenceAssignments": 90,
+          "allowedGroups": [
+            "Chest",
+            "Head",
+            "Neck"
+          ]
+        },
+        {
+          "name": "Human_Male_TP_Arms",
+          "vertexCount": 77,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 22,
+            "2": 26,
+            "3": 16,
+            "4": 13
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000004,
+          "dominantBoneVertexCounts": {
+            "Chest": 55,
+            "LeftLowerArm": 6,
+            "LeftUpperArm": 5,
+            "RightLowerArm": 6,
+            "RightUpperArm": 5
+          },
+          "fallbackVertices": 0,
+          "removedInfluenceAssignments": 243,
+          "allowedGroups": [
+            "Chest",
+            "LeftHand",
+            "LeftLowerArm",
+            "LeftShoulder",
+            "LeftUpperArm",
+            "RightHand",
+            "RightLowerArm",
+            "RightShoulder",
+            "RightUpperArm"
+          ]
+        },
+        {
+          "name": "Human_Male_TP_Hands",
+          "vertexCount": 160,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 126,
+            "2": 34
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "LeftHand": 74,
+            "LeftLowerArm": 6,
+            "RightHand": 74,
+            "RightLowerArm": 6
+          },
+          "fallbackVertices": 8,
+          "removedInfluenceAssignments": 212,
+          "allowedGroups": [
+            "LeftHand",
+            "LeftLowerArm",
+            "RightHand",
+            "RightLowerArm"
+          ]
+        },
+        {
+          "name": "Human_Male_FP_Arms",
+          "vertexCount": 77,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 22,
+            "2": 26,
+            "3": 16,
+            "4": 13
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000004,
+          "dominantBoneVertexCounts": {
+            "Chest": 55,
+            "LeftLowerArm": 6,
+            "LeftUpperArm": 5,
+            "RightLowerArm": 6,
+            "RightUpperArm": 5
+          },
+          "fallbackVertices": 0,
+          "removedInfluenceAssignments": 243,
+          "allowedGroups": [
+            "Chest",
+            "LeftHand",
+            "LeftLowerArm",
+            "LeftShoulder",
+            "LeftUpperArm",
+            "RightHand",
+            "RightLowerArm",
+            "RightShoulder",
+            "RightUpperArm"
+          ]
+        },
+        {
+          "name": "Human_Male_FP_Hands",
+          "vertexCount": 160,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 126,
+            "2": 34
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "LeftHand": 74,
+            "LeftLowerArm": 6,
+            "RightHand": 74,
+            "RightLowerArm": 6
+          },
+          "fallbackVertices": 8,
+          "removedInfluenceAssignments": 212,
+          "allowedGroups": [
+            "LeftHand",
+            "LeftLowerArm",
+            "RightHand",
+            "RightLowerArm"
+          ]
+        }
+      ]
+    },
+    "female": {
+      "armature": "UG_Female_Armature",
+      "parts": [
+        {
+          "name": "Human_Female_Body",
+          "vertexCount": 154,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 84,
+            "2": 70
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "Chest": 10,
+            "Hips": 4,
+            "LeftFoot": 26,
+            "LeftLowerLeg": 6,
+            "LeftToes": 6,
+            "LeftUpperLeg": 24,
+            "Neck": 16,
+            "RightFoot": 26,
+            "RightLowerLeg": 6,
+            "RightToes": 6,
+            "RightUpperLeg": 24
+          },
+          "fallbackVertices": 80,
+          "removedInfluenceAssignments": 310,
+          "allowedGroups": [
+            "Chest",
+            "Head",
+            "Hips",
+            "LeftFoot",
+            "LeftLowerLeg",
+            "LeftToes",
+            "LeftUpperLeg",
+            "Neck",
+            "RightFoot",
+            "RightLowerLeg",
+            "RightToes",
+            "RightUpperLeg",
+            "Spine"
+          ]
+        },
+        {
+          "name": "Human_Female_Head",
+          "vertexCount": 174,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 18,
+            "2": 150,
+            "3": 6
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "Head": 91,
+            "Neck": 83
+          },
+          "fallbackVertices": 10,
+          "removedInfluenceAssignments": 348,
+          "allowedGroups": [
+            "Chest",
+            "Head",
+            "Neck"
+          ]
+        },
+        {
+          "name": "Human_Female_TP_Arms",
+          "vertexCount": 175,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 100,
+            "2": 32,
+            "3": 43
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "Chest": 38,
+            "LeftHand": 16,
+            "LeftLowerArm": 19,
+            "LeftShoulder": 11,
+            "LeftUpperArm": 15,
+            "RightHand": 17,
+            "RightLowerArm": 24,
+            "RightShoulder": 11,
+            "RightUpperArm": 24
+          },
+          "fallbackVertices": 84,
+          "removedInfluenceAssignments": 307,
+          "allowedGroups": [
+            "Chest",
+            "LeftHand",
+            "LeftLowerArm",
+            "LeftShoulder",
+            "LeftUpperArm",
+            "RightHand",
+            "RightLowerArm",
+            "RightShoulder",
+            "RightUpperArm"
+          ]
+        },
+        {
+          "name": "Human_Female_TP_Hands",
+          "vertexCount": 172,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 40,
+            "2": 132
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "LeftHand": 80,
+            "LeftLowerArm": 4,
+            "RightHand": 83,
+            "RightLowerArm": 5
+          },
+          "fallbackVertices": 38,
+          "removedInfluenceAssignments": 117,
+          "allowedGroups": [
+            "LeftHand",
+            "LeftLowerArm",
+            "RightHand",
+            "RightLowerArm"
+          ]
+        },
+        {
+          "name": "Human_Female_FP_Arms",
+          "vertexCount": 175,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 100,
+            "2": 32,
+            "3": 43
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "Chest": 38,
+            "LeftHand": 16,
+            "LeftLowerArm": 19,
+            "LeftShoulder": 11,
+            "LeftUpperArm": 15,
+            "RightHand": 17,
+            "RightLowerArm": 24,
+            "RightShoulder": 11,
+            "RightUpperArm": 24
+          },
+          "fallbackVertices": 84,
+          "removedInfluenceAssignments": 307,
+          "allowedGroups": [
+            "Chest",
+            "LeftHand",
+            "LeftLowerArm",
+            "LeftShoulder",
+            "LeftUpperArm",
+            "RightHand",
+            "RightLowerArm",
+            "RightShoulder",
+            "RightUpperArm"
+          ]
+        },
+        {
+          "name": "Human_Female_FP_Hands",
+          "vertexCount": 172,
+          "unweightedVertices": 0,
+          "verticesOverInfluenceLimit": 0,
+          "verticesWithUnnormalizedWeights": 0,
+          "forbiddenInfluenceAssignments": 0,
+          "influencesPerVertex": {
+            "1": 40,
+            "2": 132
+          },
+          "weightSumMin": 0.99999997,
+          "weightSumMax": 1.00000003,
+          "dominantBoneVertexCounts": {
+            "LeftHand": 80,
+            "LeftLowerArm": 4,
+            "RightHand": 83,
+            "RightLowerArm": 5
+          },
+          "fallbackVertices": 38,
+          "removedInfluenceAssignments": 117,
+          "allowedGroups": [
+            "LeftHand",
+            "LeftLowerArm",
+            "RightHand",
+            "RightLowerArm"
+          ]
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Il reweighting modifica soltanto le 12 mesh derivate collegate alle armature.",
+    "Gli oggetti sorgente Human_Male e Human_Female non vengono modificati.",
+    "Le influenze sono filtrate per parte anatomica, limitate a quattro e normalizzate.",
+    "I vertici senza influenze ammesse ricevono il peso sull'osso consentito più vicino."
+  ]
+}
