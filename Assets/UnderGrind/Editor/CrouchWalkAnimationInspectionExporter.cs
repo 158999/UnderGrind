@@ -1034,7 +1034,7 @@ namespace UnderGrind.Editor
                     hierarchyPath = GetHierarchyPath(renderer.transform),
                     meshName = mesh == null ? string.Empty : mesh.name,
                     vertexCount = mesh == null ? 0 : mesh.vertexCount,
-                    triangleCount = mesh == null ? 0 : mesh.triangles.Length / 3,
+                    triangleCount = GetTriangleCount(mesh),
                     blendShapeCount = mesh == null ? 0 : mesh.blendShapeCount,
                     enabled = renderer.enabled,
                     shadowCastingMode = renderer.shadowCastingMode.ToString(),
@@ -1052,6 +1052,19 @@ namespace UnderGrind.Editor
                 result.Add(item);
             }
             return result;
+        }
+
+        private static int GetTriangleCount(Mesh mesh)
+        {
+            if (mesh == null)
+                return 0;
+
+            ulong indexCount = 0;
+            for (var subMesh = 0; subMesh < mesh.subMeshCount; subMesh++)
+                if (mesh.GetTopology(subMesh) == MeshTopology.Triangles)
+                    indexCount += mesh.GetIndexCount(subMesh);
+
+            return (int)(indexCount / 3UL);
         }
 
         private static List<CurveBindingMetadata> CreateCurveMetadata(AnimationClip clip)
