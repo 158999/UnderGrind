@@ -108,7 +108,7 @@
   "visualValidationComplete": false,
   "crouchWalkCandidateAudit": {
     "currentUnityResult": {
-      "runId": "20261124-110717-910",
+      "runId": "20261124-113037-739",
       "sourceFootCrossings": 6,
       "malePlayerFootCrossings": 10,
       "femalePlayerFootCrossings": 12,
@@ -117,7 +117,8 @@
         "male": -0.119,
         "female": -0.133
       },
-      "status": "failed"
+      "status": "failed",
+      "note": "La clip originale resta assegnata ma non approvata."
     },
     "rawBlenderCandidateAudit": {
       "reportPath": "Tools/Blender/pinoc-crouch-walk-candidate-audit.json",
@@ -128,7 +129,31 @@
     "unityCandidateDiagnostic": {
       "test": "UnderGrind.Tests.HumanoidRigImportTests.CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars",
       "reportPath": "TestResults/test/Unity/CrouchWalkCandidateAudit.txt",
-      "status": "Merged into main via PR #12 on 2026-11-24; not yet executed in Unity."
+      "runId": "20261124-113037-739",
+      "status": "executed",
+      "bestDiagnosticCandidate": "Crouch_Walk_Candidate_08.fbx",
+      "bestCandidateResults": {
+        "source": {
+          "footCrossings": 0,
+          "kneeCrossings": 0,
+          "minimumFootSeparationMeters": 0.254,
+          "minimumKneeSeparationMeters": 0.206
+        },
+        "malePlayer": {
+          "footCrossings": 0,
+          "kneeCrossings": 0,
+          "minimumFootSeparationMeters": 0.183,
+          "minimumKneeSeparationMeters": 0.14
+        },
+        "femalePlayer": {
+          "footCrossings": 0,
+          "kneeCrossings": 0,
+          "minimumFootSeparationMeters": 0.155,
+          "minimumKneeSeparationMeters": 0.114
+        },
+        "loopEndpointErrorMeters": 0
+      },
+      "interpretation": "Best result in the automated Unity retargeting audit. Visual PlayMode validation is still required before promotion."
     },
     "selectedReplacement": null
   }
