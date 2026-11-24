@@ -1095,12 +1095,14 @@ namespace UnderGrind.Editor
                 });
             }
 
+            var skeletonParentNames = GetSkeletonParentNames(avatar);
             foreach (var bone in description.skeleton ?? Array.Empty<SkeletonBone>())
             {
+                skeletonParentNames.TryGetValue(bone.name, out var parentName);
                 metadata.skeleton.Add(new SkeletonBoneMetadata
                 {
                     name = bone.name,
-                    parentName = bone.parentName,
+                    parentName = parentName ?? string.Empty,
                     position = bone.position,
                     rotation = bone.rotation,
                     scale = bone.scale
@@ -1108,6 +1110,38 @@ namespace UnderGrind.Editor
             }
 
             return metadata;
+        }
+
+        private static Dictionary<string, string> GetSkeletonParentNames(Avatar avatar)
+        {
+            var parentNames = new Dictionary<string, string>(StringComparer.Ordinal);
+            var assetPath = AssetDatabase.GetAssetPath(avatar);
+            if (string.IsNullOrEmpty(assetPath))
+                return parentNames;
+
+            var importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
+            if (importer == null)
+                return parentNames;
+
+            using (var serialized = new SerializedObject(importer))
+            {
+                var skeleton = serialized.FindProperty("m_HumanDescription.m_Skeleton");
+                if (skeleton == null || !skeleton.isArray)
+                    return parentNames;
+
+                for (var i = 0; i < skeleton.arraySize; i++)
+                {
+                    var bone = skeleton.GetArrayElementAtIndex(i);
+                    var name = bone.FindPropertyRelative("m_Name");
+                    var parent = bone.FindPropertyRelative("m_ParentName");
+                    if (name == null || string.IsNullOrEmpty(name.stringValue))
+                        continue;
+
+                    parentNames[name.stringValue] = parent == null ? string.Empty : parent.stringValue;
+                }
+            }
+
+            return parentNames;
         }
 
         private static PrefabMetadata CreatePrefabMetadata(PreviewRig rig)
@@ -1976,7 +2010,7 @@ namespace UnderGrind.Editor
             {
                 foreach (var bone in frame.bones)
                 {
-                    builder.Append(Csv(frame.index)).Append(',')
+                    builder.Append(frame.index.ToString(CultureInfo.InvariantCulture)).Append(',')
                         .Append(F(frame.timeSeconds)).Append(',')
                         .Append(F(frame.normalizedTime)).Append(',')
                         .Append(Csv(bone.humanBone)).Append(',')
@@ -2274,7 +2308,7 @@ namespace UnderGrind.Editor
                     var relative = file.Substring(sourceDirectory.Length)
                         .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                         .Replace(Path.DirectorySeparatorChar, '/');
-                    var entry = archive.CreateEntry(relative, CompressionLevel.Optimal);
+                    var entry = archive.CreateEntry(relative, System.IO.Compression.CompressionLevel.Optimal);
                     using (var entryStream = entry.Open())
                     using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
                         fileStream.CopyTo(entryStream);
