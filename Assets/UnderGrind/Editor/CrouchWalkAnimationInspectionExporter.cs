@@ -78,6 +78,16 @@ namespace UnderGrind.Editor
             public int kneeCrossingSamples;
             public float loopPositionError;
             public float loopRotationErrorDegrees;
+            public float leftFootPathLengthMeters;
+            public float rightFootPathLengthMeters;
+            public float leftFootMaximumSpeedMetersPerSecond;
+            public float rightFootMaximumSpeedMetersPerSecond;
+            public float leftFootEstimatedContactRatio;
+            public float rightFootEstimatedContactRatio;
+            public float maximumHipsDriftMeters;
+            public float maximumTorsoLeanDegrees;
+            public List<float> contactSheetTimes = new List<float>();
+            public List<string> contactSheetColumns = new List<string>();
         }
 
         [Serializable]
@@ -729,7 +739,17 @@ namespace UnderGrind.Editor
                 minimumKneeSeparation = report.motion.minimumKneeSeparationMeters,
                 kneeCrossingSamples = report.motion.kneeCrossingSampleCount,
                 loopPositionError = report.motion.loopPositionErrorMeters,
-                loopRotationErrorDegrees = report.motion.loopRotationErrorDegrees
+                loopRotationErrorDegrees = report.motion.loopRotationErrorDegrees,
+                leftFootPathLengthMeters = report.motion.leftFootPathLengthMeters,
+                rightFootPathLengthMeters = report.motion.rightFootPathLengthMeters,
+                leftFootMaximumSpeedMetersPerSecond = report.motion.leftFootMaximumSpeedMetersPerSecond,
+                rightFootMaximumSpeedMetersPerSecond = report.motion.rightFootMaximumSpeedMetersPerSecond,
+                leftFootEstimatedContactRatio = report.motion.leftFootEstimatedContactRatio,
+                rightFootEstimatedContactRatio = report.motion.rightFootEstimatedContactRatio,
+                maximumHipsDriftMeters = report.motion.maximumHipsDriftMeters,
+                maximumTorsoLeanDegrees = report.motion.maximumTorsoLeanDegrees,
+                contactSheetTimes = new List<float>(report.contactSheetTimes),
+                contactSheetColumns = new List<string>(report.contactSheetColumns)
             };
         }
 
@@ -1744,6 +1764,16 @@ namespace UnderGrind.Editor
                                 " m · Loop position error: " + entry.loopPositionError.ToString("F4", CultureInfo.InvariantCulture) +
                                 " m / " + entry.loopRotationErrorDegrees.ToString("F2", CultureInfo.InvariantCulture) + "°</p>");
                 html.AppendLine("<img src=\"" + Html(sheetPath) + "\" alt=\"Contact sheet\">");
+                html.AppendLine("<p><b>Colonne:</b> " + Html(string.Join(" · ", entry.contactSheetColumns)) + "</p>");
+                html.AppendLine("<p><b>Tempi righe:</b> " + Html(string.Join(" · ", entry.contactSheetTimes.Select(time => time.ToString("F3", CultureInfo.InvariantCulture) + " s"))) + "</p>");
+                html.AppendLine("<p>Traiettoria piedi: L " + entry.leftFootPathLengthMeters.ToString("F3", CultureInfo.InvariantCulture) +
+                                " m / R " + entry.rightFootPathLengthMeters.ToString("F3", CultureInfo.InvariantCulture) +
+                                " m · Velocità max: L " + entry.leftFootMaximumSpeedMetersPerSecond.ToString("F3", CultureInfo.InvariantCulture) +
+                                " / R " + entry.rightFootMaximumSpeedMetersPerSecond.ToString("F3", CultureInfo.InvariantCulture) + " m/s</p>");
+                html.AppendLine("<p>Contatto stimato: L " + (entry.leftFootEstimatedContactRatio * 100f).ToString("F1", CultureInfo.InvariantCulture) +
+                                "% / R " + (entry.rightFootEstimatedContactRatio * 100f).ToString("F1", CultureInfo.InvariantCulture) +
+                                "% · Deriva bacino max: " + entry.maximumHipsDriftMeters.ToString("F4", CultureInfo.InvariantCulture) +
+                                " m · Inclinazione busto max: " + entry.maximumTorsoLeanDegrees.ToString("F1", CultureInfo.InvariantCulture) + "°</p>");
                 html.AppendLine("<p><a href=\"" + Html(reportPath) + "\">Report JSON</a> · <a href=\"" + Html(posePath) +
                                 "\">Pose CSV</a> · <a href=\"" + Html(curvePath) + "\">Curve CSV</a>");
                 if (!string.IsNullOrEmpty(geometryPath))
