@@ -251,7 +251,7 @@ def main():
 
     source_path = Path(bpy.data.filepath).resolve()
     root = repository_root()
-    output_path = source_path.parent / "Derived" / "humans_reweighted.blend"
+    output_path = root / "Tools" / "Blender" / "Generated" / "humans_reweighted.blend"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     report = {
