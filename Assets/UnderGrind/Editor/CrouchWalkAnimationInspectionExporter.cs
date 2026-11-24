@@ -165,6 +165,12 @@ namespace UnderGrind.Editor
             public bool importLights;
             public bool importVisibility;
             public string animationCompression;
+            public string animationWrapMode;
+            public string motionNodeName;
+            public float globalScale;
+            public bool bakeIK;
+            public bool importBlendShapes;
+            public bool importConstraints;
             public List<ImporterProperty> serializedProperties = new List<ImporterProperty>();
         }
 
@@ -372,7 +378,7 @@ namespace UnderGrind.Editor
         [Serializable]
         private sealed class GeometryFrame
         {
-            public int poseFrameIndex;
+            public int contactSheetRowIndex;
             public float timeSeconds;
             public List<RendererGeometrySample> renderers = new List<RendererGeometrySample>();
         }
@@ -809,7 +815,13 @@ namespace UnderGrind.Editor
                 importCameras = importer.importCameras,
                 importLights = importer.importLights,
                 importVisibility = importer.importVisibility,
-                animationCompression = importer.animationCompression.ToString()
+                animationCompression = importer.animationCompression.ToString(),
+                animationWrapMode = importer.animationWrapMode.ToString(),
+                motionNodeName = importer.motionNodeName,
+                globalScale = importer.globalScale,
+                bakeIK = importer.bakeIK,
+                importBlendShapes = importer.importBlendShapes,
+                importConstraints = importer.importConstraints
             };
 
             var serialized = new SerializedObject(importer);
@@ -1525,7 +1537,7 @@ namespace UnderGrind.Editor
                 Evaluate(rig, clip, times[frameIndex]);
                 var frame = new GeometryFrame
                 {
-                    poseFrameIndex = frameIndex,
+                    contactSheetRowIndex = frameIndex,
                     timeSeconds = times[frameIndex]
                 };
 
@@ -1714,12 +1726,12 @@ namespace UnderGrind.Editor
         private static void WriteGeometryCsv(string path, IReadOnlyList<GeometryFrame> frames)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("poseFrameIndex,timeSeconds,rendererName,hierarchyPath,worldBounds,bakedLocalBounds,vertexCount,nonFiniteVertexCount,centroidX,centroidY,centroidZ,minX,minY,minZ,maxX,maxY,maxZ,maxVertexRadius,blendShapeWeights");
+            builder.AppendLine("contactSheetRowIndex,timeSeconds,rendererName,hierarchyPath,worldBounds,bakedLocalBounds,vertexCount,nonFiniteVertexCount,centroidX,centroidY,centroidZ,minX,minY,minZ,maxX,maxY,maxZ,maxVertexRadius,blendShapeWeights");
             foreach (var frame in frames)
             {
                 foreach (var renderer in frame.renderers)
                 {
-                    builder.Append(frame.poseFrameIndex).Append(',')
+                    builder.Append(frame.contactSheetRowIndex).Append(',')
                         .Append(F(frame.timeSeconds)).Append(',')
                         .Append(Csv(renderer.rendererName)).Append(',')
                         .Append(Csv(renderer.hierarchyPath)).Append(',')
