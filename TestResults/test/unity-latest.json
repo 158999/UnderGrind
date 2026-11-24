@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261123-132713-985",
-    "startedUtc":  "2026-11-23T12:27:13.9867220Z",
-    "finishedUtc":  "2026-11-23T12:27:46.4713086Z",
+    "runId":  "20261124-110717-910",
+    "startedUtc":  "2026-11-24T10:07:17.9104398Z",
+    "finishedUtc":  "2026-11-24T10:08:58.2950118Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
@@ -9,15 +9,53 @@
 
                           ],
     "totals":  {
-                   "total":  63,
-                   "passed":  62,
+                   "total":  68,
+                   "passed":  65,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  1
+                   "failed":  3
                },
     "platforms":  [
                       {
                           "platform":  "EditMode",
+                          "timeoutSeconds":  600,
+                          "timedOut":  false,
+                          "exitCode":  2,
+                          "resultValid":  false,
+                          "validationErrors":  [
+                                                   "Unity Ã¨ terminato con codice 2.",
+                                                   "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
+                                                   "Unity ha riportato 2 test falliti."
+                                               ],
+                          "compilerDiagnostics":  [
+
+                                                  ],
+                          "failures":  [
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars",
+                                               "message":  "Rilevati incroci laterali dei piedi durante il retarget Humanoid:\nMixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min anatomico=-0,114m, min asse fisso=-0,377m a 7,33s, incroci anatomici=6/232, incroci asse fisso=54/232\nPlayer male / Crouch_Walk_Forward / Scene: rest=0,110m, min anatomico=-0,119m, min asse fisso=-0,305m a 7,33s, incroci anatomici=10/232, incroci asse fisso=50/232\nPlayer female / Crouch_Walk_Forward / Scene: rest=0,084m, min anatomico=-0,133m, min asse fisso=-0,310m a 7,33s, incroci anatomici=12/232, incroci asse fisso=54/232\n  Expected: \u003cempty\u003e\n  But was:  \u003c \"Mixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min anatomico=-0,114m, min asse fisso=-0,377m a 7,33s, incroci anatomici=6/232, incroci asse fisso=54/232\", \"Player male / Crouch_Walk_Forward / Scene: rest=0,110m, min anatomico=-0,119m, min asse fisso=-0,305m a 7,33s, incroci anatomici=10/232, incroci asse fisso=50/232\", \"Player female / Crouch_Walk_Forward / Scene: rest=0,084m, min anatomico=-0,133m, min asse fisso=-0,310m a 7,33s, incroci anatomici=12/232, incroci asse fisso=54/232\" \u003e",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () [0x00123] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:382"
+                                           },
+                                           {
+                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
+                                               "message":  "Human_Male_FP_Arms: stato enabled errato per la modalitÃ  camera.\n  Expected: False\n  But was:  True",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.AssertRendererEnabled (UnityEngine.GameObject root, System.String nameToken, System.Boolean expected) [0x00050] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:544\nat UnderGrind.Tests.HumanoidRigImportTests.VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode (System.String assetPath, System.String label) [0x0002c] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:252"
+                                           }
+                                       ],
+                          "resultFile":  "TestResults/test/Unity/EditMode.xml",
+                          "logFile":  "TestResults/test/Unity/EditMode.log",
+                          "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
+                          "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
+                          "totals":  {
+                                         "total":  55,
+                                         "passed":  53,
+                                         "skipped":  0,
+                                         "inconclusive":  0,
+                                         "failed":  2
+                                     }
+                      },
+                      {
+                          "platform":  "PlayMode",
                           "timeoutSeconds":  600,
                           "timedOut":  false,
                           "exitCode":  2,
@@ -32,37 +70,10 @@
                                                   ],
                           "failures":  [
                                            {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars",
-                                               "message":  "Rilevati incroci laterali dei piedi durante il retarget Humanoid:\nMixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min anatomico=-0,114m, min asse fisso=-0,377m a 7,33s, incroci anatomici=6/232, incroci asse fisso=54/232\nPlayer male / Crouch_Walk_Forward / Scene: rest=0,110m, min anatomico=-0,119m, min asse fisso=-0,305m a 7,33s, incroci anatomici=10/232, incroci asse fisso=50/232\nPlayer female / Crouch_Walk_Forward / Scene: rest=0,084m, min anatomico=-0,133m, min asse fisso=-0,310m a 7,33s, incroci anatomici=12/232, incroci asse fisso=54/232\n  Expected: \u003cempty\u003e\n  But was:  \u003c \"Mixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min anatomico=-0,114m, min asse fisso=-0,377m a 7,33s, incroci anatomici=6/232, incroci asse fisso=54/232\", \"Player male / Crouch_Walk_Forward / Scene: rest=0,110m, min anatomico=-0,119m, min asse fisso=-0,305m a 7,33s, incroci anatomici=10/232, incroci asse fisso=50/232\", \"Player female / Crouch_Walk_Forward / Scene: rest=0,084m, min anatomico=-0,133m, min asse fisso=-0,310m a 7,33s, incroci anatomici=12/232, incroci asse fisso=54/232\" \u003e",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () [0x00123] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:287"
+                                               "test":  "UnderGrind.Tests.HumanLocomotionPlayModeTests.VisualRigPreservesInitiallyDisabledRenderers",
+                                               "message":  "Expected: False\n  But was:  True",
+                                               "stackTrace":  "at UnderGrind.Tests.HumanLocomotionPlayModeTests+\u003cVisualRigPreservesInitiallyDisabledRenderers\u003ed__4.MoveNext () [0x000e6] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\PlayMode\\HumanLocomotionPlayModeTests.cs:170\nat UnityEngine.TestTools.TestEnumerator+\u003cExecute\u003ed__8.MoveNext () [0x0003a] in .\\Library\\PackageCache\\com.unity.test-framework@01a8b42f9cf6\\UnityEngine.TestRunner\\NUnitExtensions\\Attributes\\TestEnumerator.cs:52"
                                            }
-                                       ],
-                          "resultFile":  "TestResults/test/Unity/EditMode.xml",
-                          "logFile":  "TestResults/test/Unity/EditMode.log",
-                          "stdoutFile":  "TestResults/test/Unity/EditMode.stdout.log",
-                          "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
-                          "totals":  {
-                                         "total":  50,
-                                         "passed":  49,
-                                         "skipped":  0,
-                                         "inconclusive":  0,
-                                         "failed":  1
-                                     }
-                      },
-                      {
-                          "platform":  "PlayMode",
-                          "timeoutSeconds":  600,
-                          "timedOut":  false,
-                          "exitCode":  0,
-                          "resultValid":  true,
-                          "validationErrors":  [
-
-                                               ],
-                          "compilerDiagnostics":  [
-
-                                                  ],
-                          "failures":  [
-
                                        ],
                           "resultFile":  "TestResults/test/Unity/PlayMode.xml",
                           "logFile":  "TestResults/test/Unity/PlayMode.log",
@@ -70,10 +81,10 @@
                           "stderrFile":  "TestResults/test/Unity/PlayMode.stderr.log",
                           "totals":  {
                                          "total":  13,
-                                         "passed":  13,
+                                         "passed":  12,
                                          "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  0
+                                         "failed":  1
                                      }
                       }
                   ]

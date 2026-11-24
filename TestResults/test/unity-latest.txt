@@ -1,5 +1,5 @@
 ﻿UnderGrind Unity tests
 Status: Failed
-Total: 63 | Passed: 62 | Failed: 1 | Skipped: 0 | Inconclusive: 0
+Total: 68 | Passed: 65 | Failed: 3 | Skipped: 0 | Inconclusive: 0
 Environment errors: 
 Run details: TestResults/test/Unity/
