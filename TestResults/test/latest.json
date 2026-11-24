@@ -1,8 +1,8 @@
 ﻿{
-    "runId":  "20261124-113950-291",
-    "startedUtc":  "2026-11-24T10:39:50.2916781Z",
-    "finishedUtc":  "2026-11-24T10:39:59.8412896Z",
-    "durationSeconds":  9.55,
+    "runId":  "20261124-131640-861",
+    "startedUtc":  "2026-11-24T12:16:40.8613904Z",
+    "finishedUtc":  "2026-11-24T12:16:45.4015543Z",
+    "durationSeconds":  4.54,
     "diagnosticsBuild":  "Passed",
     "buildTimeoutSeconds":  180,
     "testTimeoutSeconds":  180,

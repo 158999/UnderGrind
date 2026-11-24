@@ -1,3 +1,11 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 66428)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 67528)
-VBCSCompiler prewarm took 67.72 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 63812)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 1932)
+VBCSCompiler prewarm took 53.53 ms
+
+Aborting batchmode due to fatal error:
+It looks like another Unity instance is running with this project open.
+
+Multiple Unity instances cannot open the same project.
+
+Project: C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind
+
