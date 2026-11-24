@@ -2,10 +2,12 @@ import bpy
 import json
 import math
 from pathlib import Path
+from mathutils import Vector
 
 ROOT = Path("Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk")
 SOURCE_CLIP = Path("Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx")
 OUTPUT = Path("Tools/Blender/pinoc-crouch-walk-candidate-audit.json")
+PREVIEW_ROOT = Path("Tools/Blender/pinoc-crouch-walk-previews")
 CROSSING_TOLERANCE = 0.02
 GENERATION_TASK_IDS = ["827b8373-42df-479a-a82f-22b5a339678d", "6aa1752e-9788-4ebf-96c0-15ca7caa00b9"]
 
@@ -36,6 +38,91 @@ def find_bone(armature, token):
 
 def local_position(hips, bone):
     return hips.matrix.inverted() @ bone.matrix.translation
+
+
+def render_candidate_preview(path, scene, start, end):
+    mesh_objects = [
+        obj for obj in scene.objects
+        if obj.type == "MESH" and not obj.hide_render
+    ]
+    if not mesh_objects:
+        return {"status": "skipped", "reason": "no visible mesh objects"}
+
+    corners = [
+        obj.matrix_world @ Vector(corner)
+        for obj in mesh_objects
+        for corner in obj.bound_box
+    ]
+    minimum = Vector((
+        min(point.x for point in corners),
+        min(point.y for point in corners),
+        min(point.z for point in corners)
+    ))
+    maximum = Vector((
+        max(point.x for point in corners),
+        max(point.y for point in corners),
+        max(point.z for point in corners)
+    ))
+    center = (minimum + maximum) * 0.5
+    dimensions = maximum - minimum
+    scale = max(dimensions.x, dimensions.y, dimensions.z, 0.5)
+    distance = scale * 3.0
+
+    camera_data = bpy.data.cameras.new("UnderGrind_CrouchWalk_Preview_Camera")
+    camera = bpy.data.objects.new("UnderGrind_CrouchWalk_Preview_Camera", camera_data)
+    scene.collection.objects.link(camera)
+    camera.data.type = "ORTHO"
+    camera.data.ortho_scale = scale * 1.35
+    camera.data.clip_start = 0.01
+    camera.data.clip_end = max(100.0, distance * 4.0)
+    scene.camera = camera
+
+    scene.render.engine = "BLENDER_WORKBENCH"
+    scene.display.shading.light = "STUDIO"
+    scene.display.shading.color_type = "MATERIAL"
+    scene.display.shading.background_type = "WORLD"
+    scene.display.shading.show_shadows = True
+    scene.display.shading.show_cavity = True
+    scene.render.resolution_x = 192
+    scene.render.resolution_y = 320
+    scene.render.resolution_percentage = 100
+    scene.render.image_settings.file_format = "PNG"
+    scene.render.image_settings.color_mode = "RGBA"
+    scene.render.film_transparent = False
+
+    output_dir = PREVIEW_ROOT / path.stem
+    output_dir.mkdir(parents=True, exist_ok=True)
+    frame_count = 6
+    frames = [
+        round(start + (end - start) * index / frame_count)
+        for index in range(frame_count)
+    ]
+    views = {
+        "front": Vector((0.0, -1.0, 0.12)),
+        "side": Vector((1.0, 0.0, 0.12)),
+        "rear": Vector((0.0, 1.0, 0.12)),
+        "opposite": Vector((-1.0, 0.0, 0.12))
+    }
+
+    generated = []
+    for view_name, direction in views.items():
+        direction.normalize()
+        camera.location = center + direction * distance
+        camera.rotation_euler = (center - camera.location).to_track_quat("-Z", "Y").to_euler()
+        for index, frame in enumerate(frames):
+            scene.frame_set(frame)
+            bpy.context.view_layer.update()
+            output_path = output_dir / f"{view_name}_{index:02d}.png"
+            scene.render.filepath = str(output_path)
+            bpy.ops.render.render(write_still=True)
+            generated.append(str(output_path).replace("\\", "/"))
+
+    return {
+        "status": "ok",
+        "framesPerView": frame_count,
+        "views": list(views.keys()),
+        "files": generated
+    }
 
 
 def audit_candidate(path):
@@ -142,6 +229,12 @@ def audit_candidate(path):
         (first_local_feet[1] - last_local_feet[1]).length
     )
 
+    try:
+        preview = render_candidate_preview(path, scene, start, end)
+    except Exception as exc:
+        preview = {"status": "failed", "error": str(exc)}
+
+
     return {
         "file": str(path).replace("\\", "/"),
         "candidateType": "current-source" if path == SOURCE_CLIP else "generated-candidate",
@@ -166,6 +259,7 @@ def audit_candidate(path):
         "rawBlenderMinimumAnatomicalKneeSeparation": min_knee_separation,
         "rawBlenderHipTranslationDrift": max_hip_translation_drift,
         "rawBlenderLoopEndpointError": loop_endpoint_error,
+        "preview": preview,
         "blenderUnitScaleLength": scene.unit_settings.scale_length
     }
 
