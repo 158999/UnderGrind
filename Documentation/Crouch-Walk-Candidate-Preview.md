@@ -151,3 +151,18 @@ Il test della clip effettivamente configurata ora applica anche una soglia di qu
 Queste sono soglie QA del test, non parametri di gameplay del Player. Servono a impedire che una clip venga accettata soltanto perché non incrocia i piedi.
 
 Nel branch `fix/crouch-walk-animation-validation` l'esportatore è stato modificato per renderizzare mesh temporanee ottenute con `SkinnedMeshRenderer.BakeMesh` a ogni campione, anziché affidarsi al rendering di una posa skinned potenzialmente non aggiornata. L'esportazione ora rifiuta anche una contact sheet senza variazioni visive tra i campioni. La modifica è presente nel codice, ma **non è ancora stata eseguita in Unity**: occorre rigenerare il pacchetto e controllare le nuove immagini prima di considerare risolta la pipeline di ispezione.
+
+## Nuovi campioni generati — 24 novembre 2026
+
+Quattro nuove varianti PINOC sono state importate nella stessa cartella candidati, con prefisso `Crouch_Walk_Generated_`. La finestra di preview e l'audit Unity le includono automaticamente.
+
+L'audit Blender sul FBX sorgente non rileva incroci in nessuna delle quattro varianti. Il confronto grezzo è:
+
+| Candidato | Separazione minima piedi | Deriva bacino | Errore endpoint loop |
+|---|---:|---:|---:|
+| Generated 01 | 0,146 m | 0,233 m | 0,161 m |
+| Generated 02 | 0,173 m | 0,229 m | 0,308 m |
+| Generated 03 | 0,133 m | 0,190 m | 0,064 m |
+| Generated 04 | 0,050 m | 1,356 m | 0,299 m |
+
+Generated 03 è il primo candidato da verificare sui prefab Player. Questi dati non approvano la clip: sono misurati sul FBX sorgente e non sostituiscono la valutazione Humanoid maschile/femminile né il controllo visivo in Unity.
