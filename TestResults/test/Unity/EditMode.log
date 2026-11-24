@@ -1,24 +1,24 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 69792)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 60764)
-VBCSCompiler prewarm took 46.01 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 64024)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 73252)
+VBCSCompiler prewarm took 47.36 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr" at "2026-11-24T10:37:14.9332958Z"
 Built from '6000.6/staging' branch; Version is '6000.6.9f1 (8c45277fb9c5) revision 9192743'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr" at "2026-11-24T10:40:01.5657657Z"
 OS: 'Windows 11  (10.0.26300) Professional' Language: 'it' Physical Memory: 15875 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-11-24T10:37:14Z
+Date: 2026-11-24T10:40:01Z
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 51304, path: "C:/Program Files/WindowsApps/UnityTechnologies.UnityHub_4.0.1.65535_x64__2vrhnee42bhxm/app/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.19.0+4cc3dda
-  Session Id:              9ef54145fa8b48c687c8f7c3d1125066
+  Session Id:              466d7f3a74eb42afb045af12a3cf25c6
   Correlation Id:          62c2c2d628b500ca490b4688516a52c1
-  External correlation Id: 5507749832972949226
+  External correlation Id: 7801050178183131577
   Machine Id:              XzjnqROkxgGpDG+9teZZ5ygXX5w=
 [Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-cgr" (connect: 0.00s, validation: 0.02s, handshake: 0.08s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr-notifications" at "2026-11-24T10:37:15.0388205Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-cgr-notifications" at "2026-11-24T10:40:01.6708839Z"
 [Licensing::Module] Error: Access token is unavailable; failed to update
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
@@ -27,7 +27,7 @@ Date: 2026-11-24T10:37:14Z
   Type: Assigned
   Expiration: Unlimited
 [Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
-[Licensing::Module] Licensing Background thread has ended after 0.14s
+[Licensing::Module] Licensing Background thread has ended after 0.15s
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Unity.exe
@@ -83,16 +83,16 @@ C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [72816]  Target information:
+Player connection [69640]  Target information:
 
-Player connection [72816]  * "[IP] 192.168.0.169 [Port] 55504 [Flags] 2 [Guid] 4215258403 [EditorId] 4215258403 [Version] 1048832 [Id] WindowsEditor(7,NB208) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [69640]  * "[IP] 192.168.0.169 [Port] 55504 [Flags] 2 [Guid] 3448946504 [EditorId] 3448946504 [Version] 1048832 [Id] WindowsEditor(7,NB208) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [72816] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [72816] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [69640] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [69640] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-69712" after 0.3 seconds.
+[Package Manager] Connected to IPC stream "Upm-63556" after 0.3 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Initialising UDS system complete:
@@ -127,7 +127,7 @@ Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/Managed
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56712
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56556
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -135,30 +135,30 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.6.9f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.004985 seconds.
+Registered in 0.005932 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  1.202 seconds
-Domain Reload Profiling: 1886ms
-	BeginReloadAssembly (168ms)
-		CreateAndSetChildDomain (6ms)
+- Finished resetting the current domain, in  1.209 seconds
+Domain Reload Profiling: 1887ms
+	BeginReloadAssembly (175ms)
+		CreateAndSetChildDomain (3ms)
 	RebuildCommonClasses (7ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (129ms)
-	LoadAllAssembliesAndSetupDomain (357ms)
-		LoadAssemblies (157ms)
-		TypeCache.Refresh (239ms)
-			TypeCache.ScanAssembly (221ms)
+	RebuildNativeTypeToScriptingClass (25ms)
+	initialDomainReloadingComplete (101ms)
+	LoadAllAssembliesAndSetupDomain (369ms)
+		LoadAssemblies (168ms)
+		TypeCache.Refresh (257ms)
+			TypeCache.ScanAssembly (239ms)
 		AnalyzeDomain (1ms)
-	FinalizeReload (1203ms)
+	FinalizeReload (1211ms)
 		SetupLoadedEditorAssemblies (0ms)
 			InitializePlatformSupportModulesInManaged (27ms)
 			BeforeProcessingInitializeOnLoad (122ms)
-			ProcessInitializeOnLoadAttributes (103ms)
-			ProcessInitializeOnLoadMethodAttributes (717ms)
+			ProcessInitializeOnLoadAttributes (110ms)
+			ProcessInitializeOnLoadMethodAttributes (720ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -192,7 +192,8 @@ Application.AssetDatabase Initial Refresh Start
     com.unity.modules.animation@1.0.0 (location: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Library\PackageCache\com.unity.modules.animation)
     com.unity.test-framework.performance@6.6.0 (location: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\Library\PackageCache\com.unity.test-framework.performance@816c370aad5b)
 [Subsystems] No new subsystems found in resolved package list.
-[Package Manager] Done registering packages in 0.13 seconds
+[Package Manager] Done registering packages in 0.15 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
 Starting: C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind
 DisplayProgressbar: Compiling Scripts
@@ -200,12 +201,28 @@ warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
       Assembly system.runtime.interopservices.windowsruntime has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\NetStandard\Extensions\2.0.0\System.Runtime.InteropServices.WindowsRuntime.dll"
 warn: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
       Assembly system.componentmodel.composition has duplicate hint path. Ignoring "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\UnityReferenceAssemblies\unity-4.8-api\System.ComponentModel.Composition.dll" in favor of "C:\Program Files\Unity\Hub\Editor\6000.6.9f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.ComponentModel.Composition.dll"
-ExitCode: 0 Duration: 1s251ms
-[604/770    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-*** Tundra build success (1.11 seconds), 1 items updated, 770 evaluated
+ExitCode: 0 Duration: 2s65ms
+[603/770    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[766/770    1s] Csc Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.dll (+2 others)
+Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(745,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
+
+Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(758,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
+[767/770    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/UnderGrind.Locomotion.Tests.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/UnderGrind.Locomotion.Tests.dll, with 147 defines and 301 references
+
+processors: Unity.Jobs.CodeGen.JobsILPostProcessor, zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+
+running Unity.Jobs.CodeGen.JobsILPostProcessor
+[768/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.Locomotion.Tests.pdb
+[769/770    0s] CopyFiles Library/ScriptAssemblies/UnderGrind.Locomotion.Tests.dll
+*** Tundra build success (1.92 seconds), 5 items updated, 770 evaluated
+Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(745,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
+Assets\UnderGrind\Tests\Editor\HumanoidRigImportTests.cs(758,32): warning UAC0005: AppDomain.GetAssemblies() in Unity may return already unloaded assemblies and result in errors or leaks. Use Unity APIs instead, such as 'CurrentAssemblies.GetLoadedAssemblies()' or 'TypeCache.GetTypesDerivedFrom()'.
 Total cache size 20414448
-Total cache size after purge 20414448, took 00:00:00.0979885
-AssetDatabase: script compilation time: 2.303969s
+Total cache size after purge 20414448, took 00:00:00.0884088
+AssetDatabase: script compilation time: 3.132385s
 Begin MonoManager ReloadAssembly
 'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
 'Packages/com.unity.render-pipelines.core/Editor/Deprecated.cs' contains partial class of Unity.Object, exactly 1 of the partial classes needs to be in a file with the same filename. This is to know the one that can be referenced from ie. GameObjects
@@ -213,112 +230,110 @@ Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.660 seconds
-Domain Reload Profiling: 1663ms
-	BeginReloadAssembly (373ms)
-		DisableScriptedObjects (144ms)
-		CreateAndSetChildDomain (48ms)
+- Finished resetting the current domain, in  0.722 seconds
+Domain Reload Profiling: 1793ms
+	BeginReloadAssembly (394ms)
+		DisableScriptedObjects (143ms)
+		CreateAndSetChildDomain (50ms)
 	RebuildCommonClasses (9ms)
-	RebuildNativeTypeToScriptingClass (14ms)
-	initialDomainReloadingComplete (76ms)
-	LoadAllAssembliesAndSetupDomain (531ms)
-		LoadAssemblies (387ms)
-		TypeCache.Refresh (90ms)
-			TypeCache.ScanAssembly (79ms)
-		AnalyzeDomain (39ms)
-			BuildScriptInfoCaches (30ms)
+	RebuildNativeTypeToScriptingClass (18ms)
+	initialDomainReloadingComplete (84ms)
+	LoadAllAssembliesAndSetupDomain (564ms)
+		LoadAssemblies (408ms)
+		TypeCache.Refresh (115ms)
+			TypeCache.ScanAssembly (99ms)
+		AnalyzeDomain (36ms)
+			BuildScriptInfoCaches (28ms)
 			ResolveRequiredComponents (7ms)
-	FinalizeReload (661ms)
+	FinalizeReload (723ms)
 		SetupLoadedEditorAssemblies (0ms)
-			BeforeProcessingInitializeOnLoad (100ms)
-			ProcessInitializeOnLoadAttributes (154ms)
-			ProcessInitializeOnLoadMethodAttributes (120ms)
-			AfterProcessingInitializeOnLoad (12ms)
-		AwakeInstancesAfterBackupRestoration (38ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (128ms)
+			ProcessInitializeOnLoadAttributes (179ms)
+			ProcessInitializeOnLoadMethodAttributes (114ms)
+			AfterProcessingInitializeOnLoad (15ms)
+		AwakeInstancesAfterBackupRestoration (27ms)
 Starting new worker id: 0 with log in C:/Users/cgr/Desktop/eee/varie/unity/unity-context/UnderGrind/Logs/AssetImportWorkerHW0.log
-Importing 'GUID: b2c3d4e5f6471890abcdef1234567890 - Path: Assets/UnderGrind/Animations/PlayerAnimationManifest.json' with importer (TextScriptImporter)
-Imported 'GUID: b2c3d4e5f6471890abcdef1234567890' -> (Import Result ID: 'aaa24cd3ddbe51c0280801c4ae9b001e') in 0.021 seconds [static dependencies only]. Details - ImportResultOutputID=3b0f8f65bd5e00b3f77d48c85c5bf694 DependenciesID=bb37447ac2e8848a4c94d69cf997a22e StaticDependenciesID=ad68574241ff03fc340398f6a61c9732 
-Importing 'GUID: 860b00bdf81ca6d45ab0ecf51008cf5e - Path: Assets/UnderGrind/Animations/README.md' with importer (TextScriptImporter)
-Imported 'GUID: 860b00bdf81ca6d45ab0ecf51008cf5e' -> (Import Result ID: '9a66490ff7bc86c66da4699c8b9c851a') in 0.007 seconds [static dependencies only]. Details - ImportResultOutputID=37a883a5fc1e4626a21992e9e9b2216b DependenciesID=bc5bd02c13f018b5e1a5ac2cc80f445b StaticDependenciesID=016bfcdb96db79ceff80c4f5d22a5156 
 
-Asset Pipeline Refresh (id=874854214623ccc409449e9468c42eed): Total: 5.416 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=0163b59c24ba79f44be5392ee74b58d3): Total: 6.350 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
 	(Values over 0.05ms)
 	Summary:
-		Imports: total=2 (actual=2, local cache=0, cache server=0)
-		Asset DB Process Time: managed=2 ms, native=1442 ms
-		Asset DB Callback time: managed=392 ms, native=144 ms
-		Scripting: domain reloads=1, domain reload time=1078 ms, compile time=2307 ms, other=48 ms
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=1460 ms
+		Asset DB Callback time: managed=385 ms, native=167 ms
+		Scripting: domain reloads=1, domain reload time=1149 ms, compile time=3135 ms, other=51 ms
 		Project Asset Count: scripts=865, non-scripts=1652
-		Asset File Changes: new=0, changed=2, moved=0, deleted=0
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
 		Scan Filter Count: 0
-	InvokePackagesCallback: 142.187ms
-	ApplyChangesToAssetFolders: 1.092ms
-	Scan: 227.780ms
-	Collect global state as custom dependencies: 16.661ms
-	OnSourceAssetsModified: 1.326ms
-	CategorizeScriptCompilationAssets: 16.819ms
-	ProcessAssetsWithTransientArtifactChanges: 46.612ms
-	CategorizeAssets: 76.673ms
-	CompileScripts: 2306.611ms
-	ImportOutOfDateAssets: 739.869ms (666.030ms without children)
-		ImportManagerImport: 33.400ms (1.685ms without children)
-		UnloadImportedAssets: 1.644ms
-		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.339ms
-		ImportSchedulerStart: 38.440ms
-	PostProcessAllAssets: 396.130ms
-		VCAutoAddAssetPostprocess 2.235ms
-		PostProcessCallbackCreateDeferredMaterials 0.194ms
-		XRBuildSystem.XRAssetImported 0.153ms
-		MonoPostProcessAllAssets: 391.377ms
-			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 198.687ms
-			AssetPostprocessor.OnPostprocessAllAssets 130.931ms
-			StyleCatalogPostProcessor.OnPostprocessAllAssets 16.949ms
-			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 9.497ms
-			BuilderAssetPostprocessor.OnPostprocessAllAssets 8.905ms
-			AssetChangedListener.OnPostprocessAllAssets 2.759ms
-			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 1.970ms
-			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.931ms
-			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.663ms
-			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 1.602ms
-			SyncVS.PostprocessSyncProject 1.000ms
-			EditModeScopePostprocessor.OnPostprocessAllAssets 0.809ms
-			MaterialPostprocessor.OnPostprocessAllAssets 0.598ms
-			PostProcessor.OnPostprocessAllAssets 0.460ms
-			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.449ms
-			AudioMixerPostprocessor.OnPostprocessAllAssets 0.317ms
-			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.311ms
-			TextAssetPostProcessor.OnPostprocessAllAssets 0.310ms
-			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.298ms
-			AssetEvents.OnPostprocessAllAssets 0.238ms
-			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.238ms
-			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.219ms
-			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.178ms
-			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.163ms
-			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.139ms
-			SpeedTreePostProcessor.OnPostprocessAllAssets 0.133ms
-			ConfigAssetsTracker.OnPostprocessAllAssets 0.115ms
-			ThemePostprocessor.OnPostprocessAllAssets 0.110ms
-			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.099ms
-			AudioContainerPostProcessor.OnPostprocessAllAssets 0.088ms
-			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.086ms
-	PostAssetChangesProfiler: 3.195ms
-	UnloadStreamsBegin: 2.011ms
-	PersistCurrentRevisions: 0.319ms
-	GenerateScriptTypeHashes: 2.622ms
-	GenerateScriptTypeSerializationHashes: 4.469ms
-	Untracked: 1334.726ms
+	InvokePackagesCallback: 163.848ms
+	ApplyChangesToAssetFolders: 1.140ms
+	Scan: 260.149ms
+	Collect global state as custom dependencies: 17.279ms
+	OnSourceAssetsModified: 1.503ms
+	CategorizeScriptCompilationAssets: 16.655ms
+	ProcessAssetsWithTransientArtifactChanges: 45.174ms
+	CategorizeAssets: 42.816ms
+	CompileScripts: 3135.114ms
+	ImportOutOfDateAssets: 756.390ms (729.187ms without children)
+		UnloadImportedAssets: 1.854ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.415ms
+		ImportSchedulerStart: 24.929ms
+	PostProcessAllAssets: 390.894ms
+		VCAutoAddAssetPostprocess 2.475ms
+		PostProcessCallbackCreateDeferredMaterials 0.253ms
+		ShaderAssetModifiedCallback 0.207ms
+		WindowTitlePostprocess 0.185ms
+		XRBuildSystem.XRAssetImported 0.178ms
+		MonoPostProcessAllAssets: 385.014ms
+			UniversalRenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 208.069ms
+			AssetPostprocessor.OnPostprocessAllAssets 128.401ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 15.860ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 5.937ms
+			ShaderGraphAssetPostProcessor.OnPostprocessAllAssets 2.241ms
+			SyncVS.PostprocessSyncProject 2.000ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 1.937ms
+			AssetChangedListener.OnPostprocessAllAssets 1.744ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.557ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.210ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 0.948ms
+			MaterialPostprocessor.OnPostprocessAllAssets 0.672ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.572ms
+			ShaderReflectionAssetPostProcessor.OnPostprocessAllAssets 0.542ms
+			InputActionAssetPostprocessor.OnPostprocessAllAssets 0.478ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.354ms
+			AssetEvents.OnPostprocessAllAssets 0.310ms
+			PostProcessor.OnPostprocessAllAssets 0.301ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.300ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.268ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.267ms
+			InputActionJsonNameModifierAssetProcessor.OnPostprocessAllAssets 0.267ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.184ms
+			ProjectSettingsPostprocessor.OnPostprocessAllAssets 0.181ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.155ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.137ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.130ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.123ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.114ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.100ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.084ms
+	PostAssetChangesProfiler: 3.323ms
+	UnloadStreamsBegin: 1.655ms
+	PersistCurrentRevisions: 0.072ms
+	GenerateScriptTypeHashes: 2.246ms
+	GenerateScriptTypeSerializationHashes: 4.054ms
+	Untracked: 1409.645ms
 
 Application.AssetDatabase Initial Refresh End
 Shader Hidden/ChartRasterizerHardware is not supported: GPU does not support conservative rasterization
-Scanning for USB devices : 7.258ms
+Scanning for USB devices : 8.549ms
 Initializing Unity extensions:
 [MODES] ModeService[none].Initialize
 [MODES] ModeService[none].LoadModes
 [MODES] Loading mode Default (0) for mode-current-id-UnderGrind
 Unloading 146 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 3671 unused Assets / (1.4 MB). Loaded Objects now: 4668.
-Memory consumption went from 326.4 MB to 325.0 MB.
-Total: 10.656500 ms (FindLiveObjects: 0.484200 ms CreateObjectMapping: 0.149700 ms MarkObjects: 8.555900 ms  DeleteObjects: 1.004400 ms)
+Unloading 3671 unused Assets / (1.7 MB). Loaded Objects now: 4666.
+Memory consumption went from 325.8 MB to 324.2 MB.
+Total: 8.548900 ms (FindLiveObjects: 0.483900 ms CreateObjectMapping: 0.156400 ms MarkObjects: 6.725400 ms  DeleteObjects: 0.715600 ms)
 
 Unity is not designed to run with Administrator privileges.
 
@@ -327,18 +342,18 @@ This could make your system unstable or unbootable.
 
 Restart as a standard user for the safest experience.
 Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported for hardware-accelerated video decoding.
-[Project] Loading completed in 11.600 seconds
-	Project init time: 				10.492 seconds
+[Project] Loading completed in 12.241 seconds
+	Project init time: 				10.931 seconds
 		Template init time: 		0.000 seconds
-		Package Manager init time: 		0.365 seconds
-		Asset Database init time: 		1.937 seconds
-		Global illumination init time: 	0.012 seconds
-		Assemblies load time: 			1.989 seconds
-		Unity extensions init time: 	0.009 seconds
-		Asset Database refresh time: 	5.417 seconds
-	Scene opening time: 			0.215 seconds
-##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1795516646478,"processId":69712,"projectLoad":11.5997336,"projectInit":10.4915441,"templateInit":0.0,"packageManagerInit":0.3649753,"assetDatabaseInit":1.9372997,"globalIlluminationInit":0.0119045,"assembliesLoad":1.9888253,"unityExtensionsInit":0.0087283,"assetDatabaseRefresh":5.4167217,"sceneOpening":0.215377}
-##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1795516646478,"processId":69712,"editorVersion":"6000.6.9f1 (8c45277fb9c5)","branch":"6000.6/staging","buildType":"Release","platform":"Windows"}
+		Package Manager init time: 		0.330 seconds
+		Asset Database init time: 		1.641 seconds
+		Global illumination init time: 	0.005 seconds
+		Assemblies load time: 			1.981 seconds
+		Unity extensions init time: 	0.018 seconds
+		Asset Database refresh time: 	6.351 seconds
+	Scene opening time: 			0.143 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1795516813753,"processId":63556,"projectLoad":12.241392399999999,"projectInit":10.9308172,"templateInit":0.0,"packageManagerInit":0.3297998,"assetDatabaseInit":1.6405768,"globalIlluminationInit":0.0050085,"assembliesLoad":1.9806171,"unityExtensionsInit":0.0178208,"assetDatabaseRefresh":6.3506372,"sceneOpening":0.1427285}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1795516813753,"processId":63556,"editorVersion":"6000.6.9f1 (8c45277fb9c5)","branch":"6000.6/staging","buildType":"Release","platform":"Windows"}
 [Licensing::Client] Successfully resolved entitlement details
 Running tests for ExecutionSettings with details:
 targetPlatform = 
@@ -367,21 +382,21 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 (Filename: ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
 
 Importing 'GUID: 4f8f29cb45922534391ad94805a58b16 - Path: Assets/UnderGrind/Settings/PlayerInputSettings.asset' with importer (NativeFormatImporter)
-Imported 'GUID: 4f8f29cb45922534391ad94805a58b16' -> (Import Result ID: '6a796d75a360ec6d59d84718b85328bc') in 0.003 seconds [static dependencies only]. Details - ImportResultOutputID=cdc629896dfa0272dc1d8f2b228899ec DependenciesID=9634db5da1a2cdb477746a7ebe118107 StaticDependenciesID=13c52eb7734aaeb6a9c0e45241daee18 
-Asset Pipeline Refresh (id=ec6697a5f1eaa9e4bad369858c1f21cc): Total: 0.063 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Imported 'GUID: 4f8f29cb45922534391ad94805a58b16' -> (Import Result ID: '6a796d75a360ec6d59d84718b85328bc') in 0.009 seconds [static dependencies only]. Details - ImportResultOutputID=cdc629896dfa0272dc1d8f2b228899ec DependenciesID=9634db5da1a2cdb477746a7ebe118107 StaticDependenciesID=13c52eb7734aaeb6a9c0e45241daee18 
+Asset Pipeline Refresh (id=c9139fb969f23384298fab744be72d99): Total: 0.073 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Importing 'GUID: 52312daf9eedf2048857a10210a6272b - Path: Assets/UnderGrind/Settings/PlayerRigSettings.asset' with importer (NativeFormatImporter)
-Imported 'GUID: 52312daf9eedf2048857a10210a6272b' -> (Import Result ID: 'c459bd98897dac67bf84cb4a79912582') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=13d6a50fdb5672b508480611b453730c DependenciesID=5c254aa1b74f9e1e4cb4223f8e4c3d1d StaticDependenciesID=c3d68c98bb94bef24d538d40c9db5ec6 
+Imported 'GUID: 52312daf9eedf2048857a10210a6272b' -> (Import Result ID: 'c459bd98897dac67bf84cb4a79912582') in 0.006 seconds [static dependencies only]. Details - ImportResultOutputID=13d6a50fdb5672b508480611b453730c DependenciesID=5c254aa1b74f9e1e4cb4223f8e4c3d1d StaticDependenciesID=c3d68c98bb94bef24d538d40c9db5ec6 
 Importing 'GUID: 8cb678d867f2bbe42b3bf8b8d3032209 - Path: Assets/UnderGrind/Settings/PlayerInventoryUISettings.asset' with importer (NativeFormatImporter)
 Imported 'GUID: 8cb678d867f2bbe42b3bf8b8d3032209' -> (Import Result ID: '729e235c4d875909ad9e32cceed39f22') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=d54585928c6f70ab4523a33dc2888dbc DependenciesID=71d2d7a821125535eba08c4a7fa0fcca StaticDependenciesID=e92f41d7c53c669a91db7cf346022a18 
-Asset Pipeline Refresh (id=867c99d61aff66445a81a21e168691bf): Total: 0.024 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=2f5237ada807b57458ead9c8e15bf11d): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Start Indexing on Editor startup
 [Indexing] Starting Initial Indexing for Assets
 [UnityConnectServicesConfig] config is NOT valid, switching to default
-Created GICache directory at C:/Users/cgr/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.045s, timestamps: [11.605 - 11.650]
+Created GICache directory at C:/Users/cgr/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.031s, timestamps: [12.246 - 12.277]
 Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 32 unused Assets / (499.7 KB). Loaded Objects now: 4826.
-Memory consumption went from 328.2 MB to 327.7 MB.
-Total: 6.130800 ms (FindLiveObjects: 0.335800 ms CreateObjectMapping: 0.051400 ms MarkObjects: 5.092900 ms  DeleteObjects: 0.420900 ms)
+Unloading 32 unused Assets / (346.6 KB). Loaded Objects now: 4826.
+Memory consumption went from 328.4 MB to 328.1 MB.
+Total: 6.478400 ms (FindLiveObjects: 0.429600 ms CreateObjectMapping: 0.084000 ms MarkObjects: 5.522500 ms  DeleteObjects: 0.189600 ms)
 
 Executing IPrebuildSetup for: Unity.PerformanceTesting.Editor.TestRunBuilder.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -594,7 +609,7 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:489)
+UnderGrind.Tests.HumanoidRigImportTests:CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:503)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -635,7 +650,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 489)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 503)
 
 UnderGrind: report candidati Crouch Walk scritto in C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\Unity\CrouchWalkCandidateAudit.txt
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -644,7 +659,7 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:490)
+UnderGrind.Tests.HumanoidRigImportTests:CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:504)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -685,15 +700,15 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 490)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 504)
 
 Importing 'GUID: 217921afca27e8946873bc4e9e31c462 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx' with importer (FBXImporter)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.07 seconds
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '7b0bd9f606602a8796d9329e5099848d') in 0.201 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3280dd30fb87899f853d088081e7a0b9 DependenciesID=17a55b23a5bb685b96e99777a0044577 StaticDependenciesID=d1a4a2e0f4e412b4c03a66eabd850c30 
-Asset Pipeline Refresh (id=c1c4c85ce1b9bcb45a9d279987b8e5ca): Total: 0.262 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.08 seconds
+Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '7b0bd9f606602a8796d9329e5099848d') in 0.205 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3280dd30fb87899f853d088081e7a0b9 DependenciesID=17a55b23a5bb685b96e99777a0044577 StaticDependenciesID=d1a4a2e0f4e412b4c03a66eabd850c30 
+Asset Pipeline Refresh (id=b22778c41568e5446b093be2693cb9af): Total: 0.265 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Importing 'GUID: 217921afca27e8946873bc4e9e31c462 - Path: Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx' with importer (FBXImporter)
-Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '7b0bd9f606602a8796d9329e5099848d') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3280dd30fb87899f853d088081e7a0b9 DependenciesID=17a55b23a5bb685b96e99777a0044577 StaticDependenciesID=d1a4a2e0f4e412b4c03a66eabd850c30 
-Asset Pipeline Refresh (id=085c5d16314a2334f9ae399b7c458e86): Total: 0.042 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Imported 'GUID: 217921afca27e8946873bc4e9e31c462' -> (Import Result ID: '7b0bd9f606602a8796d9329e5099848d') in 0.024 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3280dd30fb87899f853d088081e7a0b9 DependenciesID=17a55b23a5bb685b96e99777a0044577 StaticDependenciesID=d1a4a2e0f4e412b4c03a66eabd850c30 
+Asset Pipeline Refresh (id=fcf5f54afc5a3c6468af834ffdaace1a): Total: 0.043 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 UnderGrind foot-crossing diagnostic: Mixamo source / Walking / Scene: rest=0,116m, min anatomico=0,103m, min asse fisso=0,008m a 9,73s, incroci anatomici=0/308, incroci asse fisso=0/308, min ginocchia=0,143m, incroci ginocchia=0/308
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
@@ -701,8 +716,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:378)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:392)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -743,7 +758,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Player male / Walking / Scene: rest=0,110m, min anatomico=0,054m, min asse fisso=-0,046m a 9,73s, incroci anatomici=0/308, incroci asse fisso=16/308, min ginocchia=0,085m, incroci ginocchia=0/308
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -752,8 +767,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:382)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:396)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -794,7 +809,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Player female / Walking / Scene: rest=0,084m, min anatomico=0,032m, min asse fisso=-0,063m a 9,73s, incroci anatomici=0/308, incroci asse fisso=37/308, min ginocchia=0,061m, incroci ginocchia=0/308
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -803,8 +818,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:386)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:400)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -845,7 +860,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Mixamo source / Running / Scene: rest=0,110m, min anatomico=0,065m, min asse fisso=0,035m a 3,17s, incroci anatomici=0/150, incroci asse fisso=0/150, min ginocchia=0,157m, incroci ginocchia=0/150
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -854,8 +869,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:378)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:392)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -896,7 +911,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Player male / Running / Scene: rest=0,110m, min anatomico=0,025m, min asse fisso=-0,005m a 3,17s, incroci anatomici=0/150, incroci asse fisso=0/150, min ginocchia=0,097m, incroci ginocchia=0/150
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -905,8 +920,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:382)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:396)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -947,7 +962,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Player female / Running / Scene: rest=0,084m, min anatomico=0,004m, min asse fisso=-0,024m a 3,17s, incroci anatomici=0/150, incroci asse fisso=3/150, min ginocchia=0,073m, incroci ginocchia=0/150
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -956,8 +971,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:386)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:400)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -998,7 +1013,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Mixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min anatomico=-0,114m, min asse fisso=-0,377m a 7,33s, incroci anatomici=6/232, incroci asse fisso=54/232, min ginocchia=0,123m, incroci ginocchia=0/232
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -1007,8 +1022,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:378)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:392)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -1049,7 +1064,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Player male / Crouch_Walk_Forward / Scene: rest=0,110m, min anatomico=-0,119m, min asse fisso=-0,305m a 7,33s, incroci anatomici=10/232, incroci asse fisso=50/232, min ginocchia=0,068m, incroci ginocchia=0/232
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -1058,8 +1073,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:382)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:396)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -1100,7 +1115,7 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 UnderGrind foot-crossing diagnostic: Player female / Crouch_Walk_Forward / Scene: rest=0,084m, min anatomico=-0,133m, min asse fisso=-0,310m a 7,33s, incroci anatomici=12/232, incroci asse fisso=54/232, min ginocchia=0,045m, incroci ginocchia=0/232
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
@@ -1109,8 +1124,8 @@ UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOpt
 UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
 UnityEngine.Logger:Log (UnityEngine.LogType,object)
 UnityEngine.Debug:Log (object)
-UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:554)
-UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:386)
+UnderGrind.Tests.HumanoidRigImportTests:RecordFootCrossingResult (string,UnityEngine.GameObject,UnityEngine.Avatar,UnityEngine.AnimationClip,System.Collections.Generic.ICollection`1<string>) (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:568)
+UnderGrind.Tests.HumanoidRigImportTests:LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () (at Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs:400)
 System.Reflection.RuntimeMethodInfo:Invoke (object,System.Reflection.BindingFlags,System.Reflection.Binder,object[],System.Globalization.CultureInfo)
 System.Reflection.MethodBase:Invoke (object,object[])
 NUnit.Framework.Internal.Reflect:InvokeMethod (System.Reflection.MethodInfo,object,object[])
@@ -1151,11 +1166,11 @@ UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteStep () (at ./Libr
 UnityEditor.TestTools.TestRunner.TestRun.TestJobRunner:ExecuteCallback () (at ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/TestJobRunner.cs:129)
 UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
-(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 554)
+(Filename: Assets/UnderGrind/Tests/Editor/HumanoidRigImportTests.cs Line: 568)
 
 Saving results to: C:/Users/cgr/AppData/LocalLow/DefaultCompany/UnderGrind\TestResults.xml
 Saving results to: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\Unity\EditMode.xml
-UnderGrind: test EditMode completati. Passati 54, falliti 3, saltati 0. Report: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\UnderGrind\EditMode.xml
+UnderGrind: test EditMode completati. Passati 56, falliti 1, saltati 0. Report: C:\Users\cgr\Desktop\eee\varie\unity\unity-context\UnderGrind\TestResults\test\UnderGrind\EditMode.xml
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
 UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
@@ -1175,7 +1190,7 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 (Filename: Assets/UnderGrind/Editor/LocomotionTestResultsRunner.cs Line: 80)
 
-Asset Pipeline Refresh (id=01fe0aeaa8f92b54d867ef7721791700): Total: 0.006 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=73432d12fd3051e43a602c9a5bf5fe65): Total: 0.006 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
 Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
@@ -1192,9 +1207,9 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 (Filename: ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/TestRun/Tasks/BuildActionTaskBase.cs Line: 48)
 
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 1791 unused Assets / (4.8 MB). Loaded Objects now: 4981.
-Memory consumption went from 379.5 MB to 374.8 MB.
-Total: 7.074700 ms (FindLiveObjects: 0.493100 ms CreateObjectMapping: 0.083900 ms MarkObjects: 5.447000 ms  DeleteObjects: 0.826400 ms)
+Unloading 1791 unused Assets / (5.2 MB). Loaded Objects now: 4981.
+Memory consumption went from 373.9 MB to 368.7 MB.
+Total: 7.487500 ms (FindLiveObjects: 0.520700 ms CreateObjectMapping: 0.093200 ms MarkObjects: 5.857700 ms  DeleteObjects: 0.790200 ms)
 
 DisplayProgressbar: Undo
 Test run completed. Exiting with code 2 (Failed). One or more tests failed.
@@ -1210,7 +1225,7 @@ UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
 
 (Filename: ./Library/PackageCache/com.unity.test-framework@01a8b42f9cf6/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
 
-MonoPathRemapper: Attempts to remap: 17003; Successful remaps: 11108
+MonoPathRemapper: Attempts to remap: 17008; Successful remaps: 11108
 Serialized file version minimum: 23, current 23
 [Physics::Module] Cleanup current backend.
 [Physics::Module] Id: 0xf2b8ea05
@@ -1225,17 +1240,17 @@ Shut down UDS service system complete
 AcceleratorClientConnectionCallback - disconnected - :0
 Cleanup mono
 CodeReloadManager destroyed
-abort_threads: Failed aborting id: 000000000000D62C, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000011848, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 0000000000009C80, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 00000000000118F8, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 000000000000D62C, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000011848, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 0000000000009C80, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 00000000000118F8, mono_thread_manage will ignore it
 
-debugger-agent: Unable to listen on 3200
+debugger-agent: Unable to listen on 3176
 VBCSCompilerPreWarmer: requested VBCSCompiler shutdown
 Checking for leaked weakptr:
   Found no leaked weakptrs.
 [Package Manager] Server process was shutdown
-##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1795516650353,"processId":69712,"allocatedMemory":13421154,"memoryLabels":[{"Default":168105},{"Permanent":15516},{"NewDelete":72783},{"Thread":4197944},{"Manager":31581},{"VertexData":8},{"Geometry":824},{"Texture":24},{"Shader":839819},{"Material":132},{"GfxDevice":55968},{"Audio":696},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":34816},{"Input":42840},{"JobScheduler":264},{"TextLib":336},{"Mono":48},{"MonoCode":64},{"ScriptingNativeRuntime":1259880},{"BaseObject":49360},{"Resource":1444},{"Renderer":2504},{"Transform":4781},{"File":4424},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":723358},{"StaticString":3808},{"Utility":2673718},{"Curl":2696},{"PoolAlloc":2264},{"AI":80},{"TypeTree":17165},{"ScriptManager":12688},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":7800},{"CloudService":288},{"WebRequest":552},{"VR":49650},{"SceneManager":608},{"Video":64},{"LazyScriptCache":32},{"Camera":729},{"Secure":2377},{"SerializationCache":9256},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":464},{"Hierarchy":1188},{"UIElements":40},{"CoreStats":14536},{"Identifiers":7152},{"EntityIdStore":33088},{"Gui":128},{"EditorUtility":117863},{"VersionControl":8},{"Undo":931},{"AssetDatabase":2514889},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":40465},{"Upm":1912},{"UpmDiagnostics":8},{"AssetCompliance":96},{"DrivenProperties":72},{"LocalIPC":256},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3222},{"Windowing":456},{"Licensing":12682},{"AssetReference":32},{"IPCStream":32}]}
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1795516817664,"processId":63556,"allocatedMemory":13423522,"memoryLabels":[{"Default":168105},{"Permanent":15516},{"NewDelete":72991},{"Thread":4197944},{"Manager":31581},{"VertexData":8},{"Geometry":824},{"Texture":24},{"Shader":839819},{"Material":132},{"GfxDevice":55968},{"Audio":696},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":34816},{"Input":42840},{"JobScheduler":264},{"TextLib":336},{"Mono":48},{"MonoCode":64},{"ScriptingNativeRuntime":1259880},{"BaseObject":49360},{"Resource":1444},{"Renderer":2504},{"Transform":4781},{"File":4424},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":725518},{"StaticString":3808},{"Utility":2673718},{"Curl":2696},{"PoolAlloc":2264},{"AI":80},{"TypeTree":17165},{"ScriptManager":12688},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":7800},{"CloudService":288},{"WebRequest":552},{"VR":49650},{"SceneManager":608},{"Video":64},{"LazyScriptCache":32},{"Camera":729},{"Secure":2377},{"SerializationCache":9256},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":464},{"Hierarchy":1188},{"UIElements":40},{"CoreStats":14536},{"Identifiers":7152},{"EntityIdStore":33088},{"Gui":128},{"EditorUtility":117863},{"VersionControl":8},{"Undo":931},{"AssetDatabase":2514889},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":40465},{"Upm":1912},{"UpmDiagnostics":8},{"AssetCompliance":96},{"DrivenProperties":72},{"LocalIPC":256},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3222},{"Windowing":456},{"Licensing":12682},{"AssetReference":32},{"IPCStream":32}]}

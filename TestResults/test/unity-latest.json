@@ -1,7 +1,7 @@
 ﻿{
-    "runId":  "20261124-113714-391",
-    "startedUtc":  "2026-11-24T10:37:14.3917487Z",
-    "finishedUtc":  "2026-11-24T10:37:48.4263719Z",
+    "runId":  "20261124-114001-048",
+    "startedUtc":  "2026-11-24T10:40:01.0486799Z",
+    "finishedUtc":  "2026-11-24T10:40:37.1673754Z",
     "unityEditorPath":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.6.9f1\\Editor\\Unity.exe",
     "unityTimeoutSeconds":  600,
     "status":  "Failed",
@@ -10,10 +10,10 @@
                           ],
     "totals":  {
                    "total":  70,
-                   "passed":  67,
+                   "passed":  69,
                    "skipped":  0,
                    "inconclusive":  0,
-                   "failed":  3
+                   "failed":  1
                },
     "platforms":  [
                       {
@@ -25,7 +25,7 @@
                           "validationErrors":  [
                                                    "Unity Ã¨ terminato con codice 2.",
                                                    "Il risultato Unity Ã¨ \u0027Failed(Child)\u0027, non Passed.",
-                                                   "Unity ha riportato 3 test falliti."
+                                                   "Unity ha riportato 1 test falliti."
                                                ],
                           "compilerDiagnostics":  [
 
@@ -34,17 +34,7 @@
                                            {
                                                "test":  "UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars",
                                                "message":  "Rilevati incroci laterali dei piedi durante il retarget Humanoid:\nMixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min anatomico=-0,114m, min asse fisso=-0,377m a 7,33s, incroci anatomici=6/232, incroci asse fisso=54/232, min ginocchia=0,123m, incroci ginocchia=0/232\nPlayer male / Crouch_Walk_Forward / Scene: rest=0,110m, min anatomico=-0,119m, min asse fisso=-0,305m a 7,33s, incroci anatomici=10/232, incroci asse fisso=50/232, min ginocchia=0,068m, incroci ginocchia=0/232\nPlayer female / Crouch_Walk_Forward / Scene: rest=0,084m, min anatomico=-0,133m, min asse fisso=-0,310m a 7,33s, incroci anatomici=12/232, incroci asse fisso=54/232, min ginocchia=0,045m, incroci ginocchia=0/232\n  Expected: \u003cempty\u003e\n  But was:  \u003c \"Mixamo source / Crouch_Walk_Forward / Scene: rest=0,376m, min anatomico=-0,114m, min asse fisso=-0,377m a 7,33s, incroci anatomici=6/232, incroci asse fisso=54/232, min ginocchia=0,123m, incroci ginocchia=0/232\", \"Player male / Crouch_Walk_Forward / Scene: rest=0,110m, min anatomico=-0,119m, min asse fisso=-0,305m a 7,33s, incroci anatomici=10/232, incroci asse fisso=50/232, min ginocchia=0,068m, incroci ginocchia=0/232\", \"Player female / Crouch_Walk_Forward / Scene: rest=0,084m, min anatomico=-0,133m, min asse fisso=-0,310m a 7,33s, incroci anatomici=12/232, incroci asse fisso=54/232, min ginocchia=0,045m, incroci ginocchia=0/232\" \u003e",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () [0x00123] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:389"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(\"Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx\",\"maschile\")",
-                                               "message":  "PlayerVisualRig mancante nel prefab maschile.\n  Expected: not null\n  But was:  null",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode (System.String assetPath, System.String label) [0x000c2] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:269"
-                                           },
-                                           {
-                                               "test":  "UnderGrind.Tests.HumanoidRigImportTests.VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(\"Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx\",\"femminile\")",
-                                               "message":  "PlayerVisualRig mancante nel prefab femminile.\n  Expected: not null\n  But was:  null",
-                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode (System.String assetPath, System.String label) [0x000c2] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:269"
+                                               "stackTrace":  "at UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars () [0x00123] in C:\\Users\\cgr\\Desktop\\eee\\varie\\unity\\unity-context\\UnderGrind\\Assets\\UnderGrind\\Tests\\Editor\\HumanoidRigImportTests.cs:403"
                                            }
                                        ],
                           "resultFile":  "TestResults/test/Unity/EditMode.xml",
@@ -53,10 +43,10 @@
                           "stderrFile":  "TestResults/test/Unity/EditMode.stderr.log",
                           "totals":  {
                                          "total":  57,
-                                         "passed":  54,
+                                         "passed":  56,
                                          "skipped":  0,
                                          "inconclusive":  0,
-                                         "failed":  3
+                                         "failed":  1
                                      }
                       },
                       {
