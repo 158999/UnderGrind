@@ -192,12 +192,33 @@ def reweight_mesh(obj, armature):
     fallback_vertices = 0
     removed_influence_assignments = 0
     allowed_union = set()
+    fallback_samples = []
+    side_weight_totals = {
+        "positiveX": {"left": 0.0, "right": 0.0, "vertices": 0},
+        "negativeX": {"left": 0.0, "right": 0.0, "vertices": 0},
+        "center": {"left": 0.0, "right": 0.0, "vertices": 0},
+    }
 
     for vertex in obj.data.vertices:
         armature_point = armature_inverse @ (obj.matrix_world @ vertex.co)
         allowed_names = allowed_groups_for_vertex(obj.name, armature_point.x)
         allowed_names &= set(deform_bones)
         allowed_union.update(allowed_names)
+
+        side_key = "positiveX" if armature_point.x > CENTERLINE_EPSILON else (
+            "negativeX" if armature_point.x < -CENTERLINE_EPSILON else "center"
+        )
+        side_weight_totals[side_key]["vertices"] += 1
+        original_influences = []
+        for assignment in vertex.groups:
+            group_name = group_by_index.get(assignment.group)
+            if group_name is None or assignment.weight <= WEIGHT_EPSILON:
+                continue
+            original_influences.append((group_name, float(assignment.weight)))
+            if group_name.startswith("Left"):
+                side_weight_totals[side_key]["left"] += float(assignment.weight)
+            elif group_name.startswith("Right"):
+                side_weight_totals[side_key]["right"] += float(assignment.weight)
 
         raw_weights = existing_allowed_weights(vertex, group_by_index, allowed_names)
         removed_influence_assignments += sum(
@@ -208,6 +229,15 @@ def reweight_mesh(obj, armature):
 
         if not raw_weights:
             fallback_vertices += 1
+            fallback_samples.append({
+                "vertexIndex": vertex.index,
+                "armatureLocalPosition": [round(float(value), 6) for value in armature_point],
+                "originalInfluences": [
+                    {"bone": name, "weight": round(weight, 6)}
+                    for name, weight in sorted(original_influences, key=lambda item: item[1], reverse=True)
+                ],
+                "allowedGroups": sorted(allowed_names),
+            })
             nearest = nearest_allowed_bone(armature_point, allowed_names, deform_bones)
             raw_weights = {nearest: 1.0}
 
@@ -230,8 +260,17 @@ def reweight_mesh(obj, armature):
 
     verification = inspect_reweighted_mesh(obj, allowed_union)
     verification["fallbackVertices"] = fallback_vertices
+    verification["fallbackVertexSamples"] = fallback_samples
     verification["removedInfluenceAssignments"] = removed_influence_assignments
     verification["allowedGroups"] = sorted(allowed_union)
+    verification["originalLeftRightWeightByVertexSide"] = {
+        side: {
+            "vertices": values["vertices"],
+            "leftWeight": round(values["left"], 6),
+            "rightWeight": round(values["right"], 6),
+        }
+        for side, values in side_weight_totals.items()
+    }
 
     if verification["unweightedVertices"] != 0:
         raise RuntimeError(obj.name + ": vertici non pesati dopo il reweighting.")
