@@ -409,7 +409,7 @@ namespace UnderGrind.Tests
             report.AppendLine("Misura i piedi nel frame anatomico corrente; nessun candidato viene promosso automaticamente.");
             report.AppendLine();
 
-            var ranking = new System.Collections.Generic.List<(string Path, int WorstTargetCrossings, float WorstMinimumSeparation)>();
+            var ranking = new System.Collections.Generic.List<(string Path, int WorstFootCrossings, int WorstKneeCrossings, float WorstMinimumFootSeparation, float WorstMinimumKneeSeparation)>();
             var paths = new[] { CurrentCrouchWalkPath }.Concat(candidatePaths);
             foreach (var path in paths)
             {
@@ -446,21 +446,27 @@ namespace UnderGrind.Tests
                     ranking.Add((
                         path,
                         Math.Max(maleResult.CrossingSamples, femaleResult.CrossingSamples),
-                        Math.Min(maleResult.MinimumSeparation, femaleResult.MinimumSeparation)));
+                        Math.Max(maleResult.KneeCrossingSamples, femaleResult.KneeCrossingSamples),
+                        Math.Min(maleResult.MinimumSeparation, femaleResult.MinimumSeparation),
+                        Math.Min(maleResult.MinimumKneeSeparation, femaleResult.MinimumKneeSeparation)));
                 }
             }
 
             ranking = ranking
-                .OrderBy(item => item.WorstTargetCrossings)
-                .ThenByDescending(item => item.WorstMinimumSeparation)
+                .OrderBy(item => item.WorstFootCrossings)
+                .ThenBy(item => item.WorstKneeCrossings)
+                .ThenByDescending(item => item.WorstMinimumFootSeparation)
+                .ThenByDescending(item => item.WorstMinimumKneeSeparation)
                 .ToList();
 
             report.AppendLine("Classifica diagnostica (non sostituisce la verifica visiva):");
             foreach (var item in ranking)
                 report.AppendLine(
                     System.IO.Path.GetFileName(item.Path) +
-                    ": incroci target max=" + item.WorstTargetCrossings +
-                    ", separazione minima target=" + item.WorstMinimumSeparation.ToString("F3") + "m");
+                    ": incroci piedi target max=" + item.WorstFootCrossings +
+                    ", incroci ginocchia target max=" + item.WorstKneeCrossings +
+                    ", separazione minima piedi=" + item.WorstMinimumFootSeparation.ToString("F3") + "m" +
+                    ", separazione minima ginocchia=" + item.WorstMinimumKneeSeparation.ToString("F3") + "m");
 
             var reportPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
                 Application.dataPath, "..", "TestResults", "test", "Unity", "CrouchWalkCandidateAudit.txt"));
@@ -468,6 +474,22 @@ namespace UnderGrind.Tests
             System.IO.File.WriteAllText(reportPath, report.ToString());
             Debug.Log(report.ToString());
             Debug.Log("UnderGrind: report candidati Crouch Walk scritto in " + reportPath);
+        }
+
+        private static string DescribeAvatarMapping(Avatar avatar)
+        {
+            var description = avatar.humanDescription;
+            var names = new[]
+            {
+                "LeftUpperLeg", "RightUpperLeg", "LeftLowerLeg",
+                "RightLowerLeg", "LeftFoot", "RightFoot"
+            };
+            var mapping = names.Select(humanName =>
+            {
+                var bone = description.human.FirstOrDefault(item => item.humanName == humanName);
+                return humanName + "=" + (string.IsNullOrEmpty(bone.boneName) ? "<missing>" : bone.boneName);
+            });
+            return "feetSpacing=" + description.feetSpacing.ToString("F3") + "; " + string.Join(", ", mapping);
         }
 
         private static string FormatFootCrossing(FootCrossingResult result)
