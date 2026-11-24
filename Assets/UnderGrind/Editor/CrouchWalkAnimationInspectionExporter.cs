@@ -187,6 +187,25 @@ namespace UnderGrind.Editor
             public bool bakeIK;
             public bool importBlendShapes;
             public bool importConstraints;
+            public bool importBlendShapeDeformPercent;
+            public bool importVertexColors;
+            public bool importUVs;
+            public bool preserveHierarchy;
+            public bool bakeAxisConversion;
+            public bool optimizeBones;
+            public bool isReadable;
+            public bool removeConstantScaleCurves;
+            public int maxBonesPerVertex;
+            public float minBoneWeight;
+            public float humanoidOversampling;
+            public float animationPositionError;
+            public float animationRotationError;
+            public float animationScaleError;
+            public string meshCompression;
+            public string importNormals;
+            public string importTangents;
+            public string importBlendShapeNormals;
+            public string indexFormat;
             public List<ImporterProperty> serializedProperties = new List<ImporterProperty>();
         }
 
@@ -911,7 +930,26 @@ namespace UnderGrind.Editor
                 globalScale = importer.globalScale,
                 bakeIK = importer.bakeIK,
                 importBlendShapes = importer.importBlendShapes,
-                importConstraints = importer.importConstraints
+                importConstraints = importer.importConstraints,
+                importBlendShapeDeformPercent = importer.importBlendShapeDeformPercent,
+                importVertexColors = importer.importVertexColors,
+                importUVs = importer.importUVs,
+                preserveHierarchy = importer.preserveHierarchy,
+                bakeAxisConversion = importer.bakeAxisConversion,
+                optimizeBones = importer.optimizeBones,
+                isReadable = importer.isReadable,
+                removeConstantScaleCurves = importer.removeConstantScaleCurves,
+                maxBonesPerVertex = importer.maxBonesPerVertex,
+                minBoneWeight = importer.minBoneWeight,
+                humanoidOversampling = importer.humanoidOversampling,
+                animationPositionError = importer.animationPositionError,
+                animationRotationError = importer.animationRotationError,
+                animationScaleError = importer.animationScaleError,
+                meshCompression = importer.meshCompression.ToString(),
+                importNormals = importer.importNormals.ToString(),
+                importTangents = importer.importTangents.ToString(),
+                importBlendShapeNormals = importer.importBlendShapeNormals.ToString(),
+                indexFormat = importer.indexFormat.ToString()
             };
 
             var serialized = new SerializedObject(importer);
