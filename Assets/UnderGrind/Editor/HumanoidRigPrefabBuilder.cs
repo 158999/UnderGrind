@@ -231,9 +231,10 @@ namespace UnderGrind.Editor
                 return null;
             }
 
-            // Generated prefabs must open as complete third-person characters.
-            // First-person visibility is selected later by the gameplay camera mode.
+            // Save neutral renderer defaults in the prefab. Runtime camera mode owns visibility;
+            // baking third-person preview state into the prefab would disable FP renderers permanently.
             visualRig.SetThirdPerson(true);
+            visualRig.RestoreRendererDefaults();
             if (!AssignOpaqueSkinMaterial(temporary))
             {
                 UnityEngine.Object.DestroyImmediate(temporary);
