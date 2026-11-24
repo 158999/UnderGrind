@@ -33,13 +33,13 @@ Gli otto movimenti di produzione sono già versionati in questa cartella e asseg
 ### Validazione — run Unity `20261124-114001-048`
 
 - **Walking** e **Running**: il test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` non ha segnalato incroci anatomici nella run corrente sui tre Avatar campionati. Running sul Player femminile ha però una separazione minima di soli 0,004 m: il test passa, ma la verifica visiva sul rig aggiornato resta importante.
-- **Crouch Walk Forward**: la clip ancora assegnata in `PlayerAnimationSettings.asset` continua a fallire: 6/232 campioni sulla sorgente Mixamo, 10/232 sul Player maschile e 12/232 sul femminile. Separazione minima anatomica: -0,114 m, -0,119 m e -0,133 m rispettivamente. Non è approvata.
+- **Crouch Walk originale**: `Crouch_Walk_Forward.fbx` resta difettosa e non è più assegnata: 6/232 campioni sulla sorgente Mixamo, 10/232 sul Player maschile e 12/232 sul femminile. Separazione minima anatomica: -0,114 m, -0,119 m e -0,133 m rispettivamente. Il controller usa provvisoriamente `Crouch_Walk_Candidate_08.fbx`, che non presenta incroci nell'audit Unity; la verifica visiva resta da eseguire.
 - **Visual Rig**: i quattro casi FBX/prefab del test `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` passano; il problema precedente era l'aspettativa errata sui FBX sorgente, non un componente mancante nei prefab.
 - **Jump, Fall, Land, Idle e Crouch Idle**: importati e assegnati; non sono coperti dal test di incrocio dei piedi e non sono ancora validati visivamente sul rig riparato.
 
 ### Candidati Crouch Walk
 
-La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili come Humanoid. Nessuna è assegnata al controller di produzione e nessuna sostituisce `Crouch_Walk_Forward.fbx`.
+La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili come Humanoid. Il 24 novembre 2026 `Crouch_Walk_Candidate_08.fbx` è stato assegnato provvisoriamente al controller tramite `PlayerAnimationSettings.asset`; `Crouch_Walk_Forward.fbx` resta versionata come sorgente originale e riferimento per l'audit.
 
 Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito anche nella run `20261124-114001-048`. Il candidato 08 resta il migliore nel retargeting misurato da Unity: zero incroci di piedi e ginocchia su sorgente, Player maschile e Player femminile; separazione minima dei piedi 0,254 m sulla sorgente, 0,183 m sul Player maschile e 0,155 m sul femminile; errore di chiusura del loop pari a 0 m. Il candidato 07 è anch'esso senza incroci, con separazione minima dei piedi sul Player femminile di 0,103 m e separazione minima delle ginocchia maggiore rispetto al candidato 08.
 
