@@ -54,11 +54,11 @@ I precedenti problemi Visual Rig sono risolti e verificati: il test ora distingu
 
 ### Ricerca di un sostituto per Crouch Walk
 
-Otto candidati PINOC sono presenti in `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk`, con importazione Humanoid e Avatar sorgente. Il report Blender grezzo non riproduce il retargeting Humanoid di Unity e non determina da solo il candidato definitivo.
+Dodici candidati PINOC sono presenti in `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk`, con importazione Humanoid e Avatar sorgente. Il report Blender grezzo non riproduce il retargeting Humanoid di Unity e non determina da solo il candidato definitivo.
 
 Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito nella run `20261124-114001-048` e ha generato `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il candidato 08 è primo nella classifica diagnostica: zero incroci di piedi e ginocchia su sorgente, Player maschile e femminile; separazione minima dei piedi rispettivamente 0,254 m, 0,183 m e 0,155 m; errore di chiusura del loop 0 m. Il candidato 07 è anch'esso privo di incroci, ma ha una separazione minima dei piedi di 0,103 m sul Player femminile e una separazione minima delle ginocchia maggiore.
 
-Il 24 novembre 2026 il candidato 08 è stato assegnato temporaneamente sulla base della classifica numerica, ma questa decisione è stata revocata: il superamento dei soli controlli di incrocio non dimostra che l'animazione sia utilizzabile. Nessuno degli otto candidati è approvato. Il test di locomozione verifica la clip effettivamente configurata; l'audit comparativo continua a includere la clip originale e tutti i candidati. La clip originale resta configurata e il suo difetto viene mantenuto visibile nei test fino a quando non sarà disponibile una sostituzione realmente valida.
+Il 24 novembre 2026 il candidato 08 è stato assegnato temporaneamente sulla base della classifica numerica, ma questa decisione è stata revocata: il superamento dei soli controlli di incrocio non dimostra che l'animazione sia utilizzabile. Nessuno dei dodici candidati è approvato. Il test di locomozione verifica la clip effettivamente configurata; l'audit comparativo continua a includere la clip originale e tutti i dodici candidati. La clip originale resta configurata e il suo difetto viene mantenuto visibile nei test fino a quando non sarà disponibile una sostituzione realmente valida.
 
 ### Limiti e diritti
 
