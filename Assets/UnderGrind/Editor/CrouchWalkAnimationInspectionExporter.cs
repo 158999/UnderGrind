@@ -202,7 +202,7 @@ namespace UnderGrind.Editor
             public bool importConstraints;
             public bool importBlendShapeDeformPercent;
             public bool importVertexColors;
-            public bool importUVs;
+            public string importUVs;
             public bool preserveHierarchy;
             public bool bakeAxisConversion;
             public bool optimizeBones;
@@ -974,7 +974,7 @@ namespace UnderGrind.Editor
                 importConstraints = importer.importConstraints,
                 importBlendShapeDeformPercent = importer.importBlendShapeDeformPercent,
                 importVertexColors = importer.importVertexColors,
-                importUVs = importer.importUVs,
+                importUVs = importer.importUVs.ToString(),
                 preserveHierarchy = importer.preserveHierarchy,
                 bakeAxisConversion = importer.bakeAxisConversion,
                 optimizeBones = importer.optimizeBones,
