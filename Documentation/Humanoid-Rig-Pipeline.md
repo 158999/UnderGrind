@@ -204,7 +204,7 @@ Il workflow `UnderGrind player character repair and export` (run `45365321060`) 
 - triangolazione di due facce problematiche del corpo maschile, identificate nello script come indici 92 e 186;
 - normali ricalcolate sulle mesh e UV rigenerate con Smart UV Project.
 
-I nuovi export FBX versionati sono `Human_Male_Rigged.fbx` (247.756 byte) e `Human_Female_Rigged.fbx` (255.468 byte). La verifica automatica ha confermato sei parti per FBX, 22 ossa e il materiale `UG_Skin`.
+Il primo export dopo la riparazione delle superfici, precedente al reweighting anatomico descritto sotto, ha prodotto `Human_Male_Rigged.fbx` (247.756 byte) e `Human_Female_Rigged.fbx` (255.468 byte). La verifica automatica ha confermato sei parti per FBX, 22 ossa e il materiale `UG_Skin`.
 
 Questi controlli riguardano struttura statica, topologia, UV, presenza dei pesi e export. **Non dimostrano che i pesi producano deformazioni anatomiche corrette durante animazioni o pose articolate.** Il workflow non esegue Unity, non rigenera i prefab in Unity e non produce una verifica visiva.
 
@@ -219,7 +219,7 @@ Restano quindi **PRESENTE DA VERIFICARE** in Unity:
 - qualità visiva in prima e terza persona;
 - retargeting di tutte le clip, in particolare Crouch Walk.
 
-La nuova verifica automatica aggiunta a `HumanoidRigImportTests` controlla la coerenza delle bind pose e l'esclusività dei gruppi renderer nelle due modalità camera. I test sono stati aggiunti al branch `fix/character-visual-integrity-20261124`; non risultano ancora eseguiti in Unity.
+La nuova verifica automatica aggiunta a `HumanoidRigImportTests` controlla la coerenza delle bind pose e l'esclusività dei gruppi renderer nelle due modalità camera. I test sono stati aggiunti al branch `fix/character-visual-integrity-clean`; non risultano ancora eseguiti in Unity.
 
 ### Correzione dei pesi anatomici — 24 novembre 2026
 
