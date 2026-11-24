@@ -25,7 +25,7 @@
       "loop": true,
       "unityAssetPath": "Assets/UnderGrind/Animations/Walking.fbx",
       "retargetedAtRuntime": true,
-      "validationStatus": "Zero anatomical foot crossings in Unity run 2026-11-23, before the 2026-11-24 rig repair. Rerun required on the repaired rig."
+      "validationStatus": "Zero anatomical foot crossings on source, male Player and female Player in Unity run 20261124-114001-048 after the 2026-11-24 rig repair. Visual validation remains required."
     },
     {
       "state": "Run",
@@ -35,7 +35,7 @@
       "loop": true,
       "unityAssetPath": "Assets/UnderGrind/Animations/Running.fbx",
       "retargetedAtRuntime": true,
-      "validationStatus": "Zero anatomical foot crossings in Unity run 2026-11-23, before the 2026-11-24 rig repair. Rerun required on the repaired rig."
+      "validationStatus": "Zero anatomical foot crossings on source, male Player and female Player in Unity run 20261124-114001-048 after the 2026-11-24 rig repair; minimum female Player separation was 0.004 m. Visual validation remains required."
     },
     {
       "state": "Jump",
@@ -85,7 +85,7 @@
       "loop": true,
       "unityAssetPath": "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx",
       "retargetedAtRuntime": true,
-      "validationStatus": "Known failure in Unity run 2026-11-24: 6/232 source foot crossings, 10/232 male Player, 12/232 female Player. Replacement not selected."
+      "validationStatus": "Known failure in Unity run 20261124-114001-048: 6/232 source foot crossings, 10/232 male Player, 12/232 female Player. Minimum anatomical separation: -0.114 m, -0.119 m and -0.133 m respectively. Replacement not selected."
     }
   ],
   "runningCandidateAudit": {
