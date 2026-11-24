@@ -42,7 +42,7 @@ Scegliere una cartella di destinazione. Unity crea un archivio ZIP pronto da all
 - **Analizza mesh skinned deformate:** esegue `SkinnedMeshRenderer.BakeMesh` agli istanti delle immagini e registra bounds, distribuzione dei vertici e blend shape.
 - **Tolleranza altezza contatto** e **Velocità massima contatto:** soglie euristiche per stimare il contatto dei piedi.
 
-Il valore iniziale è 30 Hz, con 12 istantanee, 192×320 pixel per riquadro e inclusione dei tempi keyframe. Il limite dei campioni evita che clip con moltissime curve producano report eccessivi; se viene raggiunto, il JSON lo segnala esplicitamente.
+Il valore iniziale è 30 Hz, con 24 istantanee (96 viste per personaggio/clip), 192×320 pixel per riquadro e inclusione dei tempi keyframe. Il limite dei campioni evita che clip con moltissime curve producano report eccessivi; se viene raggiunto, il JSON lo segnala esplicitamente.
 
 ## Struttura del pacchetto
 
