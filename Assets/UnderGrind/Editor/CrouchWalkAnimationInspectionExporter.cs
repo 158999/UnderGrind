@@ -627,8 +627,10 @@ namespace UnderGrind.Editor
             {
                 var rendererName = renderer.name;
                 var firstPerson =
-                    rendererName.IndexOf(settings.FirstPersonArmsToken, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    rendererName.IndexOf(settings.FirstPersonHandsToken, StringComparison.OrdinalIgnoreCase) >= 0;
+                    (!string.IsNullOrEmpty(settings.FirstPersonArmsToken) &&
+                     rendererName.IndexOf(settings.FirstPersonArmsToken, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (!string.IsNullOrEmpty(settings.FirstPersonHandsToken) &&
+                     rendererName.IndexOf(settings.FirstPersonHandsToken, StringComparison.OrdinalIgnoreCase) >= 0);
                 renderer.enabled = !firstPerson;
             }
 
@@ -941,7 +943,6 @@ namespace UnderGrind.Editor
             if (avatar == null)
                 return new AvatarMetadata { name = "Avatar sorgente non disponibile" };
 
-            var description = avatar.humanDescription;
             var metadata = new AvatarMetadata
             {
                 name = avatar.name,
@@ -955,8 +956,22 @@ namespace UnderGrind.Editor
                 upperLegTwist = description.upperLegTwist,
                 lowerLegTwist = description.lowerLegTwist,
                 hasTranslationDoF = description.hasTranslationDoF,
-                rootMotionBoneName = description.rootMotionBoneName
+                rootMotionBoneName = string.Empty
             };
+
+            if (!avatar.isValid || !avatar.isHuman)
+                return metadata;
+
+            var description = avatar.humanDescription;
+            metadata.feetSpacing = description.feetSpacing;
+            metadata.armStretch = description.armStretch;
+            metadata.legStretch = description.legStretch;
+            metadata.upperArmTwist = description.upperArmTwist;
+            metadata.lowerArmTwist = description.lowerArmTwist;
+            metadata.upperLegTwist = description.upperLegTwist;
+            metadata.lowerLegTwist = description.lowerLegTwist;
+            metadata.hasTranslationDoF = description.hasTranslationDoF;
+            metadata.rootMotionBoneName = description.rootMotionBoneName;
 
             foreach (var mapping in description.human ?? Array.Empty<HumanBone>())
             {
