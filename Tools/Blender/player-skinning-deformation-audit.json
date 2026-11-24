@@ -3411,23 +3411,23 @@
               "Chest": 38,
               "LeftHand": 16,
               "LeftLowerArm": 19,
-              "LeftShoulder": 11,
-              "LeftUpperArm": 15,
+              "LeftShoulder": 5,
+              "LeftUpperArm": 21,
               "RightHand": 17,
               "RightLowerArm": 24,
-              "RightShoulder": 11,
-              "RightUpperArm": 24
+              "RightShoulder": 5,
+              "RightUpperArm": 30
             },
             "deformWeightTotals": {
               "Chest": 36.6248,
               "LeftHand": 13.345384,
               "LeftLowerArm": 22.101978,
-              "LeftShoulder": 11.0,
-              "LeftUpperArm": 15.240238,
+              "LeftShoulder": 5.0,
+              "LeftUpperArm": 21.240238,
               "RightHand": 14.839852,
               "RightLowerArm": 27.014877,
-              "RightShoulder": 12.172688,
-              "RightUpperArm": 22.660183
+              "RightShoulder": 6.172688,
+              "RightUpperArm": 28.660183
             }
           },
           "restBoundsWorldMeters": {
@@ -3512,23 +3512,23 @@
               "Chest": 38,
               "LeftHand": 16,
               "LeftLowerArm": 19,
-              "LeftShoulder": 11,
-              "LeftUpperArm": 15,
+              "LeftShoulder": 5,
+              "LeftUpperArm": 21,
               "RightHand": 17,
               "RightLowerArm": 24,
-              "RightShoulder": 11,
-              "RightUpperArm": 24
+              "RightShoulder": 5,
+              "RightUpperArm": 30
             },
             "deformWeightTotals": {
               "Chest": 36.6248,
               "LeftHand": 13.345384,
               "LeftLowerArm": 22.101978,
-              "LeftShoulder": 11.0,
-              "LeftUpperArm": 15.240238,
+              "LeftShoulder": 5.0,
+              "LeftUpperArm": 21.240238,
               "RightHand": 14.839852,
               "RightLowerArm": 27.014877,
-              "RightShoulder": 12.172688,
-              "RightUpperArm": 22.660183
+              "RightShoulder": 6.172688,
+              "RightUpperArm": 28.660183
             }
           },
           "restBoundsWorldMeters": {
@@ -4439,10 +4439,10 @@
             },
             {
               "mesh": "Human_Female_TP_Arms",
-              "movedVertices": 56,
+              "movedVertices": 62,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.18421,
-              "meanDisplacementMeters": 0.034552,
+              "meanDisplacementMeters": 0.035434,
               "p95DisplacementMeters": 0.171733
             },
             {
@@ -4455,10 +4455,10 @@
             },
             {
               "mesh": "Human_Female_FP_Arms",
-              "movedVertices": 56,
+              "movedVertices": 62,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.18421,
-              "meanDisplacementMeters": 0.034552,
+              "meanDisplacementMeters": 0.035434,
               "p95DisplacementMeters": 0.171733
             },
             {
@@ -4494,10 +4494,10 @@
             },
             {
               "mesh": "Human_Female_TP_Arms",
-              "movedVertices": 56,
+              "movedVertices": 62,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.074753,
-              "meanDisplacementMeters": 0.014098,
+              "meanDisplacementMeters": 0.015339,
               "p95DisplacementMeters": 0.067259
             },
             {
@@ -4510,10 +4510,10 @@
             },
             {
               "mesh": "Human_Female_FP_Arms",
-              "movedVertices": 56,
+              "movedVertices": 62,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.074753,
-              "meanDisplacementMeters": 0.014098,
+              "meanDisplacementMeters": 0.015339,
               "p95DisplacementMeters": 0.067259
             },
             {
@@ -4549,10 +4549,10 @@
             },
             {
               "mesh": "Human_Female_TP_Arms",
-              "movedVertices": 56,
+              "movedVertices": 62,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.193735,
-              "meanDisplacementMeters": 0.035978,
+              "meanDisplacementMeters": 0.036917,
               "p95DisplacementMeters": 0.182258
             },
             {
@@ -4565,10 +4565,10 @@
             },
             {
               "mesh": "Human_Female_FP_Arms",
-              "movedVertices": 56,
+              "movedVertices": 62,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.193735,
-              "meanDisplacementMeters": 0.035978,
+              "meanDisplacementMeters": 0.036917,
               "p95DisplacementMeters": 0.182258
             },
             {
@@ -5099,10 +5099,10 @@
             },
             {
               "mesh": "Human_Female_TP_Arms",
-              "movedVertices": 71,
+              "movedVertices": 77,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.18421,
-              "meanDisplacementMeters": 0.04041,
+              "meanDisplacementMeters": 0.041292,
               "p95DisplacementMeters": 0.171733
             },
             {
@@ -5115,10 +5115,10 @@
             },
             {
               "mesh": "Human_Female_FP_Arms",
-              "movedVertices": 71,
+              "movedVertices": 77,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.18421,
-              "meanDisplacementMeters": 0.04041,
+              "meanDisplacementMeters": 0.041292,
               "p95DisplacementMeters": 0.171733
             },
             {
@@ -5154,10 +5154,10 @@
             },
             {
               "mesh": "Human_Female_TP_Arms",
-              "movedVertices": 71,
+              "movedVertices": 77,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.095528,
-              "meanDisplacementMeters": 0.019237,
+              "meanDisplacementMeters": 0.020479,
               "p95DisplacementMeters": 0.069445
             },
             {
@@ -5170,10 +5170,10 @@
             },
             {
               "mesh": "Human_Female_FP_Arms",
-              "movedVertices": 71,
+              "movedVertices": 77,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.095528,
-              "meanDisplacementMeters": 0.019237,
+              "meanDisplacementMeters": 0.020479,
               "p95DisplacementMeters": 0.069445
             },
             {
@@ -5209,10 +5209,10 @@
             },
             {
               "mesh": "Human_Female_TP_Arms",
-              "movedVertices": 71,
+              "movedVertices": 77,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.193735,
-              "meanDisplacementMeters": 0.041813,
+              "meanDisplacementMeters": 0.042753,
               "p95DisplacementMeters": 0.182258
             },
             {
@@ -5225,10 +5225,10 @@
             },
             {
               "mesh": "Human_Female_FP_Arms",
-              "movedVertices": 71,
+              "movedVertices": 77,
               "vertexCount": 175,
               "maxDisplacementMeters": 0.193735,
-              "meanDisplacementMeters": 0.041813,
+              "meanDisplacementMeters": 0.042753,
               "p95DisplacementMeters": 0.182258
             },
             {
