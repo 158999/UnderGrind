@@ -234,10 +234,6 @@ namespace UnderGrind.Editor
             // Generated prefabs must open as complete third-person characters.
             // First-person visibility is selected later by the gameplay camera mode.
             visualRig.SetThirdPerson(true);
-            // Save the prefab with all renderer groups enabled. Runtime PlayerVisualRig
-            // must capture neutral defaults before selecting first-/third-person visibility.
-            visualRig.RestoreRendererDefaults();
-
             if (!AssignOpaqueSkinMaterial(temporary))
             {
                 UnityEngine.Object.DestroyImmediate(temporary);

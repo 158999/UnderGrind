@@ -259,12 +259,13 @@ La PR `#11` contiene i nuovi asset derivati, gli audit, i test EditMode e la cor
 
 ### Correzione della visibilità delle braccia in prima persona — 24 novembre 2026
 
-La verifica dei prefab generati ha individuato un secondo difetto indipendente dai pesi: `HumanoidRigPrefabBuilder` applicava temporaneamente la modalità terza persona prima di salvare il prefab. Questo disabilitava i renderer `_FP_Arms` e `_FP_Hands`. A runtime `PlayerVisualRig` memorizzava quegli stati disabilitati come valori originali e quindi non poteva riattivare i renderer in prima persona.
+La verifica dei prefab ha individuato un difetto nel baseline dei renderer: il builder salva intenzionalmente i prefab in modalità anteprima terza persona, quindi `_FP_Arms` e `_FP_Hands` risultano disabilitati nel file prefab. `PlayerVisualRig.CacheRenderers` usava lo stato serializzato `Renderer.enabled` come baseline originale; di conseguenza, a runtime non poteva riattivare i renderer FP quando si passava alla prima persona.
 
-La correzione:
-- aggiunge `PlayerVisualRig.RestoreRendererDefaults()`, che ripristina gli stati acquisiti prima del cambio modalità;
-- il builder richiama il ripristino dopo la configurazione temporanea in terza persona, così i prefab vengono salvati con i gruppi renderer in stato neutro;
-- i prefab maschile e femminile versionati sono stati aggiornati riabilitando i renderer FP;
-- il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` ora istanzia i prefab generati, non il solo FBX, e verifica il passaggio prima persona → terza persona → prima persona.
+La correzione mantiene i prefab in anteprima terza persona e separa lo stato di anteprima dal baseline runtime: `PlayerVisualRig` considera attivi per impostazione predefinita tutti i renderer appartenenti ai gruppi controllati (testa, corpo, braccia e mani FP/TP), poi applica la visibilità in base alla modalità camera. I renderer non vengono più bloccati dal loro stato serializzato nel prefab.
+
+Il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` ora:
+- verifica che i prefab maschile e femminile abbiano i renderer FP disabilitati nella modalità anteprima;
+- istanzia i prefab e verifica che il passaggio prima persona → terza persona → prima persona riattivi ogni volta il gruppo corretto;
+- verifica che testa e corpo seguano la modalità camera.
 
 Questo corregge il blocco logico che impediva ai renderer FP di riattivarsi. Non certifica ancora la posa, la distanza o l'inquadratura degli arti rispetto alla camera: questi aspetti richiedono la verifica visiva in Unity.

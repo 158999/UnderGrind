@@ -247,6 +247,10 @@ namespace UnderGrind.Tests
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
             Assert.That(prefab, Is.Not.Null, "Prefab " + label + " non trovato: " + assetPath);
+            // The generated prefab intentionally opens in third-person preview mode.
+            // Runtime visibility must not treat these serialized FP-disabled states as defaults.
+            AssertRendererEnabled(prefab, _settings.FirstPersonArmsToken, false);
+            AssertRendererEnabled(prefab, _settings.FirstPersonHandsToken, false);
 
             var instance = UnityEngine.Object.Instantiate(prefab);
             var viewReference = new GameObject("Test View Reference").transform;
