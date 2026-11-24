@@ -210,7 +210,7 @@ namespace UnderGrind.Editor
             public bool removeConstantScaleCurves;
             public int maxBonesPerVertex;
             public float minBoneWeight;
-            public float humanoidOversampling;
+            public string humanoidOversampling;
             public float animationPositionError;
             public float animationRotationError;
             public float animationScaleError;
@@ -982,7 +982,7 @@ namespace UnderGrind.Editor
                 removeConstantScaleCurves = importer.removeConstantScaleCurves,
                 maxBonesPerVertex = importer.maxBonesPerVertex,
                 minBoneWeight = importer.minBoneWeight,
-                humanoidOversampling = importer.humanoidOversampling,
+                humanoidOversampling = importer.humanoidOversampling.ToString(),
                 animationPositionError = importer.animationPositionError,
                 animationRotationError = importer.animationRotationError,
                 animationScaleError = importer.animationScaleError,
