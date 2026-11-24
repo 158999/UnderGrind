@@ -629,7 +629,7 @@ namespace UnderGrind.Editor
             var assignedClip = animationSettings == null ? null : animationSettings.CrouchWalkClip;
             var rigSettingsPath = AssetDatabase.GetAssetPath(rigSettings);
             var assignedClipPath = assignedClip == null ? string.Empty : AssetDatabase.GetAssetPath(assignedClip);
-            return new BundleManifest
+            var manifest = new BundleManifest
             {
                 schemaVersion = SchemaVersion,
                 generatedUtc = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture),
@@ -654,6 +654,12 @@ namespace UnderGrind.Editor
                 playerRigSettingsSha256 = GetSha256(rigSettingsPath),
                 options = options
             };
+
+            if (animationSettings == null)
+                manifest.warnings.Add("PlayerAnimationSettings.asset non disponibile durante la generazione del report.");
+            else if (assignedClip == null)
+                manifest.warnings.Add("PlayerAnimationSettings.asset non assegna una CrouchWalkClip.");
+            return manifest;
         }
 
         private static PreviewRig CreatePreviewRig(string prefabPath, string characterName, PlayerRigSettings settings)
