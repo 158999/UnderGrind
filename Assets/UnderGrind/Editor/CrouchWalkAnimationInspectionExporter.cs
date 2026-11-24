@@ -651,6 +651,8 @@ namespace UnderGrind.Editor
 
             var sampleTimes = BuildSampleTimes(clip, options, out var sampleLimitReached);
             report.clip.sampleLimitReached = sampleLimitReached;
+            if (sampleLimitReached)
+                report.warnings.Add("Il limite Max Pose Samples è stato raggiunto: la sequenza temporale è stata ridotta in modo uniforme e alcuni tempi keyframe potrebbero non essere inclusi.");
             report.clip.averageSampleIntervalSeconds = CalculateAverageInterval(sampleTimes);
             report.clip.minimumSampleIntervalSeconds = CalculateMinimumInterval(sampleTimes);
             report.clip.maximumSampleIntervalSeconds = CalculateMaximumInterval(sampleTimes);
@@ -1142,10 +1144,8 @@ namespace UnderGrind.Editor
 
                 frame.leftKneeAngleDegrees = CalculateJointAngle(leftUpperLeg, leftKnee, leftFoot);
                 frame.rightKneeAngleDegrees = CalculateJointAngle(rightUpperLeg, rightKnee, rightFoot);
-                frame.leftHipAngleDegrees = CalculateJointAngle(
-                    SafeGetBoneTransform(rig.Animator, HumanBodyBones.LeftShoulder), leftUpperLeg, leftKnee);
-                frame.rightHipAngleDegrees = CalculateJointAngle(
-                    SafeGetBoneTransform(rig.Animator, HumanBodyBones.RightShoulder), rightUpperLeg, rightKnee);
+                frame.leftHipAngleDegrees = CalculateJointAngle(hips, leftUpperLeg, leftKnee);
+                frame.rightHipAngleDegrees = CalculateJointAngle(hips, rightUpperLeg, rightKnee);
 
                 foreach (var humanBone in InspectedBones)
                 {
@@ -1407,8 +1407,9 @@ namespace UnderGrind.Editor
                         try
                         {
                             var y = (times.Count - 1 - row) * options.cellHeight;
+                            var pixels = GetScaledPixels(rendered, options.cellWidth, options.cellHeight);
                             sheet.SetPixels(column * options.cellWidth, y,
-                                options.cellWidth, options.cellHeight, rendered.GetPixels());
+                                options.cellWidth, options.cellHeight, pixels);
                         }
                         finally
                         {
@@ -1423,6 +1424,32 @@ namespace UnderGrind.Editor
             finally
             {
                 UnityEngine.Object.DestroyImmediate(sheet);
+            }
+        }
+
+        private static Color[] GetScaledPixels(Texture2D source, int width, int height)
+        {
+            if (source.width == width && source.height == height)
+                return source.GetPixels();
+
+            var previous = RenderTexture.active;
+            var target = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.ARGB32);
+            Texture2D resized = null;
+            try
+            {
+                Graphics.Blit(source, target);
+                RenderTexture.active = target;
+                resized = new Texture2D(width, height, TextureFormat.RGBA32, false, false);
+                resized.ReadPixels(new Rect(0f, 0f, width, height), 0, 0, false);
+                resized.Apply(false, false);
+                return resized.GetPixels();
+            }
+            finally
+            {
+                RenderTexture.active = previous;
+                RenderTexture.ReleaseTemporary(target);
+                if (resized != null)
+                    UnityEngine.Object.DestroyImmediate(resized);
             }
         }
 
@@ -1610,7 +1637,7 @@ namespace UnderGrind.Editor
                         .Append(F(key.outTangent)).Append(',')
                         .Append(F(key.inWeight)).Append(',')
                         .Append(F(key.outWeight)).Append(',')
-                        .Append(Csv(key.weightedMode.ToString())).Append(",,,")
+                        .Append(Csv(key.weightedMode.ToString())).Append(",,")
                         .AppendLine();
                 }
             }
@@ -1628,7 +1655,7 @@ namespace UnderGrind.Editor
                         .Append(Csv(binding.propertyName)).Append(',')
                         .Append(Csv(binding.type == null ? string.Empty : binding.type.FullName)).Append(',')
                         .Append(index).Append(',')
-                        .Append(F(key.time)).Append(",,,,,,,")
+                        .Append(F(key.time)).Append(",,,,,,")
                         .Append(Csv(value == null ? string.Empty : AssetDatabase.GetAssetPath(value))).Append(',')
                         .Append(Csv(value == null ? string.Empty : value.name)).AppendLine();
                 }
