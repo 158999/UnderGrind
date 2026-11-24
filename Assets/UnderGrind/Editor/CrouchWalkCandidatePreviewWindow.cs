@@ -68,6 +68,7 @@ namespace UnderGrind.Editor
         private bool _inspectionCaptureGeometry = true;
         private float _inspectionContactHeight = 0.04f;
         private float _inspectionContactSpeed = 0.15f;
+        private float _inspectionCrossingTolerance = 0.02f;
 
         [MenuItem("UnderGrind/Animation/Crouch Walk Candidate Preview")]
         public static void Open()
@@ -213,6 +214,7 @@ namespace UnderGrind.Editor
             _inspectionCaptureGeometry = EditorGUILayout.Toggle("Analizza mesh skinned deformate", _inspectionCaptureGeometry);
             _inspectionContactHeight = EditorGUILayout.FloatField("Tolleranza altezza contatto (m)", _inspectionContactHeight);
             _inspectionContactSpeed = EditorGUILayout.FloatField("Velocità massima contatto (m/s)", _inspectionContactSpeed);
+            _inspectionCrossingTolerance = EditorGUILayout.FloatField("Tolleranza incrocio anatomico (m)", _inspectionCrossingTolerance);
 
             EditorGUILayout.Space(4f);
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
@@ -268,7 +270,8 @@ namespace UnderGrind.Editor
                 includeCurveKeyTimes = _inspectionIncludeCurveKeys,
                 captureSkinnedMeshDiagnostics = _inspectionCaptureGeometry,
                 contactHeightToleranceMeters = _inspectionContactHeight,
-                contactSpeedToleranceMetersPerSecond = _inspectionContactSpeed
+                contactSpeedToleranceMetersPerSecond = _inspectionContactSpeed,
+                crossingToleranceMeters = _inspectionCrossingTolerance
             };
 
             try
