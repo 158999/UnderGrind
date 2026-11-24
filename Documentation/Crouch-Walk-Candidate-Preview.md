@@ -54,6 +54,7 @@ Per ogni combinazione clip/personaggio:
 |---|---|
 | `report.json` | Metadati completi della clip, importer, Avatar sorgente e Player, prefab, renderer, curve, eventi, campioni e metriche aggregate. |
 | `pose-samples.csv` | Una riga per ogni osso Humanoid a ogni campione temporale. |
+| `transform-hierarchy-samples.csv` | Una riga per ogni Transform del prefab a ogni campione, inclusi nodi non Humanoid, gerarchia, tag/layer, stato attivo, trasformazioni locali/world e derivate cinematiche. |
 | `curve-keys.csv` | Tutte le curve float e object-reference, con tempi, valori, tangenti, pesi e tipo di binding. |
 | `geometry-samples.csv` | Diagnostica delle mesh skinned agli istanti della contact sheet, inclusi bounds, centroidi, min/max dei vertici, vertici non finiti e pesi delle blend shape. |
 | `contact-sheet.png` | Quattro viste del personaggio per ogni istante: frontale, tre quarti, laterale e posteriore. |
@@ -79,8 +80,8 @@ Per ogni combinazione clip/personaggio:
 
 **Pose e cinematica**
 - posizione, rotazione e scala locale di ogni osso Humanoid disponibile;
-- posizione e rotazione world, gerarchia e parent;
-- velocità lineare, accelerazione lineare e velocità angolare stimate tra campioni;
+- posizione e rotazione world, gerarchia e parent per tutte le ossa Humanoid e per ogni Transform del prefab, inclusi nodi non Humanoid;
+- velocità lineare, accelerazione lineare e velocità angolare stimate tra campioni per ogni osso Humanoid e ogni Transform;
 - posizione/rotazione del root, forward/right effettivi del modello, deriva del bacino nel root e inclinazione del busto;
 - angoli proxy di anche e ginocchia;
 - distanza tridimensionale e separazione laterale firmata di piedi e ginocchia, misurate sia sull'asse anatomico dinamico delle anche (ricalcolato a ogni campione, come nel test Unity) sia sull'asse statico della posa iniziale;
