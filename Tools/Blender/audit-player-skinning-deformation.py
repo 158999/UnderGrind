@@ -178,8 +178,8 @@ def audit_character(character_name, config, depsgraph):
             if not coords:
                 raise RuntimeError(obj.name + ": nessun vertice valutato.")
             rest_bounds[obj.name] = {
-                "min": [round(min(v[axis] for v in coords), 6) for axis in range(3)],
-                "max": [round(max(v[axis] for v in coords), 6) for axis in range(3)],
+                "min": [round(min(v[axis] for v in coords) * SCENE_UNIT_SCALE_METERS, 6) for axis in range(3)],
+                "max": [round(max(v[axis] for v in coords) * SCENE_UNIT_SCALE_METERS, 6) for axis in range(3)],
             }
 
         deformation_samples = []
