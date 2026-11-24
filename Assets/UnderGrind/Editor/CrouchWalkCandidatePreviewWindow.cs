@@ -437,8 +437,10 @@ namespace UnderGrind.Editor
             {
                 var name = renderer.name;
                 var isFirstPersonPart =
-                    name.IndexOf(rigSettings.FirstPersonArmsToken, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    name.IndexOf(rigSettings.FirstPersonHandsToken, StringComparison.OrdinalIgnoreCase) >= 0;
+                    (!string.IsNullOrEmpty(rigSettings.FirstPersonArmsToken) &&
+                     name.IndexOf(rigSettings.FirstPersonArmsToken, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (!string.IsNullOrEmpty(rigSettings.FirstPersonHandsToken) &&
+                     name.IndexOf(rigSettings.FirstPersonHandsToken, StringComparison.OrdinalIgnoreCase) >= 0);
                 renderer.enabled = !isFirstPersonPart;
             }
 
