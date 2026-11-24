@@ -62,19 +62,17 @@ Le dead zone radiali, la sensibilità, il comportamento del cursore, il timeout 
 
 `PlayerRigSettings.asset` contiene i percorsi FBX maschile/femminile, le radici degli scheletri, i requisiti Avatar Humanoid, il mapping dei renderer e la variante predefinita della scena di test. Il builder valida entrambi i personaggi e interrompe la generazione se un Avatar o un gruppo renderer richiesto manca.
 
-`PlayerVisualRig` gestisce gruppi distinti per testa, corpo, arti FP e arti TP. In prima persona nasconde la testa, usa i renderer FP e mostra il corpo quando il pitch supera la soglia configurata; in terza persona mostra testa, corpo e renderer TP. La correzione integrata in `main` con la PR #12 conserva lo stato `Renderer.enabled` originale e fa salvare i prefab con valori neutri prima dell'applicazione della modalità camera. I prefab versionati sono stati aggiornati nello stesso branch. Il nuovo comportamento non è ancora stato confermato da una nuova esecuzione Unity.
+`PlayerVisualRig` gestisce gruppi distinti per testa, corpo, arti FP e arti TP. In prima persona nasconde la testa, usa i renderer FP e mostra il corpo quando il pitch supera la soglia configurata; in terza persona mostra testa, corpo e renderer TP. `PlayerVisualRig` conserva lo stato `Renderer.enabled` originale e il builder salva i prefab con i valori neutri prima dell'applicazione della modalità camera. La run Unity `20261124-114001-048` ha verificato il test sui casi FBX maschile/femminile e sui prefab maschile/femminile: tutti e quattro passano.
 
 La registrazione del 23 novembre mostra ancora geometria/arti troppo vicini alla camera in prima persona. La selezione corretta dei gruppi renderer non certifica la posizione degli arti rispetto alla camera né elimina eventuali intersezioni; serve ancora una verifica visiva in Play Mode dopo la correzione dei pesi.
 
 ### Animazioni
 
-Gli otto FBX `mixamo-fbx` sono presenti in `Assets/UnderGrind/Animations` e le relative clip sono assegnate in `PlayerAnimationSettings.asset`, insieme al controller Animator. Ogni FBX usa un Avatar Humanoid sorgente; Unity esegue il retargeting runtime sull'Avatar del Player. Le curve non sono state ribake-ate sullo scheletro UnderGrind.
+Gli otto FBX `mixamo-fbx` sono presenti in `Assets/UnderGrind/Animations`. Le clip sono assegnate in `PlayerAnimationSettings.asset` e il controller Animator usa il retargeting Humanoid runtime: ogni sorgente ha un proprio Avatar e Unity valuta le curve sugli Avatar Player maschile e femminile.
 
-Il test Unity del 23 novembre aveva rilevato zero incroci anatomici per Walking e Running su sorgente e sui due Player; il risultato va ripetuto dopo la riparazione dei pesi. Per `Crouch_Walk_Forward`, la run `20261124-113037-739` del 24 novembre ha rilevato 6/232 incroci sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. La clip resta assegnata ma non è approvata.
+Nella run Unity `20261124-114001-048`, Walking e Running non hanno prodotto fallimenti nel controllo anatomico dei piedi. `Crouch_Walk_Forward.fbx`, ancora assegnata come Crouch Walk, resta invece difettosa: 6/232 incroci sulla sorgente Mixamo, 10/232 sul Player maschile e 12/232 sul femminile; separazione minima anatomica rispettivamente -0,114 m, -0,119 m e -0,133 m.
 
-La cartella `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk` contiene otto candidati non assegnati al controller. Il report Blender `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` valuta lo scheletro FBX grezzo e non equivale al retargeting Humanoid Unity. Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito nella run `20261124-113037-739` e ha scritto `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il candidato 08 è il migliore nella classifica automatica: zero incroci di piedi e ginocchia su sorgente e due Avatar Player, con separazione minima dei piedi di 0,183 m maschile e 0,155 m femminile. Il candidato 07 è anch'esso senza incroci e mantiene una separazione minima delle ginocchia maggiore, ma la separazione minima dei piedi sul Player femminile scende a 0,103 m. Il candidato 08 non è stato promosso: manca la verifica visiva del ciclo.
-
-Non sostituire il clip di produzione finché una variante non mostra risultati accettabili su entrambi gli Avatar e supera la verifica visiva del ciclo.
+Il test `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` ha confrontato gli otto candidati sul rig sorgente e sui due Avatar Player. `Crouch_Walk_Candidate_08.fbx` è il migliore risultato diagnostico: zero incroci di piedi e ginocchia sui tre rig, separazione minima dei piedi 0,183 m sul Player maschile e 0,155 m sul femminile, errore di loop pari a 0 m. Il candidato 07 è anch'esso senza incroci, ma la separazione minima dei piedi sul Player femminile scende a 0,103 m. Nessun candidato è stato assegnato al controller: la verifica visiva in Play Mode su entrambi gli Avatar resta un requisito prima della promozione.
 
 ## Graybox
 
@@ -88,24 +86,16 @@ Ogni suite produce un JSON riepilogativo, un TXT, i log e i report XML/TRX dispo
 
 ### Ultima esecuzione disponibile nel repository
 
-L'ultima esecuzione Unity versionata è la run `20261124-113037-739` su Unity **6000.6.9f1**:
+L'ultima esecuzione completa versionata è la run Unity `20261124-114001-048` su Unity **6000.6.9f1**:
 
 - Test autonomi C#: **6/6 superati**.
-- Unity EditMode: **54/57 superati**, 3 falliti.
+- Unity EditMode: **56/57 superati**, 1 fallito.
 - Unity PlayMode: **13/13 superati**.
-- Totale Unity: **67/70 superati**, 3 falliti.
+- Totale Unity: **69/70 superati**, 1 fallito.
 
-I tre fallimenti registrati sono:
+L'unico fallimento è `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`, limitato alla clip `Crouch_Walk_Forward.fbx`: 6/232 incroci sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. I due precedenti fallimenti Visual Rig non si riproducono: i casi FBX e prefab passano dopo la correzione del test che distingueva sorgenti importate e prefab runtime.
 
-1. `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`: Crouch Walk Forward, 6 incroci sulla sorgente, 10 sul Player maschile, 12 sul femminile.
-2. `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: il report locale non trova `PlayerVisualRig` nel prefab maschile.
-3. Lo stesso test non trova `PlayerVisualRig` nel prefab femminile.
-
-**Disallineamento da risolvere:** nel contenuto attuale di `main`, entrambi i prefab versionati contengono già il componente `PlayerVisualRig` con riferimenti a `PlayerRigSettings` e ai sei renderer. Il report della run locale non corrisponde quindi allo stato dei prefab attualmente versionati. Prima di modificare i prefab o il builder occorre aggiornare la copia locale a `54ca671` e ripetere EditMode: non è giustificato introdurre una seconda correzione sugli asset sulla sola base di un report disallineato.
-
-Il difetto Crouch Walk resta invece confermato. Il report Unity ha identificato `Crouch_Walk_Candidate_08.fbx` come miglior candidato automatico, con zero incroci su entrambi gli Avatar Player; la sostituzione resta bloccata in attesa della verifica visiva.
-
-L'assenza di un nuovo report Unity dopo le correzioni non equivale a test superati. La verifica di importazione, compilazione, rendering, EditMode e PlayMode deve essere eseguita in Unity 6000.6.9f1.
+Non risultano errori di compilazione Unity nella run. Il report PlayMode è valido e completo (13/13); il report EditMode è valido ma fallisce per l'asserzione sulla clip. La verifica visiva del movimento non è eseguita dal runner.
 
 ## Stato aggiornato della pipeline
 
@@ -113,8 +103,8 @@ La riparazione anatomica dei pesi è entrata in `main` il 24 novembre 2026. I nu
 
 **Verificato in Blender:** 12 mesh controllate, massimo quattro influenze per vertice, pesi normalizzati, nessuna influenza anatomica vietata, nessun vertice non pesato e 54 pose sintetiche valutate per personaggio.
 
-**Verificato nell'ultima run Unity del 24 novembre:** 67/70 test superati (EditMode 54/57, PlayMode 13/13). Il fallimento Crouch Walk è confermato. Gli altri due fallimenti riguardano prefab locali che non corrispondono ai prefab attualmente presenti in `main`; la verifica va ripetuta dopo sincronizzazione.
+**Verificato nell'ultima run Unity `20261124-114001-048`:** 69/70 test Unity superati; EditMode 56/57, PlayMode 13/13. I test standalone sono 6/6. I due precedenti casi Visual Rig ora passano. Resta unicamente il difetto Crouch Walk sulla clip originale.
 
-**Non ancora verificato dopo le correzioni:** import e resa dei prefab aggiornati, EditMode e PlayMode sul nuovo baseline renderer, posizione degli arti FP rispetto alla camera, deformazione visiva in prima e terza persona e retargeting definitivo di Crouch Walk.
+**Non ancora verificato:** qualità visiva delle deformazioni in prima e terza persona, posizione degli arti FP rispetto alla camera, continuità visiva dei cicli e promozione del candidato Crouch Walk. La run automatica non sostituisce il controllo visivo in Unity.
 
 La documentazione di dettaglio del rig è in `Documentation/Humanoid-Rig-Pipeline.md`; provenienza e stato delle clip sono in `Documentation/Player-Animation-Asset-Intake-2026-11-20.md` e `Assets/UnderGrind/Animations/README.md`.
