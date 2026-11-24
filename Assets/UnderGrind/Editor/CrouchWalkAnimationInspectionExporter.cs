@@ -790,6 +790,10 @@ namespace UnderGrind.Editor
             WritePoseCsv(poseCsvPath, report.poseFrames);
             report.poseCsv = "pose-samples.csv";
 
+            var transformCsvPath = Path.Combine(outputDirectory, "transform-hierarchy-samples.csv");
+            WriteTransformCsv(transformCsvPath, report.poseFrames);
+            report.transformCsv = "transform-hierarchy-samples.csv";
+
             var curveCsvPath = Path.Combine(outputDirectory, "curve-keys.csv");
             WriteCurveCsv(curveCsvPath, clip);
             report.curveCsv = "curve-keys.csv";
@@ -805,6 +809,7 @@ namespace UnderGrind.Editor
                 reportPath = ToPackagePath(relativeDirectory, "report.json"),
                 contactSheetPath = ToPackagePath(relativeDirectory, "contact-sheet.png"),
                 poseCsvPath = ToPackagePath(relativeDirectory, "pose-samples.csv"),
+                transformCsvPath = ToPackagePath(relativeDirectory, "transform-hierarchy-samples.csv"),
                 curveCsvPath = ToPackagePath(relativeDirectory, "curve-keys.csv"),
                 geometryCsvPath = options.captureSkinnedMeshDiagnostics
                     ? ToPackagePath(relativeDirectory, "geometry-samples.csv")
@@ -1931,6 +1936,44 @@ namespace UnderGrind.Editor
                         .Append(F(frame.rightHipAngleDegrees)).AppendLine();
                 }
             }
+            File.WriteAllText(path, builder.ToString(), new UTF8Encoding(false));
+        }
+
+        private static void WriteTransformCsv(string path, IReadOnlyList<PoseFrame> frames)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("frame,timeSeconds,normalizedTime,hierarchyPath,transformName,parentPath,tag,layer,layerName,activeSelf,activeInHierarchy,localPosX,localPosY,localPosZ,localRotX,localRotY,localRotZ,localRotW,localEulerX,localEulerY,localEulerZ,localScaleX,localScaleY,localScaleZ,worldPosX,worldPosY,worldPosZ,worldRotX,worldRotY,worldRotZ,worldRotW,worldEulerX,worldEulerY,worldEulerZ,lossyScaleX,lossyScaleY,lossyScaleZ,velocityX,velocityY,velocityZ,speed,acceleration,angularVelocityDegPerSec");
+
+            foreach (var frame in frames)
+            {
+                foreach (var transform in frame.transforms)
+                {
+                    builder.Append(frame.index).Append(',')
+                        .Append(F(frame.timeSeconds)).Append(',')
+                        .Append(F(frame.normalizedTime)).Append(',')
+                        .Append(Csv(transform.hierarchyPath)).Append(',')
+                        .Append(Csv(transform.transformName)).Append(',')
+                        .Append(Csv(transform.parentPath)).Append(',')
+                        .Append(Csv(transform.tag)).Append(',')
+                        .Append(transform.layer).Append(',')
+                        .Append(Csv(transform.layerName)).Append(',')
+                        .Append(transform.activeSelf).Append(',')
+                        .Append(transform.activeInHierarchy).Append(',')
+                        .Append(VectorCsv(transform.localPosition)).Append(',')
+                        .Append(QuaternionCsv(transform.localRotation)).Append(',')
+                        .Append(VectorCsv(transform.localEulerAngles)).Append(',')
+                        .Append(VectorCsv(transform.localScale)).Append(',')
+                        .Append(VectorCsv(transform.worldPosition)).Append(',')
+                        .Append(QuaternionCsv(transform.worldRotation)).Append(',')
+                        .Append(VectorCsv(transform.worldEulerAngles)).Append(',')
+                        .Append(VectorCsv(transform.lossyScale)).Append(',')
+                        .Append(VectorCsv(transform.linearVelocity)).Append(',')
+                        .Append(F(transform.linearSpeed)).Append(',')
+                        .Append(F(transform.linearAcceleration)).Append(',')
+                        .Append(F(transform.angularVelocityDegreesPerSecond)).AppendLine();
+                }
+            }
+
             File.WriteAllText(path, builder.ToString(), new UTF8Encoding(false));
         }
 
