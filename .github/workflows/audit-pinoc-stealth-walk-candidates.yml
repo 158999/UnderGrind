@@ -28,10 +28,10 @@ jobs:
         run: |
           set -euo pipefail
           folder="Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_00.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=rYli-rW1Z9-QGQbgAiMbf7T RtXM' --output "$folder/Crouch_Walk_Generated_01.fbx"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_01.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=jj_vMnT2Ctb-DBO4pVod8DxL--o' --output "$folder/Crouch_Walk_Generated_02.fbx"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_02.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=_jrulUr273ZI7IrqjoJGJ8ZDuJA' --output "$folder/Crouch_Walk_Generated_03.fbx"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_03.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=7O9Qh6nlqx6imIpy7z8Oz6BTemo' --output "$folder/Crouch_Walk_Generated_04.fbx"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_00.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=xY_BVMWZUrKvEzGbmQlMEn_wM74' --output "$folder/Crouch_Walk_Generated_01.fbx"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_01.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=KsW0OpOi5MgsPcIQDmMcTTn440I' --output "$folder/Crouch_Walk_Generated_02.fbx"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_02.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=AiW-L-LrfipyiWhBuSakC6UhyXY' --output "$folder/Crouch_Walk_Generated_03.fbx"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_03.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=yqM2SX8mMQGx2a2ZUDXiRAN_GX4' --output "$folder/Crouch_Walk_Generated_04.fbx"
           for file in "$folder"/Crouch_Walk_Generated_*.fbx; do
             test -s "$file"
             size=$(stat -c %s "$file")
