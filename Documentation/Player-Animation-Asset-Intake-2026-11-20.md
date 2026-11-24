@@ -53,7 +53,7 @@ La run Unity `20261124-110717-910` ha eseguito 55 test EditMode e 13 PlayMode: 6
 - `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: aspettativa non coerente con gli stati iniziali dei renderer FP.
 - `VisualRigPreservesInitiallyDisabledRenderers`: il rig riattivava un renderer disabilitato in origine.
 
-Le due anomalie dei renderer sono corrette nel branch `fix/crouch-walk-animation-audit`: il rig conserva lo stato enabled originale, il builder ripristina i default prima di salvare i prefab e gli asset prefab mantengono i gruppi renderer in stato neutro. La correzione non è ancora stata verificata con una nuova esecuzione Unity.
+Le due anomalie dei renderer sono corrette nel branch `fix/crouch-walk-animation-audit`: il rig conserva lo stato enabled originale, il builder ripristina i default prima di salvare i prefab e gli asset prefab mantengono i gruppi renderer in stato neutro. La correzione integrata in `main` tramite PR #12 non è ancora stata verificata con una nuova esecuzione Unity.
 
 ### Ricerca di un sostituto per Crouch Walk
 
