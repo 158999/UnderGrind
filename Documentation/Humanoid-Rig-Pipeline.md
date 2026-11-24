@@ -216,7 +216,7 @@ L'ultima esecuzione Unity versionata è la run `20261124-110717-910` su Unity 60
 - `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: l'aspettativa di renderer FP disabilitati era applicata anche all'FBX sorgente, che conserva invece i renderer attivi.
 - `VisualRigPreservesInitiallyDisabledRenderers`: il baseline runtime forzava a `true` un renderer disabilitato in origine.
 
-I due problemi dei renderer sono corretti nel branch `fix/crouch-walk-animation-audit`, ma la correzione deve essere verificata con una nuova esecuzione Unity. Il test ora controlla i valori neutri iniziali su entrambi gli FBX e sui prefab, quindi verifica i passaggi prima persona → terza persona → prima persona. Il test PlayMode continua a verificare che un renderer disabilitato in origine non venga riattivato.
+I due problemi dei renderer sono corretti in `main` tramite PR #12, ma la correzione deve essere verificata con una nuova esecuzione Unity. Il test ora controlla i valori neutri iniziali su entrambi gli FBX e sui prefab, quindi verifica i passaggi prima persona → terza persona → prima persona. Il test PlayMode continua a verificare che un renderer disabilitato in origine non venga riattivato.
 
 ### Correzione dei pesi anatomici — 24 novembre 2026
 
@@ -269,4 +269,4 @@ I prefab maschile e femminile versionati sono stati aggiornati in modo che `FP_A
 
 Il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` verifica ora i default neutri su FBX maschile/femminile e prefab maschile/femminile, poi verifica la commutazione esclusiva dei gruppi. Il test PlayMode `VisualRigPreservesInitiallyDisabledRenderers` verifica la conservazione dello stato disabilitato.
 
-Queste modifiche sono presenti nel branch `fix/crouch-walk-animation-audit` e non sono ancora state verificate con una nuova esecuzione Unity. La correzione riguarda gli stati dei renderer, non la posa o la distanza degli arti FP dalla camera: la verifica visiva della prima persona resta aperta.
+Queste modifiche sono state unite in `main` tramite PR #12 e non sono ancora state verificate con una nuova esecuzione Unity. La correzione riguarda gli stati dei renderer, non la posa o la distanza degli arti FP dalla camera: la verifica visiva della prima persona resta aperta.
