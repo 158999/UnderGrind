@@ -190,7 +190,7 @@ namespace UnderGrind.Editor
             public float upperLegTwist;
             public float lowerLegTwist;
             public bool hasTranslationDoF;
-            public bool hasExtraRoot;
+            public string rootMotionBoneName;
             public List<HumanBoneMapping> humanMappings = new List<HumanBoneMapping>();
             public List<SkeletonBoneMetadata> skeleton = new List<SkeletonBoneMetadata>();
         }
@@ -277,7 +277,7 @@ namespace UnderGrind.Editor
             public float floatParameter;
             public int intParameter;
             public string objectReference;
-            public float messageOptions;
+            public string messageOptions;
         }
 
         [Serializable]
@@ -888,7 +888,7 @@ namespace UnderGrind.Editor
                 upperLegTwist = description.upperLegTwist,
                 lowerLegTwist = description.lowerLegTwist,
                 hasTranslationDoF = description.hasTranslationDoF,
-                hasExtraRoot = description.hasExtraRoot
+                rootMotionBoneName = description.rootMotionBoneName
             };
 
             foreach (var mapping in description.human ?? Array.Empty<HumanBone>())
@@ -1039,7 +1039,7 @@ namespace UnderGrind.Editor
                         ? string.Empty
                         : AssetDatabase.GetAssetPath(animationEvent.objectReferenceParameter) + "|" +
                           animationEvent.objectReferenceParameter.name,
-                    messageOptions = (float)animationEvent.messageOptions
+                    messageOptions = animationEvent.messageOptions.ToString()
                 });
             }
             return result;
