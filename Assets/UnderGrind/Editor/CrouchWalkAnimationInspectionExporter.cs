@@ -1211,6 +1211,12 @@ namespace UnderGrind.Editor
             for (var index = 0; index < times.Count; index++)
             {
                 var time = times[index];
+                if (index % 10 == 0 || index == times.Count - 1)
+                    EditorUtility.DisplayProgressBar(
+                        "UnderGrind — Analisi animazioni",
+                        rig.CharacterName + " / " + clip.name + " — campionamento pose " +
+                        (index + 1) + "/" + times.Count,
+                        (float)(index + 1) / times.Count);
                 Evaluate(rig, clip, time);
 
                 // Match the project foot-crossing test: anatomical left-to-right axis is recalculated
@@ -1563,6 +1569,11 @@ namespace UnderGrind.Editor
             {
                 for (var row = 0; row < times.Count; row++)
                 {
+                    EditorUtility.DisplayProgressBar(
+                        "UnderGrind — Analisi animazioni",
+                        rig.CharacterName + " / " + clip.name + " — contact sheet " +
+                        (row + 1) + "/" + times.Count,
+                        (float)(row + 1) / times.Count);
                     Evaluate(rig, clip, times[row]);
                     for (var column = 0; column < angleCount; column++)
                     {
@@ -1658,6 +1669,11 @@ namespace UnderGrind.Editor
 
             for (var frameIndex = 0; frameIndex < times.Count; frameIndex++)
             {
+                EditorUtility.DisplayProgressBar(
+                    "UnderGrind — Analisi animazioni",
+                    rig.CharacterName + " / " + clip.name + " — mesh deformate " +
+                    (frameIndex + 1) + "/" + times.Count,
+                    (float)(frameIndex + 1) / times.Count);
                 Evaluate(rig, clip, times[frameIndex]);
                 var frame = new GeometryFrame
                 {
