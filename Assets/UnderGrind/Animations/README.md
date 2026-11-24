@@ -33,7 +33,7 @@ Gli otto movimenti di produzione sono già versionati in questa cartella e asseg
 ### Validazione
 
 - **Walking** e **Running**: la run Unity del 23 novembre 2026 ha registrato zero incroci anatomici dei piedi su sorgente, Player maschile e Player femminile. Il risultato precede la riparazione dei pesi del 24 novembre e va ripetuto sul rig aggiornato.
-- **Crouch Walk Forward**: la run Unity del 24 novembre 2026 è fallita. Ha rilevato 6/232 campioni con incrocio sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. Il clip resta assegnato ma non è considerato approvato.
+- **Crouch Walk Forward**: la run Unity `20261124-113037-739` del 24 novembre 2026 ha confermato il difetto: 6/232 campioni con incrocio sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. Il clip resta assegnato ma non è approvato.
 - **Jump, Fall, Land, Idle e Crouch Idle**: importati e assegnati; non sono coperti dal test di incrocio dei piedi e non sono ancora validati visivamente sul rig riparato.
 
 ### Candidati Crouch Walk
