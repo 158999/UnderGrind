@@ -14,6 +14,8 @@ namespace UnderGrind.Tests
         private const string SettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
         private const string MaleFbxPath = "Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx";
         private const string FemaleFbxPath = "Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx";
+        private const string MalePrefabPath = "Assets/UnderGrind/Generated/Prefabs/Human_Male_Rigged.prefab";
+        private const string FemalePrefabPath = "Assets/UnderGrind/Generated/Prefabs/Human_Female_Rigged.prefab";
 
         private PlayerRigSettings _settings;
 
@@ -239,19 +241,21 @@ namespace UnderGrind.Tests
         }
 
         [TestCase(MaleFbxPath, "maschile")]
-        [TestCase(FemaleFbxPath, "femminile")]
+        [TestCase(MalePrefabPath, "maschile")]
+        [TestCase(FemalePrefabPath, "femminile")]
         public void VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(string assetPath, string label)
         {
-            var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
-            Assert.That(model, Is.Not.Null, "FBX " + label + " non trovato: " + assetPath);
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            Assert.That(prefab, Is.Not.Null, "Prefab " + label + " non trovato: " + assetPath);
 
-            var instance = UnityEngine.Object.Instantiate(model);
+            var instance = UnityEngine.Object.Instantiate(prefab);
             var viewReference = new GameObject("Test View Reference").transform;
             viewReference.SetParent(instance.transform, false);
 
             try
             {
-                var rig = instance.AddComponent<PlayerVisualRig>();
+                var rig = instance.GetComponentInChildren<PlayerVisualRig>(true);
+                Assert.That(rig, Is.Not.Null, "PlayerVisualRig mancante nel prefab " + label + ".");
                 Assert.That(rig.ConfigureFromHierarchy(instance.transform, _settings), Is.True,
                     "Configurazione PlayerVisualRig non valida per " + label + ".");
                 rig.SetViewReference(viewReference);
@@ -271,6 +275,12 @@ namespace UnderGrind.Tests
                 AssertRendererEnabled(instance, _settings.FirstPersonHandsToken, false);
                 AssertRendererEnabled(instance, _settings.ThirdPersonArmsToken, true);
                 AssertRendererEnabled(instance, _settings.ThirdPersonHandsToken, true);
+
+                rig.SetThirdPerson(false);
+                AssertRendererEnabled(instance, _settings.FirstPersonArmsToken, true);
+                AssertRendererEnabled(instance, _settings.FirstPersonHandsToken, true);
+                AssertRendererEnabled(instance, _settings.ThirdPersonArmsToken, false);
+                AssertRendererEnabled(instance, _settings.ThirdPersonHandsToken, false);
             }
             finally
             {
