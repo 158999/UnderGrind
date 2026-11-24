@@ -2,11 +2,18 @@
 
 ## Personaggio di riferimento
 
-Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale. Il modello femminile misura 1,70 m. Entrambe le altezze sono configurabili nell'asset di rig.
+Il personaggio maschile è il riferimento dimensionale del Player e misura 1,78 m nel profilo iniziale; il modello femminile misura 1,70 m. Le due altezze sono configurate in `PlayerLocomotionSettings.asset` e sono usate dal controller e dal builder dei prefab.
 
-La versione corrente del progetto Blendstra `UnderGrind — Humans Source Separation` (projectId `2cdfaa98-3ea2-4a49-892a-b96488e12bc3`), salvata come `version_0ef2040af3a2bcd46fae69870ffdcb6687ff1e6b07f07d38ba1a17945152df07`, conserva le due mesh originali complete e contiene due armature distinte più sei gruppi mesh per ciascun personaggio: Body, Head, TP Arms, TP Hands, FP Arms e FP Hands. La separazione della testa e degli arti è quindi presente nella struttura del modello corrente.
+### Sorgente, rig derivato ed export
 
-L'ispezione strutturale conferma nomi, geometrie e gerarchia degli oggetti, ma non espone i modificatori Armature né i pesi dei vertici. Il file `Assets/UnderGrind/Art/Source/humans.blend` già presente nel repository non è stato sostituito automaticamente con questa versione Blendstra. Prima dell'export occorre trasferire la versione corrente nel file sorgente locale e lanciare `Tools/Blender/export-undergrind-humans.py`: lo script verifica armature, ossa Humanoid richieste, parent diretto, modificatore Armature, gruppi deformanti e peso valido per ogni vertice. Questi controlli non sono ancora stati eseguiti sulla versione Blendstra corrente; non esistono ancora FBX e prefab Unity verificati.
+`Assets/UnderGrind/Art/Source/humans.blend` resta la sorgente originale versionata e non viene sovrascritta dalla riparazione automatica. Il workflow Blender crea `Tools/Blender/Generated/humans_reweighted.blend` come derivato e da questo esporta:
+
+- `Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx`
+- `Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx`
+
+I prefab generati sono `Assets/UnderGrind/Generated/Prefabs/Human_Male_Rigged.prefab` e `Human_Female_Rigged.prefab`. Ogni personaggio contiene sei gruppi mesh: Body, Head, TP Arms, TP Hands, FP Arms e FP Hands.
+
+Il report `Tools/Blender/weight-repair-report.json` registra 12 mesh, zero vertici non pesati, zero influenze oltre il limite di quattro, zero somme non normalizzate e zero assegnazioni a gruppi anatomici vietati. Sono stati usati 14 fallback su vertici femminili (10 testa, 4 mani). Il report `Tools/Blender/player-skinning-deformation-audit.json` valuta 54 pose sintetiche per personaggio; non sostituisce la verifica delle animazioni e del rendering in Unity.
 
 ## Configurazione della locomozione
 
@@ -53,11 +60,21 @@ Le dead zone radiali, la sensibilità, il comportamento del cursore, il timeout 
 
 ## Rig, visuale e animazioni
 
-`PlayerRigSettings.asset` contiene i percorsi FBX distinti per personaggio maschile e femminile, i requisiti di Avatar Humanoid, i token per i renderer e la variante predefinita della scena di test (`Male` o `Female`). Il builder valida entrambi i prefab e istanzia la variante selezionata. `HumanLocomotionController` riceve la stessa variante: altezza della capsula, verifica dello spazio per rialzarsi e altezza della visuale vengono calcolate dai valori maschili/femminili configurati in `PlayerLocomotionSettings`. L'altezza femminile della visuale è derivata in proporzione all'altezza del modello, mantenendo un'unica fonte dimensionale. Il builder richiede entrambi i prefab validi e interrompe la generazione della scena se uno dei due manca o non soddisfa i requisiti. Non viene creato un prefab statico di ripiego.
+`PlayerRigSettings.asset` contiene i percorsi FBX maschile/femminile, le radici degli scheletri, i requisiti Avatar Humanoid, il mapping dei renderer e la variante predefinita della scena di test. Il builder valida entrambi i personaggi e interrompe la generazione se un Avatar o un gruppo renderer richiesto manca.
 
-`PlayerVisualRig` gestisce gruppi separati per testa, corpo, arti FP e arti TP. In prima persona la testa viene nascosta e il corpo viene mostrato quando la visuale guarda verso il basso, secondo soglie e isteresi configurabili. La logica è implementata; la verifica sui prefab definitivi è ancora da eseguire.
+`PlayerVisualRig` gestisce gruppi distinti per testa, corpo, arti FP e arti TP. In prima persona nasconde la testa, usa i renderer FP e mostra il corpo quando il pitch supera la soglia configurata; in terza persona mostra testa, corpo e renderer TP. La correzione in corso nel branch `fix/crouch-walk-animation-audit` conserva lo stato `Renderer.enabled` originale e fa salvare i prefab con valori neutri prima dell'applicazione della modalità camera. I prefab versionati sono stati aggiornati nello stesso branch. Il nuovo comportamento non è ancora stato confermato da una nuova esecuzione Unity.
 
-`PlayerAnimationSettings.asset` configura clip, loop, parametri Animator, soglie, transizioni e opzioni di importazione FBX. Il builder genera un controller con gli stati Idle, Walk, Run, Jump, Fall, Land, Crouch Idle e Crouch Walk. Otto clip PINOC sono state selezionate in formato `mixamo-fbx` e i relativi asset ID sono registrati in `Assets/UnderGrind/Animations/PlayerAnimationManifest.json`: Standing Idle, Walking, Running, Jump, Fall down, Hard Landing, Crouching Idle e Crouch Walk Forward. Il formato contiene uno scheletro Mixamo e una mesh X Bot di riferimento; non è il corpo UnderGrind. Le clip non sono ancora importate nel repository né retargettate sui due Avatar definitivi.
+La registrazione del 23 novembre mostra ancora geometria/arti troppo vicini alla camera in prima persona. La selezione corretta dei gruppi renderer non certifica la posizione degli arti rispetto alla camera né elimina eventuali intersezioni; serve ancora una verifica visiva in Play Mode dopo la correzione dei pesi.
+
+### Animazioni
+
+Gli otto FBX `mixamo-fbx` sono presenti in `Assets/UnderGrind/Animations` e le relative clip sono assegnate in `PlayerAnimationSettings.asset`, insieme al controller Animator. Ogni FBX usa un Avatar Humanoid sorgente; Unity esegue il retargeting runtime sull'Avatar del Player. Le curve non sono state ribake-ate sullo scheletro UnderGrind.
+
+Il test Unity del 23 novembre ha rilevato zero incroci anatomici per Walking e Running su sorgente e sui due Player. Per `Crouch_Walk_Forward`, la run del 24 novembre ha rilevato 6/232 incroci sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. La clip resta assegnata ma non è approvata.
+
+La cartella `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk` contiene otto candidati non assegnati al controller. Il report Blender `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` valuta lo scheletro FBX grezzo e non equivale al retargeting Humanoid Unity. Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` confronta il clip corrente e gli otto candidati su Avatar sorgente, maschile e femminile e scrive `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. È stato aggiunto nel branch ma non è ancora stato eseguito.
+
+Non sostituire il clip di produzione finché una variante non mostra risultati accettabili su entrambi gli Avatar e supera la verifica visiva del ciclo.
 
 ## Graybox
 
@@ -71,16 +88,33 @@ Ogni suite produce un JSON riepilogativo, un TXT, i log e i report XML/TRX dispo
 
 ### Ultima esecuzione disponibile nel repository
 
-- Test autonomi C#: **6/6 superati**, build diagnostica riuscita.
-- Unity EditMode: **non eseguito**; compilazione bloccata da `CS0103` in `PlayerRigSettings.cs(60,47)`: il campo `requireThirdPersonArms` era referenziato ma non dichiarato.
-- Unity PlayMode: **non eseguito** per lo stesso errore. Non è stato prodotto un report NUnit XML valido, quindi il numero di test eseguiti è zero.
-- Nessun conteggio pari a zero è interpretabile come test superati: Unity non ha prodotto XML valido per le due piattaforme.
+L'ultima esecuzione Unity versionata è la run `20261124-110717-910` su Unity **6000.6.9f1**:
 
-La compilazione bloccata dal campo `requireThirdPersonArms` è stata corretta dichiarando il campo serializzato e aggiornando la migrazione dell'asset. La revisione statica ha inoltre corretto il binding dell'evento `PlayerInventory.Changed` in `PlayerInventoryUI` e completato i campi di importazione FBX in `PlayerAnimationSettings`, l'istanziazione esclusiva del prefab maschile e l'uso dell'altezza maschile nel controller quando viene selezionato il personaggio femminile. La variante selezionata ora governa CharacterController, verifica dello spazio per rialzarsi e altezza della visuale. È stata aggiunta una scena Graybox indipendente con proxy temporaneo e corretta la visibilità del corpo in prima persona quando il rig non è disponibile. Il threshold dell'animazione Run è stato corretto e il rebinding controller riceve il relativo asset di input dal builder della scena. Sono stati aggiunti test EditMode per queste condizioni.
+- Test autonomi C#: **6/6 superati**.
+- Unity EditMode: **53/55 superati**, 2 falliti.
+- Unity PlayMode: **12/13 superati**, 1 fallito.
+- Totale Unity: **65/68 superati**, 3 falliti.
 
-Queste modifiche devono ancora essere verificate eseguendo nuovamente Unity 6000.6.7f1 e le suite aggiornate. L'ambiente di sviluppo remoto non dispone di Unity, PowerShell o .NET SDK: non è stata dichiarata una compilazione o un'esecuzione di test successiva alle correzioni. La verifica visiva di scena, modelli, deformazione e animazioni non è documentata.
+I tre fallimenti registrati sono:
 
+1. `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`: Crouch Walk Forward, 6 incroci sulla sorgente, 10 sul Player maschile, 12 sul femminile.
+2. `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: aspettativa di stato FP non coerente con l'asset FBX/prefab.
+3. `VisualRigPreservesInitiallyDisabledRenderers`: il rig riattivava un renderer disabilitato in origine.
+
+I due problemi dei renderer sono corretti nel branch `fix/crouch-walk-animation-audit`: il baseline conserva lo stato enabled originale; il builder ripristina i default prima di salvare il prefab; gli FBX e i prefab versionati mantengono i gruppi renderer in stato neutro. La correzione deve ancora essere verificata eseguendo nuovamente EditMode e PlayMode.
+
+Il fallimento Crouch Walk resta aperto. I candidati PINOC sono stati sottoposti ad audit Blender grezzo, ma la selezione deve essere fatta con il test Unity di retargeting aggiunto nel branch. Nessuna variante è stata promossa al controller.
+
+L'assenza di un nuovo report Unity dopo le correzioni non equivale a test superati. La verifica di importazione, compilazione, rendering, EditMode e PlayMode deve essere eseguita in Unity 6000.6.9f1.
 
 ## Stato aggiornato della pipeline
 
-L'audit tecnico del 20 novembre 2026 è in `Documentation/Player-Audit-2026-11-20.md`. Gli otto asset di locomozione selezionati nella libreria PINOC e i relativi ID sono in `Documentation/Player-Animation-Asset-Intake-2026-11-20.md`. La selezione non equivale a importazione: finché i file FBX non sono presenti nella cartella `Assets/UnderGrind/Animations`, verificati come clip Humanoid e associati all'Avatar del Player, il sistema di animazione resta non integrato.
+La riparazione anatomica dei pesi è entrata in `main` il 24 novembre 2026. I nuovi FBX e prefab sono versionati; il blend sorgente originale resta preservato e il derivato reweighted è in `Tools/Blender/Generated/humans_reweighted.blend`.
+
+**Verificato in Blender:** 12 mesh controllate, massimo quattro influenze per vertice, pesi normalizzati, nessuna influenza anatomica vietata, nessun vertice non pesato e 54 pose sintetiche valutate per personaggio.
+
+**Verificato nell'ultima run Unity del 24 novembre:** 65/68 test superati. Restano tre fallimenti, due dei quali sono corretti nel branch `fix/crouch-walk-animation-audit` ma non ancora rieseguiti. Il fallimento Crouch Walk resta aperto.
+
+**Non ancora verificato dopo le correzioni:** import e resa dei prefab aggiornati, EditMode e PlayMode sul nuovo baseline renderer, posizione degli arti FP rispetto alla camera, deformazione visiva in prima e terza persona e retargeting definitivo di Crouch Walk.
+
+La documentazione di dettaglio del rig è in `Documentation/Humanoid-Rig-Pipeline.md`; provenienza e stato delle clip sono in `Documentation/Player-Animation-Asset-Intake-2026-11-20.md` e `Assets/UnderGrind/Animations/README.md`.
