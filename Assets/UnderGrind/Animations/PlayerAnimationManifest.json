@@ -79,13 +79,13 @@
     },
     {
       "state": "Crouch Walk",
-      "name": "Crouch Walk Forward",
-      "file": "Crouch_Walk_Forward.fbx",
-      "assetPublicId": "e4f5b9e6-381c-4227-88d4-94d6a0615df8",
+      "name": "Generated Crouch Walk (3)",
+      "file": "Crouch_Walk_Generated_03.fbx",
+      "assetPublicId": "0ff23662-9938-41d3-8e99-def4e4d1e7de",
       "loop": true,
-      "unityAssetPath": "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx",
+      "unityAssetPath": "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Generated_03.fbx",
       "retargetedAtRuntime": true,
-      "validationStatus": "Known failure in Unity run 20261124-114001-048: 6/232 source foot crossings, 10/232 male Player, 12/232 female Player. Minimum anatomical separation: -0.114 m, -0.119 m and -0.133 m respectively. Replacement not selected."
+      "validationStatus": "Temporarily assigned only on fix/crouch-walk-animation-validation for Unity runtime validation. Best raw Blender candidate, but Humanoid retarget, full quality gate and PlayMode visual validation are still pending. The main branch remains unchanged."
     }
   ],
   "runningCandidateAudit": {
@@ -108,17 +108,11 @@
   "visualValidationComplete": false,
   "crouchWalkCandidateAudit": {
     "currentUnityResult": {
-      "runId": "20261124-114001-048",
-      "sourceFootCrossings": 6,
-      "malePlayerFootCrossings": 10,
-      "femalePlayerFootCrossings": 12,
-      "minimumAnatomicalFootSeparationMeters": {
-        "source": -0.114,
-        "male": -0.119,
-        "female": -0.133
-      },
-      "status": "failed",
-      "note": "La run 20261124-114001-048 conferma che la clip originale resta assegnata e non approvata; è l'unico fallimento EditMode residuo."
+      "runId": null,
+      "clip": "Crouch_Walk_Generated_03.fbx",
+      "status": "pending",
+      "assignment": "provisional-validation-branch-only",
+      "note": "Generated 03 is assigned temporarily on fix/crouch-walk-animation-validation. Run Unity EditMode and PlayMode tests before any production promotion."
     },
     "rawBlenderCandidateAudit": {
       "reportPath": "Tools/Blender/pinoc-crouch-walk-candidate-audit.json",
@@ -221,6 +215,20 @@
       "rootRelativeFootLoopErrorMetersMaximum": 0.08,
       "maximumHipsDriftMeters": 0.2,
       "note": "QA thresholds for candidate validation; not gameplay parameters."
-    }
+    },
+    "previousOriginalUnityResult": {
+      "runId": "20261124-114001-048",
+      "sourceFootCrossings": 6,
+      "malePlayerFootCrossings": 10,
+      "femalePlayerFootCrossings": 12,
+      "minimumAnatomicalFootSeparationMeters": {
+        "source": -0.114,
+        "male": -0.119,
+        "female": -0.133
+      },
+      "status": "historical-original-clip-failure",
+      "note": "The original Crouch_Walk_Forward.fbx failed this Unity run and is no longer assigned on the validation branch."
+    },
+    "provisionalAssignment": "Crouch_Walk_Generated_03.fbx"
   }
 }
