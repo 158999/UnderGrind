@@ -132,7 +132,7 @@ Al termine vengono distrutti Playable Graph, mesh temporanee, texture e istanze 
 
 ## Stato della validazione — 24 novembre 2026
 
-Nessuno degli otto candidati è approvato. In `PlayerAnimationSettings.asset` è configurata nuovamente la clip originale `Crouch_Walk_Forward.fbx`; il difetto di incrocio dei piedi resta quindi visibile nei test. Il candidato 08 non è assegnato.
+Nessuno dei dodici candidati è approvato. In `PlayerAnimationSettings.asset` è configurata nuovamente la clip originale `Crouch_Walk_Forward.fbx`; il difetto di incrocio dei piedi resta quindi visibile nei test. Il candidato 08 non è assegnato.
 
 L'ultimo pacchetto `UnderGrind-Animation-Inspection-20261124-121818-534` non è valido come prova visiva: le nove contact sheet maschili hanno lo stesso SHA-256 e le nove femminili hanno un altro SHA-256 comune; le righe mostrano pose ripetute. I campioni CSV e la diagnostica BakeMesh variano nel tempo, ma le immagini esportate non rappresentano correttamente tali campioni. La qualità visiva dei candidati non può essere approvata usando quelle contact sheet.
 
