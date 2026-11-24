@@ -648,13 +648,13 @@ namespace UnderGrind.Tests
                     var leftFootRelative = hips.InverseTransformPoint(leftFoot.position);
                     var rightFootRelative = hips.InverseTransformPoint(rightFoot.position);
                     var hipsPosition = instance.transform.InverseTransformPoint(hips.position);
-                    if (i == 0)
+                    if (sample == 0)
                     {
                         firstLeftFootRelative = leftFootRelative;
                         firstRightFootRelative = rightFootRelative;
                         firstHipsPosition = hipsPosition;
                     }
-                    if (i == sampleCount - 1)
+                    if (sample == sampleCount - 1)
                     {
                         lastLeftFootRelative = leftFootRelative;
                         lastRightFootRelative = rightFootRelative;
