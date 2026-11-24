@@ -1,12 +1,13 @@
-name: Audit new PINOC stealth-walk candidates
+name: Audit raw FBX crouch-walk candidates
 
 on:
   push:
     branches:
-      - fix/crouch-walk-animation-audit
+      - 'fix/crouch-walk-*'
     paths:
-      - '.github/workflows/audit-pinoc-stealth-walk-candidates.yml'
+      - 'Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/**'
       - 'Tools/Blender/audit-pinoc-crouch-walk-candidates.py'
+      - '.github/workflows/audit-pinoc-stealth-walk-candidates.yml'
   workflow_dispatch:
 
 permissions:
@@ -21,16 +22,11 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Download four new in-place stealth-walk candidates
+      - name: Verify candidate FBXs
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/827b8373-42df-479a-a82f-22b5a339678d/sample_00.fbx?Expires=1795521600&KeyName=vigglecloudcdn2&Signature=wPWMz2HP0Ni12HVWU3PiCuGksck' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_05.fbx
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/827b8373-42df-479a-a82f-22b5a339678d/sample_01.fbx?Expires=1795521600&KeyName=vigglecloudcdn2&Signature=Hh0OLdSaXt-lZNgXlU_i_228u2I' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_06.fbx
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/827b8373-42df-479a-a82f-22b5a339678d/sample_02.fbx?Expires=1795521600&KeyName=vigglecloudcdn2&Signature=SzRKlUYHEYd4q4YC3JWbuzwCzZg' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_07.fbx
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/827b8373-42df-479a-a82f-22b5a339678d/sample_03.fbx?Expires=1795521600&KeyName=vigglecloudcdn2&Signature=TOZP0jzPP_xOnICmbWgp3-tQbE0' --output Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_08.fbx
-          for file in Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_0{5,6,7,8}.fbx; do
+          for file in Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_0{1,2,3,4,5,6,7,8}.fbx; do
             test -s "$file"
             size=$(stat -c %s "$file")
             if [ "$size" -lt 10000 ]; then
@@ -48,26 +44,28 @@ jobs:
           tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
 
-      - name: Audit raw FBX action ranges and all candidates
+      - name: Audit current source and all eight candidates
         run: blender -b --python Tools/Blender/audit-pinoc-crouch-walk-candidates.py
 
-      - name: Commit candidate files and audit report
+      - name: Commit audit report
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_0{5,6,7,8}.fbx
           git add Tools/Blender/pinoc-crouch-walk-candidate-audit.json
-          git diff --cached --quiet && { echo "No new candidates or audit changes"; exit 1; }
-          git commit -m "assets: add audited stealth-walk candidates"
+          if git diff --cached --quiet; then
+            echo "Audit report unchanged"
+            exit 0
+          fi
+          git commit -m "test: refresh crouch-walk candidate audit"
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
 
       - name: Upload audit report
         uses: actions/upload-artifact@v4
         with:
-          name: pinoc-stealth-walk-candidate-audit
+          name: pinoc-crouch-walk-candidate-audit
           path: Tools/Blender/pinoc-crouch-walk-candidate-audit.json
           if-no-files-found: error
           retention-days: 14
