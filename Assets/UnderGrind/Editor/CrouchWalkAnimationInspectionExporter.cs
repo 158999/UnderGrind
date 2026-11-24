@@ -68,6 +68,7 @@ namespace UnderGrind.Editor
             public string reportPath;
             public string contactSheetPath;
             public string poseCsvPath;
+            public string transformCsvPath;
             public string curveCsvPath;
             public string geometryCsvPath;
             public int poseSampleCount;
@@ -131,6 +132,7 @@ namespace UnderGrind.Editor
             public List<float> contactSheetTimes = new List<float>();
             public List<string> contactSheetColumns = new List<string>();
             public string poseCsv;
+            public string transformCsv;
             public string curveCsv;
             public string geometryCsv;
             public string samplingDescription;
@@ -347,6 +349,32 @@ namespace UnderGrind.Editor
             public float leftHipAngleDegrees;
             public float rightHipAngleDegrees;
             public List<BonePose> bones = new List<BonePose>();
+            public List<TransformPose> transforms = new List<TransformPose>();
+        }
+
+        [Serializable]
+        private sealed class TransformPose
+        {
+            public string hierarchyPath;
+            public string transformName;
+            public string parentPath;
+            public string tag;
+            public int layer;
+            public string layerName;
+            public bool activeSelf;
+            public bool activeInHierarchy;
+            public Vector3 localPosition;
+            public Quaternion localRotation;
+            public Vector3 localEulerAngles;
+            public Vector3 localScale;
+            public Vector3 worldPosition;
+            public Quaternion worldRotation;
+            public Vector3 worldEulerAngles;
+            public Vector3 lossyScale;
+            public Vector3 linearVelocity;
+            public float linearSpeed;
+            public float linearAcceleration;
+            public float angularVelocityDegreesPerSecond;
         }
 
         [Serializable]
