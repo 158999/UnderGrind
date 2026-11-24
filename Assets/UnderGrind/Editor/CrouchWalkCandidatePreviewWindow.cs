@@ -58,13 +58,25 @@ namespace UnderGrind.Editor
         private bool _hasGraph;
         private double _lastUpdateTime;
         private string _status;
+        private Vector2 _scrollPosition;
+        private bool _showInspectionOptions;
+        private int _inspectionSampleRate = 30;
+        private int _inspectionFrameCount = 24;
+        private int _inspectionCellWidth = 192;
+        private int _inspectionCellHeight = 320;
+        private int _inspectionMaxSamples = 12000;
+        private bool _inspectionIncludeCurveKeys = true;
+        private bool _inspectionCaptureGeometry = true;
+        private float _inspectionContactHeight = 0.04f;
+        private float _inspectionContactSpeed = 0.15f;
+        private float _inspectionCrossingTolerance = 0.02f;
 
         [MenuItem("UnderGrind/Animation/Crouch Walk Candidate Preview")]
         public static void Open()
         {
             var window = GetWindow<CrouchWalkCandidatePreviewWindow>();
             window.titleContent = new GUIContent("Crouch Walk Preview");
-            window.minSize = new Vector2(520f, 620f);
+            window.minSize = new Vector2(560f, 700f);
             window.Show();
         }
 
@@ -93,6 +105,7 @@ namespace UnderGrind.Editor
 
         private void OnGUI()
         {
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             EditorGUILayout.LabelField("Anteprima animazione accovacciata", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
                 "Questa finestra anima un'istanza temporanea del prefab selezionato. " +
@@ -101,9 +114,11 @@ namespace UnderGrind.Editor
 
             DrawSelectionControls();
             DrawPlaybackControls();
+            DrawInspectionExportControls();
             DrawPreview();
             if (!string.IsNullOrEmpty(_status))
-                EditorGUILayout.HelpBox(_status, MessageType.Warning);
+                EditorGUILayout.HelpBox(_status, MessageType.Info);
+            EditorGUILayout.EndScrollView();
         }
 
         private void DrawSelectionControls()
@@ -179,6 +194,110 @@ namespace UnderGrind.Editor
                 EditorStyles.miniLabel);
         }
 
+        private void DrawInspectionExportControls()
+        {
+            EditorGUILayout.Space(8f);
+            _showInspectionOptions = EditorGUILayout.Foldout(
+                _showInspectionOptions, "Report diagnostico ultra dettagliato", true);
+            if (!_showInspectionOptions)
+                return;
+
+            EditorGUILayout.HelpBox(
+                "Il report campiona entrambi gli Avatar Player, registra le pose di tutte le ossa Humanoid, " +
+                "le curve/keyframe, le derivate cinematiche, le metriche di piedi e ginocchia, le mesh skinned " +
+                "e una contact sheet con quattro angolazioni. Il pacchetto viene compresso in ZIP.",
+                MessageType.Info);
+
+            _inspectionSampleRate = EditorGUILayout.IntSlider("Campionamento pose (Hz)", _inspectionSampleRate, 5, 120);
+            _inspectionFrameCount = EditorGUILayout.IntSlider("Istantanee per clip", _inspectionFrameCount, 4, 24);
+            _inspectionCellWidth = EditorGUILayout.IntSlider("Larghezza immagine (px)", _inspectionCellWidth, 128, 512);
+            _inspectionCellHeight = EditorGUILayout.IntSlider("Altezza immagine (px)", _inspectionCellHeight, 192, 768);
+            _inspectionMaxSamples = EditorGUILayout.IntSlider("Limite campioni posa", _inspectionMaxSamples, 100, 50000);
+            _inspectionIncludeCurveKeys = EditorGUILayout.Toggle("Includi tempi di tutti i keyframe", _inspectionIncludeCurveKeys);
+            _inspectionCaptureGeometry = EditorGUILayout.Toggle("Analizza mesh skinned deformate", _inspectionCaptureGeometry);
+            _inspectionContactHeight = EditorGUILayout.FloatField("Tolleranza altezza contatto (m)", _inspectionContactHeight);
+            _inspectionContactSpeed = EditorGUILayout.FloatField("Velocità massima contatto (m/s)", _inspectionContactSpeed);
+            _inspectionCrossingTolerance = EditorGUILayout.FloatField("Tolleranza incrocio anatomico (m)", _inspectionCrossingTolerance);
+
+            EditorGUILayout.Space(4f);
+            using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+            {
+                if (GUILayout.Button("Esporta clip selezionata — entrambi i personaggi", GUILayout.Height(30f)))
+                {
+                    var clip = GetSelectedClip();
+                    if (clip == null)
+                        EditorUtility.DisplayDialog("Animation Inspection", "Nessuna clip selezionata.", "OK");
+                    else
+                    {
+                        var label = _clipOptions[_clipIndex].Label;
+                        ExportInspection(new[] { clip }, new[] { label });
+                    }
+                }
+
+                if (GUILayout.Button("Esporta originale + tutti i candidati — entrambi i personaggi", GUILayout.Height(34f)))
+                {
+                    var clips = _clipOptions.Where(option => option.Clip != null).Select(option => option.Clip).ToArray();
+                    var labels = _clipOptions.Where(option => option.Clip != null).Select(option => option.Label).ToArray();
+                    if (clips.Length == 0)
+                        EditorUtility.DisplayDialog("Animation Inspection", "Non sono state trovate clip da esportare.", "OK");
+                    else
+                        ExportInspection(clips, labels);
+                }
+            }
+        }
+
+        private void ExportInspection(AnimationClip[] clips, string[] labels)
+        {
+            var settings = AssetDatabase.LoadAssetAtPath<PlayerRigSettings>(RigSettingsPath);
+            if (settings == null)
+            {
+                EditorUtility.DisplayDialog("Animation Inspection", "PlayerRigSettings.asset non è disponibile.", "OK");
+                return;
+            }
+
+            var projectRoot = Directory.GetParent(Application.dataPath).FullName;
+            var defaultFolder = Path.Combine(projectRoot, "TestResults", "AnimationInspection");
+            Directory.CreateDirectory(defaultFolder);
+            var destination = EditorUtility.SaveFolderPanel(
+                "Destinazione pacchetto Animation Inspection", defaultFolder, string.Empty);
+            if (string.IsNullOrEmpty(destination))
+                return;
+
+            var options = new CrouchWalkAnimationInspectionExporter.ExportOptions
+            {
+                sampleRateHz = _inspectionSampleRate,
+                contactSheetFrames = _inspectionFrameCount,
+                cellWidth = _inspectionCellWidth,
+                cellHeight = _inspectionCellHeight,
+                maxPoseSamples = _inspectionMaxSamples,
+                includeCurveKeyTimes = _inspectionIncludeCurveKeys,
+                captureSkinnedMeshDiagnostics = _inspectionCaptureGeometry,
+                contactHeightToleranceMeters = _inspectionContactHeight,
+                contactSpeedToleranceMetersPerSecond = _inspectionContactSpeed,
+                crossingToleranceMeters = _inspectionCrossingTolerance
+            };
+
+            try
+            {
+                var zipPath = CrouchWalkAnimationInspectionExporter.Export(
+                    clips, labels, settings, options, destination);
+                _status = "Pacchetto diagnostico creato: " + zipPath;
+                EditorUtility.DisplayDialog(
+                    "Animation Inspection completata",
+                    "Pacchetto creato. Allega qui il file ZIP:\n\n" + zipPath,
+                    "OK");
+            }
+            catch (Exception exception)
+            {
+                _status = "Esportazione non riuscita: " + exception.Message;
+                Debug.LogException(exception);
+                EditorUtility.DisplayDialog(
+                    "Animation Inspection — errore",
+                    exception.Message + "\n\nDettagli completi nella Console Unity.",
+                    "OK");
+            }
+        }
+
         private void DrawPreview()
         {
             var rect = GUILayoutUtility.GetRect(100f, 390f, GUILayout.ExpandWidth(true));
@@ -200,13 +319,15 @@ namespace UnderGrind.Editor
 
         private void ConfigureCamera()
         {
+            var characterForward = _previewInstance.transform.TransformDirection(Vector3.left).normalized;
+            var characterRight = Vector3.Cross(_previewInstance.transform.up, characterForward).normalized;
             var direction = _cameraAngle switch
             {
-                CameraAngle.Front => Vector3.back,
-                CameraAngle.ThreeQuarter => new Vector3(-1f, 0f, -1f).normalized,
-                CameraAngle.Side => Vector3.right,
-                CameraAngle.Rear => Vector3.forward,
-                _ => Vector3.back
+                CameraAngle.Front => characterForward,
+                CameraAngle.ThreeQuarter => (characterForward + characterRight).normalized,
+                CameraAngle.Side => characterRight,
+                CameraAngle.Rear => -characterForward,
+                _ => characterForward
             };
 
             var target = _modelBounds.center + Vector3.up * (_modelBounds.extents.y * 0.08f);
@@ -319,8 +440,10 @@ namespace UnderGrind.Editor
             {
                 var name = renderer.name;
                 var isFirstPersonPart =
-                    name.IndexOf(rigSettings.FirstPersonArmsToken, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    name.IndexOf(rigSettings.FirstPersonHandsToken, StringComparison.OrdinalIgnoreCase) >= 0;
+                    (!string.IsNullOrEmpty(rigSettings.FirstPersonArmsToken) &&
+                     name.IndexOf(rigSettings.FirstPersonArmsToken, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (!string.IsNullOrEmpty(rigSettings.FirstPersonHandsToken) &&
+                     name.IndexOf(rigSettings.FirstPersonHandsToken, StringComparison.OrdinalIgnoreCase) >= 0);
                 renderer.enabled = !isFirstPersonPart;
             }
 
