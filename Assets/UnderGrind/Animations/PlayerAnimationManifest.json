@@ -214,7 +214,9 @@
       "loopRotationErrorDegreesMaximum": 5,
       "rootRelativeFootLoopErrorMetersMaximum": 0.08,
       "maximumHipsDriftMeters": 0.2,
-      "note": "QA thresholds for candidate validation; not gameplay parameters."
+      "note": "QA thresholds and controller consistency checks; not gameplay parameters.",
+      "controllerClipMustMatchConfiguredSetting": true,
+      "controllerBlendThresholdMustMatchInspector": true
     },
     "previousOriginalUnityResult": {
       "runId": "20261124-114001-048",
