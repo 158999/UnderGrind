@@ -788,7 +788,7 @@ namespace UnderGrind.Editor
                 clipSourceAvatar = CreateSourceAvatarMetadata(clipPath),
                 playerPrefab = CreatePrefabMetadata(rig),
                 playerAvatar = CreateAvatarMetadata(rig.Animator.avatar, rig.Animator),
-                samplingDescription = "Campionamento deterministico tramite AnimationClipPlayable su PlayableGraph manuale. Ogni frame registra i Transform Humanoid risolti dall'Animator Player.",
+                samplingDescription = "Campionamento deterministico tramite AnimationClipPlayable su PlayableGraph manuale. Ogni frame registra i Transform Humanoid risolti dall'Animator Player. Le contact sheet renderizzano mesh temporanee ottenute con SkinnedMeshRenderer.BakeMesh a ogni campione.",
                 contactHeuristicDescription =
                     "Il contatto è una stima, non un ground truth: piede entro " +
                     options.contactHeightToleranceMeters.ToString("F3", CultureInfo.InvariantCulture) +
@@ -2361,7 +2361,7 @@ namespace UnderGrind.Editor
             text.AppendLine("- transform-hierarchy-samples.csv: un record per ogni Transform del prefab, inclusi nodi non Humanoid, gerarchia, tag/layer, stato attivo, trasformazioni locali/world e derivate cinematiche.");
             text.AppendLine("- curve-keys.csv: chiavi di tutte le curve float e object-reference.");
             text.AppendLine("- geometry-samples.csv: bounds e statistiche delle mesh skinned campionate ai tempi delle immagini.");
-            text.AppendLine("- contact-sheet.png: quattro angolazioni per ciascun istante rappresentativo.");
+            text.AppendLine("- contact-sheet.png: quattro angolazioni per ciascun istante, renderizzate da mesh skinned bake a ogni campione; l'export viene rifiutato se tutti i frame risultano visivamente identici.");
             text.AppendLine();
             text.AppendLine("CAMPIONAMENTO");
             text.AppendLine("- Frequenza uniforme: " + options.sampleRateHz + " Hz.");
