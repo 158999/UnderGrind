@@ -12,6 +12,7 @@ namespace UnderGrind.Tests
     public sealed class HumanoidRigImportTests
     {
         private const string SettingsPath = "Assets/UnderGrind/Settings/PlayerRigSettings.asset";
+        private const string AnimationSettingsPath = "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset";
         private const string MaleFbxPath = "Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx";
         private const string FemaleFbxPath = "Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx";
         private const string MalePrefabPath = "Assets/UnderGrind/Generated/Prefabs/Human_Male_Rigged.prefab";
@@ -368,11 +369,21 @@ namespace UnderGrind.Tests
         [Test]
         public void LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars()
         {
+            var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(AnimationSettingsPath);
+            Assert.That(animationSettings, Is.Not.Null,
+                "PlayerAnimationSettings deve essere presente per validare le clip realmente assegnate.");
+            Assert.That(animationSettings.CrouchWalkClip, Is.Not.Null,
+                "La clip Crouch Walk assegnata al Player deve essere configurata.");
+
+            var configuredCrouchWalkPath = AssetDatabase.GetAssetPath(animationSettings.CrouchWalkClip);
+            StringAssert.Contains("Crouch_Walk", configuredCrouchWalkPath,
+                "La clip Crouch Walk assegnata deve provenire da un FBX Crouch Walk.");
+
             var clipPaths = new[]
             {
                 "Assets/UnderGrind/Animations/Walking.fbx",
                 "Assets/UnderGrind/Animations/Running.fbx",
-                "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx"
+                configuredCrouchWalkPath
             };
             var failures = new System.Collections.Generic.List<string>();
 
