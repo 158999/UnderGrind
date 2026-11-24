@@ -1756,6 +1756,58 @@ namespace UnderGrind.Editor
             return times;
         }
 
+        private sealed class BakedPreviewRenderer : IDisposable
+        {
+            private readonly SkinnedMeshRenderer _source;
+            private readonly bool _sourceWasEnabled;
+            private readonly GameObject _previewObject;
+            private readonly Mesh _bakedMesh;
+            private readonly MeshFilter _meshFilter;
+            private readonly MeshRenderer _meshRenderer;
+
+            public BakedPreviewRenderer(SkinnedMeshRenderer source)
+            {
+                _source = source;
+                _sourceWasEnabled = source.enabled;
+                _bakedMesh = new Mesh { name = "UnderGrind_ContactSheet_BakedMesh" };
+                _previewObject = new GameObject("UnderGrind_ContactSheet_" + source.name)
+                {
+                    hideFlags = HideFlags.HideAndDontSave,
+                    layer = source.gameObject.layer
+                };
+                _previewObject.transform.SetParent(source.transform.parent, false);
+                _meshFilter = _previewObject.AddComponent<MeshFilter>();
+                _meshFilter.sharedMesh = _bakedMesh;
+                _meshRenderer = _previewObject.AddComponent<MeshRenderer>();
+                _meshRenderer.sharedMaterials = source.sharedMaterials;
+                _meshRenderer.shadowCastingMode = source.shadowCastingMode;
+                _meshRenderer.receiveShadows = source.receiveShadows;
+                _meshRenderer.lightProbeUsage = source.lightProbeUsage;
+                _meshRenderer.reflectionProbeUsage = source.reflectionProbeUsage;
+                _meshRenderer.motionVectorGenerationMode = source.motionVectorGenerationMode;
+                source.enabled = false;
+            }
+
+            public void Bake()
+            {
+                _source.BakeMesh(_bakedMesh);
+                _previewObject.transform.SetParent(_source.transform.parent, false);
+                _previewObject.transform.localPosition = _source.transform.localPosition;
+                _previewObject.transform.localRotation = _source.transform.localRotation;
+                _previewObject.transform.localScale = _source.transform.localScale;
+            }
+
+            public void Dispose()
+            {
+                if (_source != null)
+                    _source.enabled = _sourceWasEnabled;
+                if (_previewObject != null)
+                    UnityEngine.Object.DestroyImmediate(_previewObject);
+                if (_bakedMesh != null)
+                    UnityEngine.Object.DestroyImmediate(_bakedMesh);
+            }
+        }
+
         private static void CaptureContactSheet(
             PreviewRig rig,
             AnimationClip clip,
@@ -1770,6 +1822,13 @@ namespace UnderGrind.Editor
                 TextureFormat.RGBA32,
                 false,
                 false);
+            var sourceRenderers = rig.Instance.GetComponentsInChildren<SkinnedMeshRenderer>(true)
+                .Where(renderer => renderer.enabled && renderer.sharedMesh != null)
+                .ToArray();
+            var bakedRenderers = sourceRenderers
+                .Select(renderer => new BakedPreviewRenderer(renderer))
+                .ToArray();
+            var uniqueFrameHashes = new HashSet<string>();
 
             try
             {
@@ -1781,6 +1840,14 @@ namespace UnderGrind.Editor
                         (row + 1) + "/" + times.Count,
                         (float)(row + 1) / times.Count);
                     Evaluate(rig, clip, times[row]);
+
+                    // PreviewRenderUtility can render a stale SkinnedMeshRenderer pose after manual
+                    // PlayableGraph evaluation. Bake each renderer at the sampled time and render
+                    // those temporary meshes so the contact sheet actually depicts the sampled pose.
+                    foreach (var bakedRenderer in bakedRenderers)
+                        bakedRenderer.Bake();
+
+                    var rowHash = new StringBuilder();
                     for (var column = 0; column < angleCount; column++)
                     {
                         ConfigureCamera(rig, column, options.cellWidth, options.cellHeight);
@@ -1804,6 +1871,7 @@ namespace UnderGrind.Editor
                             var pixels = GetScaledPixels(rendered, options.cellWidth, options.cellHeight);
                             sheet.SetPixels(column * options.cellWidth, y,
                                 options.cellWidth, options.cellHeight, pixels);
+                            rowHash.Append(GetPixelHash(pixels));
                         }
                         finally
                         {
@@ -1824,15 +1892,41 @@ namespace UnderGrind.Editor
                                 UnityEngine.Object.DestroyImmediate(rendered);
                         }
                     }
+
+                    uniqueFrameHashes.Add(rowHash.ToString());
                 }
+
+                if (times.Count > 1 && uniqueFrameHashes.Count < 2)
+                    throw new InvalidOperationException(
+                        "La contact sheet risulta statica: nessuna differenza visiva tra i campioni temporali. " +
+                        "Il pacchetto non può essere usato per approvare una clip.");
 
                 sheet.Apply(false, false);
                 File.WriteAllBytes(outputPath, sheet.EncodeToPNG());
             }
             finally
             {
+                foreach (var bakedRenderer in bakedRenderers)
+                    bakedRenderer.Dispose();
                 UnityEngine.Object.DestroyImmediate(sheet);
             }
+        }
+
+        private static string GetPixelHash(Color[] pixels)
+        {
+            var bytes = new byte[pixels.Length * 4];
+            for (var index = 0; index < pixels.Length; index++)
+            {
+                var color = (Color32)pixels[index];
+                var offset = index * 4;
+                bytes[offset] = color.r;
+                bytes[offset + 1] = color.g;
+                bytes[offset + 2] = color.b;
+                bytes[offset + 3] = color.a;
+            }
+
+            using (var sha = SHA256.Create())
+                return BitConverter.ToString(sha.ComputeHash(bytes)).Replace("-", string.Empty);
         }
 
         private static Color[] GetScaledPixels(Texture2D source, int width, int height)
