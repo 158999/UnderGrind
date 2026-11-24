@@ -104,6 +104,8 @@ namespace UnderGrind.Editor
             public MotionSummary motion = new MotionSummary();
             public List<string> warnings = new List<string>();
             public string contactSheet;
+            public List<float> contactSheetTimes = new List<float>();
+            public List<string> contactSheetColumns = new List<string>();
             public string poseCsv;
             public string curveCsv;
             public string geometryCsv;
@@ -374,6 +376,7 @@ namespace UnderGrind.Editor
             public float maximumVertexRadius;
             public int vertexCount;
             public int nonFiniteVertexCount;
+            public string blendShapeWeights;
         }
 
         private sealed class PreviewRig : IDisposable
@@ -678,6 +681,8 @@ namespace UnderGrind.Editor
 
             var sheetPath = Path.Combine(outputDirectory, "contact-sheet.png");
             var sheetTimes = BuildContactSheetTimes(clip, options.contactSheetFrames);
+            report.contactSheetTimes.AddRange(sheetTimes);
+            report.contactSheetColumns.AddRange(new[] { "Frontale", "Tre quarti", "Laterale", "Posteriore" });
             CaptureContactSheet(rig, clip, sheetTimes, options, sheetPath);
             report.contactSheet = "contact-sheet.png";
 
@@ -858,7 +863,7 @@ namespace UnderGrind.Editor
                 hasExtraRoot = description.hasExtraRoot
             };
 
-            foreach (var mapping in description.human)
+            foreach (var mapping in description.human ?? Array.Empty<HumanBone>())
             {
                 var playerBone = playerAnimator == null
                     ? null
@@ -876,7 +881,7 @@ namespace UnderGrind.Editor
                 });
             }
 
-            foreach (var bone in description.skeleton)
+            foreach (var bone in description.skeleton ?? Array.Empty<SkeletonBone>())
             {
                 metadata.skeleton.Add(new SkeletonBoneMetadata
                 {
@@ -1522,6 +1527,18 @@ namespace UnderGrind.Editor
                         if (vertices.Length > nonFinite)
                             centroid /= vertices.Length - nonFinite;
 
+                        var blendShapeWeights = new StringBuilder();
+                        if (renderer.sharedMesh != null)
+                        {
+                            for (var blendIndex = 0; blendIndex < renderer.sharedMesh.blendShapeCount; blendIndex++)
+                            {
+                                if (blendIndex > 0) blendShapeWeights.Append("; ");
+                                blendShapeWeights.Append(renderer.sharedMesh.GetBlendShapeName(blendIndex))
+                                    .Append("=")
+                                    .Append(renderer.GetBlendShapeWeight(blendIndex).ToString("F4", CultureInfo.InvariantCulture));
+                            }
+                        }
+
                         frame.renderers.Add(new RendererGeometrySample
                         {
                             rendererName = renderer.name,
@@ -1533,7 +1550,8 @@ namespace UnderGrind.Editor
                             bakedVertexMaximum = max,
                             maximumVertexRadius = maxRadius,
                             vertexCount = vertices.Length,
-                            nonFiniteVertexCount = nonFinite
+                            nonFiniteVertexCount = nonFinite,
+                            blendShapeWeights = blendShapeWeights.ToString()
                         });
                     }
                     finally
@@ -1667,7 +1685,7 @@ namespace UnderGrind.Editor
         private static void WriteGeometryCsv(string path, IReadOnlyList<GeometryFrame> frames)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("poseFrameIndex,timeSeconds,rendererName,hierarchyPath,worldBounds,bakedLocalBounds,vertexCount,nonFiniteVertexCount,centroidX,centroidY,centroidZ,minX,minY,minZ,maxX,maxY,maxZ,maxVertexRadius");
+            builder.AppendLine("poseFrameIndex,timeSeconds,rendererName,hierarchyPath,worldBounds,bakedLocalBounds,vertexCount,nonFiniteVertexCount,centroidX,centroidY,centroidZ,minX,minY,minZ,maxX,maxY,maxZ,maxVertexRadius,blendShapeWeights");
             foreach (var frame in frames)
             {
                 foreach (var renderer in frame.renderers)
@@ -1683,7 +1701,8 @@ namespace UnderGrind.Editor
                         .Append(VectorCsv(renderer.bakedVertexCentroid)).Append(',')
                         .Append(VectorCsv(renderer.bakedVertexMinimum)).Append(',')
                         .Append(VectorCsv(renderer.bakedVertexMaximum)).Append(',')
-                        .Append(F(renderer.maximumVertexRadius)).AppendLine();
+                        .Append(F(renderer.maximumVertexRadius)).Append(',')
+                        .Append(Csv(renderer.blendShapeWeights)).AppendLine();
                 }
             }
             File.WriteAllText(path, builder.ToString(), new UTF8Encoding(false));
