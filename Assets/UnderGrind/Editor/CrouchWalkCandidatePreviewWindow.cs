@@ -341,11 +341,14 @@ namespace UnderGrind.Editor
         {
             _clipOptions.Clear();
             var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(AnimationSettingsPath);
+            var assignedClipPath = animationSettings != null && animationSettings.CrouchWalkClip != null
+                ? AssetDatabase.GetAssetPath(animationSettings.CrouchWalkClip)
+                : null;
             if (animationSettings != null && animationSettings.CrouchWalkClip != null)
             {
                 _clipOptions.Add(new ClipOption
                 {
-                    Label = "Originale assegnata — " + animationSettings.CrouchWalkClip.name,
+                    Label = "Assegnata al Player — " + Path.GetFileNameWithoutExtension(assignedClipPath),
                     Clip = animationSettings.CrouchWalkClip
                 });
             }
@@ -355,7 +358,8 @@ namespace UnderGrind.Editor
             foreach (var guid in modelGuids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
-                if (!path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase))
+                if (!path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(path, assignedClipPath, StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 var clip = AssetDatabase.LoadAllAssetsAtPath(path)
