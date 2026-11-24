@@ -1,0 +1,47 @@
+name: UnderGrind skinning and deformation audit
+
+on:
+  push:
+    branches: [fix/character-visual-integrity-clean]
+    paths:
+      - '.github/workflows/player-skinning-deformation-audit.yml'
+      - 'Tools/Blender/audit-player-skinning-deformation.py'
+      - 'Assets/UnderGrind/Art/Source/humans.blend'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install Blender 5.2.4
+        run: |
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+            https://mirror.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+            --output "$RUNNER_TEMP/blender.tar.xz"
+          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/blender-5.2.4-linux-x64/blender" --version
+
+      - name: Audit vertex weights and synthetic joint deformation
+        run: |
+          blender -b Assets/UnderGrind/Art/Source/humans.blend \
+            --python-exit-code 1 \
+            --python Tools/Blender/audit-player-skinning-deformation.py
+          test -s Tools/Blender/player-skinning-deformation-audit.json
+
+      - name: Upload non-destructive audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: undergrind-skinning-deformation-audit
+          path: Tools/Blender/player-skinning-deformation-audit.json
+          if-no-files-found: error
+          retention-days: 30
