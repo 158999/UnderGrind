@@ -395,6 +395,16 @@ namespace UnderGrind.Editor
             public float leftFootEstimatedContactRatio;
             public float rightFootEstimatedContactRatio;
             public float maximumHipsDriftMeters;
+            public float restFootSeparationMeters;
+            public float restKneeSeparationMeters;
+            public float crossingToleranceMeters;
+            public Vector3 restAnatomicalLateralAxisLocal;
+            public float minimumStaticAxisFootSeparationMeters;
+            public int staticAxisFootCrossingSampleCount;
+            public List<float> staticAxisFootCrossingTimesSeconds = new List<float>();
+            public float minimumStaticAxisKneeSeparationMeters;
+            public int staticAxisKneeCrossingSampleCount;
+            public List<float> staticAxisKneeCrossingTimesSeconds = new List<float>();
             public float loopPositionErrorMeters;
             public float loopWorldBonePositionErrorMeters;
             public float loopRotationErrorDegrees;
@@ -713,12 +723,13 @@ namespace UnderGrind.Editor
 
             report.poseFrames = SamplePoses(rig, clip, sampleTimes, options);
             CalculatePoseDerivatives(report.poseFrames);
-            CalculateFootMetrics(report.poseFrames, report.motion, options, clip.length);
+            CalculateFootMetrics(report.poseFrames, report.motion, options);
             report.motion.sampleCount = report.poseFrames.Count;
             report.motion.sampleRateHz = options.sampleRateHz;
             report.motion.minimumSampleIntervalSeconds = report.clip.minimumSampleIntervalSeconds;
             report.motion.maximumSampleIntervalSeconds = report.clip.maximumSampleIntervalSeconds;
             report.motion.loopPositionErrorMeters = CalculateLoopPositionError(report.poseFrames);
+            report.motion.loopWorldBonePositionErrorMeters = CalculateLoopWorldBonePositionError(report.poseFrames);
             report.motion.loopRotationErrorDegrees = CalculateLoopRotationError(report.poseFrames);
             report.motion.maximumHipsDriftMeters = report.poseFrames.Count == 0
                 ? 0f
@@ -777,6 +788,19 @@ namespace UnderGrind.Editor
                 kneeCrossingSamples = report.motion.kneeCrossingSampleCount,
                 loopPositionError = report.motion.loopPositionErrorMeters,
                 loopRotationErrorDegrees = report.motion.loopRotationErrorDegrees,
+                restFootSeparationMeters = report.motion.restFootSeparationMeters,
+                restKneeSeparationMeters = report.motion.restKneeSeparationMeters,
+                crossingToleranceMeters = report.motion.crossingToleranceMeters,
+                restAnatomicalLateralAxisLocal = report.motion.restAnatomicalLateralAxisLocal,
+                minimumStaticAxisFootSeparationMeters = report.motion.minimumStaticAxisFootSeparationMeters,
+                staticAxisFootCrossingSampleCount = report.motion.staticAxisFootCrossingSampleCount,
+                staticAxisFootCrossingTimesSeconds = new List<float>(report.motion.staticAxisFootCrossingTimesSeconds),
+                minimumStaticAxisKneeSeparationMeters = report.motion.minimumStaticAxisKneeSeparationMeters,
+                staticAxisKneeCrossingSampleCount = report.motion.staticAxisKneeCrossingSampleCount,
+                staticAxisKneeCrossingTimesSeconds = new List<float>(report.motion.staticAxisKneeCrossingTimesSeconds),
+                loopWorldBonePositionErrorMeters = report.motion.loopWorldBonePositionErrorMeters,
+                minimumFootSeparationTimeSeconds = report.motion.minimumFootSeparationTimeSeconds,
+                minimumKneeSeparationTimeSeconds = report.motion.minimumKneeSeparationTimeSeconds,
                 leftFootPathLengthMeters = report.motion.leftFootPathLengthMeters,
                 rightFootPathLengthMeters = report.motion.rightFootPathLengthMeters,
                 leftFootMaximumSpeedMetersPerSecond = report.motion.leftFootMaximumSpeedMetersPerSecond,
@@ -1334,8 +1358,7 @@ namespace UnderGrind.Editor
         private static void CalculateFootMetrics(
             List<PoseFrame> frames,
             MotionSummary summary,
-            ExportOptions options,
-            float clipLength)
+            ExportOptions options)
         {
             if (frames.Count == 0) return;
 
