@@ -622,6 +622,15 @@ namespace UnderGrind.Editor
             options.cellWidth = Mathf.Clamp(options.cellWidth, 128, 512);
             options.cellHeight = Mathf.Clamp(options.cellHeight, 192, 768);
             options.maxPoseSamples = Mathf.Clamp(options.maxPoseSamples, 100, 50000);
+
+            var maximumTextureSize = Mathf.Max(1024, SystemInfo.maxTextureSize);
+            options.cellWidth = Mathf.Min(options.cellWidth, maximumTextureSize / 4);
+            var maximumHeightByTexture = maximumTextureSize / options.contactSheetFrames;
+            const long maximumContactSheetPixels = 16777216L;
+            var maximumHeightByMemory = (int)(maximumContactSheetPixels /
+                (options.cellWidth * 4L) / options.contactSheetFrames);
+            options.cellHeight = Mathf.Min(options.cellHeight,
+                Mathf.Max(1, Mathf.Min(maximumHeightByTexture, maximumHeightByMemory)));
             options.contactHeightToleranceMeters = Mathf.Max(0f, options.contactHeightToleranceMeters);
             options.contactSpeedToleranceMetersPerSecond = Mathf.Max(0f, options.contactSpeedToleranceMetersPerSecond);
             options.crossingToleranceMeters = Mathf.Max(0f, options.crossingToleranceMeters);
