@@ -4,11 +4,13 @@ import math
 from pathlib import Path
 
 ROOT = Path("Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk")
+SOURCE_CLIP = Path("Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx")
 OUTPUT = Path("Tools/Blender/pinoc-crouch-walk-candidate-audit.json")
 CROSSING_TOLERANCE_METERS = 0.02
 GENERATION_TASK_ID = "827b8373-42df-479a-a82f-22b5a339678d"
 
 ASSET_IDS = {
+    "Crouch_Walk_Forward.fbx": "e4f5b9e6-381c-4227-88d4-94d6a0615df8",
     "Crouch_Walk_Candidate_01.fbx": "6dff3f2b-250b-4506-8712-7e12f3988296",
     "Crouch_Walk_Candidate_02.fbx": "bc1a6551-9608-43eb-9d60-a08c54e4247a",
     "Crouch_Walk_Candidate_03.fbx": "f74b1c97-33c0-462c-a4b9-fb0186d2e278",
@@ -144,6 +146,7 @@ def audit_candidate(path):
 
     return {
         "file": str(path).replace("\\", "/"),
+        "candidateType": "current-source" if path == SOURCE_CLIP else "generated-candidate",
         "assetPublicId": ASSET_IDS.get(path.name),
         "armature": armature.name,
         "action": armature.animation_data.action.name,
@@ -172,7 +175,8 @@ def audit_candidate(path):
 
 def main():
     results = []
-    for path in sorted(ROOT.glob("*.fbx")):
+    paths = ([SOURCE_CLIP] if SOURCE_CLIP.is_file() else []) + sorted(ROOT.glob("*.fbx"))
+    for path in paths:
         try:
             results.append({"status": "ok", **audit_candidate(path)})
         except Exception as exc:
@@ -187,7 +191,8 @@ def main():
         -item["minimumAnatomicalFootSeparation"]
     ))
     report = {
-        "source": "PINOC crouched-walk and stealth-walk text-to-motion candidates",
+        "source": "Current crouch-walk clip compared with PINOC crouched-walk and stealth-walk candidates",
+        "currentSource": str(SOURCE_CLIP).replace("\\", "/"),
         "generationTaskId": GENERATION_TASK_ID,
         "method": (
             "Blender FBX import; anatomical foot separation matches "
