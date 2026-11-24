@@ -18,7 +18,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private Renderer[] firstPersonOnlyRenderers = Array.Empty<Renderer>();
         [SerializeField] private Transform viewReference;
 
-        private readonly Dictionary<Renderer, bool> _originalEnabled = new Dictionary<Renderer, bool>();
+        private readonly Dictionary<Renderer, bool> _defaultEnabled = new Dictionary<Renderer, bool>();
         private bool _thirdPerson;
         private bool _bodyVisibleWhileLookingDown = true;
         private bool _initialized;
@@ -135,19 +135,6 @@ namespace UnderGrind.Locomotion
             ApplyVisibility();
         }
 
-        /// <summary>
-        /// Restores the renderer enabled states captured before a camera mode was applied.
-        /// Prefab generation uses this to save a neutral renderer state; runtime mode changes
-        /// must not inherit the prefab builder's temporary third-person visibility.
-        /// </summary>
-        public void RestoreRendererDefaults()
-        {
-            if (!_initialized) CacheRenderers();
-            foreach (var pair in _originalEnabled)
-                if (pair.Key != null)
-                    pair.Key.enabled = pair.Value;
-        }
-
         private void CacheRenderers()
         {
             Cache(headRenderers);
@@ -160,14 +147,16 @@ namespace UnderGrind.Locomotion
         private void Cache(IEnumerable<Renderer> renderers)
         {
             foreach (var renderer in renderers)
-                if (renderer != null && !_originalEnabled.ContainsKey(renderer))
-                    _originalEnabled.Add(renderer, renderer.enabled);
+                // These renderers are mode-controlled. Their serialized enabled state may
+                // reflect the prefab's preview mode, so it must not become the runtime baseline.
+                if (renderer != null && !_defaultEnabled.ContainsKey(renderer))
+                    _defaultEnabled.Add(renderer, true);
         }
 
         private void ApplyVisibility()
         {
             if (!_initialized) return;
-            foreach (var pair in _originalEnabled)
+            foreach (var pair in _defaultEnabled)
             {
                 if (pair.Key == null) continue;
                 var isHead = Array.IndexOf(headRenderers, pair.Key) >= 0;
