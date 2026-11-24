@@ -316,13 +316,15 @@ namespace UnderGrind.Editor
 
         private void ConfigureCamera()
         {
+            var characterForward = _previewInstance.transform.TransformDirection(Vector3.left).normalized;
+            var characterRight = Vector3.Cross(_previewInstance.transform.up, characterForward).normalized;
             var direction = _cameraAngle switch
             {
-                CameraAngle.Front => Vector3.back,
-                CameraAngle.ThreeQuarter => new Vector3(-1f, 0f, -1f).normalized,
-                CameraAngle.Side => Vector3.right,
-                CameraAngle.Rear => Vector3.forward,
-                _ => Vector3.back
+                CameraAngle.Front => characterForward,
+                CameraAngle.ThreeQuarter => (characterForward + characterRight).normalized,
+                CameraAngle.Side => characterRight,
+                CameraAngle.Rear => -characterForward,
+                _ => characterForward
             };
 
             var target = _modelBounds.center + Vector3.up * (_modelBounds.extents.y * 0.08f);
