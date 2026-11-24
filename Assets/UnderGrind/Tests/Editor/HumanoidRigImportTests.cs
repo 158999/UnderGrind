@@ -424,8 +424,8 @@ namespace UnderGrind.Tests
                 .Where(path => path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase))
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray();
-            Assert.That(candidatePaths, Has.Length.EqualTo(8),
-                "Devono essere importate tutte le otto varianti PINOC della camminata accovacciata.");
+            Assert.That(candidatePaths, Has.Length.GreaterThanOrEqualTo(8),
+                "Devono essere presenti almeno gli otto candidati storici; i nuovi campioni generati vengono inclusi automaticamente nell'audit.");
 
             var maleModel = AssetDatabase.LoadAssetAtPath<GameObject>(MaleFbxPath);
             var maleAvatar = LoadValidAvatar(MaleFbxPath);
