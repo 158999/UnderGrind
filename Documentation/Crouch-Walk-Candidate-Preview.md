@@ -166,3 +166,14 @@ L'audit Blender sul FBX sorgente non rileva incroci in nessuna delle quattro var
 | Generated 04 | 0,050 m | 1,356 m | 0,299 m |
 
 Generated 03 è il primo candidato da verificare sui prefab Player. Questi dati non approvano la clip: sono misurati sul FBX sorgente e non sostituiscono la valutazione Humanoid maschile/femminile né il controllo visivo in Unity.
+
+### Ispezione visiva Blender dei nuovi FBX
+
+Le contact sheet Blender a quattro viste e sei campioni per ciclo sono state generate e caricate nell'artifact GitHub Actions `pinoc-crouch-walk-audit-and-previews`. A differenza delle contact sheet del vecchio ZIP Unity, queste immagini mostrano variazioni temporali reali.
+
+- **Generated 01:** la postura non resta sufficientemente bassa in tutti i campioni; non è la prima scelta.
+- **Generated 02:** postura accovacciata evidente, ma la chiusura del loop sorgente è debole (circa 0,308 m).
+- **Generated 03:** postura accovacciata più costante, alternanza dei passi leggibile e nessun incrocio visibile nelle quattro viste. È il candidato sorgente più promettente.
+- **Generated 04:** deriva molto elevata; il personaggio esce dall'inquadratura in più campioni. Da scartare.
+
+Questa valutazione riguarda il FBX sorgente in Blender. Non certifica il retarget Humanoid, le animazioni sui prefab maschile/femminile o il comportamento nel controller Unity.
