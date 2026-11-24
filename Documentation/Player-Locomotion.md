@@ -103,7 +103,7 @@ La riparazione anatomica dei pesi è entrata in `main` il 24 novembre 2026. I nu
 
 **Verificato in Blender:** 12 mesh controllate, massimo quattro influenze per vertice, pesi normalizzati, nessuna influenza anatomica vietata, nessun vertice non pesato e 54 pose sintetiche valutate per personaggio.
 
-**Verificato nell'ultima run Unity `20261124-114001-048`:** 69/70 test Unity superati; EditMode 56/57, PlayMode 13/13. I test standalone sono 6/6. I due precedenti casi Visual Rig ora passano. La clip originale Crouch Walk resta difettosa ma non è più assegnata; Generated 03 è ora assegnata provvisoriamente soltanto nel branch di validazione e attende i test Unity.
+**Ultima esecuzione Unity registrata (`20261124-114001-048`, stato precedente alla nuova generazione):** 69/70 test Unity superati; EditMode 56/57, PlayMode 13/13; test standalone 6/6. Questi risultati non verificano i quattro nuovi FBX né la modifica all'esportatore. Dopo l'assegnazione provvisoria di Generated 03 nel branch di validazione non è ancora stata eseguita una nuova suite Unity.
 
 **Non ancora verificato:** qualità visiva delle deformazioni in prima e terza persona, posizione degli arti FP rispetto alla camera, continuità visiva dei cicli e promozione del candidato Crouch Walk. La run automatica non sostituisce il controllo visivo in Unity.
 
