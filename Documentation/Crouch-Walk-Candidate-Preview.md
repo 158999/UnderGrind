@@ -81,12 +81,12 @@ Per ogni combinazione clip/personaggio:
 - posizione, rotazione e scala locale di ogni osso Humanoid disponibile;
 - posizione e rotazione world, gerarchia e parent;
 - velocità lineare, accelerazione lineare e velocità angolare stimate tra campioni;
-- posizione/rotazione del root, deriva locale del bacino e inclinazione del busto;
+- posizione/rotazione del root, forward/right effettivi del modello, deriva del bacino nel root e inclinazione del busto;
 - angoli proxy di anche e ginocchia;
-- distanza tridimensionale e separazione laterale firmata di piedi e ginocchia;
+- distanza tridimensionale e separazione laterale firmata di piedi e ginocchia, misurate sia sull'asse anatomico dinamico delle anche (ricalcolato a ogni campione, come nel test Unity) sia sull'asse statico della posa iniziale;
 - altezza dei piedi rispetto al root, altezza relativa minima osservata, velocità, accelerazione, contatto stimato e possibile scivolamento;
 - lunghezza della traiettoria dei piedi, velocità massima, percentuale dei campioni in contatto, incroci e relativi tempi;
-- errore di posizione e rotazione tra il campione iniziale e quello a fine clip.
+- errore di posizione dei piedi relativi alle anche tra il campione iniziale e l'ultimo campione prima della fine, più errore world di ossa selezionate e rotazione relativa dei piedi.
 
 **Geometria deformata**
 - numero vertici, triangoli, blend shape e materiali dei renderer;
@@ -101,11 +101,12 @@ Il report campiona il retargeting Humanoid direttamente sui due prefab Player, m
 
 - Le posizioni world sono riferite all'istanza temporanea nel Preview Scene; le posizioni local sono relative al parent Transform.
 - Velocità e accelerazioni sono differenze finite. La precisione dipende dalla frequenza e dalla distribuzione dei campioni.
-- Gli incroci sono conteggi di campioni in cui la separazione laterale firmata cambia lato rispetto alla posa iniziale; non sono il numero di eventi distinti.
+- Gli incroci dinamici sono conteggi di campioni in cui la separazione firmata rispetto all'asse delle anche correnti scende sotto la tolleranza negativa configurata. Il conteggio è allineato al test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`; non rappresenta il numero di eventi distinti.
+- Il report include anche l'asse statico iniziale: può evidenziare falsi incroci quando il bacino ruota, perciò il valore dinamico è quello da confrontare con il test.
 - Il contatto è una stima euristica basata su altezza minima osservata e velocità. Non equivale al grounded state del controller.
 - La percentuale di contatto è una frazione dei campioni, non una misura temporale ponderata.
 - Gli angoli di anca sono proxy geometrici tra bacino, femore e gamba; non sono angoli anatomici certificati.
-- L'errore di loop confronta esattamente il tempo 0 con la durata della clip. Va interpretato insieme alle impostazioni di loop e alle immagini: non tutte le clip sono concepite per terminare nella posa iniziale.
+- L'errore di loop dei piedi confronta le posizioni relative alle anche a tempo 0 e a `clip.length - 0.0001 s`, come nel test esistente. È riportato separatamente anche l'errore world di ossa selezionate. Va interpretato insieme alle impostazioni di loop e alle immagini: non tutte le clip sono concepite per terminare nella posa iniziale.
 - Le immagini sono render statici del Preview Scene; non rappresentano il Game View con materiali, luci, camera, controller e post-processing di gioco.
 - Controller Animator, Blend Tree, transizioni, root motion applicato, input, collisioni, fisica e `PlayerFootSeparationIK` non vengono eseguiti. Le curve root motion sono comunque registrate.
 - La diagnostica BakeMesh descrive la geometria deformata, ma non certifica shading, normali, materiali o qualità estetica.
