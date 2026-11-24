@@ -210,13 +210,9 @@ Questi controlli riguardano struttura statica, topologia, UV, presenza dei pesi 
 
 ### Test ancora aperti
 
-L'ultima esecuzione Unity versionata è la run `20261124-110717-910` su Unity 6000.6.9f1: 55 test EditMode e 13 PlayMode, 65/68 superati. I tre fallimenti registrati sono:
+La run Unity `20261124-114001-048` su Unity 6000.6.9f1 ha eseguito 57 test EditMode e 13 PlayMode. I test standalone hanno eseguito 6 casi. Il solo fallimento Unity è `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`, relativo alla clip originale `Crouch_Walk_Forward.fbx`.
 
-- `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`: Crouch Walk Forward, 6/232 campioni con incrocio sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile.
-- `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: l'aspettativa di renderer FP disabilitati era applicata anche all'FBX sorgente, che conserva invece i renderer attivi.
-- `VisualRigPreservesInitiallyDisabledRenderers`: il baseline runtime forzava a `true` un renderer disabilitato in origine.
-
-I due problemi dei renderer sono corretti in `main` tramite PR #12, ma la correzione deve essere verificata con una nuova esecuzione Unity. Il test ora controlla i valori neutri iniziali su entrambi gli FBX e sui prefab, quindi verifica i passaggi prima persona → terza persona → prima persona. Il test PlayMode continua a verificare che un renderer disabilitato in origine non venga riattivato.
+I precedenti errori Visual Rig non sono più presenti: il test distingue ora gli FBX sorgente dai prefab generati. Gli FBX non devono contenere in origine `PlayerVisualRig`; il componente viene aggiunto dal builder quando crea il prefab. I quattro casi FBX/prefab del test di commutazione dei renderer passano nella run corrente. Il test PlayMode sulla conservazione dei renderer inizialmente disabilitati passa anch'esso.
 
 ### Correzione dei pesi anatomici — 24 novembre 2026
 
@@ -246,7 +242,7 @@ L'audit di deformazione ha eseguito 54 rotazioni sintetiche per personaggio (18 
 
 **Verificato in Blender:** pesi filtrati per parte e lato, massimo quattro influenze, normalizzazione, presenza dei gruppi, topologia statica, UV, materiale, export FBX e valutazione sintetica delle deformazioni.
 
-**Verificato nell'ultima run Unity 6.6.9f1:** compilazione senza errori; 65/68 test superati. La run ha eseguito EditMode e PlayMode sul rig reweighted, ma ha rilevato due regressioni nei renderer e il problema Crouch Walk già noto. I due problemi renderer sono corretti nel branch e attendono una nuova run. La resa visiva completa resta da controllare in gioco.
+**Verificato nella run Unity `20261124-114001-048` (Unity 6000.6.9f1):** nessuna diagnostica di compilazione; EditMode 56/57 e PlayMode 13/13. I test standalone sono 6/6. I due casi Visual Rig precedentemente falliti passano; resta il test sugli incroci della clip Crouch Walk originale. La resa visiva completa resta da controllare in gioco.
 
 Restano aperti due problemi indipendenti:
 - il test precedente `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` segnalava incroci nella clip `Crouch_Walk_Forward` (6 sorgente, 10 player maschile, 12 femminile); il reweighting non modifica la clip e il test va ripetuto;
@@ -256,33 +252,26 @@ La PR `#11` è stata unita a `main` il 24 novembre. La successiva run Unity ha e
 
 ### Correzione dei default renderer e dei prefab — 24 novembre 2026
 
-La run Unity `20261124-110717-910` ha evidenziato che forzare a `true` il baseline di ogni renderer mode-controlled riattivava anche renderer disabilitati in origine. La correzione conserva il valore `Renderer.enabled` presente quando il rig acquisisce il renderer.
+La correzione conserva il valore `Renderer.enabled` presente quando `PlayerVisualRig` acquisisce ciascun renderer. Il builder configura i gruppi, applica temporaneamente una modalità camera per la verifica, richiama `PlayerVisualRig.RestoreRendererDefaults()` e salva il prefab ripristinando gli stati neutri.
 
-Il builder deve comunque evitare di salvare nei prefab una modalità camera temporanea. La procedura aggiornata è:
+Il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` distingue i FBX sorgente dai prefab runtime: sui FBX verifica la configurazione dei gruppi e applica temporaneamente il componente per testare la commutazione; sui prefab richiede il componente serializzato. La run `20261124-114001-048` conferma il passaggio dei quattro casi. Il test PlayMode `VisualRigPreservesInitiallyDisabledRenderers` conferma che un renderer disabilitato in origine non viene riattivato.
 
-1. configura i gruppi renderer dal nome degli oggetti;
-2. applica temporaneamente la modalità terza persona per verificare il rig;
-3. chiama `PlayerVisualRig.RestoreRendererDefaults()` per ripristinare gli stati iniziali catturati;
-4. salva il prefab con i gruppi renderer in stato neutro, tutti attivi nell'asset sorgente.
-
-I prefab maschile e femminile versionati sono stati aggiornati in modo che `FP_Arms` e `FP_Hands` siano attivi nell'asset. A runtime `PlayerVisualRig` conserva questi default e applica la visibilità in base alla modalità camera. Un renderer disabilitato intenzionalmente prima della configurazione resta invece disabilitato.
-
-Il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` verifica ora i default neutri su FBX maschile/femminile e prefab maschile/femminile, poi verifica la commutazione esclusiva dei gruppi. Il test PlayMode `VisualRigPreservesInitiallyDisabledRenderers` verifica la conservazione dello stato disabilitato.
-
-Queste modifiche sono state unite in `main` tramite PR #12 e non sono ancora state verificate con una nuova esecuzione Unity. La correzione riguarda gli stati dei renderer, non la posa o la distanza degli arti FP dalla camera: la verifica visiva della prima persona resta aperta.
+Resta separata la verifica visiva della posizione degli arti FP rispetto alla camera e della resa in prima persona: il test dei gruppi renderer non dimostra la qualità dell'inquadratura.
 
 
-### Audit Unity Crouch Walk e riallineamento prefab — 24 novembre 2026
+### Audit Unity Crouch Walk e verifica Visual Rig — 24 novembre 2026
 
-La run Unity `20261124-113037-739` su Unity 6000.6.9f1 ha eseguito 57 test EditMode (54 superati, 3 falliti) e 13 PlayMode (13 superati). I test standalone C# hanno superato 6/6 casi.
+La run Unity `20261124-114001-048` su Unity 6000.6.9f1 ha eseguito 57 test EditMode e 13 PlayMode. Esito: EditMode 56/57, PlayMode 13/13; i test standalone C# sono 6/6. Nessun errore di compilazione è stato registrato. L'unico fallimento è il controllo della clip Crouch Walk.
 
-Il test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` conferma che la clip di produzione `Crouch_Walk_Forward.fbx` presenta incroci anatomici:
-- sorgente Mixamo: 6/232 campioni, separazione minima -0,114 m;
+`LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` rileva sulla clip attualmente assegnata `Crouch_Walk_Forward.fbx`:
+- sorgente Mixamo: 6/232 campioni, separazione minima anatomica -0,114 m;
 - Player maschile: 10/232 campioni, separazione minima -0,119 m;
 - Player femminile: 12/232 campioni, separazione minima -0,133 m.
 
-Il report `TestResults/test/Unity/CrouchWalkCandidateAudit.txt` confronta la clip corrente e gli otto candidati sul rig sorgente e sui due Avatar Player. `Crouch_Walk_Candidate_08.fbx` è primo nella classifica diagnostica: zero incroci di piedi e ginocchia su tutti e tre i rig; separazione minima dei piedi 0,183 m sul Player maschile e 0,155 m sul femminile. Anche il candidato 07 non presenta incroci, ma ha una separazione minima inferiore sul Player. Questi risultati sono misure automatiche del retargeting Unity, non una valutazione della qualità visiva o della continuità percepita. Il candidato 08 non è assegnato al controller e non sostituisce la clip originale finché il ciclo non viene verificato visivamente in Play Mode su entrambi gli Avatar.
+L'audit `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` ha valutato tutti gli otto candidati su sorgente, Avatar maschile e Avatar femminile. `Crouch_Walk_Candidate_08.fbx` è il migliore risultato automatico: zero incroci di piedi e ginocchia sui tre rig, separazione minima dei piedi 0,254 m sulla sorgente, 0,183 m sul Player maschile e 0,155 m sul femminile; errore di loop pari a 0 m. Il candidato 07 è anch'esso senza incroci, ma la separazione minima dei piedi sul Player femminile è 0,103 m. Questi dati misurano il retargeting campionato e non dimostrano da soli la qualità visiva del ciclo.
 
-Gli altri due test falliti riportano `PlayerVisualRig` mancante nei prefab maschile e femminile. Il controllo dei file versionati su `main` mostra invece il componente serializzato su entrambi i prefab, con il riferimento a `PlayerRigSettings.asset` e gli array dei renderer configurati. Il report locale e lo snapshot remoto non coincidono: prima di modificare builder o prefab, sincronizzare la copia locale con `main` e ripetere EditMode. Non aggiungere componenti duplicati né rigenerare i prefab sulla sola base di questo report.
+Il candidato 08 non è stato assegnato al controller: la documentazione e la procedura di animazione richiedono la verifica visiva in Play Mode su entrambi gli Avatar prima della promozione. La clip originale resta assegnata e il fallimento è quindi intenzionale e reale, non un errore di test.
 
-La run complessiva registra 67/70 test Unity superati e 6/6 standalone. La suite PlayMode è 13/13. La compilazione Unity non ha riportato errori C#; i tre fallimenti sono asserzioni EditMode. La verifica visiva in prima/terza persona e la promozione della clip Crouch Walk restano non eseguite.
+I due precedenti errori Visual Rig sono risolti: la run corrente conferma il passaggio dei quattro casi FBX/prefab e del test PlayMode che preserva i renderer inizialmente disabilitati. La diagnosi precedente sui prefab mancanti era errata: i FBX sono asset sorgente e non devono contenere `PlayerVisualRig`; il builder aggiunge il componente quando genera i prefab runtime.
+
+La verifica visiva di prima/terza persona, la posizione degli arti FP rispetto alla camera e la promozione del candidato Crouch Walk restano non eseguite.
