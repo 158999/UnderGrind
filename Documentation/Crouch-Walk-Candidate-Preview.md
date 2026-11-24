@@ -9,12 +9,12 @@ La finestra carica:
 - i candidati FBX presenti in `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk`;
 - i prefab generati `Human_Male_Rigged` e `Human_Female_Rigged`.
 
-La prima voce della selezione animazione è la clip originale assegnata; le successive sono i candidati importati dalla cartella.
+La prima voce della selezione animazione è la clip attualmente assegnata in `PlayerAnimationSettings.asset`; le successive sono i candidati importati dalla cartella.
 
 ## Anteprima
 
 - **Personaggio:** seleziona il prefab maschile o femminile.
-- **Animazione:** seleziona la clip originale o un candidato.
+- **Animazione:** seleziona la clip attualmente assegnata o uno degli altri candidati.
 - **Inquadratura:** frontale, tre quarti, laterale o posteriore.
 - **Distanza camera:** regola l'inquadratura.
 - **Pausa / Riproduci**, **Inizio**, **Loop**, **Velocità** e **Tempo normalizzato:** controllano la riproduzione e l'ispezione del ciclo.
