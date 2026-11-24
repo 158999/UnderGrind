@@ -32,7 +32,7 @@ Gli otto movimenti di produzione sono già versionati in questa cartella e asseg
 
 ### Validazione — run Unity `20261124-114001-048`
 
-- **Walking** e **Running**: il test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` non ha segnalato incroci nella run corrente sui tre Avatar campionati. La verifica visiva sul rig aggiornato resta distinta.
+- **Walking** e **Running**: il test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` non ha segnalato incroci anatomici nella run corrente sui tre Avatar campionati. Running sul Player femminile ha però una separazione minima di soli 0,004 m: il test passa, ma la verifica visiva sul rig aggiornato resta importante.
 - **Crouch Walk Forward**: la clip ancora assegnata in `PlayerAnimationSettings.asset` continua a fallire: 6/232 campioni sulla sorgente Mixamo, 10/232 sul Player maschile e 12/232 sul femminile. Separazione minima anatomica: -0,114 m, -0,119 m e -0,133 m rispettivamente. Non è approvata.
 - **Visual Rig**: i quattro casi FBX/prefab del test `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` passano; il problema precedente era l'aspettativa errata sui FBX sorgente, non un componente mancante nei prefab.
 - **Jump, Fall, Land, Idle e Crouch Idle**: importati e assegnati; non sono coperti dal test di incrocio dei piedi e non sono ancora validati visivamente sul rig riparato.
