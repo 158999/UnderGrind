@@ -40,7 +40,6 @@ namespace UnderGrind.Editor
             public float contactHeightToleranceMeters = 0.04f;
             public float contactSpeedToleranceMetersPerSecond = 0.15f;
             public float crossingToleranceMeters = 0.02f;
-            public float crossingToleranceMeters = 0.02f;
         }
 
         [Serializable]
