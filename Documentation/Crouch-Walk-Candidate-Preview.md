@@ -141,4 +141,13 @@ I dati numerici confermano che nessun candidato è pronto:
 - Il candidato 04 ha una stima di contatto elevata (circa 87% per entrambi i piedi), ma presenta un errore di rotazione al loop di circa 31,5° e un errore world delle ossa di circa 0,36 m; inoltre i risultati del report e del test comparativo precedente non concordano sul conteggio degli incroci.
 - I candidati 05–08 hanno percentuali di contatto stimate molto basse (circa 0,5–5%) e chiusure world del loop nell'ordine di 0,29–0,46 m. L'assenza di incroci non basta a renderli camminate utilizzabili.
 
+Il test della clip effettivamente configurata ora applica anche una soglia di qualità specifica per Crouch Walk, oltre all'assenza di incroci:
+- separazione minima dei piedi e delle ginocchia: almeno 0,05 m;
+- contatto stimato di ciascun piede: tra 10% e 75% dei campioni;
+- errore di rotazione del loop: massimo 5°;
+- errore di posizione dei piedi rispetto al root tra inizio e fine: massimo 0,05 m;
+- deriva massima del bacino nel root: massimo 0,10 m.
+
+Queste sono soglie QA del test, non parametri di gameplay del Player. Servono a impedire che una clip venga accettata soltanto perché non incrocia i piedi.
+
 Nel branch `fix/crouch-walk-animation-validation` l'esportatore è stato modificato per renderizzare mesh temporanee ottenute con `SkinnedMeshRenderer.BakeMesh` a ogni campione, anziché affidarsi al rendering di una posa skinned potenzialmente non aggiornata. L'esportazione ora rifiuta anche una contact sheet senza variazioni visive tra i campioni. La modifica è presente nel codice, ma **non è ancora stata eseguita in Unity**: occorre rigenerare il pacchetto e controllare le nuove immagini prima di considerare risolta la pipeline di ispezione.
