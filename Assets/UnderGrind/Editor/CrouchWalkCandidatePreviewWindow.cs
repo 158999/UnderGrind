@@ -60,7 +60,7 @@ namespace UnderGrind.Editor
         private string _status;
         private bool _showInspectionOptions;
         private int _inspectionSampleRate = 30;
-        private int _inspectionFrameCount = 12;
+        private int _inspectionFrameCount = 24;
         private int _inspectionCellWidth = 192;
         private int _inspectionCellHeight = 320;
         private int _inspectionMaxSamples = 12000;
