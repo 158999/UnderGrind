@@ -279,9 +279,17 @@ namespace UnderGrind.Editor
 
             try
             {
+                var requestedCellWidth = options.cellWidth;
+                var requestedCellHeight = options.cellHeight;
                 var zipPath = CrouchWalkAnimationInspectionExporter.Export(
                     clips, labels, settings, options, destination);
-                _status = "Pacchetto diagnostico creato: " + zipPath;
+                _inspectionCellWidth = options.cellWidth;
+                _inspectionCellHeight = options.cellHeight;
+                var dimensionsAdjusted = requestedCellWidth != options.cellWidth ||
+                                         requestedCellHeight != options.cellHeight;
+                _status = (dimensionsAdjusted
+                    ? "Risoluzione contact sheet adattata ai limiti GPU/memoria. "
+                    : string.Empty) + "Pacchetto diagnostico creato: " + zipPath;
                 EditorUtility.DisplayDialog(
                     "Animation Inspection completata",
                     "Pacchetto creato. Allega qui il file ZIP:\n\n" + zipPath,
