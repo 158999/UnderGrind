@@ -108,7 +108,7 @@
   "visualValidationComplete": false,
   "crouchWalkCandidateAudit": {
     "currentUnityResult": {
-      "runId": "20261124-113037-739",
+      "runId": "20261124-114001-048",
       "sourceFootCrossings": 6,
       "malePlayerFootCrossings": 10,
       "femalePlayerFootCrossings": 12,
@@ -118,7 +118,7 @@
         "female": -0.133
       },
       "status": "failed",
-      "note": "La clip originale resta assegnata ma non approvata."
+      "note": "La run 20261124-114001-048 conferma che la clip originale resta assegnata e non approvata; è l'unico fallimento EditMode residuo."
     },
     "rawBlenderCandidateAudit": {
       "reportPath": "Tools/Blender/pinoc-crouch-walk-candidate-audit.json",
@@ -129,7 +129,7 @@
     "unityCandidateDiagnostic": {
       "test": "UnderGrind.Tests.HumanoidRigImportTests.CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars",
       "reportPath": "TestResults/test/Unity/CrouchWalkCandidateAudit.txt",
-      "runId": "20261124-113037-739",
+      "runId": "20261124-114001-048",
       "status": "executed",
       "bestDiagnosticCandidate": "Crouch_Walk_Candidate_08.fbx",
       "bestCandidateResults": {
@@ -153,7 +153,7 @@
         },
         "loopEndpointErrorMeters": 0
       },
-      "interpretation": "Best result in the automated Unity retargeting audit. Visual PlayMode validation is still required before promotion."
+      "interpretation": "Best result in the automated Unity retargeting audit from run 20261124-114001-048. Visual PlayMode validation is still required before promotion."
     },
     "selectedReplacement": null
   }
