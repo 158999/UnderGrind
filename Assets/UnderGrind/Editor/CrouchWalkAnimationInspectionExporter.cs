@@ -1672,16 +1672,21 @@ namespace UnderGrind.Editor
                     {
                         ConfigureCamera(rig, column, options.cellWidth, options.cellHeight);
                         var rect = new Rect(0f, 0f, options.cellWidth, options.cellHeight);
-                        rig.Preview.BeginStaticPreview(rect);
-                        var pixelScale = EditorGUIUtility.pixelsPerPoint;
-                        rig.Preview.camera.pixelRect = new Rect(
-                            0f, 0f, options.cellWidth * pixelScale, options.cellHeight * pixelScale);
-                        rig.Preview.Render(true, false);
-                        var rendered = rig.Preview.EndStaticPreview();
-                        if (rendered == null)
-                            throw new InvalidOperationException("PreviewRenderUtility non ha restituito un frame.");
+                        Texture2D rendered = null;
+                        var previewBegun = false;
                         try
                         {
+                            rig.Preview.BeginStaticPreview(rect);
+                            previewBegun = true;
+                            var pixelScale = EditorGUIUtility.pixelsPerPoint;
+                            rig.Preview.camera.pixelRect = new Rect(
+                                0f, 0f, options.cellWidth * pixelScale, options.cellHeight * pixelScale);
+                            rig.Preview.Render(true, false);
+                            rendered = rig.Preview.EndStaticPreview();
+                            previewBegun = false;
+                            if (rendered == null)
+                                throw new InvalidOperationException("PreviewRenderUtility non ha restituito un frame.");
+
                             var y = (times.Count - 1 - row) * options.cellHeight;
                             var pixels = GetScaledPixels(rendered, options.cellWidth, options.cellHeight);
                             sheet.SetPixels(column * options.cellWidth, y,
@@ -1689,7 +1694,21 @@ namespace UnderGrind.Editor
                         }
                         finally
                         {
-                            UnityEngine.Object.DestroyImmediate(rendered);
+                            if (previewBegun)
+                            {
+                                try
+                                {
+                                    var abandoned = rig.Preview.EndStaticPreview();
+                                    if (abandoned != null)
+                                        UnityEngine.Object.DestroyImmediate(abandoned);
+                                }
+                                catch (Exception cleanupException)
+                                {
+                                    Debug.LogException(cleanupException);
+                                }
+                            }
+                            if (rendered != null)
+                                UnityEngine.Object.DestroyImmediate(rendered);
                         }
                     }
                 }
