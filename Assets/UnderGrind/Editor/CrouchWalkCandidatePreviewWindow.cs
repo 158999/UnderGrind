@@ -193,7 +193,7 @@ namespace UnderGrind.Editor
             _preview.camera.aspect = Mathf.Max(0.1f, rect.width / Mathf.Max(1f, rect.height));
             ConfigureCamera();
             _preview.BeginPreview(rect, GUIStyle.none);
-            _preview.camera.Render();
+            _preview.Render(true);
             var texture = _preview.EndPreview();
             GUI.DrawTexture(rect, texture, ScaleMode.StretchToFill, false);
         }
