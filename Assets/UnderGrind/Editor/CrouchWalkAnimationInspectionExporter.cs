@@ -31,7 +31,7 @@ namespace UnderGrind.Editor
         public sealed class ExportOptions
         {
             public int sampleRateHz = 30;
-            public int contactSheetFrames = 12;
+            public int contactSheetFrames = 24;
             public int cellWidth = 192;
             public int cellHeight = 320;
             public int maxPoseSamples = 12000;
