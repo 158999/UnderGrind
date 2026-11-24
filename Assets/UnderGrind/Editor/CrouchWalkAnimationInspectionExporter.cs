@@ -2074,7 +2074,7 @@ namespace UnderGrind.Editor
         private static void WriteCurveCsv(string path, AnimationClip clip)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("curveKind,bindingPath,propertyName,componentType,keyIndex,time,value,inTangent,outTangent,inWeight,outWeight,weightedMode,objectReferencePath,objectReferenceName");
+            builder.AppendLine("curveKind,bindingPath,propertyName,componentType,keyIndex,time,value,inTangent,outTangent,inWeight,outWeight,weightedMode,leftTangentMode,rightTangentMode,broken,objectReferencePath,objectReferenceName");
 
             foreach (var binding in AnimationUtility.GetCurveBindings(clip))
             {
@@ -2095,7 +2095,10 @@ namespace UnderGrind.Editor
                         .Append(F(key.outTangent)).Append(',')
                         .Append(F(key.inWeight)).Append(',')
                         .Append(F(key.outWeight)).Append(',')
-                        .Append(Csv(key.weightedMode.ToString())).Append(",,")
+                        .Append(Csv(key.weightedMode.ToString())).Append(',')
+                        .Append(Csv(AnimationUtility.GetKeyLeftTangentMode(curve, index).ToString())).Append(',')
+                        .Append(Csv(AnimationUtility.GetKeyRightTangentMode(curve, index).ToString())).Append(',')
+                        .Append(AnimationUtility.GetKeyBroken(curve, index)).Append(",,")
                         .AppendLine();
                 }
             }
@@ -2113,7 +2116,7 @@ namespace UnderGrind.Editor
                         .Append(Csv(binding.propertyName)).Append(',')
                         .Append(Csv(binding.type == null ? string.Empty : binding.type.FullName)).Append(',')
                         .Append(index).Append(',')
-                        .Append(F(key.time)).Append(",,,,,,")
+                        .Append(F(key.time)).Append(",,,,,,,,,")
                         .Append(Csv(value == null ? string.Empty : AssetDatabase.GetAssetPath(value))).Append(',')
                         .Append(Csv(value == null ? string.Empty : value.name)).AppendLine();
                 }
