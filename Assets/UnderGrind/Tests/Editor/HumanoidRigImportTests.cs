@@ -441,8 +441,11 @@ namespace UnderGrind.Tests
                 var femaleResult = MeasureFootCrossing(femaleModel, femaleAvatar, clip);
 
                 report.AppendLine(System.IO.Path.GetFileName(path) + " — " + clip.length.ToString("F2") + " s");
+                report.AppendLine("  Mapping sorgente: " + DescribeAvatarMapping(sourceAvatar));
                 report.AppendLine("  Sorgente: " + FormatFootCrossing(sourceResult));
+                report.AppendLine("  Mapping Player maschile: " + DescribeAvatarMapping(maleAvatar));
                 report.AppendLine("  Player maschile: " + FormatFootCrossing(maleResult));
+                report.AppendLine("  Mapping Player femminile: " + DescribeAvatarMapping(femaleAvatar));
                 report.AppendLine("  Player femminile: " + FormatFootCrossing(femaleResult));
                 report.AppendLine();
 
@@ -648,13 +651,13 @@ namespace UnderGrind.Tests
                     var leftFootRelative = hips.InverseTransformPoint(leftFoot.position);
                     var rightFootRelative = hips.InverseTransformPoint(rightFoot.position);
                     var hipsPosition = instance.transform.InverseTransformPoint(hips.position);
-                    if (i == 0)
+                    if (sample == 0)
                     {
                         firstLeftFootRelative = leftFootRelative;
                         firstRightFootRelative = rightFootRelative;
                         firstHipsPosition = hipsPosition;
                     }
-                    if (i == sampleCount - 1)
+                    if (sample == sampleCount - 1)
                     {
                         lastLeftFootRelative = leftFootRelative;
                         lastRightFootRelative = rightFootRelative;
