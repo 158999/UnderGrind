@@ -1396,6 +1396,7 @@ namespace UnderGrind.Editor
         private static void CalculatePoseDerivatives(List<PoseFrame> frames)
         {
             var previousVelocities = new Dictionary<string, Vector3>(StringComparer.Ordinal);
+            var previousTransformVelocities = new Dictionary<string, Vector3>(StringComparer.Ordinal);
             for (var frameIndex = 0; frameIndex < frames.Count; frameIndex++)
             {
                 var frame = frames[frameIndex];
@@ -1417,6 +1418,25 @@ namespace UnderGrind.Editor
                             if (previousVelocities.TryGetValue(key, out var previousVelocity))
                                 bone.linearAcceleration = (bone.linearVelocity - previousVelocity).magnitude / deltaTime;
                             previousVelocities[key] = bone.linearVelocity;
+                        }
+                    }
+                }
+
+                foreach (var transform in frame.transforms)
+                {
+                    var key = transform.hierarchyPath;
+                    if (previousFrame != null && deltaTime > 0f)
+                    {
+                        var previousTransform = previousFrame.transforms.FirstOrDefault(item => item.hierarchyPath == key);
+                        if (previousTransform != null)
+                        {
+                            transform.linearVelocity = (transform.worldPosition - previousTransform.worldPosition) / deltaTime;
+                            transform.linearSpeed = transform.linearVelocity.magnitude;
+                            transform.angularVelocityDegreesPerSecond =
+                                Quaternion.Angle(previousTransform.worldRotation, transform.worldRotation) / deltaTime;
+                            if (previousTransformVelocities.TryGetValue(key, out var previousVelocity))
+                                transform.linearAcceleration = (transform.linearVelocity - previousVelocity).magnitude / deltaTime;
+                            previousTransformVelocities[key] = transform.linearVelocity;
                         }
                     }
                 }
@@ -2144,7 +2164,7 @@ namespace UnderGrind.Editor
             var current = transform;
             while (current != null)
             {
-                parts.Push(current.name);
+                parts.Push(current.name + "[" + current.GetSiblingIndex() + "]");
                 current = current.parent;
             }
             return string.Join("/", parts);
