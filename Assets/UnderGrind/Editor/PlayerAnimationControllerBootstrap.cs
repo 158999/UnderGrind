@@ -37,8 +37,7 @@ namespace UnderGrind.Editor
             var requiredFiles = new[]
             {
                 "Standing_Idle.fbx", "Walking.fbx", "Running.fbx", "Jump.fbx",
-                "Fall_down.fbx", "Hard_Landing.fbx", "Crouching_Idle.fbx",
-                "Crouch_Walk_Forward.fbx"
+                "Fall_down.fbx", "Hard_Landing.fbx", "Crouching_Idle.fbx"
             };
 
             foreach (var file in requiredFiles)
@@ -49,6 +48,16 @@ namespace UnderGrind.Editor
                     Debug.Log("UnderGrind: Animator Controller bootstrap attende l'importazione di " + path);
                     return;
                 }
+            }
+
+            var configuredCrouchWalkPath = settings.CrouchWalkClip != null
+                ? AssetDatabase.GetAssetPath(settings.CrouchWalkClip)
+                : null;
+            if (string.IsNullOrEmpty(configuredCrouchWalkPath) ||
+                AssetDatabase.LoadAssetAtPath<GameObject>(configuredCrouchWalkPath) == null)
+            {
+                Debug.Log("UnderGrind: Animator Controller bootstrap attende l'importazione della clip Crouch Walk configurata.");
+                return;
             }
 
             try
