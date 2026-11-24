@@ -44,7 +44,7 @@ Il report `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` misura la separ
 
 Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito nella run `20261124-113037-739` e ha scritto `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`, includendo mapping delle ossa e separazione di piedi/ginocchia. Il candidato 08 è primo nella classifica diagnostica: zero incroci di piedi e ginocchia su sorgente, Player maschile e Player femminile; separazione minima dei piedi sul Player pari a 0,183 m maschile e 0,155 m femminile. Il candidato 07 è anch'esso privo di incroci, ma ha separazioni minime inferiori. Il report è una misura automatica del retargeting, non una verifica visiva. Nessun candidato è stato promosso e il controller continua a usare la clip originale.
 
-Non assegnare un candidato al controller finché il report Unity non mostra un risultato accettabile su entrambi gli Avatar e la verifica visiva non conferma un ciclo continuo senza deformazioni.
+Non assegnare il candidato 08 al controller finché la verifica visiva in Unity non conferma un ciclo continuo senza deformazioni su entrambi gli Avatar. La selezione automatica è diagnostica e non sostituisce il controllo del movimento in Play Mode.
 
 `LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`.
 
