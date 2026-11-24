@@ -23,11 +23,46 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
+      - name: Download generated crouch-walk samples
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder="Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_00.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=rYli-rW1Z9-QGQbgAiMbf7T RtXM' --output "$folder/Crouch_Walk_Generated_01.fbx"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_01.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=jj_vMnT2Ctb-DBO4pVod8DxL--o' --output "$folder/Crouch_Walk_Generated_02.fbx"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_02.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=_jrulUr273ZI7IrqjoJGJ8ZDuJA' --output "$folder/Crouch_Walk_Generated_03.fbx"
+          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_03.fbx?Expires=1795528800&KeyName=vigglecloudcdn2&Signature=7O9Qh6nlqx6imIpy7z8Oz6BTemo' --output "$folder/Crouch_Walk_Generated_04.fbx"
+          for file in "$folder"/Crouch_Walk_Generated_*.fbx; do
+            test -s "$file"
+            size=$(stat -c %s "$file")
+            if [ "$size" -lt 10000 ]; then
+              echo "Invalid or truncated FBX: $file ($size bytes)"
+              exit 1
+            fi
+            echo "$file: $size bytes"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          folder = Path("Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk")
+          template = (folder / "Crouch_Walk_Candidate_01.fbx.meta").read_text(encoding="utf-8")
+          template = template.replace("guid: 6dff3f2b250b450687127e12f3988296", "guid: REPLACE_GUID")
+          template = template.replace("lastFrame: 239", "lastFrame: 179")
+          entries = {
+              "Crouch_Walk_Generated_01.fbx": "719e4b83ae1443d3b743f0eed22c0b13",
+              "Crouch_Walk_Generated_02.fbx": "3065a0002fcf40b782e37743603b2feb",
+              "Crouch_Walk_Generated_03.fbx": "ef71b956591642bfb269e3e162849ea0",
+              "Crouch_Walk_Generated_04.fbx": "8d3244f18ba346c8a2558bc75c8ee7f0",
+          }
+          for filename, guid in entries.items():
+              (folder / (filename + ".meta")).write_text(template.replace("REPLACE_GUID", guid), encoding="utf-8")
+          PY
+
       - name: Verify candidate FBXs
         shell: bash
         run: |
           set -euo pipefail
-          for file in Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Candidate_0{1,2,3,4,5,6,7,8}.fbx; do
+          folder="Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk"
+          for file in "$folder"/Crouch_Walk_Candidate_*.fbx "$folder"/Crouch_Walk_Generated_*.fbx; do
             test -s "$file"
             size=$(stat -c %s "$file")
             if [ "$size" -lt 10000 ]; then
@@ -45,7 +80,7 @@ jobs:
           tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
 
-      - name: Audit current source and all eight candidates
+      - name: Audit current source and all available candidates
         run: blender -b --python Tools/Blender/audit-pinoc-crouch-walk-candidates.py
 
       - name: Commit audit report
@@ -54,7 +89,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Tools/Blender/pinoc-crouch-walk-candidate-audit.json
+          folder="Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk"
+          git add "$folder"/Crouch_Walk_Generated_*.fbx "$folder"/Crouch_Walk_Generated_*.fbx.meta Tools/Blender/pinoc-crouch-walk-candidate-audit.json
           if git diff --cached --quiet; then
             echo "Audit report unchanged"
             exit 0
