@@ -130,4 +130,4 @@ Non vengono modificati o salvati:
 
 Al termine vengono distrutti Playable Graph, mesh temporanee, texture e istanze di preview.
 
-La clip 08 resta un candidato diagnostico finché il controllo visivo sul report e la successiva verifica Play Mode non ne autorizzano la promozione.
+Il 24 novembre 2026 la clip 08 è stata assegnata provvisoriamente a `PlayerAnimationSettings.asset` perché è l'unico candidato senza incroci di piedi o ginocchia nei test di retargeting sui tre Avatar. La promozione definitiva resta subordinata alla verifica visiva del report e a una prova Play Mode su entrambi i personaggi: il report segnala circa 15,3° di errore di rotazione al loop, 8,6 mm di errore di posizione e una stima di contatto dei piedi del 4–5% dei campioni.
