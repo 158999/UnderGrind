@@ -121,7 +121,11 @@ namespace UnderGrind.Editor
             public int estimatedFrameCount;
             public bool legacy;
             public bool humanMotion;
-            public bool isLooping;
+            public bool empty;
+            public bool hasGenericRootTransform;
+            public bool hasMotionCurves;
+            public bool hasMotionFloatCurves;
+            public bool hasRootCurves;
             public string wrapMode;
             public string localBounds;
             public int floatCurveBindingCount;
@@ -751,7 +755,11 @@ namespace UnderGrind.Editor
                 estimatedFrameCount = Mathf.CeilToInt(clip.length * clip.frameRate),
                 legacy = clip.legacy,
                 humanMotion = clip.humanMotion,
-                isLooping = clip.isLooping,
+                empty = clip.empty,
+                hasGenericRootTransform = clip.hasGenericRootTransform,
+                hasMotionCurves = clip.hasMotionCurves,
+                hasMotionFloatCurves = clip.hasMotionFloatCurves,
+                hasRootCurves = clip.hasRootCurves,
                 wrapMode = clip.wrapMode.ToString(),
                 localBounds = clip.localBounds.ToString(),
                 floatCurveBindingCount = floatBindings.Length,
@@ -1405,7 +1413,8 @@ namespace UnderGrind.Editor
                         ConfigureCamera(rig, column, options.cellWidth, options.cellHeight);
                         var rect = new Rect(0f, 0f, options.cellWidth, options.cellHeight);
                         rig.Preview.BeginStaticPreview(rect);
-                        rig.Preview.Render(true);
+                        rig.Preview.camera.pixelRect = new Rect(0f, 0f, options.cellWidth, options.cellHeight);
+                        rig.Preview.Render(true, false);
                         var rendered = rig.Preview.EndStaticPreview();
                         if (rendered == null)
                             throw new InvalidOperationException("PreviewRenderUtility non ha restituito un frame.");
