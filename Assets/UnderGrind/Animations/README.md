@@ -30,21 +30,20 @@ Gli otto movimenti di produzione sono già versionati in questa cartella e asseg
 
 `PlayerAnimationControllerBuilder` individua i file FBX, applica le impostazioni Humanoid e aggiorna i riferimenti alle clip mancanti. Le sei clip Idle, Walk, Run, Jump, Crouch Idle e Crouch Walk sono obbligatorie; Fall e Land sono opzionali. Il loop di ogni clip è configurabile separatamente nell'asset `PlayerAnimationSettings.asset`.
 
-### Validazione
+### Validazione — run Unity `20261124-114001-048`
 
-- **Walking** e **Running**: la run Unity del 23 novembre 2026 ha registrato zero incroci anatomici dei piedi su sorgente, Player maschile e Player femminile. Il risultato precede la riparazione dei pesi del 24 novembre e va ripetuto sul rig aggiornato.
-- **Crouch Walk Forward**: la run Unity `20261124-113037-739` del 24 novembre 2026 ha confermato il difetto: 6/232 campioni con incrocio sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. Il clip resta assegnato ma non è approvato.
+- **Walking** e **Running**: il test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` non ha segnalato incroci nella run corrente sui tre Avatar campionati. La verifica visiva sul rig aggiornato resta distinta.
+- **Crouch Walk Forward**: la clip ancora assegnata in `PlayerAnimationSettings.asset` continua a fallire: 6/232 campioni sulla sorgente Mixamo, 10/232 sul Player maschile e 12/232 sul femminile. Separazione minima anatomica: -0,114 m, -0,119 m e -0,133 m rispettivamente. Non è approvata.
+- **Visual Rig**: i quattro casi FBX/prefab del test `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` passano; il problema precedente era l'aspettativa errata sui FBX sorgente, non un componente mancante nei prefab.
 - **Jump, Fall, Land, Idle e Crouch Idle**: importati e assegnati; non sono coperti dal test di incrocio dei piedi e non sono ancora validati visivamente sul rig riparato.
 
 ### Candidati Crouch Walk
 
-La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili come Humanoid. Non sono assegnate al controller di produzione e non sostituiscono `Crouch_Walk_Forward.fbx`.
+La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili come Humanoid. Nessuna è assegnata al controller di produzione e nessuna sostituisce `Crouch_Walk_Forward.fbx`.
 
-Il report `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` misura la separazione anatomica sullo scheletro FBX grezzo. Le varianti 05–08 non mostrano incroci grezzi di piedi o ginocchia, ma l'audit Blender non equivale al retargeting Humanoid di Unity. Non è stato selezionato alcun sostituto.
+Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito anche nella run `20261124-114001-048`. Il candidato 08 resta il migliore nel retargeting misurato da Unity: zero incroci di piedi e ginocchia su sorgente, Player maschile e Player femminile; separazione minima dei piedi 0,254 m sulla sorgente, 0,183 m sul Player maschile e 0,155 m sul femminile; errore di chiusura del loop pari a 0 m. Il candidato 07 è anch'esso senza incroci, con separazione minima dei piedi sul Player femminile di 0,103 m e separazione minima delle ginocchia maggiore rispetto al candidato 08.
 
-Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito nella run `20261124-113037-739` e ha scritto `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`, includendo mapping delle ossa e separazione di piedi/ginocchia. Il candidato 08 è primo nella classifica diagnostica: zero incroci di piedi e ginocchia su sorgente, Player maschile e Player femminile; separazione minima dei piedi sul Player pari a 0,183 m maschile e 0,155 m femminile. Il candidato 07 è anch'esso privo di incroci, ma ha una separazione minima dei piedi inferiore sul Player femminile; la sua separazione minima delle ginocchia è invece maggiore. Il report è una misura automatica del retargeting, non una verifica visiva. Nessun candidato è stato promosso e il controller continua a usare la clip originale.
-
-Non assegnare il candidato 08 al controller finché la verifica visiva in Unity non conferma un ciclo continuo senza deformazioni su entrambi gli Avatar. La selezione automatica è diagnostica e non sostituisce il controllo del movimento in Play Mode.
+Questi dati sono una classifica diagnostica automatica, non una verifica visiva. Il candidato 08 non è stato promosso e il controller continua a usare la clip originale. Prima dell'assegnazione occorre verificare in Play Mode il ciclo continuo, le deformazioni e le transizioni su entrambi gli Avatar.
 
 `LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`.
 
