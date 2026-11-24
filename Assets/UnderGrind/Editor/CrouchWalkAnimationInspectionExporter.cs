@@ -2069,6 +2069,7 @@ namespace UnderGrind.Editor
                 var reportPath = entry.reportPath.Replace('\\', '/');
                 var sheetPath = entry.contactSheetPath.Replace('\\', '/');
                 var posePath = entry.poseCsvPath.Replace('\\', '/');
+                var transformPath = entry.transformCsvPath.Replace('\\', '/');
                 var curvePath = entry.curveCsvPath.Replace('\\', '/');
                 var geometryPath = entry.geometryCsvPath.Replace('\\', '/');
                 html.AppendLine("<section><h2>" + Html(entry.clipName) + " — " + Html(entry.character) + "</h2>");
@@ -2103,7 +2104,8 @@ namespace UnderGrind.Editor
                                 "% · Deriva bacino max: " + entry.maximumHipsDriftMeters.ToString("F4", CultureInfo.InvariantCulture) +
                                 " m · Inclinazione busto max: " + entry.maximumTorsoLeanDegrees.ToString("F1", CultureInfo.InvariantCulture) + "°</p>");
                 html.AppendLine("<p><a href=\"" + Html(reportPath) + "\">Report JSON</a> · <a href=\"" + Html(posePath) +
-                                "\">Pose CSV</a> · <a href=\"" + Html(curvePath) + "\">Curve CSV</a>");
+                                "\">Pose Humanoid CSV</a> · <a href=\"" + Html(transformPath) +
+                                "\">Hierarchy Transform CSV</a> · <a href=\"" + Html(curvePath) + "\">Curve CSV</a>");
                 if (!string.IsNullOrEmpty(geometryPath))
                     html.AppendLine(" · <a href=\"" + Html(geometryPath) + "\">Geometry CSV</a>");
                 html.AppendLine("</p></section>");
@@ -2125,6 +2127,7 @@ namespace UnderGrind.Editor
             text.AppendLine("- index.html: indice navigabile con contact sheet e link ai dati.");
             text.AppendLine("- <clip>/<male|female>/report.json: metadati, Avatar, importer, curve, eventi, pose e metriche.");
             text.AppendLine("- pose-samples.csv: un record per osso Humanoid e campione temporale, con trasformazioni e derivate.");
+            text.AppendLine("- transform-hierarchy-samples.csv: un record per ogni Transform del prefab, inclusi nodi non Humanoid, gerarchia, tag/layer, stato attivo, trasformazioni locali/world e derivate cinematiche.");
             text.AppendLine("- curve-keys.csv: chiavi di tutte le curve float e object-reference.");
             text.AppendLine("- geometry-samples.csv: bounds e statistiche delle mesh skinned campionate ai tempi delle immagini.");
             text.AppendLine("- contact-sheet.png: quattro angolazioni per ciascun istante rappresentativo.");
