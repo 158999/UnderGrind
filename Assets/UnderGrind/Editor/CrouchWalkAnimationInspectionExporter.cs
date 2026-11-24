@@ -22,6 +22,7 @@ namespace UnderGrind.Editor
     public static class CrouchWalkAnimationInspectionExporter
     {
         private const int SchemaVersion = 1;
+        private const string PlayerAnimationSettingsPath = "Assets/UnderGrind/Settings/PlayerAnimationSettings.asset";
         private static readonly HumanBodyBones[] InspectedBones = Enum.GetValues(typeof(HumanBodyBones))
             .Cast<HumanBodyBones>()
             .Where(bone => bone != HumanBodyBones.LastBone)
@@ -54,6 +55,18 @@ namespace UnderGrind.Editor
             public string graphicsApi;
             public string renderPipeline;
             public string colorSpace;
+            public string playerAnimationSettingsPath;
+            public string playerAnimationSettingsGuid;
+            public string playerAnimationSettingsDependencyHash;
+            public string playerAnimationSettingsSha256;
+            public string assignedCrouchWalkClipName;
+            public string assignedCrouchWalkClipPath;
+            public string assignedCrouchWalkClipGuid;
+            public string assignedCrouchWalkClipSha256;
+            public string playerRigSettingsPath;
+            public string playerRigSettingsGuid;
+            public string playerRigSettingsDependencyHash;
+            public string playerRigSettingsSha256;
             public ExportOptions options;
             public List<BundleEntry> entries = new List<BundleEntry>();
             public List<string> warnings = new List<string>();
@@ -533,7 +546,7 @@ namespace UnderGrind.Editor
             var packageDirectory = Path.Combine(destinationDirectory, packageName);
             Directory.CreateDirectory(packageDirectory);
 
-            var manifest = CreateManifest(options);
+            var manifest = CreateManifest(options, rigSettings);
             var characterDefinitions = new[]
             {
                 new { Name = "Male", PrefabName = rigSettings.MalePrefabName },
@@ -609,9 +622,13 @@ namespace UnderGrind.Editor
             options.crossingToleranceMeters = Mathf.Max(0f, options.crossingToleranceMeters);
         }
 
-        private static BundleManifest CreateManifest(ExportOptions options)
+        private static BundleManifest CreateManifest(ExportOptions options, PlayerRigSettings rigSettings)
         {
             var pipeline = GraphicsSettings.currentRenderPipeline;
+            var animationSettings = AssetDatabase.LoadAssetAtPath<PlayerAnimationSettings>(PlayerAnimationSettingsPath);
+            var assignedClip = animationSettings == null ? null : animationSettings.CrouchWalkClip;
+            var rigSettingsPath = AssetDatabase.GetAssetPath(rigSettings);
+            var assignedClipPath = assignedClip == null ? string.Empty : AssetDatabase.GetAssetPath(assignedClip);
             return new BundleManifest
             {
                 schemaVersion = SchemaVersion,
@@ -623,6 +640,18 @@ namespace UnderGrind.Editor
                 graphicsApi = SystemInfo.graphicsDeviceType.ToString(),
                 renderPipeline = pipeline == null ? "Built-in" : pipeline.GetType().FullName,
                 colorSpace = QualitySettings.activeColorSpace.ToString(),
+                playerAnimationSettingsPath = PlayerAnimationSettingsPath,
+                playerAnimationSettingsGuid = AssetDatabase.AssetPathToGUID(PlayerAnimationSettingsPath),
+                playerAnimationSettingsDependencyHash = AssetDatabase.GetAssetDependencyHash(PlayerAnimationSettingsPath).ToString(),
+                playerAnimationSettingsSha256 = GetSha256(PlayerAnimationSettingsPath),
+                assignedCrouchWalkClipName = assignedClip == null ? string.Empty : assignedClip.name,
+                assignedCrouchWalkClipPath = assignedClipPath,
+                assignedCrouchWalkClipGuid = string.IsNullOrEmpty(assignedClipPath) ? string.Empty : AssetDatabase.AssetPathToGUID(assignedClipPath),
+                assignedCrouchWalkClipSha256 = string.IsNullOrEmpty(assignedClipPath) ? string.Empty : GetSha256(assignedClipPath),
+                playerRigSettingsPath = rigSettingsPath,
+                playerRigSettingsGuid = AssetDatabase.AssetPathToGUID(rigSettingsPath),
+                playerRigSettingsDependencyHash = AssetDatabase.GetAssetDependencyHash(rigSettingsPath).ToString(),
+                playerRigSettingsSha256 = GetSha256(rigSettingsPath),
                 options = options
             };
         }
