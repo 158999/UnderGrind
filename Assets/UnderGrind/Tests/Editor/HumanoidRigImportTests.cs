@@ -197,6 +197,87 @@ namespace UnderGrind.Tests
             }
         }
 
+        [TestCase(MaleFbxPath, "maschile")]
+        [TestCase(FemaleFbxPath, "femminile")]
+        public void ImportedSkinnedMeshesHaveBindPosesMatchingTheirBoneAndRendererTransforms(
+            string assetPath, string label)
+        {
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            Assert.That(model, Is.Not.Null, "FBX " + label + " non trovato: " + assetPath);
+
+            var instance = UnityEngine.Object.Instantiate(model);
+            try
+            {
+                foreach (var renderer in instance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                {
+                    var mesh = renderer.sharedMesh;
+                    Assert.That(mesh, Is.Not.Null, renderer.name + ": mesh mancante.");
+
+                    var bindPoses = mesh.bindposes;
+                    Assert.That(bindPoses, Is.Not.Empty, renderer.name + ": bind pose mancanti.");
+                    Assert.That(bindPoses.Length, Is.EqualTo(renderer.bones.Length),
+                        renderer.name + ": numero bind pose diverso dal numero di ossa.");
+
+                    for (var boneIndex = 0; boneIndex < renderer.bones.Length; boneIndex++)
+                    {
+                        var bone = renderer.bones[boneIndex];
+                        Assert.That(bone, Is.Not.Null,
+                            renderer.name + ": riferimento osso nullo all'indice " + boneIndex + ".");
+
+                        // Unity stores each bind pose as bone.worldToLocal * renderer.localToWorld.
+                        // Reconstructing it from the imported transforms catches mismatched mesh/rig spaces.
+                        var expected = bone.worldToLocalMatrix * renderer.transform.localToWorldMatrix;
+                        AssertMatrixApproximately(bindPoses[boneIndex], expected, 0.002f,
+                            renderer.name + " / " + bone.name);
+                    }
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(instance);
+            }
+        }
+
+        [TestCase(MaleFbxPath, "maschile")]
+        [TestCase(FemaleFbxPath, "femminile")]
+        public void VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(string assetPath, string label)
+        {
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            Assert.That(model, Is.Not.Null, "FBX " + label + " non trovato: " + assetPath);
+
+            var instance = UnityEngine.Object.Instantiate(model);
+            var viewReference = new GameObject("Test View Reference").transform;
+            viewReference.SetParent(instance.transform, false);
+
+            try
+            {
+                var rig = instance.AddComponent<PlayerVisualRig>();
+                Assert.That(rig.ConfigureFromHierarchy(instance.transform, _settings), Is.True,
+                    "Configurazione PlayerVisualRig non valida per " + label + ".");
+                rig.SetViewReference(viewReference);
+
+                rig.SetThirdPerson(false);
+                AssertRendererEnabled(instance, _settings.HeadRendererSuffix, false);
+                AssertRendererEnabled(instance, _settings.BodyRendererToken, false);
+                AssertRendererEnabled(instance, _settings.FirstPersonArmsToken, true);
+                AssertRendererEnabled(instance, _settings.FirstPersonHandsToken, true);
+                AssertRendererEnabled(instance, _settings.ThirdPersonArmsToken, false);
+                AssertRendererEnabled(instance, _settings.ThirdPersonHandsToken, false);
+
+                rig.SetThirdPerson(true);
+                AssertRendererEnabled(instance, _settings.HeadRendererSuffix, true);
+                AssertRendererEnabled(instance, _settings.BodyRendererToken, true);
+                AssertRendererEnabled(instance, _settings.FirstPersonArmsToken, false);
+                AssertRendererEnabled(instance, _settings.FirstPersonHandsToken, false);
+                AssertRendererEnabled(instance, _settings.ThirdPersonArmsToken, true);
+                AssertRendererEnabled(instance, _settings.ThirdPersonHandsToken, true);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(instance);
+            }
+        }
+
         [Test]
         public void ConfiguredModelYawAlignsAuthoredForwardWithPlayerForward()
         {
@@ -429,6 +510,25 @@ namespace UnderGrind.Tests
                 if (graph.IsValid()) graph.Destroy();
                 UnityEngine.Object.DestroyImmediate(instance);
             }
+        }
+
+        private static void AssertMatrixApproximately(
+            Matrix4x4 actual, Matrix4x4 expected, float tolerance, string context)
+        {
+            for (var row = 0; row < 4; row++)
+            for (var column = 0; column < 4; column++)
+                Assert.That(actual[row, column], Is.EqualTo(expected[row, column]).Within(tolerance),
+                    context + ": bind pose non coerente alla riga " + row + ", colonna " + column + ".");
+        }
+
+        private static void AssertRendererEnabled(GameObject root, string nameToken, bool expected)
+        {
+            var renderer = root.GetComponentsInChildren<Renderer>(true)
+                .SingleOrDefault(candidate => candidate.name.IndexOf(
+                    nameToken, StringComparison.OrdinalIgnoreCase) >= 0);
+            Assert.That(renderer, Is.Not.Null, "Renderer non trovato per token " + nameToken + ".");
+            Assert.That(renderer.enabled, Is.EqualTo(expected),
+                renderer.name + ": stato enabled errato per la modalità camera.");
         }
 
         private static bool IsTPoseValid(string assetPath)
