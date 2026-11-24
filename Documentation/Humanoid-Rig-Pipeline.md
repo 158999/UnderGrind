@@ -256,3 +256,15 @@ Restano aperti due problemi indipendenti:
 - la registrazione del 23 novembre mostra ancora un'inquadratura FP con geometria/arti troppo vicini alla camera. Il test dei gruppi renderer verifica solo quali mesh vengono mostrate, non la posa né il posizionamento degli arti FP rispetto alla camera.
 
 La PR `#11` contiene i nuovi asset derivati, gli audit, i test EditMode e la correzione del trigger CI. Rimane draft fino alla verifica Unity e alla revisione visiva.
+
+### Correzione della visibilità delle braccia in prima persona — 24 novembre 2026
+
+La verifica dei prefab generati ha individuato un secondo difetto indipendente dai pesi: `HumanoidRigPrefabBuilder` applicava temporaneamente la modalità terza persona prima di salvare il prefab. Questo disabilitava i renderer `_FP_Arms` e `_FP_Hands`. A runtime `PlayerVisualRig` memorizzava quegli stati disabilitati come valori originali e quindi non poteva riattivare i renderer in prima persona.
+
+La correzione:
+- aggiunge `PlayerVisualRig.RestoreRendererDefaults()`, che ripristina gli stati acquisiti prima del cambio modalità;
+- il builder richiama il ripristino dopo la configurazione temporanea in terza persona, così i prefab vengono salvati con i gruppi renderer in stato neutro;
+- i prefab maschile e femminile versionati sono stati aggiornati riabilitando i renderer FP;
+- il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` ora istanzia i prefab generati, non il solo FBX, e verifica il passaggio prima persona → terza persona → prima persona.
+
+Questo corregge il blocco logico che impediva ai renderer FP di riattivarsi. Non certifica ancora la posa, la distanza o l'inquadratura degli arti rispetto alla camera: questi aspetti richiedono la verifica visiva in Unity.
