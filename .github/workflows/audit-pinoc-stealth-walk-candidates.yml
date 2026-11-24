@@ -15,6 +15,7 @@ permissions:
 
 jobs:
   audit:
+    if: startsWith(github.ref_name, 'fix/crouch-walk-')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
