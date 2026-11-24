@@ -63,6 +63,7 @@ Per ogni combinazione clip/personaggio:
 
 **Identità e provenienza**
 - versione Unity, sistema operativo, CPU, GPU, API grafica, render pipeline e color space;
+- fingerprint SHA-256, GUID e dependency hash di `PlayerAnimationSettings.asset`, `PlayerRigSettings.asset` e della clip Crouch Walk effettivamente assegnata;
 - percorso asset, GUID, dependency hash, SHA-256 e dimensione in byte di FBX e prefab;
 - nome, durata, frame rate, numero di frame stimato, wrap mode, clip vuota/valida, flag Humanoid e flag delle curve root motion.
 
