@@ -63,3 +63,25 @@ Il 24 novembre 2026 il candidato 08 è stato assegnato temporaneamente sulla bas
 ### Limiti e diritti
 
 La presenza di un asset nella libreria o nel progetto non certifica i diritti di distribuzione commerciale. Prima di una release commerciale verificare le condizioni d'uso del piano PINOC applicabile e conservare gli identificativi di provenienza riportati in questo documento.
+
+
+## Nuova generazione Crouch Walk — 24 novembre 2026
+
+È stata avviata e completata una generazione PINOC dedicata a un ciclo di camminata accovacciata in-place, con quattro campioni dello stesso prompt. Durata richiesta: 6 secondi. Costo registrato dal servizio: 6 crediti gratuiti.
+
+Il prompt richiede:
+- postura accovacciata mantenuta per tutto il ciclo, busto leggermente inclinato e testa stabile;
+- alternanza sinistra/destra con trasferimento del peso, fase d'appoggio e fase di oscillazione;
+- piedi e ginocchia sempre separati, senza incroci o compenetrazioni;
+- piede d'appoggio quasi fermo, passi moderati, contro-rotazione naturale di bacino e spalle;
+- ciclo continuo con posa iniziale/finale coerente;
+- root centrato, senza traslazione o rotazione, per il Blend Tree in-place del Player.
+
+| Campione | Nome PINOC | Asset ID | Formato richiesto per Unity |
+|---|---|---|---|
+| 01 | Crouch Walk (1) | `d441b0b6-a674-4849-9e9e-eeeb3b1b57c3` | `mixamo-fbx` |
+| 02 | Crouch Walk (2) | `e81092b1-33f8-410e-8628-d67ec26fe36d` | `mixamo-fbx` |
+| 03 | Crouch Walk (3) | `0ff23662-9938-41d3-8e99-def4e4d1e7de` | `mixamo-fbx` |
+| 04 | Crouch Walk (4) | `17dc1540-bfe8-4f08-b293-5053305aaef8` | `mixamo-fbx` |
+
+**Stato:** generati e disponibili per l'esportazione FBX; non ancora importati nel repository, retargettizzati in Unity, ispezionati visivamente o sottoposti alla matrice di test. Nessuno dei quattro è assegnato a `PlayerAnimationSettings.asset`. I link firmati PINOC sono temporanei e non vengono versionati; gli Asset ID sono il riferimento permanente per recuperarli.
