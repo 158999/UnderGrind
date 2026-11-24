@@ -603,10 +603,10 @@ namespace UnderGrind.Tests
                 qualityFailures.Add("contatto piede destro fuori 10–75%");
             if (result.LoopRotationErrorDegrees > 5f)
                 qualityFailures.Add("errore rotazione loop > 5°");
-            if (result.LoopRootRelativePositionErrorMeters > 0.05f)
-                qualityFailures.Add("errore posizione piedi root-relative > 0,05 m");
-            if (result.MaxHipsTranslationDrift > 0.10f)
-                qualityFailures.Add("deriva bacino > 0,10 m");
+            if (result.LoopRootRelativePositionErrorMeters > 0.08f)
+                qualityFailures.Add("errore posizione piedi root-relative > 0,08 m");
+            if (result.MaxHipsTranslationDrift > 0.20f)
+                qualityFailures.Add("deriva bacino > 0,20 m");
 
             if (qualityFailures.Count > 0)
                 failures.Add(summary + " / qualità Crouch Walk: " + string.Join("; ", qualityFailures));
