@@ -1740,7 +1740,7 @@ namespace UnderGrind.Editor
         private static void WritePoseCsv(string path, IReadOnlyList<PoseFrame> frames)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("frame,timeSeconds,normalizedTime,humanBone,transformName,hierarchyPath,parentName,localPosX,localPosY,localPosZ,localRotX,localRotY,localRotZ,localRotW,localEulerX,localEulerY,localEulerZ,localScaleX,localScaleY,localScaleZ,worldPosX,worldPosY,worldPosZ,worldRotX,worldRotY,worldRotZ,worldRotW,worldEulerX,worldEulerY,worldEulerZ,velocityX,velocityY,velocityZ,speed,acceleration,angularVelocityDegPerSec,hipsDrift,torsoLean,leftFootSignedLateral,footDistance,footLateralSeparation,kneeSignedLateral,kneeDistance,kneeLateralSeparation,leftFootHeight,rightFootHeight,leftFootHeightAboveMinimum,rightFootHeightAboveMinimum,leftFootSpeed,rightFootSpeed,leftFootAcceleration,rightFootAcceleration,leftFootContact,rightFootContact,leftFootSliding,rightFootSliding,leftKneeAngle,rightKneeAngle,leftHipAngle,rightHipAngle");
+            builder.AppendLine("frame,timeSeconds,normalizedTime,humanBone,transformName,hierarchyPath,parentName,rootWorldPosX,rootWorldPosY,rootWorldPosZ,rootWorldRotX,rootWorldRotY,rootWorldRotZ,rootWorldRotW,rootLocalPosX,rootLocalPosY,rootLocalPosZ,modelForwardX,modelForwardY,modelForwardZ,modelRightX,modelRightY,modelRightZ,hipsWorldPosX,hipsWorldPosY,hipsWorldPosZ,hipsWorldRotX,hipsWorldRotY,hipsWorldRotZ,hipsWorldRotW,hipsRootLocalX,hipsRootLocalY,hipsRootLocalZ,anatomicalLateralX,anatomicalLateralY,anatomicalLateralZ,restLateralX,restLateralY,restLateralZ,leftFootRelativeHipsX,leftFootRelativeHipsY,leftFootRelativeHipsZ,rightFootRelativeHipsX,rightFootRelativeHipsY,rightFootRelativeHipsZ,leftFootRelativeHipsRotX,leftFootRelativeHipsRotY,leftFootRelativeHipsRotZ,leftFootRelativeHipsRotW,rightFootRelativeHipsRotX,rightFootRelativeHipsRotY,rightFootRelativeHipsRotZ,rightFootRelativeHipsRotW,localPosX,localPosY,localPosZ,localRotX,localRotY,localRotZ,localRotW,localEulerX,localEulerY,localEulerZ,localScaleX,localScaleY,localScaleZ,worldPosX,worldPosY,worldPosZ,worldRotX,worldRotY,worldRotZ,worldRotW,worldEulerX,worldEulerY,worldEulerZ,velocityX,velocityY,velocityZ,speed,acceleration,angularVelocityDegPerSec,hipsDrift,torsoLean,leftFootSignedLateral,leftFootStaticAxisSeparation,footDistance,footLateralSeparation,kneeSignedLateral,kneeStaticAxisSeparation,kneeDistance,kneeLateralSeparation,leftFootHeight,rightFootHeight,leftFootHeightAboveMinimum,rightFootHeightAboveMinimum,leftFootSpeed,rightFootSpeed,leftFootAcceleration,rightFootAcceleration,leftFootContact,rightFootContact,leftFootSliding,rightFootSliding,leftKneeAngle,rightKneeAngle,leftHipAngle,rightHipAngle");
 
             foreach (var frame in frames)
             {
@@ -1753,6 +1753,20 @@ namespace UnderGrind.Editor
                         .Append(Csv(bone.transformName)).Append(',')
                         .Append(Csv(bone.hierarchyPath)).Append(',')
                         .Append(Csv(bone.parentName)).Append(',')
+                        .Append(VectorCsv(frame.rootWorldPosition)).Append(',')
+                        .Append(QuaternionCsv(frame.rootWorldRotation)).Append(',')
+                        .Append(VectorCsv(frame.rootLocalPosition)).Append(',')
+                        .Append(VectorCsv(frame.modelForwardWorld)).Append(',')
+                        .Append(VectorCsv(frame.modelRightWorld)).Append(',')
+                        .Append(VectorCsv(frame.hipsWorldPosition)).Append(',')
+                        .Append(QuaternionCsv(frame.hipsWorldRotation)).Append(',')
+                        .Append(VectorCsv(frame.hipsRootLocalPosition)).Append(',')
+                        .Append(VectorCsv(frame.anatomicalLateralAxisLocal)).Append(',')
+                        .Append(VectorCsv(frame.restAnatomicalLateralAxisLocal)).Append(',')
+                        .Append(VectorCsv(frame.leftFootRelativeToHips)).Append(',')
+                        .Append(VectorCsv(frame.rightFootRelativeToHips)).Append(',')
+                        .Append(QuaternionCsv(frame.leftFootRelativeRotationToHips)).Append(',')
+                        .Append(QuaternionCsv(frame.rightFootRelativeRotationToHips)).Append(',')
                         .Append(VectorCsv(bone.localPosition)).Append(',')
                         .Append(QuaternionCsv(bone.localRotation)).Append(',')
                         .Append(VectorCsv(bone.localEulerAngles)).Append(',')
@@ -1767,9 +1781,11 @@ namespace UnderGrind.Editor
                         .Append(F(frame.hipsDriftFromStartMeters)).Append(',')
                         .Append(F(frame.torsoLeanDegrees)).Append(',')
                         .Append(F(frame.leftFootSignedLateralSeparation)).Append(',')
+                        .Append(F(frame.leftRightFootStaticAxisSeparationSigned)).Append(',')
                         .Append(F(frame.leftRightFootDistanceMeters)).Append(',')
                         .Append(F(frame.leftRightFootLateralSeparationMeters)).Append(',')
                         .Append(F(frame.leftRightKneeSignedLateralSeparation)).Append(',')
+                        .Append(F(frame.leftRightKneeStaticAxisSeparationSigned)).Append(',')
                         .Append(F(frame.leftRightKneeDistanceMeters)).Append(',')
                         .Append(F(frame.leftRightKneeLateralSeparationMeters)).Append(',')
                         .Append(F(frame.leftFootHeightInRootSpace)).Append(',')
