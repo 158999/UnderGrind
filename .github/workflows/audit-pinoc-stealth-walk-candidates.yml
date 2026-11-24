@@ -114,5 +114,7 @@ jobs:
           path: |
             Tools/Blender/pinoc-crouch-walk-candidate-audit.json
             Tools/Blender/pinoc-crouch-walk-previews/
+            Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Generated_*.fbx
+            Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk/Crouch_Walk_Generated_*.fbx.meta
           if-no-files-found: error
           retention-days: 14
