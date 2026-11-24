@@ -6,6 +6,18 @@ from pathlib import Path
 ROOT = Path("Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk")
 OUTPUT = Path("Tools/Blender/pinoc-crouch-walk-candidate-audit.json")
 CROSSING_TOLERANCE_METERS = 0.02
+GENERATION_TASK_ID = "827b8373-42df-479a-a82f-22b5a339678d"
+
+ASSET_IDS = {
+    "Crouch_Walk_Candidate_01.fbx": "6dff3f2b-250b-4506-8712-7e12f3988296",
+    "Crouch_Walk_Candidate_02.fbx": "bc1a6551-9608-43eb-9d60-a08c54e4247a",
+    "Crouch_Walk_Candidate_03.fbx": "f74b1c97-33c0-462c-a4b9-fb0186d2e278",
+    "Crouch_Walk_Candidate_04.fbx": "657d2212-de9b-4524-8bc2-091767afa6a6",
+    "Crouch_Walk_Candidate_05.fbx": "40dac395-75f7-4911-b234-97fb94cf548b",
+    "Crouch_Walk_Candidate_06.fbx": "58d94313-09b2-4ecd-a404-300f61c9909c",
+    "Crouch_Walk_Candidate_07.fbx": "cac937f4-fa78-4905-b124-edddde4612d8",
+    "Crouch_Walk_Candidate_08.fbx": "5d550ae7-20c1-43f6-be9a-9ac91bf77bd5",
+}
 
 
 def find_bone(armature, token):
@@ -39,9 +51,11 @@ def audit_candidate(path):
     hips = find_bone(armature, "hips")
     left_upper_leg = find_bone(armature, "leftupleg")
     right_upper_leg = find_bone(armature, "rightupleg")
+    left_lower_leg = find_bone(armature, "leftleg")
+    right_lower_leg = find_bone(armature, "rightleg")
     left_foot = find_bone(armature, "leftfoot")
     right_foot = find_bone(armature, "rightfoot")
-    if not all((hips, left_upper_leg, right_upper_leg, left_foot, right_foot)):
+    if not all((hips, left_upper_leg, right_upper_leg, left_lower_leg, right_lower_leg, left_foot, right_foot)):
         names = [bone.name for bone in armature.pose.bones]
         raise RuntimeError("required Humanoid bones missing; imported bones: " + ", ".join(names[:80]))
 
@@ -73,7 +87,9 @@ def audit_candidate(path):
             frame_samples.append(end)
 
     crossed_frames = []
+    crossed_knee_frames = []
     min_anatomical_separation = float("inf")
+    min_knee_separation = float("inf")
     min_static_axis_separation = float("inf")
     max_hip_translation_drift = 0.0
     first_local_feet = None
@@ -94,13 +110,18 @@ def audit_candidate(path):
         left_foot_position = left_foot.matrix.translation
         right_foot_position = right_foot.matrix.translation
         foot_delta = left_foot_position - right_foot_position
-
         anatomical_separation = foot_delta.dot(current_lateral)
         static_axis_separation = foot_delta.dot(rest_lateral)
         min_anatomical_separation = min(min_anatomical_separation, anatomical_separation)
         min_static_axis_separation = min(min_static_axis_separation, static_axis_separation)
         if anatomical_separation < -CROSSING_TOLERANCE_METERS:
             crossed_frames.append(frame)
+
+        knee_delta = left_lower_leg.matrix.translation - right_lower_leg.matrix.translation
+        knee_separation = knee_delta.dot(current_lateral)
+        min_knee_separation = min(min_knee_separation, knee_separation)
+        if knee_separation < -CROSSING_TOLERANCE_METERS:
+            crossed_knee_frames.append(frame)
 
         hips_position = hips.matrix.translation.copy()
         if first_hip_position is None:
@@ -123,6 +144,7 @@ def audit_candidate(path):
 
     return {
         "file": str(path).replace("\\", "/"),
+        "assetPublicId": ASSET_IDS.get(path.name),
         "armature": armature.name,
         "action": armature.animation_data.action.name,
         "frameStart": start,
@@ -130,6 +152,8 @@ def audit_candidate(path):
         "sampledFrames": len(frame_samples),
         "leftHipBone": left_upper_leg.name,
         "rightHipBone": right_upper_leg.name,
+        "leftKneeBone": left_lower_leg.name,
+        "rightKneeBone": right_lower_leg.name,
         "leftFootBone": left_foot.name,
         "rightFootBone": right_foot.name,
         "restAnatomicalFootSeparation": rest_separation,
@@ -138,6 +162,9 @@ def audit_candidate(path):
         "crossingCount": len(crossed_frames),
         "minimumAnatomicalFootSeparation": min_anatomical_separation,
         "minimumStaticAxisFootSeparation": min_static_axis_separation,
+        "crossedKneeFrames": crossed_knee_frames,
+        "kneeCrossingCount": len(crossed_knee_frames),
+        "minimumAnatomicalKneeSeparation": min_knee_separation,
         "maxHipTranslationDrift": max_hip_translation_drift,
         "loopEndpointError": loop_endpoint_error
     }
@@ -154,16 +181,19 @@ def main():
     valid = [item for item in results if item["status"] == "ok"]
     valid.sort(key=lambda item: (
         item["crossingCount"],
+        item["kneeCrossingCount"],
         item["loopEndpointError"],
         item["maxHipTranslationDrift"],
         -item["minimumAnatomicalFootSeparation"]
     ))
     report = {
-        "source": "PINOC crouched-walk text-to-motion candidates",
+        "source": "PINOC crouched-walk and stealth-walk text-to-motion candidates",
+        "generationTaskId": GENERATION_TASK_ID,
         "method": (
             "Blender FBX import; anatomical foot separation matches "
             "HumanoidRigImportTests.MeasureFootCrossing: project LeftFoot-RightFoot "
-            "onto the current LeftUpperLeg-RightUpperLeg axis. Crossing tolerance: 0.02m."
+            "onto the current LeftUpperLeg-RightUpperLeg axis. Knee separation uses "
+            "the same axis and LeftLeg-RightLeg. Crossing tolerance: 0.02m."
         ),
         "ranking": [item["file"] for item in valid],
         "results": results
