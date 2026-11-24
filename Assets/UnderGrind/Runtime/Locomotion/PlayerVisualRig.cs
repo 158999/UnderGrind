@@ -135,6 +135,19 @@ namespace UnderGrind.Locomotion
             ApplyVisibility();
         }
 
+        /// <summary>
+        /// Restores the renderer enabled states captured before a camera mode was applied.
+        /// Prefab generation uses this to save a neutral renderer state; runtime mode changes
+        /// must not inherit the prefab builder's temporary third-person visibility.
+        /// </summary>
+        public void RestoreRendererDefaults()
+        {
+            if (!_initialized) CacheRenderers();
+            foreach (var pair in _originalEnabled)
+                if (pair.Key != null)
+                    pair.Key.enabled = pair.Value;
+        }
+
         private void CacheRenderers()
         {
             Cache(headRenderers);
