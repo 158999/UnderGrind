@@ -1,21 +1,31 @@
 # UnderGrind — scena di test locomozione
 
-## Requisiti e importazione del personaggio
+## Rig e importazione del personaggio
 
 - Unity **6000.6.9f1**.
 - Pacchetti del progetto: Input System e Unity Test Framework.
-- Il file Blender attualmente committato è `Assets/UnderGrind/Art/Source/humans.blend`.
-- La sorgente riggata più recente è il progetto Blendstra `UnderGrind — Humans Source Separation` (projectId `2cdfaa98-3ea2-4a49-892a-b96488e12bc3`), versione `version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6`. Aprire [la versione sorgente](https://blendstra.com/studio?workspace=wsp_fcfd842ff566eb960d6d885ff219b4f02b624b23&project=2cdfaa98-3ea2-4a49-892a-b96488e12bc3&version=version_f438fed3b4ebd67a0ac2e4edb0a391c017544b8d5c01ded12d03275cbeb397a6) e scaricare il file Blender sorgente. Il file `Assets/UnderGrind/Art/Source/humans.blend` nel repository deve essere sostituito con questa versione: esportare il vecchio file senza prima trasferire la sorgente riggata genera FBX non aggiornati.
-- Copiare la sorgente scaricata in `Assets/UnderGrind/Art/Source/humans.blend`, quindi eseguire da PowerShell nella root del repository `Tools/Blender/run-export.ps1 -Force`. Se Blender non è nel PATH, impostare `BLENDER_EXECUTABLE` o passare `-BlenderExecutable`.
-- Il runner interrompe l'export se mancano armature, mesh, pesi, UV map o immagini texture referenziate ma non disponibili. L'export centra a zero la sola traslazione globale dell'armatura (senza cambiare gli offset relativi mesh/ossa), copia e incorpora le immagini referenziate e produce `Tools/Blender/last-export-report.json` con UV bounds, materiali, immagini e trasformazioni prima/dopo l'export.
-- Dopo l'export, in Unity selezionare entrambi gli FBX e usare **Reimport**. Se le UV bounds riportate sono limitate a una porzione dell'atlante, non rimappare automaticamente: confrontare le coordinate con il layout della texture sorgente. Se l'FBX non contiene le immagini attese, controllare il report e i nodi Image Texture in Blender.
-- Unity importa i file FBX tramite Blender installato sul computer. Se l'importazione non produce un modello nella finestra Project, verificare **Edit → Preferences → External Tools** e ripetere Reimport.
+- Sorgente originale: `Assets/UnderGrind/Art/Source/humans.blend`. Non sostituirla con un file esterno durante la procedura di riparazione.
+- Blend derivato con pesi anatomici riparati: `Tools/Blender/Generated/humans_reweighted.blend`.
+- FBX maschile/femminile: `Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx` e `Human_Female_Rigged.fbx`.
+- Prefab: `Assets/UnderGrind/Generated/Prefabs/Human_Male_Rigged.prefab` e `Human_Female_Rigged.prefab`.
 
-Il builder richiede i due prefab Humanoid maschile e femminile configurati in `PlayerRigSettings.asset`. Verifica Animator, Avatar Humanoid valido, SkinnedMeshRenderer, testa, corpo e gruppi renderer FP/TP. La proprietà `DefaultCharacter` dell'asset sceglie quale variante istanziare nella scena; entrambe vengono comunque validate. L'altezza del CharacterController è letta da `PlayerLocomotionSettings`, la stessa fonte usata per normalizzare il prefab. Se i prefab non superano la validazione, la scena non viene creata: non viene usato un manichino statico come sostituto.
+Il workflow GitHub Actions **UnderGrind anatomical skin-weight repair** genera il blend derivato e i due FBX senza sovrascrivere `humans.blend`. Il report `Tools/Blender/weight-repair-report.json` registra 12 mesh, zero vertici non pesati, zero influenze oltre il limite di quattro, zero pesi non normalizzati e zero assegnazioni anatomiche vietate. Sono stati usati 14 fallback su vertici femminili (10 testa, 4 mani). `Tools/Blender/player-skinning-deformation-audit.json` valuta 54 pose sintetiche per personaggio. Questi report verificano i dati e la valutazione dello skinning in Blender, non la resa finale in Unity.
+
+Per rigenerare i prefab con le impostazioni correnti, aprire il progetto in Unity e usare **UnderGrind → Player → Build Male and Female Prefabs From Configured FBX**. Il builder valida entrambi gli Avatar Humanoid, i sei gruppi renderer e salva i renderer in stato neutro; la modalità camera viene applicata a runtime da `PlayerVisualRig`.
+
+La scena completa richiede entrambi i prefab validi. Se i prefab non superano la validazione, la scena non viene creata e non viene usato un manichino statico di ripiego.
+
 
 ## Animazioni
 
-Gli otto movimenti selezionati da PINOC sono elencati in `Assets/UnderGrind/Animations/PlayerAnimationManifest.json`. I relativi FBX `mixamo-fbx` sono disponibili tramite gli asset ID nel manifest, ma non sono ancora nel repository. Scaricare i file con i nomi indicati nel manifest in `Assets/UnderGrind/Animations`; il builder li importa come Humanoid, assegna le clip per nome e genera l'Animator Controller con **UnderGrind → Player → Refresh Clips and Build Animator Controller**. La mesh X Bot inclusa negli FBX è solo un riferimento per l'animazione e non sostituisce il personaggio UnderGrind.
+Gli otto FBX `mixamo-fbx` sono già versionati in `Assets/UnderGrind/Animations` e assegnati in `Assets/UnderGrind/Settings/PlayerAnimationSettings.asset`. Ogni FBX ha un Avatar Humanoid sorgente; Unity esegue il retargeting runtime sull'Avatar del Player. La mesh X Bot inclusa negli FBX è solo un riferimento per l'animazione e non sostituisce il personaggio UnderGrind.
+
+La clip `Crouch_Walk_Forward` resta non approvata: l'ultima run Unity del 24 novembre ha rilevato 6/232 incroci dei piedi sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. Walking e Running avevano zero incroci nel test del 23 novembre, prima della riparazione dei pesi.
+
+La cartella `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk` contiene otto candidati non assegnati al controller. Il report Blender `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` analizza lo scheletro FBX grezzo e non certifica il retargeting Unity. Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` confronta la sorgente e gli otto candidati sugli Avatar sorgente, maschile e femminile; genera `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il test è stato aggiunto nel branch `fix/crouch-walk-animation-audit` ma non è ancora stato eseguito in Unity.
+
+Per aggiornare i riferimenti e rigenerare il controller usare **UnderGrind → Player → Refresh Clips and Build Animator Controller**. Non sostituire la clip di produzione finché una variante non supera il confronto Unity su entrambi gli Avatar e la verifica visiva del ciclo.
+
 
 ## Creazione della scena
 
@@ -52,4 +62,11 @@ I report JSON distinguono esecuzioni superate, fallite e non configurate. XML as
 
 ## Limiti della verifica
 
-La modifica dei file nel repository non equivale a una verifica nell'Editor Unity. Importazione Blender, compilazione C#, rendering, EditMode e PlayMode devono essere eseguiti sul progetto aperto in Unity. La presenza di FBX, Avatar Humanoid e Animator validi deve essere verificata sui modelli definitivi.
+L'ultima esecuzione Unity versionata è la run `20261124-110717-910` su Unity 6000.6.9f1: 65/68 test superati (EditMode 53/55, PlayMode 12/13). I tre fallimenti erano:
+- Crouch Walk Forward: incroci anatomici dei piedi sulla sorgente e sui due Avatar Player.
+- Visibilità dei renderer FP durante il cambio camera.
+- Conservazione dello stato iniziale dei renderer disabilitati.
+
+I due problemi dei renderer sono corretti nel branch `fix/crouch-walk-animation-audit`: il rig conserva gli stati enabled originali, il builder ripristina i default prima di salvare e i prefab sono stati aggiornati allo stato neutro. La correzione non è ancora stata verificata con una nuova run Unity. Il problema Crouch Walk resta aperto e nessun candidato è stato promosso.
+
+La presenza di FBX, Avatar Humanoid e Animator validi non equivale a una verifica visiva. Importazione, compilazione, EditMode, PlayMode, deformazione delle mesh, posizione degli arti FP e resa in prima/terza persona devono essere controllati nell'Editor Unity.
