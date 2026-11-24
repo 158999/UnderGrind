@@ -183,3 +183,40 @@ Dopo l'importazione delle clip nella cartella `Assets/UnderGrind/Animations`, **
 - [ ] Cicli di camminata e corsa controllati visivamente per scivolamento dei piedi, transizioni e movimento della radice.
 - [ ] Test PlayMode superati sul rig importato.
 - [ ] Visuale in prima e terza persona controllata nella scena Unity.
+
+## Verifica delle riparazioni geometriche — 24 novembre 2026
+
+La revisione del branch `main` al commit `48e6d7333ec15e2a9bd76ba087912dd8e44fb94d` ha individuato due workflow Blender distinti.
+
+### Audit della sorgente speculare
+
+Il workflow `Repair mirrored humanoid source` (run GitHub Actions `45363208155`) ha riaperto e verificato il file `.blend` con Blender 5.2.4. Il report classifica le 12 mesh riggate come già complete su entrambi i lati. Non sono state aggiunte metà mancanti e i conteggi geometrici non sono cambiati: il titolo del commit non va interpretato come prova di una ricostruzione effettiva della geometria speculare.
+
+### Riparazione delle superfici e nuovo export
+
+Il workflow `UnderGrind player character repair and export` (run `45365321060`) è terminato con successo. Il report Blender registra:
+
+- 12 mesh riggate: sei maschili e sei femminili;
+- 22 ossa per armatura e offset laterale scheletro-corpo pari a 0 m per entrambi i personaggi;
+- tutti i vertici delle 12 mesh associati ad almeno un peso deformante; zero vertici non pesati;
+- zero facce ad area nulla e zero poligoni auto-intersecanti rilevati dall'audit;
+- una UV map non collassata e il materiale opaco `UG_Skin` su ogni mesh;
+- triangolazione di due facce problematiche del corpo maschile, identificate nello script come indici 92 e 186;
+- normali ricalcolate sulle mesh e UV rigenerate con Smart UV Project.
+
+I nuovi export FBX versionati sono `Human_Male_Rigged.fbx` (247.756 byte) e `Human_Female_Rigged.fbx` (255.468 byte). La verifica automatica ha confermato sei parti per FBX, 22 ossa e il materiale `UG_Skin`.
+
+Questi controlli riguardano struttura statica, topologia, UV, presenza dei pesi e export. **Non dimostrano che i pesi producano deformazioni anatomiche corrette durante animazioni o pose articolate.** Il workflow non esegue Unity, non rigenera i prefab in Unity e non produce una verifica visiva.
+
+### Test ancora aperti
+
+L'ultimo report Unity disponibile prima dei nuovi FBX è la run `20261123-132707-274`: 49/50 EditMode e 13/13 PlayMode. L'unico fallimento è `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`, limitato alla clip `Crouch_Walk_Forward`: 6 campioni con incrocio nella sorgente Mixamo, 10 sul player maschile e 12 sul femminile. Questo report precede i nuovi FBX e deve essere rieseguito dopo la loro importazione; non è una misura del nuovo rig.
+
+Restano quindi **PRESENTE DA VERIFICARE** in Unity:
+- coerenza delle bind pose importate rispetto alle trasformazioni di ossa e renderer;
+- deformazione di spalle, gomiti, anche, ginocchia, caviglie e piedi;
+- visibilità esclusiva dei gruppi renderer FP/TP durante il cambio camera;
+- qualità visiva in prima e terza persona;
+- retargeting di tutte le clip, in particolare Crouch Walk.
+
+La nuova verifica automatica aggiunta a `HumanoidRigImportTests` controlla la coerenza delle bind pose e l'esclusività dei gruppi renderer nelle due modalità camera. I test sono stati aggiunti al branch `fix/character-visual-integrity-20261124`; non risultano ancora eseguiti in Unity.
