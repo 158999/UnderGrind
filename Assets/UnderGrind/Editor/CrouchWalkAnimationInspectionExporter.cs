@@ -1632,10 +1632,10 @@ namespace UnderGrind.Editor
             Vector3 direction;
             switch (angleIndex)
             {
-                case 0: direction = -forward; break;
-                case 1: direction = (-forward - right).normalized; break;
+                case 0: direction = forward; break;
+                case 1: direction = (forward + right).normalized; break;
                 case 2: direction = right; break;
-                default: direction = forward; break;
+                default: direction = -forward; break;
             }
 
             var target = rig.Bounds.center + Vector3.up * (rig.Bounds.extents.y * 0.03f);
