@@ -1645,12 +1645,30 @@ namespace UnderGrind.Editor
                 default: direction = -forward; break;
             }
 
-            var target = rig.Bounds.center + Vector3.up * (rig.Bounds.extents.y * 0.03f);
-            var halfHeight = Mathf.Max(0.5f, rig.Bounds.extents.y);
-            var distance = halfHeight / Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad) * 1.25f;
+            var modelUp = rig.Animator.transform.up;
+            var target = rig.Bounds.center + modelUp * (rig.Bounds.extents.y * 0.03f);
             camera.aspect = (float)width / height;
-            camera.transform.position = target + direction * distance + Vector3.up * (rig.Bounds.extents.y * 0.04f);
-            camera.transform.LookAt(target);
+            camera.transform.position = target + direction * 4f + modelUp * (rig.Bounds.extents.y * 0.04f);
+            camera.transform.LookAt(target, modelUp);
+
+            var boundsExtents = rig.Bounds.extents;
+            var cameraRight = camera.transform.right;
+            var cameraUp = camera.transform.up;
+            var projectedHalfWidth =
+                Mathf.Abs(boundsExtents.x * cameraRight.x) +
+                Mathf.Abs(boundsExtents.y * cameraRight.y) +
+                Mathf.Abs(boundsExtents.z * cameraRight.z);
+            var projectedHalfHeight =
+                Mathf.Abs(boundsExtents.x * cameraUp.x) +
+                Mathf.Abs(boundsExtents.y * cameraUp.y) +
+                Mathf.Abs(boundsExtents.z * cameraUp.z);
+            var tangentVertical = Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            var tangentHorizontal = tangentVertical * camera.aspect;
+            var distance = Mathf.Max(
+                projectedHalfHeight / tangentVertical,
+                projectedHalfWidth / tangentHorizontal) * 1.2f;
+            camera.transform.position = target + direction * distance + modelUp * (rig.Bounds.extents.y * 0.04f);
+            camera.transform.LookAt(target, modelUp);
         }
 
         private static List<GeometryFrame> CaptureGeometryFrames(
