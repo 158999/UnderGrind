@@ -1,0 +1,140 @@
+name: UnderGrind anatomical skin-weight repair
+
+on:
+  push:
+    branches: [fix/character-visual-integrity-clean]
+    paths:
+      - '.github/workflows/player-skinning-reweight.yml'
+      - 'Tools/Blender/reweight-player-character.py'
+      - 'Tools/Blender/audit-player-skinning-deformation.py'
+      - 'Tools/Blender/export-undergrind-humans.py'
+      - 'Assets/UnderGrind/Art/Source/humans.blend'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reweight-and-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: fix/character-visual-integrity-clean
+          lfs: true
+
+      - name: Validate Blender Python syntax
+        run: |
+          python3 -m py_compile \
+            Tools/Blender/reweight-player-character.py \
+            Tools/Blender/audit-player-skinning-deformation.py \
+            Tools/Blender/export-undergrind-humans.py
+
+      - name: Install Blender 5.2.4
+        run: |
+          curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+            https://mirror.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz \
+            --output "$RUNNER_TEMP/blender.tar.xz"
+          tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/blender-5.2.4-linux-x64/blender" --version
+
+      - name: Reweight derived meshes without modifying the source blend
+        run: |
+          blender -b Assets/UnderGrind/Art/Source/humans.blend \
+            --python-exit-code 1 \
+            --python Tools/Blender/reweight-player-character.py
+          test -s Tools/Blender/Generated/humans_reweighted.blend
+          test -s Tools/Blender/weight-repair-report.json
+
+      - name: Audit repaired topology and skin deformation
+        run: |
+          blender -b Tools/Blender/Generated/humans_reweighted.blend \
+            --python-exit-code 1 \
+            --python Tools/Blender/player-character-audit.py
+          blender -b Tools/Blender/Generated/humans_reweighted.blend \
+            --python-exit-code 1 \
+            --python Tools/Blender/audit-player-skinning-deformation.py
+          test -s Tools/Blender/player-character-audit.json
+          test -s Tools/Blender/player-skinning-deformation-audit.json
+
+      - name: Export male and female Unity FBX assets from the derived blend
+        run: |
+          rm -f Tools/Blender/last-export-report.json
+          blender -b Tools/Blender/Generated/humans_reweighted.blend \
+            --python-exit-code 1 \
+            --python Tools/Blender/export-undergrind-humans.py
+          test -s Tools/Blender/last-export-report.json
+          test -s Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+          test -s Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
+
+      - name: Validate weight repair, deformation coverage and FBX exports
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          weights = json.loads(Path("Tools/Blender/weight-repair-report.json").read_text(encoding="utf-8"))
+          if set(weights["characters"]) != {"male", "female"}:
+              raise SystemExit("Weight report must contain male and female")
+          for character, data in weights["characters"].items():
+              if len(data["parts"]) != 6:
+                  raise SystemExit(f"{character}: expected six repaired parts")
+              for part in data["parts"]:
+                  if part["unweightedVertices"] or part["verticesOverInfluenceLimit"]:
+                      raise SystemExit(f"{part['name']}: unweighted vertices or more than four influences")
+                  if part["verticesWithUnnormalizedWeights"] or part["forbiddenInfluenceAssignments"]:
+                      raise SystemExit(f"{part['name']}: non-normalized or anatomically forbidden influences")
+
+          deformation = json.loads(Path("Tools/Blender/player-skinning-deformation-audit.json").read_text(encoding="utf-8"))
+          if set(deformation["characters"]) != {"male", "female"}:
+              raise SystemExit("Deformation report must contain male and female")
+          for character, data in deformation["characters"].items():
+              if data["missingPoseBones"]:
+                  raise SystemExit(f"{character}: missing pose bones {data['missingPoseBones']}")
+              if len(data["deformationSamples"]) != 54:
+                  raise SystemExit(f"{character}: expected 54 synthetic pose samples")
+
+          exports = json.loads(Path("Tools/Blender/last-export-report.json").read_text(encoding="utf-8"))
+          if len(exports) != 2 or {item["character"] for item in exports} != {"male", "female"}:
+              raise SystemExit("Expected male and female FBX exports")
+          for item in exports:
+              if len(item["parts"]) != 6 or item["bytes"] <= 0:
+                  raise SystemExit(f"{item['character']}: invalid FBX export report")
+          print("Verified: 12 parts, normalized weights, <=4 influences, 108 synthetic pose samples and two FBX exports.")
+          PY
+
+      - name: Commit derived blend, repaired FBX and reports
+        env:
+          TARGET_BRANCH: fix/character-visual-integrity-clean
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Tools/Blender/Generated/humans_reweighted.blend
+          git add Tools/Blender/weight-repair-report.json
+          git add Tools/Blender/player-character-audit.json
+          git add Tools/Blender/player-skinning-deformation-audit.json
+          git add Tools/Blender/last-export-report.json
+          git add Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+          git add Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
+          git diff --cached --quiet && { echo "No derived weight repair changes to commit"; exit 1; }
+          git commit -m "fix: normalize humanoid skin weights and regenerate FBX"
+          git pull --rebase origin "$TARGET_BRANCH"
+          git push origin "HEAD:$TARGET_BRANCH"
+
+      - name: Upload derived rig and diagnostic reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: undergrind-reweighted-humanoid-rigs
+          path: |
+            Tools/Blender/Generated/humans_reweighted.blend
+            Tools/Blender/weight-repair-report.json
+            Tools/Blender/player-character-audit.json
+            Tools/Blender/player-skinning-deformation-audit.json
+            Tools/Blender/last-export-report.json
+            Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx
+            Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx
+          if-no-files-found: error
+          retention-days: 30

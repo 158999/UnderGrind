@@ -1,0 +1,1705 @@
+{
+  "blenderVersion": "5.2.4 LTS",
+  "source": "/home/runner/work/UnderGrind/UnderGrind/Tools/Blender/Generated/humans_reweighted.blend",
+  "characters": {
+    "male": {
+      "armature": "UG_Male_Armature",
+      "armatureMatrixWorld": [
+        [
+          0.509165,
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          0.509165,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.509165,
+          -0.002486
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "armatureScale": [
+        0.509165,
+        0.509165,
+        0.509165
+      ],
+      "bodyCenterlineXInArmatureSpace": 0.0,
+      "centralBoneCenterlineX": 0.0,
+      "skeletonOffsetFromBodyMeters": 0.0,
+      "centralBones": {
+        "Hips": {
+          "head": [
+            0.0,
+            -0.104208,
+            1.613006
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            1.89268
+          ]
+        },
+        "Spine": {
+          "head": [
+            0.0,
+            -0.104208,
+            1.89268
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            2.277231
+          ]
+        },
+        "Chest": {
+          "head": [
+            0.0,
+            -0.104208,
+            2.277231
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            2.661783
+          ]
+        },
+        "Neck": {
+          "head": [
+            0.0,
+            -0.104208,
+            2.661783
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            2.941456
+          ]
+        },
+        "Head": {
+          "head": [
+            0.0,
+            -0.104208,
+            2.941456
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            3.430885
+          ]
+        }
+      },
+      "allBones": [
+        {
+          "name": "Root",
+          "parent": null,
+          "head": [
+            0.0,
+            -0.104208,
+            0.004882
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            0.162199
+          ]
+        },
+        {
+          "name": "Hips",
+          "parent": "Root",
+          "head": [
+            0.0,
+            -0.104208,
+            1.613006
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            1.89268
+          ]
+        },
+        {
+          "name": "Spine",
+          "parent": "Hips",
+          "head": [
+            0.0,
+            -0.104208,
+            1.89268
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            2.277231
+          ]
+        },
+        {
+          "name": "Chest",
+          "parent": "Spine",
+          "head": [
+            0.0,
+            -0.104208,
+            2.277231
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            2.661783
+          ]
+        },
+        {
+          "name": "Neck",
+          "parent": "Chest",
+          "head": [
+            0.0,
+            -0.104208,
+            2.661783
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            2.941456
+          ]
+        },
+        {
+          "name": "Head",
+          "parent": "Neck",
+          "head": [
+            0.0,
+            -0.104208,
+            2.941456
+          ],
+          "tail": [
+            0.0,
+            -0.104208,
+            3.430885
+          ]
+        },
+        {
+          "name": "LeftShoulder",
+          "parent": "Chest",
+          "head": [
+            0.0,
+            -0.104208,
+            2.644303
+          ],
+          "tail": [
+            0.176266,
+            -0.104208,
+            2.644303
+          ]
+        },
+        {
+          "name": "LeftUpperArm",
+          "parent": "LeftShoulder",
+          "head": [
+            0.176266,
+            -0.104208,
+            2.644303
+          ],
+          "tail": [
+            0.332947,
+            -0.104208,
+            2.32967
+          ]
+        },
+        {
+          "name": "LeftLowerArm",
+          "parent": "LeftUpperArm",
+          "head": [
+            0.332947,
+            -0.104208,
+            2.32967
+          ],
+          "tail": [
+            0.396598,
+            -0.104208,
+            1.980078
+          ]
+        },
+        {
+          "name": "LeftHand",
+          "parent": "LeftLowerArm",
+          "head": [
+            0.396598,
+            -0.104208,
+            1.980078
+          ],
+          "tail": [
+            0.42108,
+            -0.104208,
+            1.840241
+          ]
+        },
+        {
+          "name": "RightShoulder",
+          "parent": "Chest",
+          "head": [
+            0.0,
+            -0.104208,
+            2.644303
+          ],
+          "tail": [
+            -0.176266,
+            -0.104208,
+            2.644303
+          ]
+        },
+        {
+          "name": "RightUpperArm",
+          "parent": "RightShoulder",
+          "head": [
+            -0.176266,
+            -0.104208,
+            2.644303
+          ],
+          "tail": [
+            -0.332947,
+            -0.104208,
+            2.32967
+          ]
+        },
+        {
+          "name": "RightLowerArm",
+          "parent": "RightUpperArm",
+          "head": [
+            -0.332947,
+            -0.104208,
+            2.32967
+          ],
+          "tail": [
+            -0.396598,
+            -0.104208,
+            1.980078
+          ]
+        },
+        {
+          "name": "RightHand",
+          "parent": "RightLowerArm",
+          "head": [
+            -0.396598,
+            -0.104208,
+            1.980078
+          ],
+          "tail": [
+            -0.42108,
+            -0.104208,
+            1.840241
+          ]
+        },
+        {
+          "name": "LeftUpperLeg",
+          "parent": "Hips",
+          "head": [
+            0.093029,
+            -0.104208,
+            1.717884
+          ],
+          "tail": [
+            0.102822,
+            -0.104208,
+            0.966261
+          ]
+        },
+        {
+          "name": "LeftLowerLeg",
+          "parent": "LeftUpperLeg",
+          "head": [
+            0.102822,
+            -0.104208,
+            0.966261
+          ],
+          "tail": [
+            0.107718,
+            -0.104208,
+            0.197158
+          ]
+        },
+        {
+          "name": "LeftFoot",
+          "parent": "LeftLowerLeg",
+          "head": [
+            0.107718,
+            -0.104208,
+            0.197158
+          ],
+          "tail": [
+            0.107718,
+            0.0775,
+            0.197158
+          ]
+        },
+        {
+          "name": "LeftToes",
+          "parent": "LeftFoot",
+          "head": [
+            0.107718,
+            0.0775,
+            0.197158
+          ],
+          "tail": [
+            0.107718,
+            0.125955,
+            0.12724
+          ]
+        },
+        {
+          "name": "RightUpperLeg",
+          "parent": "Hips",
+          "head": [
+            -0.093029,
+            -0.104208,
+            1.717884
+          ],
+          "tail": [
+            -0.102822,
+            -0.104208,
+            0.966261
+          ]
+        },
+        {
+          "name": "RightLowerLeg",
+          "parent": "RightUpperLeg",
+          "head": [
+            -0.102822,
+            -0.104208,
+            0.966261
+          ],
+          "tail": [
+            -0.107718,
+            -0.104208,
+            0.197158
+          ]
+        },
+        {
+          "name": "RightFoot",
+          "parent": "RightLowerLeg",
+          "head": [
+            -0.107718,
+            -0.104208,
+            0.197158
+          ],
+          "tail": [
+            -0.107718,
+            0.0775,
+            0.197158
+          ]
+        },
+        {
+          "name": "RightToes",
+          "parent": "RightFoot",
+          "head": [
+            -0.107718,
+            0.0775,
+            0.197158
+          ],
+          "tail": [
+            -0.107718,
+            0.125955,
+            0.12724
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "name": "Human_Male_Body",
+          "vertices": 201,
+          "polygons": 216,
+          "triangles": 398,
+          "armatureParent": "UG_Male_Armature",
+          "armatureModifiers": [
+            "UG_Male_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 201,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.504965,
+              -0.407054,
+              0.004882
+            ],
+            "max": [
+              0.504965,
+              0.169076,
+              2.731701
+            ],
+            "center": [
+              0.0,
+              -0.118989,
+              1.368292
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.006134712602943182,
+              0.006134721450507641
+            ],
+            "max": [
+              0.9618148803710938,
+              0.9938651919364929
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.509165,
+              0.0,
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              0.509165,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.509165,
+              -0.002486
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Male_Head",
+          "vertices": 140,
+          "polygons": 144,
+          "triangles": 256,
+          "armatureParent": "UG_Male_Armature",
+          "armatureModifiers": [
+            "UG_Male_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 140,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.485914,
+              -0.328997,
+              2.731701
+            ],
+            "max": [
+              0.485914,
+              0.184011,
+              3.500803
+            ],
+            "center": [
+              0.0,
+              -0.072493,
+              3.116252
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.005631124135106802,
+              0.005631072446703911
+            ],
+            "max": [
+              0.9744641184806824,
+              0.9943692684173584
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.509165,
+              0.0,
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              0.509165,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.509165,
+              -0.002486
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Male_TP_Arms",
+          "vertices": 77,
+          "polygons": 54,
+          "triangles": 104,
+          "armatureParent": "UG_Male_Armature",
+          "armatureModifiers": [
+            "UG_Male_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 77,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.749248,
+              -0.246757,
+              2.15291
+            ],
+            "max": [
+              0.749248,
+              0.198639,
+              2.731701
+            ],
+            "center": [
+              0.0,
+              -0.024059,
+              2.442306
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.005213615018874407,
+              0.005213342607021332
+            ],
+            "max": [
+              0.9947865009307861,
+              0.9920713901519775
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.509165,
+              0.0,
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              0.509165,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.509165,
+              -0.002486
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Male_TP_Hands",
+          "vertices": 160,
+          "polygons": 146,
+          "triangles": 292,
+          "armatureParent": "UG_Male_Armature",
+          "armatureModifiers": [
+            "UG_Male_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 160,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.979255,
+              -0.316477,
+              1.58092
+            ],
+            "max": [
+              0.979255,
+              0.070272,
+              2.24857
+            ],
+            "center": [
+              0.0,
+              -0.123103,
+              1.914745
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.005908286198973656,
+              0.0059081679210066795
+            ],
+            "max": [
+              0.9940917491912842,
+              0.9892987608909607
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.509165,
+              0.0,
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              0.509165,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.509165,
+              -0.002486
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Male_FP_Arms",
+          "vertices": 77,
+          "polygons": 54,
+          "triangles": 104,
+          "armatureParent": "UG_Male_Armature",
+          "armatureModifiers": [
+            "UG_Male_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 77,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.749248,
+              -0.246757,
+              2.15291
+            ],
+            "max": [
+              0.749248,
+              0.198639,
+              2.731701
+            ],
+            "center": [
+              0.0,
+              -0.024059,
+              2.442306
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.005213615018874407,
+              0.005213342607021332
+            ],
+            "max": [
+              0.9947865009307861,
+              0.9920713901519775
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.509165,
+              0.0,
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              0.509165,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.509165,
+              -0.002486
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Male_FP_Hands",
+          "vertices": 160,
+          "polygons": 146,
+          "triangles": 292,
+          "armatureParent": "UG_Male_Armature",
+          "armatureModifiers": [
+            "UG_Male_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 160,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.979255,
+              -0.316477,
+              1.58092
+            ],
+            "max": [
+              0.979255,
+              0.070272,
+              2.24857
+            ],
+            "center": [
+              0.0,
+              -0.123103,
+              1.914745
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.005908286198973656,
+              0.0059081679210066795
+            ],
+            "max": [
+              0.9940917491912842,
+              0.9892987608909607
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.509165,
+              0.0,
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              0.509165,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.509165,
+              -0.002486
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        }
+      ]
+    },
+    "female": {
+      "armature": "UG_Female_Armature",
+      "armatureMatrixWorld": [
+        [
+          0.513855,
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.513855,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.513855,
+          -0.001394
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "armatureScale": [
+        0.513855,
+        0.513855,
+        0.513855
+      ],
+      "bodyCenterlineXInArmatureSpace": 0.0,
+      "centralBoneCenterlineX": 0.0,
+      "skeletonOffsetFromBodyMeters": 0.0,
+      "centralBones": {
+        "Hips": {
+          "head": [
+            0.0,
+            -0.079652,
+            1.524542
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            1.789208
+          ]
+        },
+        "Spine": {
+          "head": [
+            0.0,
+            -0.079652,
+            1.789208
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            2.153123
+          ]
+        },
+        "Chest": {
+          "head": [
+            0.0,
+            -0.079652,
+            2.153123
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            2.517039
+          ]
+        },
+        "Neck": {
+          "head": [
+            0.0,
+            -0.079652,
+            2.517039
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            2.781705
+          ]
+        },
+        "Head": {
+          "head": [
+            0.0,
+            -0.079652,
+            2.781705
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            3.24487
+          ]
+        }
+      },
+      "allBones": [
+        {
+          "name": "Root",
+          "parent": null,
+          "head": [
+            0.0,
+            -0.079652,
+            0.002713
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            0.151587
+          ]
+        },
+        {
+          "name": "Hips",
+          "parent": "Root",
+          "head": [
+            0.0,
+            -0.079652,
+            1.524542
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            1.789208
+          ]
+        },
+        {
+          "name": "Spine",
+          "parent": "Hips",
+          "head": [
+            0.0,
+            -0.079652,
+            1.789208
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            2.153123
+          ]
+        },
+        {
+          "name": "Chest",
+          "parent": "Spine",
+          "head": [
+            0.0,
+            -0.079652,
+            2.153123
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            2.517039
+          ]
+        },
+        {
+          "name": "Neck",
+          "parent": "Chest",
+          "head": [
+            0.0,
+            -0.079652,
+            2.517039
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            2.781705
+          ]
+        },
+        {
+          "name": "Head",
+          "parent": "Neck",
+          "head": [
+            0.0,
+            -0.079652,
+            2.781705
+          ],
+          "tail": [
+            0.0,
+            -0.079652,
+            3.24487
+          ]
+        },
+        {
+          "name": "LeftShoulder",
+          "parent": "Chest",
+          "head": [
+            0.0,
+            -0.079652,
+            2.500497
+          ],
+          "tail": [
+            0.133187,
+            -0.079652,
+            2.500497
+          ]
+        },
+        {
+          "name": "LeftUpperArm",
+          "parent": "LeftShoulder",
+          "head": [
+            0.133187,
+            -0.079652,
+            2.500497
+          ],
+          "tail": [
+            0.251576,
+            -0.079652,
+            2.202748
+          ]
+        },
+        {
+          "name": "LeftLowerArm",
+          "parent": "LeftUpperArm",
+          "head": [
+            0.251576,
+            -0.079652,
+            2.202748
+          ],
+          "tail": [
+            0.299671,
+            -0.079652,
+            1.871916
+          ]
+        },
+        {
+          "name": "LeftHand",
+          "parent": "LeftLowerArm",
+          "head": [
+            0.299671,
+            -0.079652,
+            1.871916
+          ],
+          "tail": [
+            0.318169,
+            -0.079652,
+            1.739583
+          ]
+        },
+        {
+          "name": "RightShoulder",
+          "parent": "Chest",
+          "head": [
+            0.0,
+            -0.079652,
+            2.500497
+          ],
+          "tail": [
+            -0.133187,
+            -0.079652,
+            2.500497
+          ]
+        },
+        {
+          "name": "RightUpperArm",
+          "parent": "RightShoulder",
+          "head": [
+            -0.133187,
+            -0.079652,
+            2.500497
+          ],
+          "tail": [
+            -0.251576,
+            -0.079652,
+            2.202748
+          ]
+        },
+        {
+          "name": "RightLowerArm",
+          "parent": "RightUpperArm",
+          "head": [
+            -0.251576,
+            -0.079652,
+            2.202748
+          ],
+          "tail": [
+            -0.299671,
+            -0.079652,
+            1.871916
+          ]
+        },
+        {
+          "name": "RightHand",
+          "parent": "RightLowerArm",
+          "head": [
+            -0.299671,
+            -0.079652,
+            1.871916
+          ],
+          "tail": [
+            -0.318169,
+            -0.079652,
+            1.739583
+          ]
+        },
+        {
+          "name": "LeftUpperLeg",
+          "parent": "Hips",
+          "head": [
+            0.070293,
+            -0.079652,
+            1.623791
+          ],
+          "tail": [
+            0.077693,
+            -0.079652,
+            0.912502
+          ]
+        },
+        {
+          "name": "LeftLowerLeg",
+          "parent": "LeftUpperLeg",
+          "head": [
+            0.077693,
+            -0.079652,
+            0.912502
+          ],
+          "tail": [
+            0.081392,
+            -0.079652,
+            0.18467
+          ]
+        },
+        {
+          "name": "LeftFoot",
+          "parent": "LeftLowerLeg",
+          "head": [
+            0.081392,
+            -0.079652,
+            0.18467
+          ],
+          "tail": [
+            0.081392,
+            0.06733,
+            0.18467
+          ]
+        },
+        {
+          "name": "LeftToes",
+          "parent": "LeftFoot",
+          "head": [
+            0.081392,
+            0.06733,
+            0.18467
+          ],
+          "tail": [
+            0.081392,
+            0.106526,
+            0.118504
+          ]
+        },
+        {
+          "name": "RightUpperLeg",
+          "parent": "Hips",
+          "head": [
+            -0.070293,
+            -0.079652,
+            1.623791
+          ],
+          "tail": [
+            -0.077693,
+            -0.079652,
+            0.912502
+          ]
+        },
+        {
+          "name": "RightLowerLeg",
+          "parent": "RightUpperLeg",
+          "head": [
+            -0.077693,
+            -0.079652,
+            0.912502
+          ],
+          "tail": [
+            -0.081392,
+            -0.079652,
+            0.18467
+          ]
+        },
+        {
+          "name": "RightFoot",
+          "parent": "RightLowerLeg",
+          "head": [
+            -0.081392,
+            -0.079652,
+            0.18467
+          ],
+          "tail": [
+            -0.081392,
+            0.06733,
+            0.18467
+          ]
+        },
+        {
+          "name": "RightToes",
+          "parent": "RightFoot",
+          "head": [
+            -0.081392,
+            0.06733,
+            0.18467
+          ],
+          "tail": [
+            -0.081392,
+            0.106526,
+            0.118504
+          ]
+        }
+      ],
+      "parts": [
+        {
+          "name": "Human_Female_Body",
+          "vertices": 154,
+          "polygons": 130,
+          "triangles": 270,
+          "armatureParent": "UG_Female_Armature",
+          "armatureModifiers": [
+            "UG_Female_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 154,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.496142,
+              -0.324623,
+              0.002713
+            ],
+            "max": [
+              0.496142,
+              0.137619,
+              2.583205
+            ],
+            "center": [
+              0.0,
+              -0.093502,
+              1.292959
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.005949025508016348,
+              0.005948953330516815
+            ],
+            "max": [
+              0.9940509796142578,
+              0.885832667350769
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.513855,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.513855,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.513855,
+              -0.001394
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Female_Head",
+          "vertices": 174,
+          "polygons": 178,
+          "triangles": 312,
+          "armatureParent": "UG_Female_Armature",
+          "armatureModifiers": [
+            "UG_Female_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 174,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.396862,
+              -0.251785,
+              2.583205
+            ],
+            "max": [
+              0.396862,
+              0.163766,
+              3.311037
+            ],
+            "center": [
+              0.0,
+              -0.04401,
+              2.947121
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.006529021076858044,
+              0.006529016885906458
+            ],
+            "max": [
+              0.9785071015357971,
+              0.9934706687927246
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.513855,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.513855,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.513855,
+              -0.001394
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Female_TP_Arms",
+          "vertices": 175,
+          "polygons": 140,
+          "triangles": 272,
+          "armatureParent": "UG_Female_Armature",
+          "armatureModifiers": [
+            "UG_Female_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 175,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.702591,
+              -0.279168,
+              1.771358
+            ],
+            "max": [
+              0.702591,
+              0.165319,
+              2.583205
+            ],
+            "center": [
+              0.0,
+              -0.056925,
+              2.177282
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.006335807964205742,
+              0.006335831247270107
+            ],
+            "max": [
+              0.9936643242835999,
+              0.9848991632461548
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.513855,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.513855,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.513855,
+              -0.001394
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Female_TP_Hands",
+          "vertices": 172,
+          "polygons": 142,
+          "triangles": 284,
+          "armatureParent": "UG_Female_Armature",
+          "armatureModifiers": [
+            "UG_Female_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 172,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.739929,
+              -0.290152,
+              1.302617
+            ],
+            "max": [
+              0.739928,
+              0.149216,
+              1.998208
+            ],
+            "center": [
+              -0.0,
+              -0.070468,
+              1.650413
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.007162883877754211,
+              0.007162836845964193
+            ],
+            "max": [
+              0.9928370714187622,
+              0.9694254398345947
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.513855,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.513855,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.513855,
+              -0.001394
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Female_FP_Arms",
+          "vertices": 175,
+          "polygons": 140,
+          "triangles": 272,
+          "armatureParent": "UG_Female_Armature",
+          "armatureModifiers": [
+            "UG_Female_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 175,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.702591,
+              -0.279168,
+              1.771358
+            ],
+            "max": [
+              0.702591,
+              0.165319,
+              2.583205
+            ],
+            "center": [
+              0.0,
+              -0.056925,
+              2.177282
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.006335807964205742,
+              0.006335831247270107
+            ],
+            "max": [
+              0.9936643242835999,
+              0.9848991632461548
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.513855,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.513855,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.513855,
+              -0.001394
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "name": "Human_Female_FP_Hands",
+          "vertices": 172,
+          "polygons": 142,
+          "triangles": 284,
+          "armatureParent": "UG_Female_Armature",
+          "armatureModifiers": [
+            "UG_Female_Armature"
+          ],
+          "vertexGroups": 21,
+          "weightedVertices": 172,
+          "unweightedVertices": 0,
+          "armatureLocalBounds": {
+            "min": [
+              -0.739929,
+              -0.290152,
+              1.302617
+            ],
+            "max": [
+              0.739928,
+              0.149216,
+              1.998208
+            ],
+            "center": [
+              -0.0,
+              -0.070468,
+              1.650413
+            ]
+          },
+          "uvLayerCount": 1,
+          "uvBounds": {
+            "min": [
+              0.007162883877754211,
+              0.007162836845964193
+            ],
+            "max": [
+              0.9928370714187622,
+              0.9694254398345947
+            ]
+          },
+          "materials": [
+            "UG_Skin"
+          ],
+          "normalLengthMin": 1.0,
+          "zeroAreaFaces": [],
+          "selfIntersectingPolygons": [],
+          "matrixWorld": [
+            [
+              0.513855,
+              0.0,
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.513855,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.513855,
+              -0.001394
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "errors": []
+}

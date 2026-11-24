@@ -204,7 +204,7 @@ Il workflow `UnderGrind player character repair and export` (run `45365321060`) 
 - triangolazione di due facce problematiche del corpo maschile, identificate nello script come indici 92 e 186;
 - normali ricalcolate sulle mesh e UV rigenerate con Smart UV Project.
 
-I nuovi export FBX versionati sono `Human_Male_Rigged.fbx` (247.756 byte) e `Human_Female_Rigged.fbx` (255.468 byte). La verifica automatica ha confermato sei parti per FBX, 22 ossa e il materiale `UG_Skin`.
+Il primo export dopo la riparazione delle superfici, precedente al reweighting anatomico descritto sotto, ha prodotto `Human_Male_Rigged.fbx` (247.756 byte) e `Human_Female_Rigged.fbx` (255.468 byte). La verifica automatica ha confermato sei parti per FBX, 22 ossa e il materiale `UG_Skin`.
 
 Questi controlli riguardano struttura statica, topologia, UV, presenza dei pesi e export. **Non dimostrano che i pesi producano deformazioni anatomiche corrette durante animazioni o pose articolate.** Il workflow non esegue Unity, non rigenera i prefab in Unity e non produce una verifica visiva.
 
@@ -219,4 +219,52 @@ Restano quindi **PRESENTE DA VERIFICARE** in Unity:
 - qualità visiva in prima e terza persona;
 - retargeting di tutte le clip, in particolare Crouch Walk.
 
-La nuova verifica automatica aggiunta a `HumanoidRigImportTests` controlla la coerenza delle bind pose e l'esclusività dei gruppi renderer nelle due modalità camera. I test sono stati aggiunti al branch `fix/character-visual-integrity-20261124`; non risultano ancora eseguiti in Unity.
+La nuova verifica automatica aggiunta a `HumanoidRigImportTests` controlla la coerenza delle bind pose e l'esclusività dei gruppi renderer nelle due modalità camera. I test sono stati aggiunti al branch `fix/character-visual-integrity-clean`; non risultano ancora eseguiti in Unity.
+
+### Correzione dei pesi anatomici — 24 novembre 2026
+
+L'audit di deformazione ha evidenziato contaminazioni tra gruppi ossei di lati e parti differenti. Nel sorgente precedente, per esempio, alcune porzioni del corpo maschile e femminile avevano vertici sul lato positivo X pesati prevalentemente con ossa `Right`, mentre l'armatura colloca le ossa `Left` su quel lato. Erano inoltre presenti influenze delle gambe sulle mesh delle mani e delle braccia, e influenze delle braccia sulla testa femminile.
+
+La correzione è stata generata dal workflow `UnderGrind anatomical skin-weight repair` (run `45368720257`) con Blender 5.2.4:
+
+- Il lato anatomico viene ricavato dalla posizione delle ossa `LeftUpperLeg/LeftUpperArm` e `RightUpperLeg/RightUpperArm`, non da un'assunzione fissa sull'orientamento del modello.
+- Le influenze sinistra/destra vengono rimappate sul lato anatomico coerente con la posizione del vertice.
+- Le mesh Body usano ossa centrali e ossa della gamba dello stesso lato; Head usa Head/Neck/Chest; Arms usa Chest e le ossa del braccio dello stesso lato; Hands usa LowerArm/Hand dello stesso lato.
+- Ogni vertice è limitato a un massimo di quattro influenze e i pesi vengono normalizzati a somma 1.
+- Se un vertice non conserva influenze ammesse, viene assegnato all'osso consentito più vicino al segmento del vertice.
+
+Esito del report `weight-repair-report.json`:
+- 12 mesh controllate;
+- zero vertici non pesati;
+- zero vertici con più di quattro influenze;
+- zero vertici con pesi non normalizzati;
+- zero assegnazioni a gruppi vietati;
+- 14 fallback complessivi: 10 vertici della testa femminile e 4 vertici delle mani femminili.
+
+Il processo non modifica `Assets/UnderGrind/Art/Source/humans.blend`: crea `Tools/Blender/Generated/humans_reweighted.blend` come sorgente derivata, mantenendo intatti gli oggetti originali `Human_Male` e `Human_Female`. Da questa copia sono stati esportati i nuovi FBX maschile (235.580 byte) e femminile (247.292 byte), ciascuno con sei parti e 22 ossa.
+
+L'audit di deformazione ha eseguito 54 rotazioni sintetiche per personaggio (18 ossa, tre assi ciascuna): nessuna delle ossa previste manca e ogni campione produce movimento su almeno una mesh. È un controllo tecnico dei pesi e della valutazione dello skinning, non una verifica delle pose anatomiche finali né delle animazioni importate in Unity.
+
+### Stato di verifica dopo il reweighting
+
+**Verificato in Blender:** pesi filtrati per parte e lato, massimo quattro influenze, normalizzazione, presenza dei gruppi, topologia statica, UV, materiale, export FBX e valutazione sintetica delle deformazioni.
+
+**Non ancora verificato in Unity 6.6.9f1:** compilazione, import effettivo dei nuovi FBX, rigenerazione/aggiornamento dei prefab, test EditMode e PlayMode sul nuovo rig, retargeting delle animazioni e resa visiva in gioco.
+
+Restano aperti due problemi indipendenti:
+- il test precedente `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` segnalava incroci nella clip `Crouch_Walk_Forward` (6 sorgente, 10 player maschile, 12 femminile); il reweighting non modifica la clip e il test va ripetuto;
+- la registrazione del 23 novembre mostra ancora un'inquadratura FP con geometria/arti troppo vicini alla camera. Il test dei gruppi renderer verifica solo quali mesh vengono mostrate, non la posa né il posizionamento degli arti FP rispetto alla camera.
+
+La PR `#11` contiene i nuovi asset derivati, gli audit, i test EditMode e la correzione del trigger CI. Rimane draft fino alla verifica Unity e alla revisione visiva.
+
+### Correzione della visibilità delle braccia in prima persona — 24 novembre 2026
+
+La verifica dei prefab generati ha individuato un secondo difetto indipendente dai pesi: `HumanoidRigPrefabBuilder` applicava temporaneamente la modalità terza persona prima di salvare il prefab. Questo disabilitava i renderer `_FP_Arms` e `_FP_Hands`. A runtime `PlayerVisualRig` memorizzava quegli stati disabilitati come valori originali e quindi non poteva riattivare i renderer in prima persona.
+
+La correzione:
+- aggiunge `PlayerVisualRig.RestoreRendererDefaults()`, che ripristina gli stati acquisiti prima del cambio modalità;
+- il builder richiama il ripristino dopo la configurazione temporanea in terza persona, così i prefab vengono salvati con i gruppi renderer in stato neutro;
+- i prefab maschile e femminile versionati sono stati aggiornati riabilitando i renderer FP;
+- il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` ora istanzia i prefab generati, non il solo FBX, e verifica il passaggio prima persona → terza persona → prima persona.
+
+Questo corregge il blocco logico che impediva ai renderer FP di riattivarsi. Non certifica ancora la posa, la distanza o l'inquadratura degli arti rispetto alla camera: questi aspetti richiedono la verifica visiva in Unity.

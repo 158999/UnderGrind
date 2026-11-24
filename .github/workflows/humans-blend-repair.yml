@@ -7,6 +7,9 @@ on:
       - '.github/workflows/humans-blend-repair.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'Assets/UnderGrind/Art/Source/humans.blend'
+      - 'Tools/Blender/export-undergrind-humans.py'
   workflow_dispatch:
 
 permissions:

@@ -2,7 +2,7 @@
   {
     "character": "male",
     "file": "/home/runner/work/UnderGrind/UnderGrind/Assets/UnderGrind/Art/Source/Rigged/Human_Male_Rigged.fbx",
-    "bytes": 247756,
+    "bytes": 235580,
     "bones": 22,
     "boneHierarchy": [
       {
@@ -513,7 +513,7 @@
   {
     "character": "female",
     "file": "/home/runner/work/UnderGrind/UnderGrind/Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx",
-    "bytes": 255468,
+    "bytes": 247292,
     "bones": 22,
     "boneHierarchy": [
       {

@@ -18,7 +18,7 @@ namespace UnderGrind.Locomotion
         [SerializeField] private Renderer[] firstPersonOnlyRenderers = Array.Empty<Renderer>();
         [SerializeField] private Transform viewReference;
 
-        private readonly Dictionary<Renderer, bool> _originalEnabled = new Dictionary<Renderer, bool>();
+        private readonly Dictionary<Renderer, bool> _defaultEnabled = new Dictionary<Renderer, bool>();
         private bool _thirdPerson;
         private bool _bodyVisibleWhileLookingDown = true;
         private bool _initialized;
@@ -147,14 +147,16 @@ namespace UnderGrind.Locomotion
         private void Cache(IEnumerable<Renderer> renderers)
         {
             foreach (var renderer in renderers)
-                if (renderer != null && !_originalEnabled.ContainsKey(renderer))
-                    _originalEnabled.Add(renderer, renderer.enabled);
+                // These renderers are mode-controlled. Their serialized enabled state may
+                // reflect the prefab's preview mode, so it must not become the runtime baseline.
+                if (renderer != null && !_defaultEnabled.ContainsKey(renderer))
+                    _defaultEnabled.Add(renderer, true);
         }
 
         private void ApplyVisibility()
         {
             if (!_initialized) return;
-            foreach (var pair in _originalEnabled)
+            foreach (var pair in _defaultEnabled)
             {
                 if (pair.Key == null) continue;
                 var isHead = Array.IndexOf(headRenderers, pair.Key) >= 0;
