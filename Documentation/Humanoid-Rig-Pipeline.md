@@ -220,3 +220,39 @@ Restano quindi **PRESENTE DA VERIFICARE** in Unity:
 - retargeting di tutte le clip, in particolare Crouch Walk.
 
 La nuova verifica automatica aggiunta a `HumanoidRigImportTests` controlla la coerenza delle bind pose e l'esclusività dei gruppi renderer nelle due modalità camera. I test sono stati aggiunti al branch `fix/character-visual-integrity-20261124`; non risultano ancora eseguiti in Unity.
+
+### Correzione dei pesi anatomici — 24 novembre 2026
+
+L'audit di deformazione ha evidenziato contaminazioni tra gruppi ossei di lati e parti differenti. Nel sorgente precedente, per esempio, alcune porzioni del corpo maschile e femminile avevano vertici sul lato positivo X pesati prevalentemente con ossa `Right`, mentre l'armatura colloca le ossa `Left` su quel lato. Erano inoltre presenti influenze delle gambe sulle mesh delle mani e delle braccia, e influenze delle braccia sulla testa femminile.
+
+La correzione è stata generata dal workflow `UnderGrind anatomical skin-weight repair` (run `45368720257`) con Blender 5.2.4:
+
+- Il lato anatomico viene ricavato dalla posizione delle ossa `LeftUpperLeg/LeftUpperArm` e `RightUpperLeg/RightUpperArm`, non da un'assunzione fissa sull'orientamento del modello.
+- Le influenze sinistra/destra vengono rimappate sul lato anatomico coerente con la posizione del vertice.
+- Le mesh Body usano ossa centrali e ossa della gamba dello stesso lato; Head usa Head/Neck/Chest; Arms usa Chest e le ossa del braccio dello stesso lato; Hands usa LowerArm/Hand dello stesso lato.
+- Ogni vertice è limitato a un massimo di quattro influenze e i pesi vengono normalizzati a somma 1.
+- Se un vertice non conserva influenze ammesse, viene assegnato all'osso consentito più vicino al segmento del vertice.
+
+Esito del report `weight-repair-report.json`:
+- 12 mesh controllate;
+- zero vertici non pesati;
+- zero vertici con più di quattro influenze;
+- zero vertici con pesi non normalizzati;
+- zero assegnazioni a gruppi vietati;
+- 14 fallback complessivi: 10 vertici della testa femminile e 4 vertici delle mani femminili.
+
+Il processo non modifica `Assets/UnderGrind/Art/Source/humans.blend`: crea `Tools/Blender/Generated/humans_reweighted.blend` come sorgente derivata, mantenendo intatti gli oggetti originali `Human_Male` e `Human_Female`. Da questa copia sono stati esportati i nuovi FBX maschile (235.580 byte) e femminile (247.292 byte), ciascuno con sei parti e 22 ossa.
+
+L'audit di deformazione ha eseguito 54 rotazioni sintetiche per personaggio (18 ossa, tre assi ciascuna): nessuna delle ossa previste manca e ogni campione produce movimento su almeno una mesh. È un controllo tecnico dei pesi e della valutazione dello skinning, non una verifica delle pose anatomiche finali né delle animazioni importate in Unity.
+
+### Stato di verifica dopo il reweighting
+
+**Verificato in Blender:** pesi filtrati per parte e lato, massimo quattro influenze, normalizzazione, presenza dei gruppi, topologia statica, UV, materiale, export FBX e valutazione sintetica delle deformazioni.
+
+**Non ancora verificato in Unity 6.6.9f1:** compilazione, import effettivo dei nuovi FBX, rigenerazione/aggiornamento dei prefab, test EditMode e PlayMode sul nuovo rig, retargeting delle animazioni e resa visiva in gioco.
+
+Restano aperti due problemi indipendenti:
+- il test precedente `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` segnalava incroci nella clip `Crouch_Walk_Forward` (6 sorgente, 10 player maschile, 12 femminile); il reweighting non modifica la clip e il test va ripetuto;
+- la registrazione del 23 novembre mostra ancora un'inquadratura FP con geometria/arti troppo vicini alla camera. Il test dei gruppi renderer verifica solo quali mesh vengono mostrate, non la posa né il posizionamento degli arti FP rispetto alla camera.
+
+La PR `#11` contiene i nuovi asset derivati, gli audit, i test EditMode e la correzione del trigger CI. Rimane draft fino alla verifica Unity e alla revisione visiva.
