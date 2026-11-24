@@ -1114,11 +1114,12 @@ namespace UnderGrind.Editor
 
         private static List<float> BuildSampleTimes(AnimationClip clip, ExportOptions options, out bool limitReached)
         {
-            var times = new SortedSet<float> { 0f, clip.length, Mathf.Max(0f, clip.length - 0.0001f) };
+            var lastSampleTime = Mathf.Max(0f, clip.length - 0.0001f);
+            var times = new SortedSet<float> { 0f, lastSampleTime };
             var interval = 1f / options.sampleRateHz;
             var uniformCount = Mathf.CeilToInt(clip.length * options.sampleRateHz);
             for (var index = 1; index < uniformCount; index++)
-                times.Add(Mathf.Min(clip.length, index * interval));
+                times.Add(Mathf.Min(lastSampleTime, index * interval));
 
             if (options.includeCurveKeyTimes)
             {
@@ -1128,7 +1129,7 @@ namespace UnderGrind.Editor
                     if (curve == null) continue;
                     foreach (var key in curve.keys)
                         if (key.time >= 0f && key.time <= clip.length)
-                            times.Add(key.time);
+                            times.Add(Mathf.Min(key.time, lastSampleTime));
                 }
 
                 foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(clip))
@@ -1137,7 +1138,7 @@ namespace UnderGrind.Editor
                     if (keys == null) continue;
                     foreach (var key in keys)
                         if (key.time >= 0f && key.time <= clip.length)
-                            times.Add(key.time);
+                            times.Add(Mathf.Min(key.time, lastSampleTime));
                 }
             }
 
@@ -1146,7 +1147,7 @@ namespace UnderGrind.Editor
                 return times.ToList();
 
             var allTimes = times.ToArray();
-            var reduced = new SortedSet<float> { 0f, Mathf.Max(0f, clip.length - 0.0001f), clip.length };
+            var reduced = new SortedSet<float> { 0f, lastSampleTime };
             var retainedInteriorCount = Mathf.Max(0, options.maxPoseSamples - 3);
             var stride = retainedInteriorCount <= 1
                 ? 1f
@@ -1504,9 +1505,7 @@ namespace UnderGrind.Editor
         {
             if (frames.Count < 2) return 0f;
             var first = frames[0];
-            var endFrame = frames[frames.Count - 1].timeSeconds >= frames[frames.Count - 2].timeSeconds
-                ? frames[frames.Count - 2]
-                : frames[frames.Count - 1];
+            var endFrame = frames[frames.Count - 1];
             return Mathf.Max(
                 Vector3.Distance(first.leftFootRelativeToHips, endFrame.leftFootRelativeToHips),
                 Vector3.Distance(first.rightFootRelativeToHips, endFrame.rightFootRelativeToHips));
@@ -1516,7 +1515,7 @@ namespace UnderGrind.Editor
         {
             if (frames.Count < 2) return 0f;
             var first = frames[0];
-            var last = frames[frames.Count - 2];
+            var last = frames[frames.Count - 1];
             var names = new[] { "Hips", "LeftFoot", "RightFoot", "LeftLowerLeg", "RightLowerLeg" };
             var errors = new List<float>();
             foreach (var name in names)
@@ -1533,7 +1532,7 @@ namespace UnderGrind.Editor
         {
             if (frames.Count < 2) return 0f;
             var first = frames[0];
-            var endFrame = frames[frames.Count - 2];
+            var endFrame = frames[frames.Count - 1];
             return Mathf.Max(
                 Quaternion.Angle(first.leftFootRelativeRotationToHips, endFrame.leftFootRelativeRotationToHips),
                 Quaternion.Angle(first.rightFootRelativeRotationToHips, endFrame.rightFootRelativeRotationToHips));
