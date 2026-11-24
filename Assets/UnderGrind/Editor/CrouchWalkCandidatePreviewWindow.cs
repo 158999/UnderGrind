@@ -58,6 +58,7 @@ namespace UnderGrind.Editor
         private bool _hasGraph;
         private double _lastUpdateTime;
         private string _status;
+        private Vector2 _scrollPosition;
         private bool _showInspectionOptions;
         private int _inspectionSampleRate = 30;
         private int _inspectionFrameCount = 24;
@@ -75,7 +76,7 @@ namespace UnderGrind.Editor
         {
             var window = GetWindow<CrouchWalkCandidatePreviewWindow>();
             window.titleContent = new GUIContent("Crouch Walk Preview");
-            window.minSize = new Vector2(560f, 760f);
+            window.minSize = new Vector2(560f, 700f);
             window.Show();
         }
 
@@ -104,6 +105,7 @@ namespace UnderGrind.Editor
 
         private void OnGUI()
         {
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             EditorGUILayout.LabelField("Anteprima animazione accovacciata", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
                 "Questa finestra anima un'istanza temporanea del prefab selezionato. " +
@@ -115,7 +117,8 @@ namespace UnderGrind.Editor
             DrawInspectionExportControls();
             DrawPreview();
             if (!string.IsNullOrEmpty(_status))
-                EditorGUILayout.HelpBox(_status, MessageType.Warning);
+                EditorGUILayout.HelpBox(_status, MessageType.Info);
+            EditorGUILayout.EndScrollView();
         }
 
         private void DrawSelectionControls()
