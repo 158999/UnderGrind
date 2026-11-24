@@ -94,3 +94,11 @@ Il prompt richiede:
 | Generated 04 | 0 | 0,050 m | 1,356 m | 0,299 m | da scartare in base ai dati grezzi |
 
 I valori sono misurati sul FBX sorgente in Blender e non rappresentano il retarget Humanoid di Unity. I link firmati PINOC sono temporanei e non vengono versionati; gli Asset ID sono il riferimento permanente per recuperarli.
+
+### Revisione visiva dei nuovi campioni
+
+Le contact sheet Blender (quattro angolazioni, sei istanti) sono state prodotte per tutti i dodici candidati e caricate nell'artifact GitHub Actions `pinoc-crouch-walk-audit-and-previews`.
+
+Generated 03 è il candidato sorgente più promettente: mantiene meglio la postura accovacciata e mostra un'alternanza dei passi leggibile. Generated 01 tende a rialzarsi; Generated 02 ha una chiusura del loop debole; Generated 04 presenta una deriva evidente e viene scartato.
+
+La selezione è ancora provvisoria: occorre eseguire l'ispezione Unity sui due Avatar Player e verificare il loop, il contatto dei piedi e la separazione dopo il retarget. La clip di produzione resta quella originale finché questa verifica non passa.
