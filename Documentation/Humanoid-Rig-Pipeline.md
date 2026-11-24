@@ -210,16 +210,13 @@ Questi controlli riguardano struttura statica, topologia, UV, presenza dei pesi 
 
 ### Test ancora aperti
 
-L'ultimo report Unity disponibile prima dei nuovi FBX è la run `20261123-132707-274`: 49/50 EditMode e 13/13 PlayMode. L'unico fallimento è `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`, limitato alla clip `Crouch_Walk_Forward`: 6 campioni con incrocio nella sorgente Mixamo, 10 sul player maschile e 12 sul femminile. Questo report precede i nuovi FBX e deve essere rieseguito dopo la loro importazione; non è una misura del nuovo rig.
+L'ultima esecuzione Unity versionata è la run `20261124-110717-910` su Unity 6000.6.9f1: 55 test EditMode e 13 PlayMode, 65/68 superati. I tre fallimenti registrati sono:
 
-Restano quindi **PRESENTE DA VERIFICARE** in Unity:
-- coerenza delle bind pose importate rispetto alle trasformazioni di ossa e renderer;
-- deformazione di spalle, gomiti, anche, ginocchia, caviglie e piedi;
-- visibilità esclusiva dei gruppi renderer FP/TP durante il cambio camera;
-- qualità visiva in prima e terza persona;
-- retargeting di tutte le clip, in particolare Crouch Walk.
+- `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`: Crouch Walk Forward, 6/232 campioni con incrocio sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile.
+- `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: l'aspettativa di renderer FP disabilitati era applicata anche all'FBX sorgente, che conserva invece i renderer attivi.
+- `VisualRigPreservesInitiallyDisabledRenderers`: il baseline runtime forzava a `true` un renderer disabilitato in origine.
 
-La nuova verifica automatica aggiunta a `HumanoidRigImportTests` controlla la coerenza delle bind pose e l'esclusività dei gruppi renderer nelle due modalità camera. I test sono stati aggiunti al branch `fix/character-visual-integrity-clean`; non risultano ancora eseguiti in Unity.
+I due problemi dei renderer sono corretti nel branch `fix/crouch-walk-animation-audit`, ma la correzione deve essere verificata con una nuova esecuzione Unity. Il test ora controlla i valori neutri iniziali su entrambi gli FBX e sui prefab, quindi verifica i passaggi prima persona → terza persona → prima persona. Il test PlayMode continua a verificare che un renderer disabilitato in origine non venga riattivato.
 
 ### Correzione dei pesi anatomici — 24 novembre 2026
 
@@ -249,23 +246,27 @@ L'audit di deformazione ha eseguito 54 rotazioni sintetiche per personaggio (18 
 
 **Verificato in Blender:** pesi filtrati per parte e lato, massimo quattro influenze, normalizzazione, presenza dei gruppi, topologia statica, UV, materiale, export FBX e valutazione sintetica delle deformazioni.
 
-**Non ancora verificato in Unity 6.6.9f1:** compilazione, import effettivo dei nuovi FBX, rigenerazione/aggiornamento dei prefab, test EditMode e PlayMode sul nuovo rig, retargeting delle animazioni e resa visiva in gioco.
+**Verificato nell'ultima run Unity 6.6.9f1:** compilazione senza errori; 65/68 test superati. La run ha eseguito EditMode e PlayMode sul rig reweighted, ma ha rilevato due regressioni nei renderer e il problema Crouch Walk già noto. I due problemi renderer sono corretti nel branch e attendono una nuova run. La resa visiva completa resta da controllare in gioco.
 
 Restano aperti due problemi indipendenti:
 - il test precedente `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` segnalava incroci nella clip `Crouch_Walk_Forward` (6 sorgente, 10 player maschile, 12 femminile); il reweighting non modifica la clip e il test va ripetuto;
 - la registrazione del 23 novembre mostra ancora un'inquadratura FP con geometria/arti troppo vicini alla camera. Il test dei gruppi renderer verifica solo quali mesh vengono mostrate, non la posa né il posizionamento degli arti FP rispetto alla camera.
 
-La PR `#11` contiene i nuovi asset derivati, gli audit, i test EditMode e la correzione del trigger CI. Rimane draft fino alla verifica Unity e alla revisione visiva.
+La PR `#11` è stata unita a `main` il 24 novembre. La successiva run Unity ha esposto i due problemi renderer descritti sopra; la loro correzione e l'audit dei candidati Crouch Walk sono in lavorazione nel branch `fix/crouch-walk-animation-audit`.
 
-### Correzione della visibilità delle braccia in prima persona — 24 novembre 2026
+### Correzione dei default renderer e dei prefab — 24 novembre 2026
 
-La verifica dei prefab ha individuato un difetto nel baseline dei renderer: il builder salva intenzionalmente i prefab in modalità anteprima terza persona, quindi `_FP_Arms` e `_FP_Hands` risultano disabilitati nel file prefab. `PlayerVisualRig.CacheRenderers` usava lo stato serializzato `Renderer.enabled` come baseline originale; di conseguenza, a runtime non poteva riattivare i renderer FP quando si passava alla prima persona.
+La run Unity `20261124-110717-910` ha evidenziato che forzare a `true` il baseline di ogni renderer mode-controlled riattivava anche renderer disabilitati in origine. La correzione conserva il valore `Renderer.enabled` presente quando il rig acquisisce il renderer.
 
-La correzione mantiene i prefab in anteprima terza persona e separa lo stato di anteprima dal baseline runtime: `PlayerVisualRig` considera attivi per impostazione predefinita tutti i renderer appartenenti ai gruppi controllati (testa, corpo, braccia e mani FP/TP), poi applica la visibilità in base alla modalità camera. I renderer non vengono più bloccati dal loro stato serializzato nel prefab.
+Il builder deve comunque evitare di salvare nei prefab una modalità camera temporanea. La procedura aggiornata è:
 
-Il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` ora:
-- verifica che i prefab maschile e femminile abbiano i renderer FP disabilitati nella modalità anteprima;
-- istanzia i prefab e verifica che il passaggio prima persona → terza persona → prima persona riattivi ogni volta il gruppo corretto;
-- verifica che testa e corpo seguano la modalità camera.
+1. configura i gruppi renderer dal nome degli oggetti;
+2. applica temporaneamente la modalità terza persona per verificare il rig;
+3. chiama `PlayerVisualRig.RestoreRendererDefaults()` per ripristinare gli stati iniziali catturati;
+4. salva il prefab con i gruppi renderer in stato neutro, tutti attivi nell'asset sorgente.
 
-Questo corregge il blocco logico che impediva ai renderer FP di riattivarsi. Non certifica ancora la posa, la distanza o l'inquadratura degli arti rispetto alla camera: questi aspetti richiedono la verifica visiva in Unity.
+I prefab maschile e femminile versionati sono stati aggiornati in modo che `FP_Arms` e `FP_Hands` siano attivi nell'asset. A runtime `PlayerVisualRig` conserva questi default e applica la visibilità in base alla modalità camera. Un renderer disabilitato intenzionalmente prima della configurazione resta invece disabilitato.
+
+Il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` verifica ora i default neutri su FBX maschile/femminile e prefab maschile/femminile, poi verifica la commutazione esclusiva dei gruppi. Il test PlayMode `VisualRigPreservesInitiallyDisabledRenderers` verifica la conservazione dello stato disabilitato.
+
+Queste modifiche sono presenti nel branch `fix/crouch-walk-animation-audit` e non sono ancora state verificate con una nuova esecuzione Unity. La correzione riguarda gli stati dei renderer, non la posa o la distanza degli arti FP dalla camera: la verifica visiva della prima persona resta aperta.
