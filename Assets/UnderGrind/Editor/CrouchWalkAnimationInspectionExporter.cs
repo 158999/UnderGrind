@@ -1673,7 +1673,9 @@ namespace UnderGrind.Editor
                         ConfigureCamera(rig, column, options.cellWidth, options.cellHeight);
                         var rect = new Rect(0f, 0f, options.cellWidth, options.cellHeight);
                         rig.Preview.BeginStaticPreview(rect);
-                        rig.Preview.camera.pixelRect = new Rect(0f, 0f, options.cellWidth, options.cellHeight);
+                        var pixelScale = EditorGUIUtility.pixelsPerPoint;
+                        rig.Preview.camera.pixelRect = new Rect(
+                            0f, 0f, options.cellWidth * pixelScale, options.cellHeight * pixelScale);
                         rig.Preview.Render(true, false);
                         var rendered = rig.Preview.EndStaticPreview();
                         if (rendered == null)
