@@ -441,8 +441,11 @@ namespace UnderGrind.Tests
                 var femaleResult = MeasureFootCrossing(femaleModel, femaleAvatar, clip);
 
                 report.AppendLine(System.IO.Path.GetFileName(path) + " — " + clip.length.ToString("F2") + " s");
+                report.AppendLine("  Mapping sorgente: " + DescribeAvatarMapping(sourceAvatar));
                 report.AppendLine("  Sorgente: " + FormatFootCrossing(sourceResult));
+                report.AppendLine("  Mapping Player maschile: " + DescribeAvatarMapping(maleAvatar));
                 report.AppendLine("  Player maschile: " + FormatFootCrossing(maleResult));
+                report.AppendLine("  Mapping Player femminile: " + DescribeAvatarMapping(femaleAvatar));
                 report.AppendLine("  Player femminile: " + FormatFootCrossing(femaleResult));
                 report.AppendLine();
 
