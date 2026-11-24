@@ -70,9 +70,9 @@ La registrazione del 23 novembre mostra ancora geometria/arti troppo vicini alla
 
 Gli otto FBX `mixamo-fbx` sono presenti in `Assets/UnderGrind/Animations` e le relative clip sono assegnate in `PlayerAnimationSettings.asset`, insieme al controller Animator. Ogni FBX usa un Avatar Humanoid sorgente; Unity esegue il retargeting runtime sull'Avatar del Player. Le curve non sono state ribake-ate sullo scheletro UnderGrind.
 
-Il test Unity del 23 novembre ha rilevato zero incroci anatomici per Walking e Running su sorgente e sui due Player. Per `Crouch_Walk_Forward`, la run del 24 novembre ha rilevato 6/232 incroci sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. La clip resta assegnata ma non è approvata.
+Il test Unity del 23 novembre aveva rilevato zero incroci anatomici per Walking e Running su sorgente e sui due Player; il risultato va ripetuto dopo la riparazione dei pesi. Per `Crouch_Walk_Forward`, la run `20261124-113037-739` del 24 novembre ha rilevato 6/232 incroci sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. La clip resta assegnata ma non è approvata.
 
-La cartella `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk` contiene otto candidati non assegnati al controller. Il report Blender `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` valuta lo scheletro FBX grezzo e non equivale al retargeting Humanoid Unity. Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` confronta il clip corrente e gli otto candidati su Avatar sorgente, maschile e femminile e scrive `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. È stato aggiunto nel branch ma non è ancora stato eseguito.
+La cartella `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk` contiene otto candidati non assegnati al controller. Il report Blender `Tools/Blender/pinoc-crouch-walk-candidate-audit.json` valuta lo scheletro FBX grezzo e non equivale al retargeting Humanoid Unity. Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito nella run `20261124-113037-739` e ha scritto `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il candidato 08 è il migliore nella classifica automatica: zero incroci di piedi e ginocchia su sorgente e due Avatar Player, con separazione minima dei piedi di 0,183 m maschile e 0,155 m femminile. Non è stato promosso: manca la verifica visiva del ciclo.
 
 Non sostituire il clip di produzione finché una variante non mostra risultati accettabili su entrambi gli Avatar e supera la verifica visiva del ciclo.
 
@@ -88,22 +88,22 @@ Ogni suite produce un JSON riepilogativo, un TXT, i log e i report XML/TRX dispo
 
 ### Ultima esecuzione disponibile nel repository
 
-L'ultima esecuzione Unity versionata è la run `20261124-110717-910` su Unity **6000.6.9f1**:
+L'ultima esecuzione Unity versionata è la run `20261124-113037-739` su Unity **6000.6.9f1**:
 
 - Test autonomi C#: **6/6 superati**.
-- Unity EditMode: **53/55 superati**, 2 falliti.
-- Unity PlayMode: **12/13 superati**, 1 fallito.
-- Totale Unity: **65/68 superati**, 3 falliti.
+- Unity EditMode: **54/57 superati**, 3 falliti.
+- Unity PlayMode: **13/13 superati**.
+- Totale Unity: **67/70 superati**, 3 falliti.
 
 I tre fallimenti registrati sono:
 
 1. `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`: Crouch Walk Forward, 6 incroci sulla sorgente, 10 sul Player maschile, 12 sul femminile.
-2. `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: aspettativa di stato FP non coerente con l'asset FBX/prefab.
-3. `VisualRigPreservesInitiallyDisabledRenderers`: il rig riattivava un renderer disabilitato in origine.
+2. `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: il report locale non trova `PlayerVisualRig` nel prefab maschile.
+3. Lo stesso test non trova `PlayerVisualRig` nel prefab femminile.
 
-I due problemi dei renderer sono corretti in `main` tramite PR #12: il baseline conserva lo stato enabled originale; il builder ripristina i default prima di salvare il prefab; gli FBX e i prefab versionati mantengono i gruppi renderer in stato neutro. La correzione integrata in `main` deve ancora essere verificata eseguendo nuovamente EditMode e PlayMode.
+**Disallineamento da risolvere:** nel contenuto attuale di `main`, entrambi i prefab versionati contengono già il componente `PlayerVisualRig` con riferimenti a `PlayerRigSettings` e ai sei renderer. Il report della run locale non corrisponde quindi allo stato dei prefab attualmente versionati. Prima di modificare i prefab o il builder occorre aggiornare la copia locale a `54ca671` e ripetere EditMode: non è giustificato introdurre una seconda correzione sugli asset sulla sola base di un report disallineato.
 
-Il fallimento Crouch Walk resta aperto. I candidati PINOC sono stati sottoposti ad audit Blender grezzo, ma la selezione deve essere fatta con il test Unity di retargeting aggiunto nel branch. Nessuna variante è stata promossa al controller.
+Il difetto Crouch Walk resta invece confermato. Il report Unity ha identificato `Crouch_Walk_Candidate_08.fbx` come miglior candidato automatico, con zero incroci su entrambi gli Avatar Player; la sostituzione resta bloccata in attesa della verifica visiva.
 
 L'assenza di un nuovo report Unity dopo le correzioni non equivale a test superati. La verifica di importazione, compilazione, rendering, EditMode e PlayMode deve essere eseguita in Unity 6000.6.9f1.
 
@@ -113,7 +113,7 @@ La riparazione anatomica dei pesi è entrata in `main` il 24 novembre 2026. I nu
 
 **Verificato in Blender:** 12 mesh controllate, massimo quattro influenze per vertice, pesi normalizzati, nessuna influenza anatomica vietata, nessun vertice non pesato e 54 pose sintetiche valutate per personaggio.
 
-**Verificato nell'ultima run Unity del 24 novembre:** 65/68 test superati. Restano tre fallimenti, due dei quali sono corretti nel branch `fix/crouch-walk-animation-audit` ma non ancora rieseguiti. Il fallimento Crouch Walk resta aperto.
+**Verificato nell'ultima run Unity del 24 novembre:** 67/70 test superati (EditMode 54/57, PlayMode 13/13). Il fallimento Crouch Walk è confermato. Gli altri due fallimenti riguardano prefab locali che non corrispondono ai prefab attualmente presenti in `main`; la verifica va ripetuta dopo sincronizzazione.
 
 **Non ancora verificato dopo le correzioni:** import e resa dei prefab aggiornati, EditMode e PlayMode sul nuovo baseline renderer, posizione degli arti FP rispetto alla camera, deformazione visiva in prima e terza persona e retargeting definitivo di Crouch Walk.
 
