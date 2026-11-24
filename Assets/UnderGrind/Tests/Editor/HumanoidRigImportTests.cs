@@ -16,6 +16,8 @@ namespace UnderGrind.Tests
         private const string FemaleFbxPath = "Assets/UnderGrind/Art/Source/Rigged/Human_Female_Rigged.fbx";
         private const string MalePrefabPath = "Assets/UnderGrind/Generated/Prefabs/Human_Male_Rigged.prefab";
         private const string FemalePrefabPath = "Assets/UnderGrind/Generated/Prefabs/Human_Female_Rigged.prefab";
+        private const string CurrentCrouchWalkPath = "Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx";
+        private const string CrouchWalkCandidateFolder = "Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk";
 
         private PlayerRigSettings _settings;
 
@@ -384,6 +386,99 @@ namespace UnderGrind.Tests
                 Environment.NewLine + string.Join(Environment.NewLine, failures));
         }
 
+        [Test]
+        public void CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars()
+        {
+            var candidatePaths = AssetDatabase.FindAssets("t:Model", new[] { CrouchWalkCandidateFolder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Where(path => path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+            Assert.That(candidatePaths, Has.Length.EqualTo(8),
+                "Devono essere importate tutte le otto varianti PINOC della camminata accovacciata.");
+
+            var maleModel = AssetDatabase.LoadAssetAtPath<GameObject>(MaleFbxPath);
+            var maleAvatar = LoadValidAvatar(MaleFbxPath);
+            var femaleModel = AssetDatabase.LoadAssetAtPath<GameObject>(FemaleFbxPath);
+            var femaleAvatar = LoadValidAvatar(FemaleFbxPath);
+            Assert.That(maleModel, Is.Not.Null);
+            Assert.That(femaleModel, Is.Not.Null);
+
+            var report = new System.Text.StringBuilder();
+            report.AppendLine("UnderGrind — audit Unity Humanoid retarget Crouch Walk");
+            report.AppendLine("Misura i piedi nel frame anatomico corrente; nessun candidato viene promosso automaticamente.");
+            report.AppendLine();
+
+            var ranking = new System.Collections.Generic.List<(string Path, int WorstTargetCrossings, float WorstMinimumSeparation)>();
+            var paths = new[] { CurrentCrouchWalkPath }.Concat(candidatePaths);
+            foreach (var path in paths)
+            {
+                var importer = AssetImporter.GetAtPath(path) as ModelImporter;
+                Assert.That(importer, Is.Not.Null, "ModelImporter mancante: " + path);
+                Assert.That(importer.animationType, Is.EqualTo(ModelImporterAnimationType.Human),
+                    "Il candidato deve essere importato come Humanoid: " + path);
+                Assert.That(importer.avatarSetup, Is.EqualTo(ModelImporterAvatarSetup.CreateFromThisModel),
+                    "Il candidato deve generare un Avatar dalla propria sorgente: " + path);
+
+                var clip = AssetDatabase.LoadAllAssetsAtPath(path)
+                    .OfType<AnimationClip>()
+                    .FirstOrDefault(candidate => candidate != null &&
+                        candidate.humanMotion &&
+                        !candidate.name.StartsWith("__preview__", StringComparison.OrdinalIgnoreCase));
+                Assert.That(clip, Is.Not.Null, "Clip Humanoid non trovata: " + path);
+
+                var sourceModel = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                var sourceAvatar = LoadValidAvatar(path);
+                Assert.That(sourceModel, Is.Not.Null, "Modello sorgente mancante: " + path);
+
+                var sourceResult = MeasureFootCrossing(sourceModel, sourceAvatar, clip);
+                var maleResult = MeasureFootCrossing(maleModel, maleAvatar, clip);
+                var femaleResult = MeasureFootCrossing(femaleModel, femaleAvatar, clip);
+
+                report.AppendLine(System.IO.Path.GetFileName(path) + " — " + clip.length.ToString("F2") + " s");
+                report.AppendLine("  Sorgente: " + FormatFootCrossing(sourceResult));
+                report.AppendLine("  Player maschile: " + FormatFootCrossing(maleResult));
+                report.AppendLine("  Player femminile: " + FormatFootCrossing(femaleResult));
+                report.AppendLine();
+
+                if (path != CurrentCrouchWalkPath)
+                {
+                    ranking.Add((
+                        path,
+                        Math.Max(maleResult.CrossingSamples, femaleResult.CrossingSamples),
+                        Math.Min(maleResult.MinimumSeparation, femaleResult.MinimumSeparation)));
+                }
+            }
+
+            ranking = ranking
+                .OrderBy(item => item.WorstTargetCrossings)
+                .ThenByDescending(item => item.WorstMinimumSeparation)
+                .ToList();
+
+            report.AppendLine("Classifica diagnostica (non sostituisce la verifica visiva):");
+            foreach (var item in ranking)
+                report.AppendLine(
+                    System.IO.Path.GetFileName(item.Path) +
+                    ": incroci target max=" + item.WorstTargetCrossings +
+                    ", separazione minima target=" + item.WorstMinimumSeparation.ToString("F3") + "m");
+
+            var reportPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(
+                Application.dataPath, "..", "TestResults", "test", "Unity", "CrouchWalkCandidateAudit.txt"));
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(reportPath));
+            System.IO.File.WriteAllText(reportPath, report.ToString());
+            Debug.Log(report.ToString());
+            Debug.Log("UnderGrind: report candidati Crouch Walk scritto in " + reportPath);
+        }
+
+        private static string FormatFootCrossing(FootCrossingResult result)
+        {
+            return "rest=" + result.RestSeparation.ToString("F3") + "m" +
+                   ", min piedi=" + result.MinimumSeparation.ToString("F3") + "m" +
+                   ", incroci piedi=" + result.CrossingSamples + "/" + result.SampleCount +
+                   ", min ginocchia=" + result.MinimumKneeSeparation.ToString("F3") + "m" +
+                   ", incroci ginocchia=" + result.KneeCrossingSamples + "/" + result.SampleCount;
+        }
+
         private sealed class FootCrossingResult
         {
             public float RestSeparation;
@@ -393,6 +488,8 @@ namespace UnderGrind.Tests
             public int CrossingSamples;
             public int StaticAxisCrossingSamples;
             public int SampleCount;
+            public float MinimumKneeSeparation;
+            public int KneeCrossingSamples;
         }
 
         private static void RecordFootCrossingResult(
@@ -411,7 +508,9 @@ namespace UnderGrind.Tests
                 ", min asse fisso=" + result.StaticAxisMinimumSeparation.ToString("F3") + "m" +
                 " a " + result.WorstTime.ToString("F2") + "s" +
                 ", incroci anatomici=" + result.CrossingSamples + "/" + result.SampleCount +
-                ", incroci asse fisso=" + result.StaticAxisCrossingSamples + "/" + result.SampleCount;
+                ", incroci asse fisso=" + result.StaticAxisCrossingSamples + "/" + result.SampleCount +
+                ", min ginocchia=" + result.MinimumKneeSeparation.ToString("F3") + "m" +
+                ", incroci ginocchia=" + result.KneeCrossingSamples + "/" + result.SampleCount;
             Debug.Log("UnderGrind foot-crossing diagnostic: " + summary);
 
             if (result.RestSeparation <= 0f || result.CrossingSamples > 0)
@@ -442,10 +541,14 @@ namespace UnderGrind.Tests
 
                 var leftHip = animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
                 var rightHip = animator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
+                var leftKnee = animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
+                var rightKnee = animator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
                 var leftFoot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
                 var rightFoot = animator.GetBoneTransform(HumanBodyBones.RightFoot);
                 Assert.That(leftHip, Is.Not.Null, model.name + ": LeftUpperLeg non mappata.");
                 Assert.That(rightHip, Is.Not.Null, model.name + ": RightUpperLeg non mappata.");
+                Assert.That(leftKnee, Is.Not.Null, model.name + ": LeftLowerLeg non mappata.");
+                Assert.That(rightKnee, Is.Not.Null, model.name + ": RightLowerLeg non mappata.");
                 Assert.That(leftFoot, Is.Not.Null, model.name + ": LeftFoot non mappata.");
                 Assert.That(rightFoot, Is.Not.Null, model.name + ": RightFoot non mappata.");
 
@@ -474,6 +577,8 @@ namespace UnderGrind.Tests
                 var worstTime = 0f;
                 var crossingSamples = 0;
                 var staticAxisCrossingSamples = 0;
+                var minimumKneeSeparation = float.PositiveInfinity;
+                var kneeCrossingSamples = 0;
 
                 for (var sample = 0; sample < sampleCount; sample++)
                 {
@@ -495,6 +600,11 @@ namespace UnderGrind.Tests
                     // A fixed rest-pose axis can report false crossings when the pelvis turns.
                     var separation = Vector3.Dot(footDelta, currentLateral);
                     var staticAxisSeparation = Vector3.Dot(footDelta, restLateral);
+                    var leftKneePosition = instance.transform.InverseTransformPoint(leftKnee.position);
+                    var rightKneePosition = instance.transform.InverseTransformPoint(rightKnee.position);
+                    var kneeSeparation = Vector3.Dot(leftKneePosition - rightKneePosition, currentLateral);
+                    minimumKneeSeparation = Mathf.Min(minimumKneeSeparation, kneeSeparation);
+                    if (kneeSeparation < -crossingToleranceMeters) kneeCrossingSamples++;
                     if (separation < minimumSeparation)
                     {
                         minimumSeparation = separation;
@@ -516,7 +626,9 @@ namespace UnderGrind.Tests
                     WorstTime = worstTime,
                     CrossingSamples = crossingSamples,
                     StaticAxisCrossingSamples = staticAxisCrossingSamples,
-                    SampleCount = sampleCount
+                    SampleCount = sampleCount,
+                    MinimumKneeSeparation = minimumKneeSeparation,
+                    KneeCrossingSamples = kneeCrossingSamples
                 };
             }
             finally
