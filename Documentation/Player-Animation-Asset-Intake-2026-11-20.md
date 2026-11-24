@@ -46,22 +46,19 @@ Al momento dell'acquisizione gli otto asset erano disponibili nella libreria PIN
 
 Gli otto FBX `mixamo-fbx` sono ora versionati in `Assets/UnderGrind/Animations`. I riferimenti alle otto clip e al controller sono assegnati in `Assets/UnderGrind/Settings/PlayerAnimationSettings.asset`. Ogni FBX usa un Avatar Humanoid sorgente; il Player usa il proprio Avatar maschile o femminile per il retargeting runtime. Non è stato eseguito un bake DCC delle curve sullo scheletro UnderGrind.
 
-### Risultati Unity disponibili
+### Risultati Unity disponibili — run `20261124-114001-048`
 
-La run Unity `20261124-110717-910` ha eseguito 55 test EditMode e 13 PlayMode: 65 superati e 3 falliti. I fallimenti registrati sono:
-- `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`: Crouch Walk Forward, 6/232 incroci sulla sorgente, 10/232 sul Player maschile, 12/232 sul femminile.
-- `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode`: aspettativa non coerente con gli stati iniziali dei renderer FP.
-- `VisualRigPreservesInitiallyDisabledRenderers`: il rig riattivava un renderer disabilitato in origine.
+La run Unity su 6000.6.9f1 ha eseguito 57 test EditMode e 13 PlayMode. Esito: 56/57 EditMode, 13/13 PlayMode e 69/70 test Unity complessivi. I test standalone C# sono 6/6. L'unico fallimento è `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars`, relativo alla clip originale `Crouch_Walk_Forward.fbx`: 6/232 incroci sulla sorgente, 10/232 sul Player maschile e 12/232 sul femminile. Non sono stati rilevati errori di compilazione.
 
-Le due anomalie dei renderer sono corrette nel branch `fix/crouch-walk-animation-audit`: il rig conserva lo stato enabled originale, il builder ripristina i default prima di salvare i prefab e gli asset prefab mantengono i gruppi renderer in stato neutro. La correzione integrata in `main` tramite PR #12 non è ancora stata verificata con una nuova esecuzione Unity.
+I precedenti problemi Visual Rig sono risolti e verificati: il test ora distingue gli FBX sorgente dai prefab runtime e i quattro casi passano. Anche il test PlayMode sulla conservazione dei renderer inizialmente disabilitati passa.
 
 ### Ricerca di un sostituto per Crouch Walk
 
-Otto candidati PINOC sono presenti in `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk`, con importazione Humanoid e Avatar sorgente. L'audit Blender grezzo è in `Tools/Blender/pinoc-crouch-walk-candidate-audit.json`. Le varianti 05–08 non presentano incroci di piedi o ginocchia sullo scheletro FBX grezzo; tuttavia l'audit non riproduce la mappatura Avatar Humanoid di Unity e non può determinare da solo il candidato definitivo.
+Otto candidati PINOC sono presenti in `Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk`, con importazione Humanoid e Avatar sorgente. Il report Blender grezzo non riproduce il retargeting Humanoid di Unity e non determina da solo il candidato definitivo.
 
-È stato aggiunto il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars`. Confronta la clip corrente e gli otto candidati su sorgente, Avatar maschile e Avatar femminile, registra il mapping delle ossa e genera `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il test non è ancora stato eseguito.
+Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito nella run `20261124-114001-048` e ha generato `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il candidato 08 è primo nella classifica diagnostica: zero incroci di piedi e ginocchia su sorgente, Player maschile e femminile; separazione minima dei piedi rispettivamente 0,254 m, 0,183 m e 0,155 m; errore di chiusura del loop 0 m. Il candidato 07 è anch'esso privo di incroci, ma ha una separazione minima dei piedi di 0,103 m sul Player femminile e una separazione minima delle ginocchia maggiore.
 
-Nessun candidato è stato assegnato al controller di produzione. La clip originale resta assegnata finché una variante non supera il confronto Unity su entrambi gli Avatar e la verifica visiva del ciclo.
+Il candidato 08 non è stato assegnato al controller. La promozione resta subordinata alla verifica visiva in Play Mode del ciclo continuo e delle deformazioni su entrambi gli Avatar. La clip originale resta assegnata e il test continua correttamente a segnalarne il difetto.
 
 ### Limiti e diritti
 
