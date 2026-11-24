@@ -1156,7 +1156,7 @@ namespace UnderGrind.Editor
             ExportOptions options)
         {
             var frames = new List<PoseFrame>(times.Count);
-            var root = rig.Animator.transform;
+            var root = rig.Instance.transform;
             var hips = SafeGetBoneTransform(rig.Animator, HumanBodyBones.Hips);
             var spine = SafeGetBoneTransform(rig.Animator, HumanBodyBones.UpperChest) ??
                         SafeGetBoneTransform(rig.Animator, HumanBodyBones.Chest) ??
@@ -1167,13 +1167,40 @@ namespace UnderGrind.Editor
             var rightKnee = SafeGetBoneTransform(rig.Animator, HumanBodyBones.RightLowerLeg);
             var leftUpperLeg = SafeGetBoneTransform(rig.Animator, HumanBodyBones.LeftUpperLeg);
             var rightUpperLeg = SafeGetBoneTransform(rig.Animator, HumanBodyBones.RightUpperLeg);
-            var leftUpperArm = SafeGetBoneTransform(rig.Animator, HumanBodyBones.LeftUpperArm);
-            var rightUpperArm = SafeGetBoneTransform(rig.Animator, HumanBodyBones.RightUpperArm);
 
+            if (hips == null || leftFoot == null || rightFoot == null ||
+                leftKnee == null || rightKnee == null ||
+                leftUpperLeg == null || rightUpperLeg == null)
+                throw new InvalidOperationException(
+                    rig.CharacterName + ": mapping Humanoid incompleto. Servono Hips, entrambe le anche, ginocchia e piedi.");
+
+            Vector3 restLateralAxisLocal = Vector3.zero;
             for (var index = 0; index < times.Count; index++)
             {
                 var time = times[index];
                 Evaluate(rig, clip, time);
+
+                // Match the project foot-crossing test: anatomical left-to-right axis is recalculated
+                // from the two upper legs at every sample, so it follows pelvis rotation.
+                var lateralAxisLocal = root.InverseTransformDirection(
+                    leftUpperLeg.position - rightUpperLeg.position).normalized;
+                if (lateralAxisLocal.sqrMagnitude < 0.9f)
+                    throw new InvalidOperationException(
+                        rig.CharacterName + ": asse anatomico delle anche non valido al tempo " +
+                        time.ToString("F4", CultureInfo.InvariantCulture) + " s.");
+
+                if (index == 0)
+                    restLateralAxisLocal = lateralAxisLocal;
+
+                var leftFootRootLocal = root.InverseTransformPoint(leftFoot.position);
+                var rightFootRootLocal = root.InverseTransformPoint(rightFoot.position);
+                var footDelta = leftFootRootLocal - rightFootRootLocal;
+                var leftKneeRootLocal = root.InverseTransformPoint(leftKnee.position);
+                var rightKneeRootLocal = root.InverseTransformPoint(rightKnee.position);
+                var kneeDelta = leftKneeRootLocal - rightKneeRootLocal;
+                var modelForward = root.TransformDirection(Vector3.left).normalized;
+                var modelRight = Vector3.Cross(root.up, modelForward).normalized;
+
                 var frame = new PoseFrame
                 {
                     index = index,
@@ -1182,36 +1209,35 @@ namespace UnderGrind.Editor
                     rootWorldPosition = root.position,
                     rootWorldRotation = root.rotation,
                     rootLocalPosition = root.localPosition,
-                    hipsWorldPosition = hips == null ? Vector3.zero : hips.position,
-                    hipsLocalPosition = hips == null ? Vector3.zero : hips.localPosition
+                    hipsWorldPosition = hips.position,
+                    hipsWorldRotation = hips.rotation,
+                    hipsRootLocalPosition = root.InverseTransformPoint(hips.position),
+                    anatomicalLateralAxisLocal = lateralAxisLocal,
+                    restAnatomicalLateralAxisLocal = restLateralAxisLocal,
+                    leftFootRelativeToHips = hips.InverseTransformPoint(leftFoot.position),
+                    rightFootRelativeToHips = hips.InverseTransformPoint(rightFoot.position),
+                    leftFootRelativeRotationToHips = Quaternion.Inverse(hips.rotation) * leftFoot.rotation,
+                    rightFootRelativeRotationToHips = Quaternion.Inverse(hips.rotation) * rightFoot.rotation,
+                    leftFootSignedLateralSeparation = Vector3.Dot(footDelta, lateralAxisLocal),
+                    leftRightFootStaticAxisSeparationSigned = Vector3.Dot(footDelta, restLateralAxisLocal),
+                    leftRightFootDistanceMeters = footDelta.magnitude,
+                    leftRightFootLateralSeparationMeters = Mathf.Abs(Vector3.Dot(footDelta, lateralAxisLocal)),
+                    leftRightKneeSignedLateralSeparation = Vector3.Dot(kneeDelta, lateralAxisLocal),
+                    leftRightKneeStaticAxisSeparationSigned = Vector3.Dot(kneeDelta, restLateralAxisLocal),
+                    leftRightKneeDistanceMeters = kneeDelta.magnitude,
+                    leftRightKneeLateralSeparationMeters = Mathf.Abs(Vector3.Dot(kneeDelta, lateralAxisLocal)),
+                    leftFootHeightInRootSpace = leftFootRootLocal.y,
+                    rightFootHeightInRootSpace = rightFootRootLocal.y
                 };
 
-                if (hips != null && frames.Count > 0)
+                if (frames.Count > 0)
                     frame.hipsDriftFromStartMeters = Vector3.Distance(
-                        frame.hipsLocalPosition, frames[0].hipsLocalPosition);
+                        frame.hipsRootLocalPosition, frames[0].hipsRootLocalPosition);
 
                 if (spine != null)
                 {
-                    var spineDirection = (spine.position - (hips == null ? root.position : hips.position)).normalized;
+                    var spineDirection = (spine.position - hips.position).normalized;
                     frame.torsoLeanDegrees = Vector3.Angle(root.up, spineDirection);
-                }
-
-                if (leftFoot != null && rightFoot != null)
-                {
-                    var delta = rightFoot.position - leftFoot.position;
-                    frame.leftFootSignedLateralSeparation = Vector3.Dot(delta, root.right);
-                    frame.leftRightFootDistanceMeters = delta.magnitude;
-                    frame.leftRightFootLateralSeparationMeters = Mathf.Abs(frame.leftFootSignedLateralSeparation);
-                    frame.leftFootHeightInRootSpace = root.InverseTransformPoint(leftFoot.position).y;
-                    frame.rightFootHeightInRootSpace = root.InverseTransformPoint(rightFoot.position).y;
-                }
-
-                if (leftKnee != null && rightKnee != null)
-                {
-                    var delta = rightKnee.position - leftKnee.position;
-                    frame.leftRightKneeSignedLateralSeparation = Vector3.Dot(delta, root.right);
-                    frame.leftRightKneeDistanceMeters = delta.magnitude;
-                    frame.leftRightKneeLateralSeparationMeters = Mathf.Abs(frame.leftRightKneeSignedLateralSeparation);
                 }
 
                 frame.leftKneeAngleDegrees = CalculateJointAngle(leftUpperLeg, leftKnee, leftFoot);
