@@ -389,6 +389,8 @@ namespace UnderGrind.Tests
                 .FirstOrDefault(child => child.motion == animationSettings.CrouchWalkClip);
             Assert.That(crouchWalkChild.motion, Is.SameAs(animationSettings.CrouchWalkClip),
                 "Il Blend Tree deve usare esattamente la clip Crouch Walk configurata nell'Inspector.");
+            Assert.That(crouchWalkChild.threshold, Is.EqualTo(animationSettings.CrouchWalkThreshold).Within(0.0001f),
+                "La soglia Crouch Walk del Blend Tree deve corrispondere al valore configurato nell'Inspector.");
             Assert.That(animationSettings.CrouchWalkLoops, Is.True,
                 "La camminata accovacciata deve essere configurata come ciclo.");
         }
