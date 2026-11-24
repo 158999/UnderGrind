@@ -7,7 +7,7 @@ ROOT = Path("Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk")
 SOURCE_CLIP = Path("Assets/UnderGrind/Animations/Crouch_Walk_Forward.fbx")
 OUTPUT = Path("Tools/Blender/pinoc-crouch-walk-candidate-audit.json")
 CROSSING_TOLERANCE = 0.02
-GENERATION_TASK_ID = "827b8373-42df-479a-a82f-22b5a339678d"
+GENERATION_TASK_IDS = ["827b8373-42df-479a-a82f-22b5a339678d", "6aa1752e-9788-4ebf-96c0-15ca7caa00b9"]
 
 ASSET_IDS = {
     "Crouch_Walk_Forward.fbx": "e4f5b9e6-381c-4227-88d4-94d6a0615df8",
@@ -19,6 +19,10 @@ ASSET_IDS = {
     "Crouch_Walk_Candidate_06.fbx": "58d94313-09b2-4ecd-a404-300f61c9909c",
     "Crouch_Walk_Candidate_07.fbx": "cac937f4-fa78-4905-b124-edddde4612d8",
     "Crouch_Walk_Candidate_08.fbx": "5d550ae7-20c1-43f6-be9a-9ac91bf77bd5",
+    "Crouch_Walk_Generated_01.fbx": "d441b0b6-a674-4849-9e9e-eeeb3b1b57c3",
+    "Crouch_Walk_Generated_02.fbx": "e81092b1-33f8-410e-8628-d67ec26fe36d",
+    "Crouch_Walk_Generated_03.fbx": "0ff23662-9938-41d3-8e99-def4e4d1e7de",
+    "Crouch_Walk_Generated_04.fbx": "17dc1540-bfe8-4f08-b293-5053305aaef8",
 }
 
 
@@ -188,7 +192,7 @@ def main():
     ))
     report = {
         "source": "Raw Blender armature audit; not a Unity Humanoid retarget result",
-        "generationTaskId": GENERATION_TASK_ID,
+        "generationTaskIds": GENERATION_TASK_IDS,
         "currentSource": source_result,
         "unityRetargetValidationRequired": True,
         "method": (
