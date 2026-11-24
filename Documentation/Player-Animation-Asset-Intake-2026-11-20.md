@@ -84,4 +84,13 @@ Il prompt richiede:
 | 03 | Crouch Walk (3) | `0ff23662-9938-41d3-8e99-def4e4d1e7de` | `mixamo-fbx` |
 | 04 | Crouch Walk (4) | `17dc1540-bfe8-4f08-b293-5053305aaef8` | `mixamo-fbx` |
 
-**Stato:** generati e disponibili per l'esportazione FBX; non ancora importati nel repository, retargettizzati in Unity, ispezionati visivamente o sottoposti alla matrice di test. Nessuno dei quattro è assegnato a `PlayerAnimationSettings.asset`. I link firmati PINOC sono temporanei e non vengono versionati; gli Asset ID sono il riferimento permanente per recuperarli.
+**Stato:** i quattro FBX sono stati importati nel branch `fix/crouch-walk-animation-validation` con metadata Humanoid e loop attivo. Il controllo d'integrità dei file è passato; l'audit Blender grezzo ha analizzato tutti e quattro. Il retarget Humanoid sui prefab Player, l'ispezione visiva e la matrice di test Unity sono ancora da eseguire. Nessuno dei quattro è assegnato a `PlayerAnimationSettings.asset`.
+
+| Campione | Incroci piedi Blender | Separazione minima | Deriva bacino | Errore endpoint loop | Valutazione grezza |
+|---|---:|---:|---:|---:|---|
+| Generated 01 | 0 | 0,146 m | 0,233 m | 0,161 m | candidato da verificare |
+| Generated 02 | 0 | 0,173 m | 0,229 m | 0,308 m | chiusura loop debole |
+| Generated 03 | 0 | 0,133 m | 0,190 m | 0,064 m | migliore dei quattro, non approvato |
+| Generated 04 | 0 | 0,050 m | 1,356 m | 0,299 m | da scartare in base ai dati grezzi |
+
+I valori sono misurati sul FBX sorgente in Blender e non rappresentano il retarget Humanoid di Unity. I link firmati PINOC sono temporanei e non vengono versionati; gli Asset ID sono il riferimento permanente per recuperarli.
