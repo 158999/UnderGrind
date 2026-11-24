@@ -135,6 +135,13 @@ namespace UnderGrind.Locomotion
             ApplyVisibility();
         }
 
+        public void RestoreRendererDefaults()
+        {
+            if (!_initialized) CacheRenderers();
+            foreach (var pair in _defaultEnabled)
+                if (pair.Key != null) pair.Key.enabled = pair.Value;
+        }
+
         private void CacheRenderers()
         {
             Cache(headRenderers);
@@ -147,10 +154,8 @@ namespace UnderGrind.Locomotion
         private void Cache(IEnumerable<Renderer> renderers)
         {
             foreach (var renderer in renderers)
-                // These renderers are mode-controlled. Their serialized enabled state may
-                // reflect the prefab's preview mode, so it must not become the runtime baseline.
                 if (renderer != null && !_defaultEnabled.ContainsKey(renderer))
-                    _defaultEnabled.Add(renderer, true);
+                    _defaultEnabled.Add(renderer, renderer.enabled);
         }
 
         private void ApplyVisibility()
