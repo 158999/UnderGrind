@@ -1246,6 +1246,7 @@ namespace UnderGrind.Editor
             var rightKnee = SafeGetBoneTransform(rig.Animator, HumanBodyBones.RightLowerLeg);
             var leftUpperLeg = SafeGetBoneTransform(rig.Animator, HumanBodyBones.LeftUpperLeg);
             var rightUpperLeg = SafeGetBoneTransform(rig.Animator, HumanBodyBones.RightUpperLeg);
+            var allTransforms = rig.Instance.GetComponentsInChildren<Transform>(true);
 
             if (hips == null || leftFoot == null || rightFoot == null ||
                 leftKnee == null || rightKnee == null ||
@@ -1349,6 +1350,29 @@ namespace UnderGrind.Editor
                         worldPosition = boneTransform.position,
                         worldRotation = boneTransform.rotation,
                         worldEulerAngles = boneTransform.eulerAngles
+                    });
+                }
+
+                foreach (var transform in allTransforms)
+                {
+                    frame.transforms.Add(new TransformPose
+                    {
+                        hierarchyPath = GetHierarchyPath(transform),
+                        transformName = transform.name,
+                        parentPath = transform.parent == null ? string.Empty : GetHierarchyPath(transform.parent),
+                        tag = transform.gameObject.tag,
+                        layer = transform.gameObject.layer,
+                        layerName = LayerMask.LayerToName(transform.gameObject.layer),
+                        activeSelf = transform.gameObject.activeSelf,
+                        activeInHierarchy = transform.gameObject.activeInHierarchy,
+                        localPosition = transform.localPosition,
+                        localRotation = transform.localRotation,
+                        localEulerAngles = transform.localEulerAngles,
+                        localScale = transform.localScale,
+                        worldPosition = transform.position,
+                        worldRotation = transform.rotation,
+                        worldEulerAngles = transform.eulerAngles,
+                        lossyScale = transform.lossyScale
                     });
                 }
 
