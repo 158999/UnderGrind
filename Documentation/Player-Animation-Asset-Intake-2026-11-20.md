@@ -58,7 +58,7 @@ Otto candidati PINOC sono presenti in `Assets/UnderGrind/Animations/Candidates/P
 
 Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito nella run `20261124-114001-048` e ha generato `TestResults/test/Unity/CrouchWalkCandidateAudit.txt`. Il candidato 08 è primo nella classifica diagnostica: zero incroci di piedi e ginocchia su sorgente, Player maschile e femminile; separazione minima dei piedi rispettivamente 0,254 m, 0,183 m e 0,155 m; errore di chiusura del loop 0 m. Il candidato 07 è anch'esso privo di incroci, ma ha una separazione minima dei piedi di 0,103 m sul Player femminile e una separazione minima delle ginocchia maggiore.
 
-Il candidato 08 non è stato assegnato al controller. La promozione resta subordinata alla verifica visiva in Play Mode del ciclo continuo e delle deformazioni su entrambi gli Avatar. La clip originale resta assegnata e il test continua correttamente a segnalarne il difetto.
+Il 24 novembre 2026 `Crouch_Walk_Candidate_08.fbx` è stato assegnato provvisoriamente tramite `PlayerAnimationSettings.asset`, perché non presenta incroci di piedi o ginocchia sui tre Avatar. Il test di locomozione verifica ora la clip effettivamente assegnata; l'audit comparativo continua a includere la clip originale e tutti gli otto candidati. Il report ultra dettagliato indica per il candidato 08 un errore di loop di rotazione di circa 15,3°, un errore di posizione di 8,6 mm e un contatto stimato basso (circa 4–5% dei campioni). L'originale resta versionato ma non è più assegnato. Ciclo continuo, deformazioni e transizioni devono essere verificati visivamente in Play Mode su entrambi gli Avatar prima dell'accettazione definitiva.
 
 ### Limiti e diritti
 
