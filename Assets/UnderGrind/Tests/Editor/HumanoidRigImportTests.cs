@@ -242,11 +242,12 @@ namespace UnderGrind.Tests
             }
         }
 
-        [TestCase(MaleFbxPath, "maschile")]
-        [TestCase(FemaleFbxPath, "femminile")]
-        [TestCase(MalePrefabPath, "maschile")]
-        [TestCase(FemalePrefabPath, "femminile")]
-        public void VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(string assetPath, string label)
+        [TestCase(MaleFbxPath, "maschile", false)]
+        [TestCase(FemaleFbxPath, "femminile", false)]
+        [TestCase(MalePrefabPath, "maschile", true)]
+        [TestCase(FemalePrefabPath, "femminile", true)]
+        public void VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode(
+            string assetPath, string label, bool requiresSerializedVisualRig)
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
             Assert.That(prefab, Is.Not.Null, "Prefab " + label + " non trovato: " + assetPath);
@@ -266,7 +267,20 @@ namespace UnderGrind.Tests
             try
             {
                 var rig = instance.GetComponentInChildren<PlayerVisualRig>(true);
-                Assert.That(rig, Is.Not.Null, "PlayerVisualRig mancante nel prefab " + label + ".");
+                if (requiresSerializedVisualRig)
+                {
+                    Assert.That(rig, Is.Not.Null,
+                        "PlayerVisualRig deve essere serializzato nel prefab " + label + ".");
+                }
+                else if (rig == null)
+                {
+                    // FBX files are source assets, not runtime prefabs. The builder adds
+                    // PlayerVisualRig when it creates the generated prefab.
+                    rig = instance.AddComponent<PlayerVisualRig>();
+                }
+
+                Assert.That(rig, Is.Not.Null,
+                    "PlayerVisualRig non disponibile per la configurazione del rig " + label + ".");
                 Assert.That(rig.ConfigureFromHierarchy(instance.transform, _settings), Is.True,
                     "Configurazione PlayerVisualRig non valida per " + label + ".");
                 rig.SetViewReference(viewReference);
