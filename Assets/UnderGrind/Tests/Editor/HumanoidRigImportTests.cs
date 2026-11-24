@@ -414,7 +414,7 @@ namespace UnderGrind.Tests
             report.AppendLine("Misura i piedi nel frame anatomico corrente; nessun candidato viene promosso automaticamente.");
             report.AppendLine();
 
-            var ranking = new System.Collections.Generic.List<(string Path, int WorstFootCrossings, int WorstKneeCrossings, float WorstMinimumFootSeparation, float WorstMinimumKneeSeparation)>();
+            var ranking = new System.Collections.Generic.List<(string Path, int WorstFootCrossings, int WorstKneeCrossings, float WorstLoopEndpointError, float WorstHipsDrift, float WorstMinimumFootSeparation, float WorstMinimumKneeSeparation)>();
             var paths = new[] { CurrentCrouchWalkPath }.Concat(candidatePaths);
             foreach (var path in paths)
             {
@@ -452,6 +452,8 @@ namespace UnderGrind.Tests
                         path,
                         Math.Max(maleResult.CrossingSamples, femaleResult.CrossingSamples),
                         Math.Max(maleResult.KneeCrossingSamples, femaleResult.KneeCrossingSamples),
+                        Math.Max(maleResult.LoopEndpointError, femaleResult.LoopEndpointError),
+                        Math.Max(maleResult.MaxHipsTranslationDrift, femaleResult.MaxHipsTranslationDrift),
                         Math.Min(maleResult.MinimumSeparation, femaleResult.MinimumSeparation),
                         Math.Min(maleResult.MinimumKneeSeparation, femaleResult.MinimumKneeSeparation)));
                 }
@@ -460,6 +462,8 @@ namespace UnderGrind.Tests
             ranking = ranking
                 .OrderBy(item => item.WorstFootCrossings)
                 .ThenBy(item => item.WorstKneeCrossings)
+                .ThenBy(item => item.WorstLoopEndpointError)
+                .ThenBy(item => item.WorstHipsDrift)
                 .ThenByDescending(item => item.WorstMinimumFootSeparation)
                 .ThenByDescending(item => item.WorstMinimumKneeSeparation)
                 .ToList();
@@ -470,6 +474,8 @@ namespace UnderGrind.Tests
                     System.IO.Path.GetFileName(item.Path) +
                     ": incroci piedi target max=" + item.WorstFootCrossings +
                     ", incroci ginocchia target max=" + item.WorstKneeCrossings +
+                    ", errore loop max=" + item.WorstLoopEndpointError.ToString("F3") + "m" +
+                    ", deriva anche max=" + item.WorstHipsDrift.ToString("F3") + "m" +
                     ", separazione minima piedi=" + item.WorstMinimumFootSeparation.ToString("F3") + "m" +
                     ", separazione minima ginocchia=" + item.WorstMinimumKneeSeparation.ToString("F3") + "m");
 
@@ -503,7 +509,9 @@ namespace UnderGrind.Tests
                    ", min piedi=" + result.MinimumSeparation.ToString("F3") + "m" +
                    ", incroci piedi=" + result.CrossingSamples + "/" + result.SampleCount +
                    ", min ginocchia=" + result.MinimumKneeSeparation.ToString("F3") + "m" +
-                   ", incroci ginocchia=" + result.KneeCrossingSamples + "/" + result.SampleCount;
+                   ", incroci ginocchia=" + result.KneeCrossingSamples + "/" + result.SampleCount +
+                   ", errore loop=" + result.LoopEndpointError.ToString("F3") + "m" +
+                   ", deriva anche=" + result.MaxHipsTranslationDrift.ToString("F3") + "m";
         }
 
         private sealed class FootCrossingResult
@@ -517,6 +525,8 @@ namespace UnderGrind.Tests
             public int SampleCount;
             public float MinimumKneeSeparation;
             public int KneeCrossingSamples;
+            public float LoopEndpointError;
+            public float MaxHipsTranslationDrift;
         }
 
         private static void RecordFootCrossingResult(
@@ -566,12 +576,14 @@ namespace UnderGrind.Tests
                 animator.Rebind();
                 animator.Update(0f);
 
+                var hips = animator.GetBoneTransform(HumanBodyBones.Hips);
                 var leftHip = animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
                 var rightHip = animator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
                 var leftKnee = animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
                 var rightKnee = animator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
                 var leftFoot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
                 var rightFoot = animator.GetBoneTransform(HumanBodyBones.RightFoot);
+                Assert.That(hips, Is.Not.Null, model.name + ": Hips non mappato.");
                 Assert.That(leftHip, Is.Not.Null, model.name + ": LeftUpperLeg non mappata.");
                 Assert.That(rightHip, Is.Not.Null, model.name + ": RightUpperLeg non mappata.");
                 Assert.That(leftKnee, Is.Not.Null, model.name + ": LeftLowerLeg non mappata.");
@@ -606,6 +618,12 @@ namespace UnderGrind.Tests
                 var staticAxisCrossingSamples = 0;
                 var minimumKneeSeparation = float.PositiveInfinity;
                 var kneeCrossingSamples = 0;
+                var firstLeftFootRelative = Vector3.zero;
+                var firstRightFootRelative = Vector3.zero;
+                var lastLeftFootRelative = Vector3.zero;
+                var lastRightFootRelative = Vector3.zero;
+                var firstHipsPosition = Vector3.zero;
+                var maxHipsTranslationDrift = 0f;
 
                 for (var sample = 0; sample < sampleCount; sample++)
                 {
@@ -627,6 +645,23 @@ namespace UnderGrind.Tests
                     // A fixed rest-pose axis can report false crossings when the pelvis turns.
                     var separation = Vector3.Dot(footDelta, currentLateral);
                     var staticAxisSeparation = Vector3.Dot(footDelta, restLateral);
+                    var leftFootRelative = hips.InverseTransformPoint(leftFoot.position);
+                    var rightFootRelative = hips.InverseTransformPoint(rightFoot.position);
+                    var hipsPosition = instance.transform.InverseTransformPoint(hips.position);
+                    if (i == 0)
+                    {
+                        firstLeftFootRelative = leftFootRelative;
+                        firstRightFootRelative = rightFootRelative;
+                        firstHipsPosition = hipsPosition;
+                    }
+                    if (i == sampleCount - 1)
+                    {
+                        lastLeftFootRelative = leftFootRelative;
+                        lastRightFootRelative = rightFootRelative;
+                    }
+                    maxHipsTranslationDrift = Mathf.Max(maxHipsTranslationDrift,
+                        Vector3.Distance(firstHipsPosition, hipsPosition));
+
                     var leftKneePosition = instance.transform.InverseTransformPoint(leftKnee.position);
                     var rightKneePosition = instance.transform.InverseTransformPoint(rightKnee.position);
                     var kneeSeparation = Vector3.Dot(leftKneePosition - rightKneePosition, currentLateral);
@@ -655,7 +690,11 @@ namespace UnderGrind.Tests
                     StaticAxisCrossingSamples = staticAxisCrossingSamples,
                     SampleCount = sampleCount,
                     MinimumKneeSeparation = minimumKneeSeparation,
-                    KneeCrossingSamples = kneeCrossingSamples
+                    KneeCrossingSamples = kneeCrossingSamples,
+                    LoopEndpointError = Mathf.Max(
+                        Vector3.Distance(firstLeftFootRelative, lastLeftFootRelative),
+                        Vector3.Distance(firstRightFootRelative, lastRightFootRelative)),
+                    MaxHipsTranslationDrift = maxHipsTranslationDrift
                 };
             }
             finally
