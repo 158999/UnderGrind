@@ -481,7 +481,7 @@ namespace UnderGrind.Editor
             ValidateOptions(options);
             Directory.CreateDirectory(destinationDirectory);
 
-            var timestamp = DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff", CultureInfo.InvariantCulture);
             var packageName = "UnderGrind-Animation-Inspection-" + timestamp;
             var packageDirectory = Path.Combine(destinationDirectory, packageName);
             Directory.CreateDirectory(packageDirectory);
