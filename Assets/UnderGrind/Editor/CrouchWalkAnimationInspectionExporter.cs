@@ -1149,8 +1149,11 @@ namespace UnderGrind.Editor
 
             var allTimes = times.ToArray();
             var reduced = new SortedSet<float> { 0f, Mathf.Max(0f, clip.length - 0.0001f), clip.length };
-            var stride = (float)(allTimes.Length - 1) / (options.maxPoseSamples - 1);
-            for (var index = 0; index < options.maxPoseSamples; index++)
+            var retainedInteriorCount = Mathf.Max(0, options.maxPoseSamples - 3);
+            var stride = retainedInteriorCount <= 1
+                ? 1f
+                : (float)(allTimes.Length - 1) / (retainedInteriorCount - 1);
+            for (var index = 0; index < retainedInteriorCount; index++)
                 reduced.Add(allTimes[Mathf.Clamp(Mathf.RoundToInt(index * stride), 0, allTimes.Length - 1)]);
             return reduced.ToList();
         }
@@ -1624,8 +1627,8 @@ namespace UnderGrind.Editor
         {
             var camera = rig.Preview.camera;
             var root = rig.Animator.transform;
-            var forward = root.forward;
-            var right = root.right;
+            var forward = root.TransformDirection(Vector3.left).normalized;
+            var right = Vector3.Cross(root.up, forward).normalized;
             Vector3 direction;
             switch (angleIndex)
             {
