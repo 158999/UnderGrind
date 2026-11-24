@@ -43,7 +43,7 @@ La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili
 
 Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito anche nella run `20261124-114001-048`. Il candidato 08 resta il migliore nel retargeting misurato da Unity: zero incroci di piedi e ginocchia su sorgente, Player maschile e Player femminile; separazione minima dei piedi 0,254 m sulla sorgente, 0,183 m sul Player maschile e 0,155 m sul femminile; errore di chiusura del loop pari a 0 m. Il candidato 07 è anch'esso senza incroci, con separazione minima dei piedi sul Player femminile di 0,103 m e separazione minima delle ginocchia maggiore rispetto al candidato 08.
 
-Questi dati sono una classifica diagnostica automatica, non una verifica visiva. Il candidato 08 non è stato promosso e il controller continua a usare la clip originale. Prima dell'assegnazione occorre verificare in Play Mode il ciclo continuo, le deformazioni e le transizioni su entrambi gli Avatar.
+Questi dati sono una classifica diagnostica automatica, non una verifica visiva. L'assegnazione provvisoria del candidato 08 elimina gli incroci nei controlli numerici sui tre Avatar. Il report ultra dettagliato segnala però un errore di loop di rotazione di circa 15,3°, un errore di posizione di 8,6 mm e un contatto stimato basso (circa 4–5% dei campioni). Ciclo continuo, deformazioni e transizioni devono ancora essere verificati in Play Mode su entrambi gli Avatar prima dell'accettazione definitiva.
 
 `LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`.
 
