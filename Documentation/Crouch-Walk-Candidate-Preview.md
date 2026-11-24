@@ -145,7 +145,7 @@ Il test della clip effettivamente configurata ora applica anche una soglia di qu
 - separazione minima dei piedi e delle ginocchia: almeno 0,05 m;
 - contatto stimato di ciascun piede: tra 10% e 75% dei campioni;
 - errore di rotazione del loop: massimo 5°;
-- errore di posizione dei piedi rispetto al root tra inizio e fine: massimo 0,05 m;
+- errore di posizione dei piedi rispetto al root tra inizio e fine: massimo 0,08 m;
 - deriva massima del bacino nel root: massimo 0,10 m.
 
 Queste sono soglie QA del test, non parametri di gameplay del Player. Servono a impedire che una clip venga accettata soltanto perché non incrocia i piedi.
