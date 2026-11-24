@@ -706,7 +706,9 @@ namespace UnderGrind.Editor
                     options.contactHeightToleranceMeters.ToString("F3", CultureInfo.InvariantCulture) +
                     " m dal minimo osservato nel ciclo e velocità <= " +
                     options.contactSpeedToleranceMetersPerSecond.ToString("F3", CultureInfo.InvariantCulture) +
-                    " m/s. La soglia non sostituisce la valutazione visiva o il grounded state del controller."
+                    " m/s. La soglia non sostituisce la valutazione visiva o il grounded state del controller. " +
+                    "Gli incroci usano l'asse anatomico dinamico delle anche e una tolleranza di " +
+                    options.crossingToleranceMeters.ToString("F3", CultureInfo.InvariantCulture) + " m."
             };
 
             report.renderers = CreateRendererMetadata(rig.Instance);
@@ -1146,7 +1148,7 @@ namespace UnderGrind.Editor
                 return times.ToList();
 
             var allTimes = times.ToArray();
-            var reduced = new SortedSet<float> { 0f, clip.length };
+            var reduced = new SortedSet<float> { 0f, Mathf.Max(0f, clip.length - 0.0001f), clip.length };
             var stride = (float)(allTimes.Length - 1) / (options.maxPoseSamples - 1);
             for (var index = 0; index < options.maxPoseSamples; index++)
                 reduced.Add(allTimes[Mathf.Clamp(Mathf.RoundToInt(index * stride), 0, allTimes.Length - 1)]);
