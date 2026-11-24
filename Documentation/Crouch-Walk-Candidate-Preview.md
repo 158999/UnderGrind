@@ -165,7 +165,7 @@ L'audit Blender sul FBX sorgente non rileva incroci in nessuna delle quattro var
 | Generated 03 | 0,133 m | 0,190 m | 0,064 m |
 | Generated 04 | 0,050 m | 1,356 m | 0,299 m |
 
-Generated 03 è il primo candidato da verificare sui prefab Player. Questi dati non approvano la clip: sono misurati sul FBX sorgente e non sostituiscono la valutazione Humanoid maschile/femminile né il controllo visivo in Unity.
+Generated 03 è attualmente assegnata in modo provvisorio nel branch di validazione per verificare i prefab Player. Questi dati non approvano la clip: sono misurati sul FBX sorgente e non sostituiscono la valutazione Humanoid maschile/femminile né il controllo visivo in Unity.
 
 ### Ispezione visiva Blender dei nuovi FBX
 
