@@ -48,7 +48,7 @@ jobs:
           tar -xJf "$RUNNER_TEMP/blender.tar.xz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/blender-5.2.4-linux-x64" >> "$GITHUB_PATH"
 
-      - name: Audit current source and all eight candidates
+      - name: Audit raw FBX action ranges and all candidates
         run: blender -b --python Tools/Blender/audit-pinoc-crouch-walk-candidates.py
 
       - name: Commit candidate files and audit report
