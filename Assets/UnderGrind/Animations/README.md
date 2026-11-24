@@ -33,17 +33,17 @@ Gli otto movimenti di produzione sono già versionati in questa cartella e asseg
 ### Validazione — run Unity `20261124-114001-048`
 
 - **Walking** e **Running**: il test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` non ha segnalato incroci anatomici nella run corrente sui tre Avatar campionati. Running sul Player femminile ha però una separazione minima di soli 0,004 m: il test passa, ma la verifica visiva sul rig aggiornato resta importante.
-- **Crouch Walk originale**: `Crouch_Walk_Forward.fbx` resta difettosa e non è più assegnata: 6/232 campioni sulla sorgente Mixamo, 10/232 sul Player maschile e 12/232 sul femminile. Separazione minima anatomica: -0,114 m, -0,119 m e -0,133 m rispettivamente. Il controller usa provvisoriamente `Crouch_Walk_Candidate_08.fbx`, che non presenta incroci nell'audit Unity; la verifica visiva resta da eseguire.
+- **Crouch Walk**: nessuna delle otto varianti candidate è stata approvata per l'uso. `Crouch_Walk_Forward.fbx` resta la clip configurata, ma il test anatomico ne conferma gli incroci: 6/232 campioni sulla sorgente Mixamo, 10/232 sul Player maschile e 12/232 sul femminile. Non sostituirla con un candidato sulla sola base della classifica numerica.
 - **Visual Rig**: i quattro casi FBX/prefab del test `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` passano; il problema precedente era l'aspettativa errata sui FBX sorgente, non un componente mancante nei prefab.
 - **Jump, Fall, Land, Idle e Crouch Idle**: importati e assegnati; non sono coperti dal test di incrocio dei piedi e non sono ancora validati visivamente sul rig riparato.
 
 ### Candidati Crouch Walk
 
-La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili come Humanoid. Il 24 novembre 2026 `Crouch_Walk_Candidate_08.fbx` è stato assegnato provvisoriamente al controller tramite `PlayerAnimationSettings.asset`; `Crouch_Walk_Forward.fbx` resta versionata come sorgente originale e riferimento per l'audit.
+La cartella `Candidates/PINOC_CrouchWalk` contiene otto varianti FBX importabili come Humanoid. Nessuna è approvata per il controller: i controlli numerici non bastano a stabilire che il movimento sia visivamente e funzionalmente utilizzabile.
 
 Il test EditMode `CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars` è stato eseguito anche nella run `20261124-114001-048`. Il candidato 08 resta il migliore nel retargeting misurato da Unity: zero incroci di piedi e ginocchia su sorgente, Player maschile e Player femminile; separazione minima dei piedi 0,254 m sulla sorgente, 0,183 m sul Player maschile e 0,155 m sul femminile; errore di chiusura del loop pari a 0 m. Il candidato 07 è anch'esso senza incroci, con separazione minima dei piedi sul Player femminile di 0,103 m e separazione minima delle ginocchia maggiore rispetto al candidato 08.
 
-Questi dati sono una classifica diagnostica automatica, non una verifica visiva. L'assegnazione provvisoria del candidato 08 elimina gli incroci nei controlli numerici sui tre Avatar. Il report ultra dettagliato segnala però un errore di loop di rotazione di circa 15,3°, un errore di posizione di 8,6 mm e un contatto stimato basso (circa 4–5% dei campioni). Ciclo continuo, deformazioni e transizioni devono ancora essere verificati in Play Mode su entrambi gli Avatar prima dell'accettazione definitiva.
+Questi dati sono una classifica diagnostica automatica e non autorizzano la promozione di alcun candidato. Le immagini e i campioni completi devono essere valutati per postura, deformazioni, contatto, ritmo, continuità e comportamento su entrambi gli Avatar. Finché non viene identificata una clip realmente utilizzabile, nessuna variante candidata deve essere assegnata al controller.
 
 `LocomotionTestSceneBuilder` non cerca clip dentro `humans.blend`: usa l'eventuale Avatar presente nel file soltanto come fallback per il modello statico. Il controller di animazione viene assegnato tramite `PlayerAnimationSettings.asset`.
 
