@@ -23,40 +23,6 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Download generated crouch-walk samples
-        shell: bash
-        run: |
-          set -euo pipefail
-          folder="Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_00.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=xY_BVMWZUrKvEzGbmQlMEn_wM74' --output "$folder/Crouch_Walk_Generated_01.fbx"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_01.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=KsW0OpOi5MgsPcIQDmMcTTn440I' --output "$folder/Crouch_Walk_Generated_02.fbx"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_02.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=AiW-L-LrfipyiWhBuSakC6UhyXY' --output "$folder/Crouch_Walk_Generated_03.fbx"
-          curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 'https://cdn.viggle.ai/3d-editor-assets/text2motion/6aa1752e-9788-4ebf-96c0-15ca7caa00b9/sample_03.fbx?Expires=1795532400&KeyName=vigglecloudcdn2&Signature=yqM2SX8mMQGx2a2ZUDXiRAN_GX4' --output "$folder/Crouch_Walk_Generated_04.fbx"
-          for file in "$folder"/Crouch_Walk_Generated_*.fbx; do
-            test -s "$file"
-            size=$(stat -c %s "$file")
-            if [ "$size" -lt 10000 ]; then
-              echo "Invalid or truncated FBX: $file ($size bytes)"
-              exit 1
-            fi
-            echo "$file: $size bytes"
-          done
-          python3 - <<'PY'
-          from pathlib import Path
-          folder = Path("Assets/UnderGrind/Animations/Candidates/PINOC_CrouchWalk")
-          template = (folder / "Crouch_Walk_Candidate_01.fbx.meta").read_text(encoding="utf-8")
-          template = template.replace("guid: 6dff3f2b250b450687127e12f3988296", "guid: REPLACE_GUID")
-          template = template.replace("lastFrame: 239", "lastFrame: 179")
-          entries = {
-              "Crouch_Walk_Generated_01.fbx": "719e4b83ae1443d3b743f0eed22c0b13",
-              "Crouch_Walk_Generated_02.fbx": "3065a0002fcf40b782e37743603b2feb",
-              "Crouch_Walk_Generated_03.fbx": "ef71b956591642bfb269e3e162849ea0",
-              "Crouch_Walk_Generated_04.fbx": "8d3244f18ba346c8a2558bc75c8ee7f0",
-          }
-          for filename, guid in entries.items():
-              (folder / (filename + ".meta")).write_text(template.replace("REPLACE_GUID", guid), encoding="utf-8")
-          PY
-
       - name: Verify candidate FBXs
         shell: bash
         run: |
@@ -72,6 +38,14 @@ jobs:
             printf '%s %s bytes\n' "$file" "$size"
           done
 
+      - name: Install headless rendering libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libegl-mesa0 libgl1 libgl1-mesa-dri libxkbcommon0 libxrender1 libxi6 libxfixes3 libxext6 python3-pil
+
+      - name: Validate Blender audit script syntax
+        run: python3 -m py_compile Tools/Blender/audit-pinoc-crouch-walk-candidates.py
+
       - name: Install Blender
         run: |
           curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
@@ -82,6 +56,39 @@ jobs:
 
       - name: Audit current source and all available candidates
         run: blender -b --python Tools/Blender/audit-pinoc-crouch-walk-candidates.py
+
+      - name: Assemble Blender preview contact sheets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw
+
+          root = Path("Tools/Blender/pinoc-crouch-walk-previews")
+          views = ("front", "side", "rear", "opposite")
+          frame_count = 6
+          for folder in sorted(root.iterdir()) if root.exists() else []:
+              if not folder.is_dir():
+                  continue
+              first = folder / f"{views[0]}_00.png"
+              if not first.exists():
+                  continue
+              with Image.open(first) as image:
+                  width, height = image.size
+              sheet = Image.new("RGB", (width * len(views), height * frame_count), (24, 24, 24))
+              draw = ImageDraw.Draw(sheet)
+              for column, view in enumerate(views):
+                  draw.text((column * width + 5, 5), view, fill=(255, 255, 255))
+                  for row in range(frame_count):
+                      frame_path = folder / f"{view}_{row:02d}.png"
+                      if not frame_path.exists():
+                          continue
+                      with Image.open(frame_path) as image:
+                          sheet.paste(image.convert("RGB"), (column * width, row * height))
+              sheet.save(folder / "contact-sheet.png")
+              for frame_path in folder.glob("*_*.png"):
+                  frame_path.unlink()
+          PY
 
       - name: Commit audit report
         shell: bash
@@ -99,10 +106,13 @@ jobs:
           git pull --rebase origin "$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
 
-      - name: Upload audit report
+      - name: Upload audit report and visual previews
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pinoc-crouch-walk-candidate-audit
-          path: Tools/Blender/pinoc-crouch-walk-candidate-audit.json
+          name: pinoc-crouch-walk-audit-and-previews
+          path: |
+            Tools/Blender/pinoc-crouch-walk-candidate-audit.json
+            Tools/Blender/pinoc-crouch-walk-previews/
           if-no-files-found: error
           retention-days: 14
