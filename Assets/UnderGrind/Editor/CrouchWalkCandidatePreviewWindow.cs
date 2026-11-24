@@ -37,7 +37,6 @@ namespace UnderGrind.Editor
         private sealed class ClipOption
         {
             public string Label;
-            public string AssetPath;
             public AnimationClip Clip;
         }
 
@@ -226,7 +225,6 @@ namespace UnderGrind.Editor
                 _clipOptions.Add(new ClipOption
                 {
                     Label = "Originale assegnata — " + animationSettings.CrouchWalkClip.name,
-                    AssetPath = AssetDatabase.GetAssetPath(animationSettings.CrouchWalkClip),
                     Clip = animationSettings.CrouchWalkClip
                 });
             }
@@ -248,7 +246,6 @@ namespace UnderGrind.Editor
                 candidateOptions.Add(new ClipOption
                 {
                     Label = Path.GetFileNameWithoutExtension(path),
-                    AssetPath = path,
                     Clip = clip
                 });
             }
@@ -295,14 +292,19 @@ namespace UnderGrind.Editor
                 return;
             }
 
-            _previewInstance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var previewScene = _preview.camera.gameObject.scene;
+            if (!previewScene.IsValid() || !previewScene.isLoaded)
+            {
+                _status = "La scena temporanea di anteprima non è disponibile.";
+                return;
+            }
+
+            _previewInstance = PrefabUtility.InstantiatePrefab(prefab, previewScene) as GameObject;
             if (_previewInstance == null)
             {
                 _status = "Impossibile creare l'istanza temporanea di " + prefabName + ".";
                 return;
             }
-
-            _preview.AddSingleGO(_previewInstance);
             _animator = _previewInstance.GetComponentInChildren<Animator>(true);
             if (_animator == null || _animator.avatar == null || !_animator.avatar.isHuman || !_animator.avatar.isValid)
             {
