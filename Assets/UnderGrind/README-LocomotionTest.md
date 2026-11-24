@@ -67,6 +67,6 @@ L'ultima esecuzione Unity versionata è la run `20261124-110717-910` su Unity 60
 - Visibilità dei renderer FP durante il cambio camera.
 - Conservazione dello stato iniziale dei renderer disabilitati.
 
-I due problemi dei renderer sono corretti nel branch `fix/crouch-walk-animation-audit`: il rig conserva gli stati enabled originali, il builder ripristina i default prima di salvare e i prefab sono stati aggiornati allo stato neutro. La correzione non è ancora stata verificata con una nuova run Unity. Il problema Crouch Walk resta aperto e nessun candidato è stato promosso.
+I due problemi dei renderer sono corretti in `main` tramite PR #12: il rig conserva gli stati enabled originali, il builder ripristina i default prima di salvare e i prefab sono stati aggiornati allo stato neutro. La correzione in `main` non è ancora stata verificata con una nuova run Unity. Il problema Crouch Walk resta aperto e nessun candidato è stato promosso.
 
 La presenza di FBX, Avatar Humanoid e Animator validi non equivale a una verifica visiva. Importazione, compilazione, EditMode, PlayMode, deformazione delle mesh, posizione degli arti FP e resa in prima/terza persona devono essere controllati nell'Editor Unity.
