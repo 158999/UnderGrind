@@ -270,3 +270,19 @@ I prefab maschile e femminile versionati sono stati aggiornati in modo che `FP_A
 Il test EditMode `VisualRigSwitchesExclusiveRendererGroupsForEachCameraMode` verifica ora i default neutri su FBX maschile/femminile e prefab maschile/femminile, poi verifica la commutazione esclusiva dei gruppi. Il test PlayMode `VisualRigPreservesInitiallyDisabledRenderers` verifica la conservazione dello stato disabilitato.
 
 Queste modifiche sono state unite in `main` tramite PR #12 e non sono ancora state verificate con una nuova esecuzione Unity. La correzione riguarda gli stati dei renderer, non la posa o la distanza degli arti FP dalla camera: la verifica visiva della prima persona resta aperta.
+
+
+### Audit Unity Crouch Walk e riallineamento prefab — 24 novembre 2026
+
+La run Unity `20261124-113037-739` su Unity 6000.6.9f1 ha eseguito 57 test EditMode (54 superati, 3 falliti) e 13 PlayMode (13 superati). I test standalone C# hanno superato 6/6 casi.
+
+Il test `LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars` conferma che la clip di produzione `Crouch_Walk_Forward.fbx` presenta incroci anatomici:
+- sorgente Mixamo: 6/232 campioni, separazione minima -0,114 m;
+- Player maschile: 10/232 campioni, separazione minima -0,119 m;
+- Player femminile: 12/232 campioni, separazione minima -0,133 m.
+
+Il report `TestResults/test/Unity/CrouchWalkCandidateAudit.txt` confronta la clip corrente e gli otto candidati sul rig sorgente e sui due Avatar Player. `Crouch_Walk_Candidate_08.fbx` è primo nella classifica diagnostica: zero incroci di piedi e ginocchia su tutti e tre i rig; separazione minima dei piedi 0,183 m sul Player maschile e 0,155 m sul femminile. Anche il candidato 07 non presenta incroci, ma ha una separazione minima inferiore sul Player. Questi risultati sono misure automatiche del retargeting Unity, non una valutazione della qualità visiva o della continuità percepita. Il candidato 08 non è assegnato al controller e non sostituisce la clip originale finché il ciclo non viene verificato visivamente in Play Mode su entrambi gli Avatar.
+
+Gli altri due test falliti riportano `PlayerVisualRig` mancante nei prefab maschile e femminile. Il controllo dei file versionati su `main` mostra invece il componente serializzato su entrambi i prefab, con il riferimento a `PlayerRigSettings.asset` e gli array dei renderer configurati. Il report locale e lo snapshot remoto non coincidono: prima di modificare builder o prefab, sincronizzare la copia locale con `main` e ripetere EditMode. Non aggiungere componenti duplicati né rigenerare i prefab sulla sola base di questo report.
+
+La run complessiva registra 67/70 test Unity superati e 6/6 standalone. La suite PlayMode è 13/13. La compilazione Unity non ha riportato errori C#; i tre fallimenti sono asserzioni EditMode. La verifica visiva in prima/terza persona e la promozione della clip Crouch Walk restano non eseguite.
