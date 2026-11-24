@@ -48,38 +48,72 @@ def side_bones(prefix, suffixes):
     return {prefix + suffix for suffix in suffixes}
 
 
-def allowed_groups_for_vertex(part_name, armature_local_x):
+def positive_x_side_for_armature(armature):
+    bones = {bone.name: bone for bone in armature.data.bones}
+    left_reference = (bones["LeftUpperLeg"].head_local.x + bones["LeftUpperArm"].head_local.x) * 0.5
+    right_reference = (bones["RightUpperLeg"].head_local.x + bones["RightUpperArm"].head_local.x) * 0.5
+    if abs(left_reference - right_reference) <= WEIGHT_EPSILON:
+        raise RuntimeError(armature.name + ": impossibile determinare il lato anatomico dai riferimenti ossei.")
+    return "Left" if left_reference > right_reference else "Right"
+
+
+def side_for_vertex_x(armature_local_x, positive_x_side):
+    if armature_local_x > CENTERLINE_EPSILON:
+        return positive_x_side
+    if armature_local_x < -CENTERLINE_EPSILON:
+        return "Right" if positive_x_side == "Left" else "Left"
+    return None
+
+
+def remap_group_to_anatomical_side(group_name, target_side):
+    if target_side is None:
+        return group_name
+    if group_name.startswith("Left"):
+        suffix = group_name[4:]
+    elif group_name.startswith("Right"):
+        suffix = group_name[5:]
+    else:
+        return group_name
+    return target_side + suffix
+
+
+def allowed_groups_for_vertex(part_name, armature_local_x, positive_x_side):
     central = {"Hips", "Spine", "Chest", "Neck", "Head"}
-    left_legs = side_bones("Left", ("UpperLeg", "LowerLeg", "Foot", "Toes"))
-    right_legs = side_bones("Right", ("UpperLeg", "LowerLeg", "Foot", "Toes"))
-    left_arms = side_bones("Left", ("Shoulder", "UpperArm", "LowerArm", "Hand"))
-    right_arms = side_bones("Right", ("Shoulder", "UpperArm", "LowerArm", "Hand"))
+    target_side = side_for_vertex_x(armature_local_x, positive_x_side)
 
     if "_Head" in part_name:
         return {"Head", "Neck", "Chest"}
 
     if "_Hands" in part_name:
-        if armature_local_x > CENTERLINE_EPSILON:
-            return {"LeftLowerArm", "LeftHand"}
-        if armature_local_x < -CENTERLINE_EPSILON:
-            return {"RightLowerArm", "RightHand"}
+        if target_side is not None:
+            return {target_side + "LowerArm", target_side + "Hand"}
         return {"LeftLowerArm", "LeftHand", "RightLowerArm", "RightHand"}
 
     if "_Arms" in part_name:
-        if armature_local_x > CENTERLINE_EPSILON:
-            return {"Chest"} | left_arms
-        if armature_local_x < -CENTERLINE_EPSILON:
-            return {"Chest"} | right_arms
-        return {"Chest"} | left_arms | right_arms
+        if target_side is not None:
+            return {"Chest"} | side_bones(target_side, ("Shoulder", "UpperArm", "LowerArm", "Hand"))
+        return {"Chest"} | side_bones("Left", ("Shoulder", "UpperArm", "LowerArm", "Hand")) | side_bones(
+            "Right", ("Shoulder", "UpperArm", "LowerArm", "Hand")
+        )
 
     if "_Body" in part_name:
-        if armature_local_x > CENTERLINE_EPSILON:
-            return central | left_legs
-        if armature_local_x < -CENTERLINE_EPSILON:
-            return central | right_legs
-        return central | left_legs | right_legs
+        if target_side is not None:
+            return central | side_bones(target_side, ("UpperLeg", "LowerLeg", "Foot", "Toes"))
+        return central | side_bones("Left", ("UpperLeg", "LowerLeg", "Foot", "Toes")) | side_bones(
+            "Right", ("UpperLeg", "LowerLeg", "Foot", "Toes")
+        )
 
     raise RuntimeError("Tipo mesh non riconosciuto per il reweighting: " + part_name)
+
+
+def existing_allowed_weights(vertex, group_names, allowed_names, target_side):
+    result = {}
+    for assignment in vertex.groups:
+        group_name = group_names.get(assignment.group)
+        mapped_name = remap_group_to_anatomical_side(group_name, target_side) if group_name else None
+        if mapped_name in allowed_names and assignment.weight > WEIGHT_EPSILON:
+            result[mapped_name] = result.get(mapped_name, 0.0) + float(assignment.weight)
+    return result
 
 
 def point_segment_distance(point, head, tail):
@@ -188,6 +222,7 @@ def reweight_mesh(obj, armature):
     deform_bones = {bone.name: bone for bone in armature.data.bones if bone.use_deform}
     group_by_index = {group.index: group.name for group in obj.vertex_groups}
     armature_inverse = armature.matrix_world.inverted()
+    positive_x_side = positive_x_side_for_armature(armature)
     planned_weights = []
     fallback_vertices = 0
     removed_influence_assignments = 0
@@ -201,7 +236,8 @@ def reweight_mesh(obj, armature):
 
     for vertex in obj.data.vertices:
         armature_point = armature_inverse @ (obj.matrix_world @ vertex.co)
-        allowed_names = allowed_groups_for_vertex(obj.name, armature_point.x)
+        target_side = side_for_vertex_x(armature_point.x, positive_x_side)
+        allowed_names = allowed_groups_for_vertex(obj.name, armature_point.x, positive_x_side)
         allowed_names &= set(deform_bones)
         allowed_union.update(allowed_names)
 
@@ -220,7 +256,7 @@ def reweight_mesh(obj, armature):
             elif group_name.startswith("Right"):
                 side_weight_totals[side_key]["right"] += float(assignment.weight)
 
-        raw_weights = existing_allowed_weights(vertex, group_by_index, allowed_names)
+        raw_weights = existing_allowed_weights(vertex, group_by_index, allowed_names, target_side)
         removed_influence_assignments += sum(
             1 for assignment in vertex.groups
             if group_by_index.get(assignment.group) not in allowed_names
@@ -236,6 +272,7 @@ def reweight_mesh(obj, armature):
                     {"bone": name, "weight": round(weight, 6)}
                     for name, weight in sorted(original_influences, key=lambda item: item[1], reverse=True)
                 ],
+                "targetAnatomicalSide": target_side,
                 "allowedGroups": sorted(allowed_names),
             })
             nearest = nearest_allowed_bone(armature_point, allowed_names, deform_bones)
@@ -263,6 +300,7 @@ def reweight_mesh(obj, armature):
     verification["fallbackVertexSamples"] = fallback_samples
     verification["removedInfluenceAssignments"] = removed_influence_assignments
     verification["allowedGroups"] = sorted(allowed_union)
+    verification["positiveXAnatomicalSide"] = positive_x_side
     verification["originalLeftRightWeightByVertexSide"] = {
         side: {
             "vertices": values["vertices"],
