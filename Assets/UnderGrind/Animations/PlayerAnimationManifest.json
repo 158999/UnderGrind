@@ -122,15 +122,28 @@
     },
     "rawBlenderCandidateAudit": {
       "reportPath": "Tools/Blender/pinoc-crouch-walk-candidate-audit.json",
-      "generationTaskId": "827b8373-42df-479a-a82f-22b5a339678d",
-      "candidateCount": 8,
-      "interpretation": "Raw FBX armature audit only. It is not equivalent to Unity Humanoid retargeting and cannot select a production clip."
+      "candidateCount": 12,
+      "interpretation": "Raw FBX armature audit and Blender preview only. It is not a Unity Humanoid retarget result and cannot select a production clip.",
+      "generationTaskIds": [
+        "827b8373-42df-479a-a82f-22b5a339678d",
+        "6aa1752e-9788-4ebf-96c0-15ca7caa00b9"
+      ],
+      "previewArtifact": "GitHub Actions artifact: pinoc-crouch-walk-audit-and-previews"
     },
     "unityCandidateDiagnostic": {
+      "test": "UnderGrind.Tests.HumanoidRigImportTests.LocomotionClipsDoNotCrossFeetOnSourceAndPlayerAvatars",
+      "reportPath": "TestResults/test/Unity/CrouchWalkCandidateAudit.txt",
+      "status": "pending",
+      "runId": null,
+      "candidateCount": 12,
+      "note": "The four newly generated candidates are imported on fix/crouch-walk-animation-validation. Run the Unity EditMode suite to evaluate all 12 candidates on the source, male Player and female Player Humanoid Avatars. The production clip remains the original until a candidate passes the full quality gate."
+    },
+    "selectedReplacement": null,
+    "previousUnityCandidateDiagnostic": {
       "test": "UnderGrind.Tests.HumanoidRigImportTests.CrouchWalkCandidatesAreAuditedOnSourceAndPlayerAvatars",
       "reportPath": "TestResults/test/Unity/CrouchWalkCandidateAudit.txt",
       "runId": "20261124-114001-048",
-      "status": "executed",
+      "status": "historical-only",
       "bestDiagnosticCandidate": "Crouch_Walk_Candidate_08.fbx",
       "bestCandidateResults": {
         "source": {
@@ -153,8 +166,61 @@
         },
         "loopEndpointErrorMeters": 0
       },
-      "interpretation": "Best result in the automated Unity retargeting audit from run 20261124-114001-048. Visual PlayMode validation is still required before promotion."
+      "interpretation": "This result audited the original clip and the eight historical candidates only. Candidate 08 was not approved because the subsequent visual and gait review found insufficient foot contact and a poor loop."
     },
-    "selectedReplacement": null
+    "candidateAssessment": [
+      {
+        "file": "Crouch_Walk_Generated_01.fbx",
+        "assetPublicId": "d441b0b6-a674-4849-9e9e-eeeb3b1b57c3",
+        "rawBlenderFootCrossings": 0,
+        "minimumFootSeparationMeters": 0.145877,
+        "hipDriftMeters": 0.233085,
+        "loopEndpointErrorMeters": 0.160948,
+        "visualAssessment": "Not preferred: crouch posture is not consistently low.",
+        "status": "candidate"
+      },
+      {
+        "file": "Crouch_Walk_Generated_02.fbx",
+        "assetPublicId": "e81092b1-33f8-410e-8628-d67ec26fe36d",
+        "rawBlenderFootCrossings": 0,
+        "minimumFootSeparationMeters": 0.172856,
+        "hipDriftMeters": 0.229207,
+        "loopEndpointErrorMeters": 0.308093,
+        "visualAssessment": "Crouched pose is clear, but loop closure is weak.",
+        "status": "candidate"
+      },
+      {
+        "file": "Crouch_Walk_Generated_03.fbx",
+        "assetPublicId": "0ff23662-9938-41d3-8e99-def4e4d1e7de",
+        "rawBlenderFootCrossings": 0,
+        "minimumFootSeparationMeters": 0.132939,
+        "hipDriftMeters": 0.189819,
+        "loopEndpointErrorMeters": 0.063724,
+        "visualAssessment": "Best raw source candidate: sustained crouch and readable alternating steps. Unity retarget validation pending.",
+        "status": "promising-not-approved"
+      },
+      {
+        "file": "Crouch_Walk_Generated_04.fbx",
+        "assetPublicId": "17dc1540-bfe8-4f08-b293-5053305aaef8",
+        "rawBlenderFootCrossings": 0,
+        "minimumFootSeparationMeters": 0.049647,
+        "hipDriftMeters": 1.355581,
+        "loopEndpointErrorMeters": 0.298565,
+        "visualAssessment": "Reject: excessive drift and character leaves the preview frame.",
+        "status": "rejected"
+      }
+    ],
+    "qualityGate": {
+      "footAndKneeCrossings": 0,
+      "minimumFootAndKneeSeparationMeters": 0.05,
+      "estimatedContactRatioPerFoot": [
+        0.1,
+        0.75
+      ],
+      "loopRotationErrorDegreesMaximum": 5,
+      "rootRelativeFootLoopErrorMetersMaximum": 0.08,
+      "maximumHipsDriftMeters": 0.2,
+      "note": "QA thresholds for candidate validation; not gameplay parameters."
+    }
   }
 }
