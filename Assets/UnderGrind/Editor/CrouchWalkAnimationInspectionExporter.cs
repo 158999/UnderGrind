@@ -560,7 +560,6 @@ namespace UnderGrind.Editor
             options.contactHeightToleranceMeters = Mathf.Max(0f, options.contactHeightToleranceMeters);
             options.contactSpeedToleranceMetersPerSecond = Mathf.Max(0f, options.contactSpeedToleranceMetersPerSecond);
             options.crossingToleranceMeters = Mathf.Max(0f, options.crossingToleranceMeters);
-            options.crossingToleranceMeters = Mathf.Max(0f, options.crossingToleranceMeters);
         }
 
         private static BundleManifest CreateManifest(ExportOptions options)
